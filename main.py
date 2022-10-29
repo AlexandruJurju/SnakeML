@@ -1,5 +1,4 @@
-import numpy as np
-import pygame as pg
+from model import *
 
 if __name__ == "__main__":
-    pass
+    model = Model(5)
