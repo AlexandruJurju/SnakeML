@@ -54,10 +54,10 @@ class Game:
             line_end_x = self.model.snake.body[0][1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X
             line_end_y = self.model.snake.body[0][0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y
 
-            pygame.draw.line(self.window, COLOR_WHITE,
-                             (vision_lines[line]["W"][0][1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
-                              vision_lines[line]["W"][0][0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
-                             (line_end_x, line_end_y), width=2)
+            pygame.draw.line(self.window, COLOR_APPLE,
+                             ((vision_lines[line]["W"][0][1]) * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
+                              (vision_lines[line]["W"][0][0]) * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
+                             (line_end_x, line_end_y), width=1)
 
             if vision_lines[line]["S"][0] is not None:
                 pygame.draw.line(self.window, (255, 0, 0),
@@ -84,6 +84,9 @@ class Game:
 
             self.__draw_board()
             self.__draw_vision_lines()
+            print(self.model.board)
+            print(self.model.snake.body)
+            self.running = self.model.move_random_direction()
             self.__manage_key_inputs()
 
             pygame.display.update()

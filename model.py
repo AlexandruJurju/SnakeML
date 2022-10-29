@@ -155,3 +155,25 @@ class Model:
                 "-Y": self.__look_in_direction(Direction.DOWN, return_type),
                 "+Y": self.__look_in_direction(Direction.UP, return_type)
             }
+
+    def move_random_direction(self) -> bool:
+        head = self.snake.body[0]
+        valid_directions = self.__get_valid_direction_for_block(head)
+
+        if len(valid_directions) == 0:
+            return False
+
+        direction = random.choice(valid_directions)
+
+        new_head = [head[0] + direction.value[0], head[1] + direction.value[1]]
+        self.snake.body.insert(0, new_head)
+
+        if self.board[new_head[0], new_head[1]] == "A":
+            self.__update_board_from_snake()
+            self.__place_new_apple()
+        else:
+            self.snake.body = self.snake.body[:-1]
+
+        self.__update_board_from_snake()
+
+        return True
