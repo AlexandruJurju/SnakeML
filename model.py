@@ -88,8 +88,6 @@ class Model:
                 self.snake.body.append(new_block)
                 head = new_block
 
-        print(self.snake.body)
-
     def __update_board_from_snake(self):
         self.__clear_snake_on_board()
 
