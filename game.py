@@ -3,7 +3,7 @@ from constants import *
 from model import *
 
 
-class Display:
+class Game:
     def __init__(self, model: Model):
         pygame.init()
         self.window = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -50,6 +50,7 @@ class Display:
 
             self.__draw_board()
             self.__manage_key_inputs()
+            self.running = self.model.move_random_direction()
 
             pygame.display.update()
             self.fps_clock.tick(MAX_FPS)

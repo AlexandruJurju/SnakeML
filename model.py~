@@ -94,12 +94,9 @@ class Model:
         for piece in self.snake.body:
             self.board[piece[0], piece[1]] = "S"
 
-    def move_random_direction(self) -> bool:
+    def move_random_direction(self) -> None:
         old_head = self.snake.body[0]
         valid_directions = self.__get_valid_directions_for_block(old_head)
-
-        if len(valid_directions) <= 0:
-            return False
 
         rand_direction = random.choice(valid_directions)
 
@@ -117,5 +114,3 @@ class Model:
             self.snake.body = self.snake.body[:-1]
 
         self.__update_board_from_snake()
-
-        return True

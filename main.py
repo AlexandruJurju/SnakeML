@@ -1,7 +1,6 @@
 from model import *
-from display import *
+from game import *
 
 if __name__ == "__main__":
-    model = Model(10, 3)
-    display = Display(model)
+    display = Game(Model(5, 3))
     display.run()
