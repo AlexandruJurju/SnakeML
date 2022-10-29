@@ -51,9 +51,7 @@ class Game:
             self.__draw_board()
             self.__manage_key_inputs()
 
-            print(self.model.board)
-            print(self.model.snake.body)
-            print(self.model.look_in_direction(Direction.UP, "boolean"))
+            print(self.model.get_vision_lines("boolean"))
 
             pygame.display.update()
             self.fps_clock.tick(MAX_FPS)

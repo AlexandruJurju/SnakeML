@@ -89,7 +89,7 @@ class Model:
         for piece in self.snake.body:
             self.board[piece[0], piece[1]] = "S"
 
-    def look_in_direction(self, direction: Direction, return_type: str) -> {}:
+    def __look_in_direction(self, direction: Direction, return_type: str) -> {}:
         apple_distance = np.inf
         segment_distance = np.inf
 
@@ -125,3 +125,15 @@ class Model:
                 "S": [segment_coord, segment_boolean]
             }
             return vision
+
+    def get_vision_lines(self, return_type: str) -> {}:
+        return {
+            "+X": self.__look_in_direction(Direction.RIGHT, return_type),
+            "-X": self.__look_in_direction(Direction.LEFT, return_type),
+            "-Y": self.__look_in_direction(Direction.DOWN, return_type),
+            "+Y": self.__look_in_direction(Direction.UP, return_type),
+            "Q1": self.__look_in_direction(Direction.QUADRANT1, return_type),
+            "Q2": self.__look_in_direction(Direction.QUADRANT2, return_type),
+            "Q3": self.__look_in_direction(Direction.QUADRANT3, return_type),
+            "Q4": self.__look_in_direction(Direction.QUADRANT4, return_type)
+        }
