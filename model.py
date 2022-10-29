@@ -41,13 +41,14 @@ class Model:
         for i in range(1, self.size):
             for j in range(1, self.size):
                 if self.board[i, j] == "X":
-                    empty.append((i, j))
+                    empty.append([i, j])
 
         # return random empty block from found empty blocks
         return random.choice(empty)
 
     def __place_new_apple(self) -> None:
-        self.board[self.__get_random_empty_block()] = "A"
+        empty = self.__get_random_empty_block()
+        self.board[empty[0], empty[1]] = "A"
 
     def __get_valid_direction_for_block(self, block: Tuple) -> List[Direction]:
         valid_directions = []
@@ -78,9 +79,16 @@ class Model:
             new_block = [head[0] + random_direction.value[0], head[1] + random_direction.value[1]]
 
             # redundant check if new position is empty and check if piece is already in body
-            if self.board[new_block[0], new_block[1]] == "X" and new_block not in self.snake.body:
+            contained = False
+            for piece in self.snake.body:
+                if piece == new_block:
+                    contained = True
+
+            if self.board[new_block[0], new_block[1]] == "X" and not contained:
                 self.snake.body.append(new_block)
                 head = new_block
+
+        print(self.snake.body)
 
     def __update_board_from_snake(self):
         self.__clear_snake_on_board()

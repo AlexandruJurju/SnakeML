@@ -9,6 +9,9 @@ COLOR_APPLE = (199, 55, 47)
 
 MAX_FPS = 10
 
+OFFSET_BOARD_X = 50
+OFFSET_BOARD_Y = 25
+
 
 class Direction(Enum):
     UP = [-1, 0]
