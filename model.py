@@ -63,6 +63,7 @@ class Model:
 
         return valid_directions
 
+    # TODO make sure there are no duplicates
     def __create_random_snake(self, snake_size: int) -> None:
         # head is the first block of the snake, the block where the search starts
         head = self.__get_random_empty_block()
