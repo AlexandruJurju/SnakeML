@@ -1,9 +1,10 @@
 import random
 from typing import Tuple, List
-from snake import *
-from constants import MAIN_DIRECTIONS
 
 import numpy as np
+
+from constants import MAIN_DIRECTIONS, Direction
+from snake import Snake
 
 
 class Model:
@@ -17,8 +18,6 @@ class Model:
         self.__create_random_snake(snake_size)
         self.__update_board_from_snake()
 
-        print(self.board)
-
     def __make_board(self) -> None:
         for i in range(0, self.size):
             for j in range(0, self.size):
@@ -28,13 +27,13 @@ class Model:
                 else:
                     self.board[i, j] = "X"
 
-    def __clear_snake_on_board(self) -> None:
+    def __clear_snake_on_board(self):
         for i in range(1, self.size):
             for j in range(1, self.size):
                 if self.board[i, j] == "S":
                     self.board[i, j] = "X"
 
-    def __get_random_empty_block(self) -> Tuple[int, int]:
+    def __get_random_empty_block(self) -> []:
         empty = []
 
         # find all empty spots on the board
@@ -47,10 +46,10 @@ class Model:
         return random.choice(empty)
 
     def __place_new_apple(self) -> None:
-        empty = self.__get_random_empty_block()
-        self.board[empty[0], empty[1]] = "A"
+        rand_block = self.__get_random_empty_block()
+        self.board[rand_block[0], rand_block[1]] = "A"
 
-    def __get_valid_directions_for_block(self, block: Tuple) -> List[Direction]:
+    def __get_valid_direction_for_block(self, block: Tuple) -> List[Direction]:
         valid_directions = []
 
         # check all main direction that the block has
@@ -70,7 +69,7 @@ class Model:
 
         while len(self.snake.body) < snake_size:
             # get all possible directions of block
-            valid_directions = self.__get_valid_directions_for_block(head)
+            valid_directions = self.__get_valid_direction_for_block(head)
 
             # choose random direction for new snake piece position
             random_direction = random.choice(valid_directions)
@@ -79,43 +78,12 @@ class Model:
             new_block = [head[0] + random_direction.value[0], head[1] + random_direction.value[1]]
 
             # redundant check if new position is empty and check if piece is already in body
-            contained = False
-            for piece in self.snake.body:
-                if piece == new_block:
-                    contained = True
-
-            if self.board[new_block[0], new_block[1]] == "X" and not contained:
+            if self.board[new_block[0], new_block[1]] == "X":
                 self.snake.body.append(new_block)
                 head = new_block
 
-    def __update_board_from_snake(self) -> None:
+    def __update_board_from_snake(self):
         self.__clear_snake_on_board()
 
         for piece in self.snake.body:
             self.board[piece[0], piece[1]] = "S"
-
-    def move_random_direction(self) -> bool:
-        old_head = self.snake.body[0]
-        valid_directions = self.__get_valid_directions_for_block(old_head)
-
-        if len(valid_directions) <= 0:
-            return False
-
-        rand_direction = random.choice(valid_directions)
-
-        # replace preview snake head position with new one
-        new_head = [old_head[0] + rand_direction.value[0], old_head[1] + rand_direction.value[1]]
-        self.snake.body.insert(0, new_head)
-
-        # move all preview body pieces to new values
-        # if snakes eats an apple then last body piece is not removed, same thing as gaining a new piece
-        # else last piece is removed from list old1 old2 old3 -> new1 old1 old2
-        if self.board[new_head[0], new_head[1]] == "A":
-            self.__update_board_from_snake()
-            self.__place_new_apple()
-        else:
-            self.snake.body = self.snake.body[:-1]
-
-        self.__update_board_from_snake()
-
-        return True

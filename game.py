@@ -50,7 +50,9 @@ class Game:
 
             self.__draw_board()
             self.__manage_key_inputs()
-            self.running = self.model.move_random_direction()
+
+            print(self.model.board)
+            print(self.model.snake.body)
 
             pygame.display.update()
             self.fps_clock.tick(MAX_FPS)
