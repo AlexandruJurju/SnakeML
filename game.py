@@ -37,6 +37,40 @@ class Game:
                 # draw lines between squares
                 pygame.draw.rect(self.window, COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE), width=1)
 
+    def __draw_vision_lines(self):
+        vision_lines = self.model.get_vision_lines(8, "boolean")
+        font = pygame.font.SysFont("arial", 18)
+
+        # loop over all lines in given vision lines
+        for line in vision_lines:
+            line_label = font.render(line, True, COLOR_BLACK)
+
+            # render vision line text at wall position
+            self.window.blit(line_label, [vision_lines[line]["W"][0][1] * SQUARE_SIZE + OFFSET_BOARD_X,
+                                          vision_lines[line]["W"][0][0] * SQUARE_SIZE + OFFSET_BOARD_Y])
+
+            # draw line from head to wall, draw before body and apple lines
+            # drawing uses SQUARE_SIZE//2 so that lines go through the middle of the squares
+            line_end_x = self.model.snake.body[0][1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X
+            line_end_y = self.model.snake.body[0][0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y
+
+            pygame.draw.line(self.window, COLOR_WHITE,
+                             (vision_lines[line]["W"][0][1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
+                              vision_lines[line]["W"][0][0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
+                             (line_end_x, line_end_y), width=2)
+
+            if vision_lines[line]["S"][0] is not None:
+                pygame.draw.line(self.window, (255, 0, 0),
+                                 (vision_lines[line]["S"][0][1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
+                                  vision_lines[line]["S"][0][0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
+                                 (line_end_x, line_end_y), width=5)
+
+            if vision_lines[line]["A"][0] is not None:
+                pygame.draw.line(self.window, (0, 255, 0),
+                                 (vision_lines[line]["A"][0][1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
+                                  vision_lines[line]["A"][0][0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
+                                 (line_end_x, line_end_y), width=5)
+
     def __manage_key_inputs(self):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
@@ -49,9 +83,8 @@ class Game:
             self.window.fill(COLOR_BLACK)
 
             self.__draw_board()
+            self.__draw_vision_lines()
             self.__manage_key_inputs()
-
-            print(self.model.get_vision_lines("boolean"))
 
             pygame.display.update()
             self.fps_clock.tick(MAX_FPS)

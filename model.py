@@ -84,8 +84,10 @@ class Model:
                 head = new_block
 
     def __update_board_from_snake(self):
+        # remove previous snake position on board
         self.__clear_snake_on_board()
 
+        # loop all snake pieces and put S on board using their coordinates
         for piece in self.snake.body:
             self.board[piece[0], piece[1]] = "S"
 
@@ -96,11 +98,16 @@ class Model:
         apple_coord = None
         segment_coord = None
 
+        # search starts at one block in the given direction
+        # otherwise head is also check in the loop
         head = self.snake.body[0]
         start = [head[0] + direction.value[0], head[1] + direction.value[1]]
 
+        # booleans are used to store the first value found
         apple_found = False
         segment_found = False
+
+        # loop are blocks in the given direction and store position and coordinates of apple and snake segments
         while self.board[start[0]][start[1]] != "W":
             if self.board[start[0]][start[1]] == "A" and apple_found == False:
                 apple_distance = math.dist(head, start)
@@ -112,13 +119,15 @@ class Model:
                 segment_found = True
             start = [start[0] + direction.value[0], start[1] + direction.value[1]]
 
+        # at the end of the loop start block is at the position of a wall
         wall_distance = math.dist(head, start)
         wall_coord = start
 
         if return_type == "boolean":
-            apple_boolean = 1.0 if apple_distance != np.inf else 0.0
-            segment_boolean = 1.0 if segment_distance != np.inf else 0.0
+            apple_boolean = 1.0 if apple_found else 0.0
+            segment_boolean = 1.0 if segment_found else 0.0
 
+            # use 1/wall distance to get values between 0 and 1 , better for neural network
             vision = {
                 "W": [wall_coord, 1 / wall_distance],
                 "A": [apple_coord, apple_boolean],
@@ -126,14 +135,23 @@ class Model:
             }
             return vision
 
-    def get_vision_lines(self, return_type: str) -> {}:
-        return {
-            "+X": self.__look_in_direction(Direction.RIGHT, return_type),
-            "-X": self.__look_in_direction(Direction.LEFT, return_type),
-            "-Y": self.__look_in_direction(Direction.DOWN, return_type),
-            "+Y": self.__look_in_direction(Direction.UP, return_type),
-            "Q1": self.__look_in_direction(Direction.QUADRANT1, return_type),
-            "Q2": self.__look_in_direction(Direction.QUADRANT2, return_type),
-            "Q3": self.__look_in_direction(Direction.QUADRANT3, return_type),
-            "Q4": self.__look_in_direction(Direction.QUADRANT4, return_type)
-        }
+    def get_vision_lines(self, vision_line_number: int, return_type: str) -> {}:
+
+        if vision_line_number == 8:
+            return {
+                "+X": self.__look_in_direction(Direction.RIGHT, return_type),
+                "-X": self.__look_in_direction(Direction.LEFT, return_type),
+                "-Y": self.__look_in_direction(Direction.DOWN, return_type),
+                "+Y": self.__look_in_direction(Direction.UP, return_type),
+                "Q1": self.__look_in_direction(Direction.QUADRANT1, return_type),
+                "Q2": self.__look_in_direction(Direction.QUADRANT2, return_type),
+                "Q3": self.__look_in_direction(Direction.QUADRANT3, return_type),
+                "Q4": self.__look_in_direction(Direction.QUADRANT4, return_type)
+            }
+        else:
+            return {
+                "+X": self.__look_in_direction(Direction.RIGHT, return_type),
+                "-X": self.__look_in_direction(Direction.LEFT, return_type),
+                "-Y": self.__look_in_direction(Direction.DOWN, return_type),
+                "+Y": self.__look_in_direction(Direction.UP, return_type)
+            }
