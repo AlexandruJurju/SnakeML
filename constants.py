@@ -8,3 +8,18 @@ COLOR_SNAKE = (0, 128, 255)
 COLOR_APPLE = (199, 55, 47)
 
 MAX_FPS = 10
+
+
+class Direction(Enum):
+    UP = [-1, 0]
+    DOWN = [1, 0]
+    LEFT = [0, -1]
+    RIGHT = [0, 1]
+    QUADRANT1 = [-1, 1]
+    QUADRANT2 = [1, 1]
+    QUADRANT3 = [1, -1]
+    QUADRANT4 = [-1, -1]
+
+
+MAIN_DIRECTIONS = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
+ALL_DIRECTIONS = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT, Direction.QUADRANT1, Direction.QUADRANT2, Direction.QUADRANT3, Direction.QUADRANT4]

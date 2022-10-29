@@ -1,3 +1,6 @@
+from constants import Direction
+
+
 class Snake:
-    def __init__(self, size: int) -> None:
-        self.size = size
+    def __init__(self) -> None:
+        self.body = []
