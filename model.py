@@ -1,3 +1,4 @@
+import math
 import random
 from typing import Tuple, List
 
@@ -87,3 +88,40 @@ class Model:
 
         for piece in self.snake.body:
             self.board[piece[0], piece[1]] = "S"
+
+    def look_in_direction(self, direction: Direction, return_type: str) -> {}:
+        apple_distance = np.inf
+        segment_distance = np.inf
+
+        apple_coord = None
+        segment_coord = None
+
+        head = self.snake.body[0]
+        start = [head[0] + direction.value[0], head[1] + direction.value[1]]
+
+        apple_found = False
+        segment_found = False
+        while self.board[start[0]][start[1]] != "W":
+            if self.board[start[0]][start[1]] == "A" and apple_found == False:
+                apple_distance = math.dist(head, start)
+                apple_coord = start
+                apple_found = True
+            elif self.board[start[0]][start[1]] == "S" and segment_found == False:
+                segment_distance = math.dist(head, start)
+                segment_coord = start
+                segment_found = True
+            start = [start[0] + direction.value[0], start[1] + direction.value[1]]
+
+        wall_distance = math.dist(head, start)
+        wall_coord = start
+
+        if return_type == "boolean":
+            apple_boolean = 1.0 if apple_distance != np.inf else 0.0
+            segment_boolean = 1.0 if segment_distance != np.inf else 0.0
+
+            vision = {
+                "W": [wall_coord, 1 / wall_distance],
+                "A": [apple_coord, apple_boolean],
+                "S": [segment_coord, segment_boolean]
+            }
+            return vision

@@ -53,6 +53,7 @@ class Game:
 
             print(self.model.board)
             print(self.model.snake.body)
+            print(self.model.look_in_direction(Direction.UP, "boolean"))
 
             pygame.display.update()
             self.fps_clock.tick(MAX_FPS)
