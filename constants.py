@@ -9,7 +9,7 @@ COLOR_SNAKE_HEAD = (64, 64, 255)
 COLOR_APPLE = (199, 55, 47)
 COLOR_SQUARE_DELIMITER = (64, 64, 64)
 
-MAX_FPS = 1
+MAX_FPS = 0.0001
 
 OFFSET_BOARD_X = 50
 OFFSET_BOARD_Y = 50
@@ -20,12 +20,11 @@ class Direction(Enum):
     DOWN = [1, 0]
     LEFT = [0, -1]
     RIGHT = [0, 1]
-    QUADRANT1 = [-1, 1]
-    QUADRANT2 = [1, 1]
-    QUADRANT3 = [1, -1]
-    QUADRANT4 = [-1, -1]
+    Q1 = [-1, 1]
+    Q2 = [1, 1]
+    Q3 = [1, -1]
+    Q4 = [-1, -1]
 
 
 MAIN_DIRECTIONS = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
-ALL_DIRECTIONS = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT, Direction.QUADRANT1, Direction.QUADRANT2, Direction.QUADRANT3,
-                  Direction.QUADRANT4]
+ALL_DIRECTIONS = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT, Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]

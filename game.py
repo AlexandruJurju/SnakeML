@@ -14,7 +14,8 @@ class Game:
         self.model = model
 
     def __draw_board(self):
-        # use y and x for index instead of x and y
+        # use y,x for index in board instead of x,y because of changed logic
+        # x is line y is column ; drawing x is column and y is line
         for x in range(self.model.size):
             for y in range(self.model.size):
                 x_position = x * SQUARE_SIZE + OFFSET_BOARD_X
@@ -28,11 +29,10 @@ class Game:
                     case "A":
                         pygame.draw.rect(self.window, COLOR_APPLE, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
 
+                # draw snake head using another color
                 head = self.model.snake.body[0]
                 pygame.draw.rect(self.window, COLOR_SNAKE_HEAD,
-                                 pygame.Rect(head[1] * SQUARE_SIZE + OFFSET_BOARD_X,
-                                             head[0] * SQUARE_SIZE + OFFSET_BOARD_Y,
-                                             SQUARE_SIZE, SQUARE_SIZE))
+                                 pygame.Rect(head[1] * SQUARE_SIZE + OFFSET_BOARD_X, head[0] * SQUARE_SIZE + OFFSET_BOARD_Y, SQUARE_SIZE, SQUARE_SIZE))
 
                 # draw lines between squares
                 pygame.draw.rect(self.window, COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE), width=1)
@@ -54,17 +54,20 @@ class Game:
             line_end_x = self.model.snake.body[0][1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X
             line_end_y = self.model.snake.body[0][0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y
 
+            # draw line form snake head until wall block
             pygame.draw.line(self.window, COLOR_APPLE,
                              ((vision_lines[line]["W"][0][1]) * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
                               (vision_lines[line]["W"][0][0]) * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
                              (line_end_x, line_end_y), width=1)
 
+            # draw another line from snake head to first segment found
             if vision_lines[line]["S"][0] is not None:
                 pygame.draw.line(self.window, (255, 0, 0),
                                  (vision_lines[line]["S"][0][1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
                                   vision_lines[line]["S"][0][0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
                                  (line_end_x, line_end_y), width=5)
 
+            # draw another line from snake to apple if apple is found
             if vision_lines[line]["A"][0] is not None:
                 pygame.draw.line(self.window, (0, 255, 0),
                                  (vision_lines[line]["A"][0][1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,

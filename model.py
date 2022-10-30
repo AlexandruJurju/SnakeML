@@ -133,6 +133,15 @@ class Model:
                 "A": [apple_coord, apple_boolean],
                 "S": [segment_coord, segment_boolean]
             }
+
+            return vision
+        elif return_type == "distance":
+            vision = {
+                "W": [wall_coord, 1 / wall_distance],
+                "A": [apple_coord, 1 / apple_distance],
+                "S": [segment_coord, 1 / segment_distance]
+            }
+
             return vision
 
     def get_vision_lines(self, vision_line_number: int, return_type: str) -> {}:
@@ -143,10 +152,10 @@ class Model:
                 "-X": self.__look_in_direction(Direction.LEFT, return_type),
                 "-Y": self.__look_in_direction(Direction.DOWN, return_type),
                 "+Y": self.__look_in_direction(Direction.UP, return_type),
-                "Q1": self.__look_in_direction(Direction.QUADRANT1, return_type),
-                "Q2": self.__look_in_direction(Direction.QUADRANT2, return_type),
-                "Q3": self.__look_in_direction(Direction.QUADRANT3, return_type),
-                "Q4": self.__look_in_direction(Direction.QUADRANT4, return_type)
+                "Q1": self.__look_in_direction(Direction.Q1, return_type),
+                "Q2": self.__look_in_direction(Direction.Q2, return_type),
+                "Q3": self.__look_in_direction(Direction.Q3, return_type),
+                "Q4": self.__look_in_direction(Direction.Q4, return_type)
             }
         else:
             return {
@@ -160,14 +169,20 @@ class Model:
         head = self.snake.body[0]
         valid_directions = self.__get_valid_direction_for_block(head)
 
+        # if block has no valid directions then snake is dead, return false
         if len(valid_directions) == 0:
             return False
 
         direction = random.choice(valid_directions)
 
+        # new head is the next block in the chosen direction
         new_head = [head[0] + direction.value[0], head[1] + direction.value[1]]
+
+        # insert new head at the start of the list for moving other segments
         self.snake.body.insert(0, new_head)
 
+        # if snake doesn't find an apple then all segments except last are moved one position forward, old_head old1 old2 -> new_head old_head old1 ; same as moving
+        # if snake finds an apple then the last segments is not removed when moving
         if self.board[new_head[0], new_head[1]] == "A":
             self.__update_board_from_snake()
             self.__place_new_apple()
