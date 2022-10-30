@@ -63,7 +63,6 @@ class Model:
 
         return valid_directions
 
-    # TODO make sure there are no duplicates
     def __create_random_snake(self, snake_size: int) -> None:
         # head is the first block of the snake, the block where the search starts
         head = self.__get_random_empty_block()
@@ -80,7 +79,7 @@ class Model:
             new_block = [head[0] + random_direction.value[0], head[1] + random_direction.value[1]]
 
             # redundant check if new position is empty and check if piece is already in body
-            if self.board[new_block[0], new_block[1]] == "X":
+            if self.board[new_block[0], new_block[1]] == "X" and (new_block not in self.snake.body):
                 self.snake.body.append(new_block)
                 head = new_block
 
