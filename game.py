@@ -12,6 +12,7 @@ class Game:
 
         self.running = True
         self.model = model
+        self.direction = Direction.UP
 
     def __draw_board(self):
         # use y,x for index in board instead of x,y because of changed logic
@@ -46,8 +47,8 @@ class Game:
             line_label = font.render(line, True, COLOR_BLACK)
 
             # render vision line text at wall position
-            self.window.blit(line_label, [vision_lines[line]["W"][0][1] * SQUARE_SIZE + OFFSET_BOARD_X,
-                                          vision_lines[line]["W"][0][0] * SQUARE_SIZE + OFFSET_BOARD_Y])
+            self.window.blit(line_label, [vision_lines[line].wall_coord[1] * SQUARE_SIZE + OFFSET_BOARD_X,
+                                          vision_lines[line].wall_coord[0] * SQUARE_SIZE + OFFSET_BOARD_Y])
 
             # draw line from head to wall, draw before body and apple lines
             # drawing uses SQUARE_SIZE//2 so that lines go through the middle of the squares
@@ -56,22 +57,22 @@ class Game:
 
             # draw line form snake head until wall block
             pygame.draw.line(self.window, COLOR_APPLE,
-                             ((vision_lines[line]["W"][0][1]) * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
-                              (vision_lines[line]["W"][0][0]) * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
+                             ((vision_lines[line].wall_coord[1]) * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
+                              (vision_lines[line].wall_coord[0]) * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
                              (line_end_x, line_end_y), width=1)
 
             # draw another line from snake head to first segment found
-            if vision_lines[line]["S"][0] is not None:
-                pygame.draw.line(self.window, (255, 0, 0),
-                                 (vision_lines[line]["S"][0][1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
-                                  vision_lines[line]["S"][0][0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
+            if vision_lines[line].segment_coord is not None:
+                pygame.draw.line(self.window, COLOR_RED,
+                                 (vision_lines[line].segment_coord[1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
+                                  vision_lines[line].segment_coord[0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
                                  (line_end_x, line_end_y), width=5)
 
             # draw another line from snake to apple if apple is found
-            if vision_lines[line]["A"][0] is not None:
-                pygame.draw.line(self.window, (0, 255, 0),
-                                 (vision_lines[line]["A"][0][1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
-                                  vision_lines[line]["A"][0][0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
+            if vision_lines[line].apple_coord is not None:
+                pygame.draw.line(self.window, COLOR_GREEN,
+                                 (vision_lines[line].apple_coord[1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
+                                  vision_lines[line].apple_coord[0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
                                  (line_end_x, line_end_y), width=5)
 
     def __manage_key_inputs(self):
@@ -80,21 +81,24 @@ class Game:
                 match event.key:
                     case pygame.K_ESCAPE:
                         self.running = False
+                    case pygame.K_UP:
+                        self.direction = Direction.UP
+                    case pygame.K_DOWN:
+                        self.direction = Direction.DOWN
+                    case pygame.K_LEFT:
+                        self.direction = Direction.LEFT
+                    case pygame.K_RIGHT:
+                        self.direction = Direction.RIGHT
 
     def run(self) -> None:
         while self.running:
             self.__manage_key_inputs()
             self.window.fill(COLOR_BACKGROUND)
 
+            self.running = self.model.move_in_direction(self.direction)
             self.__draw_board()
             self.__draw_vision_lines()
-
-            nn_input = []
-            vision_lines = self.model.get_vision_lines(8, "boolean")
-            for line in vision_lines:
-                print(line)
-
-            self.running = self.model.move_random_direction()
+            self.model.model_parameters_to_nn_input_form()
 
             pygame.display.update()
             self.fps_clock.tick(MAX_FPS)

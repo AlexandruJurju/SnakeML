@@ -8,6 +8,16 @@ from constants import MAIN_DIRECTIONS, Direction
 from snake import Snake
 
 
+class VisionLine:
+    def __init__(self, wall_coord, wall_distance, apple_coord, apple_distance, segment_coord, segment_distance):
+        self.wall_coord = wall_coord
+        self.wall_distance = wall_distance
+        self.apple_coord = apple_coord
+        self.apple_distance = apple_distance
+        self.segment_coord = segment_coord
+        self.segment_distance = segment_distance
+
+
 class Model:
     def __init__(self, board_size: int, snake_size: int):
         self.size = board_size + 2
@@ -101,48 +111,51 @@ class Model:
         # search starts at one block in the given direction
         # otherwise head is also check in the loop
         head = self.snake.body[0]
-        start = [head[0] + direction.value[0], head[1] + direction.value[1]]
+        current_block = [head[0] + direction.value[0], head[1] + direction.value[1]]
 
         # booleans are used to store the first value found
         apple_found = False
         segment_found = False
 
+        total_distance = 0.0
         # loop are blocks in the given direction and store position and coordinates of apple and snake segments
-        while self.board[start[0]][start[1]] != "W":
-            if self.board[start[0]][start[1]] == "A" and apple_found == False:
-                apple_distance = math.dist(head, start)
-                apple_coord = start
+        while self.board[current_block[0], current_block[1]] != "W":
+            if self.board[current_block[0], current_block[1]] == "A" and apple_found == False:
+                apple_distance = math.dist(head, current_block)
+                apple_coord = current_block
                 apple_found = True
-            elif self.board[start[0]][start[1]] == "S" and segment_found == False:
-                segment_distance = math.dist(head, start)
-                segment_coord = start
+            elif self.board[current_block[0], current_block[1]] == "S" and segment_found == False:
+                segment_distance = math.dist(head, current_block)
+                segment_coord = current_block
                 segment_found = True
-            start = [start[0] + direction.value[0], start[1] + direction.value[1]]
+            total_distance += 1
+            current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
 
-        # at the end of the loop start block is at the position of a wall
-        wall_distance = math.dist(head, start)
-        wall_coord = start
+        wall_distance = math.dist(head, current_block)
+        wall_coord = current_block
 
         if return_type == "boolean":
             apple_boolean = 1.0 if apple_found else 0.0
             segment_boolean = 1.0 if segment_found else 0.0
+            wall_distance_output = 1 / wall_distance
 
-            # use 1/wall distance to get values between 0 and 1 , better for neural network
             vision = {
-                "W": [wall_coord, 1 / wall_distance],
+                "W": [wall_coord, wall_distance_output],
                 "A": [apple_coord, apple_boolean],
                 "S": [segment_coord, segment_boolean]
             }
+            return VisionLine(wall_coord, 1 / wall_distance, apple_coord, apple_boolean, segment_coord, segment_boolean)
 
-            return vision
         elif return_type == "distance":
+            wall_distance_output = 1 / wall_distance
+            apple_distance_output = 1 / apple_distance
+            segment_distance_output = 1 / segment_distance
             vision = {
-                "W": [wall_coord, 1 / wall_distance],
-                "A": [apple_coord, 1 / apple_distance],
-                "S": [segment_coord, 1 / segment_distance]
+                "W": [wall_coord, 1 / wall_distance_output],
+                "A": [apple_coord, 1 / apple_distance_output],
+                "S": [segment_coord, 1 / segment_distance_output]
             }
-
-            return vision
+            return VisionLine(wall_coord, 1 / wall_distance, apple_coord, 1 / apple_distance, segment_coord, 1 / segment_distance)
 
     def get_vision_lines(self, vision_line_number: int, return_type: str) -> {}:
         if vision_line_number == 8:
@@ -193,7 +206,8 @@ class Model:
         return True
 
     def move_in_direction(self, new_direction: Direction) -> bool:
-        next_head = [self.snake.body[0] + new_direction.value[0], self.snake.body[0] + new_direction.value[1]]
+        head = self.snake.body[0]
+        next_head = [head[0] + new_direction.value[0], head[1] + new_direction.value[1]]
 
         new_head_value = self.board[next_head[0], next_head[1]]
         if (new_head_value == "W") or (new_head_value == "S"):
@@ -212,6 +226,11 @@ class Model:
 
     def model_parameters_to_nn_input_form(self):
         nn_input = []
-        for line in self.snake.vision_lines:
-            for value in self.snake.vision_lines[line]:
-                nn_input.append(self.snake.vision_lines[line][value][1])
+        vision_lines = self.get_vision_lines(8, "boolean")
+        # for line in vision_lines:
+        #     nn_input.append(vision_lines[line].wall_distance)
+        #     nn_input.append(vision_lines[line].apple_distance)
+        #     nn_input.append(vision_lines[line].segment_distance)
+
+        nn_input.append(vision_lines["+X"].wall_distance)
+        print(nn_input)

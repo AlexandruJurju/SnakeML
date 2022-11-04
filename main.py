@@ -12,5 +12,6 @@ if __name__ == "__main__":
     }
 
     nn = NeuralNetwork(nn_config, relu, softmax)
+
     display = Game(Model(10, 3))
     display.run()
