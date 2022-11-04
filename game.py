@@ -83,14 +83,18 @@ class Game:
 
     def run(self) -> None:
         while self.running:
-            self.window.fill(COLOR_BLACK)
+            self.__manage_key_inputs()
+            self.window.fill(COLOR_BACKGROUND)
 
             self.__draw_board()
             self.__draw_vision_lines()
-            print(self.model.board)
-            print(self.model.snake.body)
+
+            nn_input = []
+            vision_lines = self.model.get_vision_lines(8, "boolean")
+            for line in vision_lines:
+                print(line)
+
             self.running = self.model.move_random_direction()
-            self.__manage_key_inputs()
 
             pygame.display.update()
             self.fps_clock.tick(MAX_FPS)

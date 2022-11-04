@@ -145,7 +145,6 @@ class Model:
             return vision
 
     def get_vision_lines(self, vision_line_number: int, return_type: str) -> {}:
-
         if vision_line_number == 8:
             return {
                 "+X": self.__look_in_direction(Direction.RIGHT, return_type),
@@ -192,3 +191,27 @@ class Model:
         self.__update_board_from_snake()
 
         return True
+
+    def move_in_direction(self, new_direction: Direction) -> bool:
+        next_head = [self.snake.body[0] + new_direction.value[0], self.snake.body[0] + new_direction.value[1]]
+
+        new_head_value = self.board[next_head[0], next_head[1]]
+        if (new_head_value == "W") or (new_head_value == "S"):
+            return False
+
+        self.snake.body.insert(0, next_head)
+
+        if new_head_value == "A":
+            self.__update_board_from_snake()
+            self.__place_new_apple()
+        else:
+            self.snake.body = self.snake.body[:-1]
+            self.__update_board_from_snake()
+
+        return True
+
+    def model_parameters_to_nn_input_form(self):
+        nn_input = []
+        for line in self.snake.vision_lines:
+            for value in self.snake.vision_lines[line]:
+                nn_input.append(self.snake.vision_lines[line][value][1])
