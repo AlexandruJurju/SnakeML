@@ -241,5 +241,4 @@ class Model:
         nn_input = self.get_parameters_in_nn_input_form()
         output = self.snake.brain.feed_forward(nn_input)
         next_direction = MAIN_DIRECTIONS[list(output).index(max(list(output)))]
-        print(next_direction)
         return next_direction
