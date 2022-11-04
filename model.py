@@ -2,10 +2,9 @@ import math
 import random
 from typing import Tuple, List
 
-import numpy as np
-
 from constants import MAIN_DIRECTIONS, Direction
 from snake import Snake
+from neural_network_dictionary import *
 
 
 class VisionLine:
@@ -19,10 +18,10 @@ class VisionLine:
 
 
 class Model:
-    def __init__(self, board_size: int, snake_size: int):
+    def __init__(self, board_size: int, snake_size: int, neural_net: NeuralNetwork):
         self.size = board_size + 2
         self.board = np.empty((self.size, self.size), dtype=object)
-        self.snake = Snake()
+        self.snake = Snake(neural_net)
 
         self.__make_board()
         self.__place_new_apple()
@@ -117,7 +116,6 @@ class Model:
         apple_found = False
         segment_found = False
 
-        total_distance = 0.0
         # loop are blocks in the given direction and store position and coordinates of apple and snake segments
         while self.board[current_block[0], current_block[1]] != "W":
             if self.board[current_block[0], current_block[1]] == "A" and apple_found == False:
@@ -128,7 +126,6 @@ class Model:
                 segment_distance = math.dist(head, current_block)
                 segment_coord = current_block
                 segment_found = True
-            total_distance += 1
             current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
 
         wall_distance = math.dist(head, current_block)
@@ -224,13 +221,25 @@ class Model:
 
         return True
 
-    def model_parameters_to_nn_input_form(self):
+    def get_parameters_in_nn_input_form(self) -> np.ndarray:
         nn_input = []
         vision_lines = self.get_vision_lines(8, "boolean")
-        # for line in vision_lines:
-        #     nn_input.append(vision_lines[line].wall_distance)
-        #     nn_input.append(vision_lines[line].apple_distance)
-        #     nn_input.append(vision_lines[line].segment_distance)
+        for line in vision_lines:
+            nn_input.append(vision_lines[line].wall_distance)
+            nn_input.append(vision_lines[line].apple_distance)
+            nn_input.append(vision_lines[line].segment_distance)
 
-        nn_input.append(vision_lines["+X"].wall_distance)
-        print(nn_input)
+        for direction in MAIN_DIRECTIONS:
+            if self.snake.direction == direction:
+                nn_input.append(1.0)
+            else:
+                nn_input.append(0.0)
+
+        return np.reshape(nn_input, (len(nn_input), 1))
+
+    def get_direction_from_nn_output(self):
+        nn_input = self.get_parameters_in_nn_input_form()
+        output = self.snake.brain.feed_forward(nn_input)
+        next_direction = MAIN_DIRECTIONS[list(output).index(max(list(output)))]
+        print(next_direction)
+        return next_direction

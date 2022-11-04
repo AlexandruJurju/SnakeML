@@ -4,14 +4,19 @@ from model import *
 
 
 class Game:
-    def __init__(self, model: Model):
+    def __init__(self, model_size: int, snake_size: int):
         pygame.init()
         self.window = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Snake Game")
         self.fps_clock = pygame.time.Clock()
 
+        nn_config = {
+            "L1": [28, 16],
+            "L2": [16, 4]
+        }
+
         self.running = True
-        self.model = model
+        self.model = Model(model_size, snake_size, NeuralNetwork(nn_config))
         self.direction = Direction.UP
 
     def __draw_board(self):
@@ -95,10 +100,13 @@ class Game:
             self.__manage_key_inputs()
             self.window.fill(COLOR_BACKGROUND)
 
-            self.running = self.model.move_in_direction(self.direction)
-            self.__draw_board()
-            self.__draw_vision_lines()
-            self.model.model_parameters_to_nn_input_form()
+            next_direction = self.model.get_direction_from_nn_output()
+            self.running = self.model.move_in_direction(next_direction)
 
-            pygame.display.update()
-            self.fps_clock.tick(MAX_FPS)
+            if self.running:
+                self.__draw_board()
+                self.__draw_vision_lines()
+                self.model.get_parameters_in_nn_input_form()
+
+                pygame.display.update()
+                self.fps_clock.tick(MAX_FPS)
