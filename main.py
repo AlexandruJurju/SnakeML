@@ -1,7 +1,5 @@
-from model import *
 from game import *
-from neural_network_dictionary import *
-from neural_network_utils import *
+from Neural.keras_wannabe_classes import *
 
 if __name__ == "__main__":
     # 8 vision lines each with 3 values = 24
@@ -9,3 +7,8 @@ if __name__ == "__main__":
 
     display = Game(10, 3)
     display.run()
+
+    network = [
+        Dense(28, 16),
+
+    ]

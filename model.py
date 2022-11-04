@@ -4,7 +4,7 @@ from typing import Tuple, List
 
 from constants import MAIN_DIRECTIONS, Direction
 from snake import Snake
-from neural_network_dictionary import *
+from Neural.neural_network_dictionary import *
 
 
 class VisionLine:
@@ -240,5 +240,7 @@ class Model:
     def get_direction_from_nn_output(self):
         nn_input = self.get_parameters_in_nn_input_form()
         output = self.snake.brain.feed_forward(nn_input)
+        print(output)
+        print()
         next_direction = MAIN_DIRECTIONS[list(output).index(max(list(output)))]
         return next_direction

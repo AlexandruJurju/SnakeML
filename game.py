@@ -106,7 +106,6 @@ class Game:
             if self.running:
                 self.__draw_board()
                 self.__draw_vision_lines()
-                self.model.get_parameters_in_nn_input_form()
 
                 pygame.display.update()
                 self.fps_clock.tick(MAX_FPS)

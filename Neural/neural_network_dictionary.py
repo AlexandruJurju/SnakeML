@@ -1,5 +1,5 @@
 import numpy as np
-from neural_network_utils import *
+from Neural.neural_network_utils import *
 
 
 class NeuralNetwork:

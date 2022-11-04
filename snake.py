@@ -1,5 +1,4 @@
-from constants import Direction
-from neural_network_dictionary import *
+from Neural.neural_network_dictionary import *
 
 
 class Snake:
