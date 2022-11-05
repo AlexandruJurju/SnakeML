@@ -19,7 +19,7 @@ class NeuralNetwork:
             self.weights[layer] = np.random.uniform(-1, 1, (self.architecture[layer][1], self.architecture[layer][0]))
             self.biases[layer] = np.random.uniform(-1, 1, (self.architecture[layer][1], 1))
 
-    def feed_forward(self, inputs: np.ndarray) -> np.ndarray:
+    def forward(self, inputs: np.ndarray) -> np.ndarray:
         self.input = inputs
         for i, layer in enumerate(self.architecture):
             layer_weights = self.weights[layer]
@@ -35,7 +35,7 @@ class NeuralNetwork:
                 self.outputs[layer] = output
                 return output
 
-    def feed_back(self, output_gradient, learning_rate) -> np.ndarray:
+    def backward(self, output_gradient, learning_rate) -> np.ndarray:
         for i, layer in reversed(list(enumerate(self.architecture))):
             layer_weight_gradient = np.dot(output_gradient, np.transpose(self.input))
             self.weights[layer] -= learning_rate * layer_weight_gradient

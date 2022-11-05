@@ -1,4 +1,5 @@
 import pygame
+
 from constants import *
 from model import *
 
@@ -10,13 +11,14 @@ class Game:
         pygame.display.set_caption("Snake Game")
         self.fps_clock = pygame.time.Clock()
 
-        nn_config = {
-            "L1": [28, 16],
-            "L2": [16, 4]
-        }
+        net = KerasNetwork()
+        net.add(Dense(28, 16))
+        net.add(Activation(relu, relu))
+        net.add(Dense(16, 4))
+        net.add(Activation(softmax, softmax))
 
         self.running = True
-        self.model = Model(model_size, snake_size, NeuralNetwork(nn_config))
+        self.model = Model(model_size, snake_size, net)
         self.direction = Direction.UP
 
     def __draw_board(self):

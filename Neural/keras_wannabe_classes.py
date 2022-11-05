@@ -1,5 +1,5 @@
 import numpy as np
-from neural_network_utils import *
+from Neural.neural_network_utils import *
 
 
 class Layer:
@@ -24,23 +24,26 @@ class Dense(Layer):
         self.inputs = inputs
         return np.dot(self.weights, self.inputs) + self.bias
 
-    def backward(self, output_gradient, learning_rate):
-        weights_gradient = np.dot(output_gradient, np.transpose(self.inputs))
-        input_gradient = np.dot(self.weights.T, output_gradient)
-        self.weights -= learning_rate * weights_gradient
-        self.bias -= learning_rate * output_gradient
-        return input_gradient
+    def backward(self, output_error, learning_rate):
+        input_error = np.dot(output_error, self.weights.T)
+        weights_error = np.dot(self.inputs.T, output_error)
+
+        self.weights -= learning_rate * weights_error
+        self.bias -= learning_rate * output_error
+
+        return input_error
 
 
 class Activation(Layer):
-    def __init__(self, activation, activation_derivated):
+    def __init__(self, activation, activation_prime):
         super().__init__()
         self.activation = activation
-        self.activation_derivated = activation_derivated
+        self.activation_derivated = activation_prime
 
     def forward(self, inputs):
         self.inputs = inputs
-        return self.activation(inputs)
+        self.output = self.activation(inputs)
+        return self.output
 
-    def backward(self, output_gradient, learning_rate):
-        return np.multiply(output_gradient, self.activation_derivated(self.inputs))
+    def backward(self, output_error, learning_rate):
+        return np.multiply(self.activation_derivated(self.inputs), output_error)
