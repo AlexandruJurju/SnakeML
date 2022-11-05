@@ -240,7 +240,10 @@ class Model:
     def get_direction_from_nn_output(self):
         nn_input = self.get_parameters_in_nn_input_form()
         output = self.snake.brain.feed_forward(nn_input)
-        print(output)
+
+        for i, val in enumerate(output):
+            print(str(MAIN_DIRECTIONS[i]) + " " + str(val))
         print()
+
         next_direction = MAIN_DIRECTIONS[list(output).index(max(list(output)))]
         return next_direction
