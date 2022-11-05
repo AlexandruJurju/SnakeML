@@ -1,5 +1,4 @@
 from game import *
-from Neural.keras_wannabe_classes import *
 from Neural.keras_wannabe import *
 
 if __name__ == "__main__":

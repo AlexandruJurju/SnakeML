@@ -2,6 +2,7 @@ import pygame
 
 from constants import *
 from model import *
+from Neural.neural_network_utils import *
 
 
 class Game:
