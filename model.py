@@ -202,6 +202,7 @@ class Model:
 
         return True
 
+    # TODO have only 3 moves Left, Right, Forward
     def move_in_direction(self, new_direction: Direction) -> bool:
         head = self.snake.body[0]
         next_head = [head[0] + new_direction.value[0], head[1] + new_direction.value[1]]
