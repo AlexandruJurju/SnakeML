@@ -238,13 +238,13 @@ class Model:
 
         return np.reshape(nn_input, (len(nn_input), 1))
 
-    def get_direction_from_nn_output(self):
+    def get_nn_output(self) -> np.ndarray:
+        nn_input = self.get_parameters_in_nn_input_form()
+        return self.snake.brain.feed_forward(nn_input)
+
+    def get_direction_from_nn_output(self) -> Direction:
         nn_input = self.get_parameters_in_nn_input_form()
         output = self.snake.brain.feed_forward(nn_input)
-
-        for i, val in enumerate(output):
-            print(str(MAIN_DIRECTIONS[i]) + " " + str(val))
-        print()
 
         next_direction = MAIN_DIRECTIONS[list(output).index(max(list(output)))]
         return next_direction

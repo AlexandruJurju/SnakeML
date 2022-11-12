@@ -3,7 +3,7 @@ import numpy as np
 
 class Layer:
     def __init__(self):
-        self.inputs = None
+        self.inputs: int
         self.output = None
 
     def forward(self, inputs):
@@ -16,6 +16,8 @@ class Layer:
 class Dense(Layer):
     def __init__(self, input_size, output_size):
         super().__init__()
+        self.input_size = input_size
+        self.output_size = output_size
         self.weights = np.random.uniform(-1, 1, (output_size, input_size))
         self.bias = np.random.uniform(-1, 1, (output_size, 1))
 
