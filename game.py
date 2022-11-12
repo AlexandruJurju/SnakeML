@@ -24,18 +24,16 @@ class Game:
 
     def __draw_network(self):
         nn_font = pygame.font.SysFont("arial", 15)
-        board_end = SQUARE_SIZE * self.model.size + OFFSET_BOARD_X
 
-        input_label_offset_x = board_end + 50
+        input_label_offset_x = 600
         input_label_offset_y = 20
-        label_distance_between = 30
+        label_height_between = 25
 
-        neuron_width_between = 200
-        neuron_height_between = 30
+        neuron_width_between = 100
+        neuron_height_between = label_height_between
         neuron_offset_x = input_label_offset_x + 50
         neuron_offset_y = 20
         neuron_radius = 10
-        nn_inputs = self.model.get_parameters_in_nn_input_form()
 
         # for drawing vision lines names next to input neurons
         count = 0
@@ -43,7 +41,7 @@ class Game:
         for line in self.model.get_vision_lines(8, "boolean"):
             for param in param_type:
                 line_label = nn_font.render(line + param, True, (255, 255, 255))
-                self.window.blit(line_label, [input_label_offset_x, label_distance_between * count + input_label_offset_y - 10])
+                self.window.blit(line_label, [input_label_offset_x, label_height_between * count + input_label_offset_y - 10])
                 count += 1
 
         # max distance is used to center the neurons in the next layers, formula for new yOffset is (yLenghtPrevius - yLenghtCurrent) / 2
@@ -94,6 +92,9 @@ class Game:
             for j in range(layer.output_size):
                 # if current layer is the last layer in NN then neurons are colored using NN output results
                 if i == len(dense_layers) - 1:
+                    outputs[np.where(outputs != np.max(outputs))] = 0
+                    outputs[np.where(outputs == np.max(outputs))] = 1
+
                     pygame.draw.circle(self.window, (0, 255 * outputs[j], 0), (neuron_offset_x, neuron_height_between * j + neuron_offset_y + hidden_offset_y),
                                        neuron_radius - 1)
                     pygame.draw.circle(self.window, COLOR_WHITE, (neuron_offset_x, neuron_height_between * j + neuron_offset_y + hidden_offset_y), neuron_radius - 1, width=1)
@@ -109,6 +110,8 @@ class Game:
                             direction = "LEFT"
                         case 3:
                             direction = "RIGHT"
+                        case _:
+                            direction = None
 
                     line_label = nn_font.render(direction, True, (255, 255, 255))
                     self.window.blit(line_label, [neuron_offset_x + 10, neuron_height_between * j + neuron_offset_y + hidden_offset_y - 5])
@@ -126,24 +129,24 @@ class Game:
             neuron_offset_x += neuron_width_between
 
             # self.__draw_colored_lines_between_neurons(layer, line_end, line_start)
-            self.__draw_lines_between_neurons(line_end, line_start)
+            # self.__draw_lines_between_neurons(line_end, line_start)
 
             line_start = line_end
             line_end = []
 
     def __draw_lines_between_neurons(self, line_end, line_start):
-        for k in range(len(line_end)):
-            for l in range(len(line_start)):
-                pygame.draw.line(self.window, COLOR_WHITE, line_start[l], line_end[k], width=1)
+        for i in range(len(line_end)):
+            for j in range(len(line_start)):
+                pygame.draw.line(self.window, COLOR_WHITE, line_start[j], line_end[i], width=1)
 
     def __draw_colored_lines_between_neurons(self, layer, line_end, line_start):
-        for k in range(len(line_end)):
-            for l in range(len(line_start)):
-                if layer.weights[k][l] < 0:
-                    color = (-(255 * layer.weights[k][l]), 0, 0)
+        for i in range(len(line_end)):
+            for j in range(len(line_start)):
+                if layer.weights[i][j] < 0:
+                    color = (-(255 * layer.weights[i][j]), 0, 0)
                 else:
-                    color = (0, 100 * layer.weights[k][l], 255 * layer.weights[k][l])
-                pygame.draw.line(self.window, color, line_start[l], line_end[k], width=1)
+                    color = (0, 100 * layer.weights[i][j], 255 * layer.weights[i][j])
+                pygame.draw.line(self.window, color, line_start[j], line_end[i], width=1)
 
     def __draw_board(self):
         # use y,x for index in board instead of x,y because of changed logic
@@ -226,10 +229,10 @@ class Game:
             self.__manage_key_inputs()
             self.window.fill(COLOR_BACKGROUND)
 
-            # next_direction = self.model.get_direction_from_nn_output()
-            # self.running = self.model.move_in_direction(next_direction)
+            next_direction = self.model.get_direction_from_nn_output()
+            self.running = self.model.move_in_direction(next_direction)
 
-            self.model.move_random_direction()
+            # self.model.move_random_direction()
 
             if self.running:
                 self.__draw_board()

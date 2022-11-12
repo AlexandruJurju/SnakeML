@@ -16,6 +16,7 @@ class Layer:
 class Dense(Layer):
     def __init__(self, input_size, output_size):
         super().__init__()
+        self.inputs = None
         self.input_size = input_size
         self.output_size = output_size
         self.weights = np.random.uniform(-1, 1, (output_size, input_size))
@@ -38,6 +39,7 @@ class Dense(Layer):
 class Activation(Layer):
     def __init__(self, activation, activation_prime):
         super().__init__()
+        self.inputs = None
         self.activation = activation
         self.activation_derivated = activation_prime
 
