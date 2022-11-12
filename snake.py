@@ -1,4 +1,4 @@
-from Neural.keras_wannabe import *
+from Neural.list_neural_network import *
 
 
 class Snake:

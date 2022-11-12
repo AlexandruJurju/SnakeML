@@ -232,12 +232,16 @@ class Game:
             next_direction = self.model.get_direction_from_nn_output()
             self.running = self.model.move_in_direction(next_direction)
 
+            print(str(next_direction) + " " + str(self.running))
             # self.model.move_random_direction()
 
             if self.running:
                 self.__draw_board()
                 # self.__draw_vision_lines()
                 self.__draw_network()
+            else:
+                self.running = True
+                self.model.reinit_model()
 
-                pygame.display.update()
-                self.fps_clock.tick(MAX_FPS)
+            pygame.display.update()
+            self.fps_clock.tick(MAX_FPS)

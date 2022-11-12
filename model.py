@@ -2,7 +2,7 @@ import math
 import random
 from typing import Tuple, List
 
-from Neural.keras_wannabe import *
+from Neural.list_neural_network import *
 from constants import MAIN_DIRECTIONS, Direction
 from snake import Snake
 
@@ -19,6 +19,8 @@ class VisionLine:
 
 class Model:
     def __init__(self, board_size: int, snake_size: int, neural_net: KerasNetwork):
+        self.snake_size = snake_size
+
         self.size = board_size + 2
         self.board = np.empty((self.size, self.size), dtype=object)
         self.snake = Snake(neural_net)
@@ -248,3 +250,12 @@ class Model:
 
         next_direction = MAIN_DIRECTIONS[list(output).index(max(list(output)))]
         return next_direction
+
+    def reinit_model(self):
+        self.board = np.empty((self.size, self.size), dtype=object)
+        self.__make_board()
+        self.__place_new_apple()
+        self.snake.body = []
+        self.__create_random_snake(self.snake_size)
+        self.__update_board_from_snake()
+        self.snake.brain.reinit_layers()

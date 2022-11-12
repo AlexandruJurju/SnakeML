@@ -59,6 +59,12 @@ class KerasNetwork:
     def add(self, layer: Layer):
         self.layers.append(layer)
 
+    def reinit_layers(self):
+        for layer in self.layers:
+            if type(layer) is Dense:
+                layer.weights = np.random.uniform(-1, 1, (layer.output_size, layer.input_size))
+                layer.bias = np.random.uniform(-1, 1, (layer.output_size, 1))
+
     def feed_forward(self, inputs) -> np.ndarray:
         nn_input = inputs
         for layer in self.layers:
