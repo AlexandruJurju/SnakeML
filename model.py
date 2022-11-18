@@ -206,6 +206,8 @@ class Model:
 
     # TODO have only 3 moves Left, Right, Forward
     def move_in_direction(self, new_direction: Direction) -> bool:
+        self.snake.direction = new_direction
+
         head = self.snake.body[0]
         next_head = [head[0] + new_direction.value[0], head[1] + new_direction.value[1]]
 
@@ -251,11 +253,44 @@ class Model:
         next_direction = MAIN_DIRECTIONS[list(output).index(max(list(output)))]
         return next_direction
 
+    def get_3_directions(self) -> Direction:
+        nn_input = self.get_parameters_in_nn_input_form()
+        output = self.snake.brain.feed_forward(nn_input)
+
+        direction_index = list(output).index(max(list(output)))
+
+        if direction_index == 0:
+            print("STRAIGHT")
+            return self.snake.direction
+        if direction_index == 1:
+            print("LEFT")
+            match self.snake.direction:
+                case Direction.UP:
+                    return Direction.LEFT
+                case Direction.LEFT:
+                    return Direction.DOWN
+                case Direction.DOWN:
+                    return Direction.RIGHT
+                case Direction.RIGHT:
+                    return Direction.UP
+        if direction_index == 2:
+            print("RIGHT")
+            match self.snake.direction:
+                case Direction.UP:
+                    return Direction.RIGHT
+                case Direction.LEFT:
+                    return Direction.UP
+                case Direction.DOWN:
+                    return Direction.LEFT
+                case Direction.RIGHT:
+                    return Direction.DOWN
+
     def reinit_model(self):
         self.board = np.empty((self.size, self.size), dtype=object)
         self.__make_board()
         self.__place_new_apple()
         self.snake.body = []
+        self.snake.direction = random.choice(MAIN_DIRECTIONS)
         self.__create_random_snake(self.snake_size)
         self.__update_board_from_snake()
         self.snake.brain.reinit_layers()

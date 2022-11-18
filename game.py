@@ -15,7 +15,7 @@ class Game:
         net = KerasNetwork()
         net.add(Dense(28, 16))
         net.add(Activation(relu, relu))
-        net.add(Dense(16, 4))
+        net.add(Dense(16, 3))
         net.add(Activation(softmax, softmax))
 
         self.running = True
@@ -60,6 +60,11 @@ class Game:
         inputs = self.model.get_parameters_in_nn_input_form()
         outputs = self.model.get_nn_output()
 
+        self.draw_neurons(dense_layers, inputs, line_end, line_start, max_y_distance, neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius,
+                          neuron_width_between, nn_font, outputs)
+
+    def draw_neurons(self, dense_layers, inputs, line_end, line_start, max_y_distance, neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius,
+                     neuron_width_between, nn_font, outputs):
         # draw neurons
         for i, layer in enumerate(dense_layers):
             # if it's the first layer, draw neurons using input
@@ -90,7 +95,7 @@ class Game:
             hidden_offset_y = (max_y_distance - current_y_distance) // 2
 
             for j in range(layer.output_size):
-                # if current layer is the last layer in NN then neurons are colored using NN output results
+                # Draw NN final outputs
                 if i == len(dense_layers) - 1:
                     outputs[np.where(outputs != np.max(outputs))] = 0
                     outputs[np.where(outputs == np.max(outputs))] = 1
@@ -103,18 +108,17 @@ class Game:
                     # TODO direction output matches NN output
                     match j:
                         case 0:
-                            direction = "UP"
+                            direction = "STRAIGHT"
                         case 1:
-                            direction = "DOWN"
-                        case 2:
                             direction = "LEFT"
-                        case 3:
+                        case 2:
                             direction = "RIGHT"
                         case _:
                             direction = None
 
                     line_label = nn_font.render(direction, True, (255, 255, 255))
                     self.window.blit(line_label, [neuron_offset_x + 10, neuron_height_between * j + neuron_offset_y + hidden_offset_y - 5])
+                # Draw NN hidden layers outputs
                 else:
                     # hidden neuron activation color
                     if self.model.snake.brain.layers[i + 1].output[j] <= 0:
@@ -229,7 +233,7 @@ class Game:
             self.__manage_key_inputs()
             self.window.fill(COLOR_BACKGROUND)
 
-            next_direction = self.model.get_direction_from_nn_output()
+            next_direction = self.model.get_3_directions()
             self.running = self.model.move_in_direction(next_direction)
 
             print(str(next_direction) + " " + str(self.running))
