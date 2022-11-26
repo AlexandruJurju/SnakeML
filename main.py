@@ -149,8 +149,8 @@ if __name__ == "__main__":
 
     # TODO split in 70% train 30% test
     # TODO make a test loop
-    X = np.reshape(X, (2, 24, 1))
-    Y = np.reshape(Y, (2, 3, 1))
+    X = np.reshape(X, (len(X), 24, 1))
+    Y = np.reshape(Y, (len(Y), 3, 1))
 
     net.train(mse, mse_prime, X, Y, 100, 0.1)
 

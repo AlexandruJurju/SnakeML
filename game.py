@@ -16,13 +16,15 @@ class Game:
         self.model = Model(model_size, snake_size, net)
 
     def run(self) -> None:
+        self.__draw_board()
+
         while self.running:
             self.__manage_key_inputs()
             self.window.fill(COLOR_BACKGROUND)
             # self.model.move_random_direction()
 
             next_direction = self.model.get_neural_network_direction_output_3()
-            self.model.move_in_direction(next_direction)
+            self.running = self.model.move_in_direction(next_direction)
 
             if self.running:
                 self.__draw_board()

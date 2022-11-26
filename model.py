@@ -28,7 +28,7 @@ class Model:
         self.__make_board()
         self.__place_new_apple()
         # self.__create_random_snake(snake_size)
-        self.__place_snake_on_given_locations([[1, 1], [1, 2], [1, 3]])
+        self.__place_snake_on_given_locations([[10, 1], [9, 1], [8, 1]])
         self.__update_board_from_snake()
 
     def __make_board(self) -> None:
