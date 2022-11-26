@@ -1,3 +1,5 @@
+import time
+
 import pygame
 
 from constants import *
@@ -17,6 +19,9 @@ class Game:
 
     def run(self) -> None:
         self.__draw_board()
+        print(self.model.board)
+        pygame.display.update()
+        self.fps_clock.tick(MAX_FPS)
 
         while self.running:
             self.__manage_key_inputs()
@@ -24,7 +29,7 @@ class Game:
             # self.model.move_random_direction()
 
             next_direction = self.model.get_neural_network_direction_output_3()
-            self.running = self.model.move_in_direction(next_direction)
+            self.model.move_in_direction(next_direction)
 
             if self.running:
                 self.__draw_board()

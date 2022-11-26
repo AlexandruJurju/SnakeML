@@ -28,7 +28,7 @@ class Model:
         self.__make_board()
         self.__place_new_apple()
         # self.__create_random_snake(snake_size)
-        self.__place_snake_on_given_locations([[10, 1], [9, 1], [8, 1]])
+        self.__place_snake_on_given_locations([[10, 2], [10, 1], [9, 1]], Direction.RIGHT)
         self.__update_board_from_snake()
 
     def __make_board(self) -> None:
@@ -40,7 +40,8 @@ class Model:
                 else:
                     self.board[i, j] = "X"
 
-    def __place_snake_on_given_locations(self, positions: []) -> None:
+    def __place_snake_on_given_locations(self, positions: [], direction) -> None:
+        self.snake.direction = direction
         for i, position in enumerate(positions):
             self.board[position[0], position[1]] = "S"
             self.snake.body.append([position[0], position[1]])
@@ -243,6 +244,7 @@ class Model:
         direction_index = list(output).index(max(list(output)))
         print(direction_index)
 
+        # TODO what direction is snake initialized
         # STRAIGHT
         if direction_index == 0:
             return self.snake.direction
