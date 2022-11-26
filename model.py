@@ -27,7 +27,8 @@ class Model:
 
         self.__make_board()
         self.__place_new_apple()
-        self.__create_random_snake(snake_size)
+        # self.__create_random_snake(snake_size)
+        self.__place_snake_on_given_locations([[1, 1], [1, 2], [1, 3]])
         self.__update_board_from_snake()
 
     def __make_board(self) -> None:
@@ -38,6 +39,11 @@ class Model:
                     self.board[i, j] = "W"
                 else:
                     self.board[i, j] = "X"
+
+    def __place_snake_on_given_locations(self, positions: []) -> None:
+        for i, position in enumerate(positions):
+            self.board[position[0], position[1]] = "S"
+            self.snake.body.append([position[0], position[1]])
 
     def __clear_snake_on_board(self):
         for i in range(1, self.size):
@@ -138,24 +144,13 @@ class Model:
             apple_boolean = 1.0 if apple_found else 0.0
             segment_boolean = 1.0 if segment_found else 0.0
 
-            # vision = {
-            #     "W": [wall_coord, wall_distance_output],
-            #     "A": [apple_coord, apple_boolean],
-            #     "S": [segment_coord, segment_boolean]
-            # }
-
-            return VisionLine(wall_coord, 1 / wall_distance, apple_coord, apple_boolean, segment_coord, segment_boolean)
+            return VisionLine(wall_coord, wall_distance, apple_coord, apple_boolean, segment_coord, segment_boolean)
 
         elif return_type == "distance":
             wall_distance_output = 1 / wall_distance
             apple_distance_output = apple_distance
             segment_distance_output = segment_distance
 
-            # vision = {
-            #     "W": [wall_coord, 1 / wall_distance_output],
-            #     "A": [apple_coord, apple_distance_output],
-            #     "S": [segment_coord, 1 / segment_distance_output]
-            # }
             return VisionLine(wall_coord, 1 / wall_distance, apple_coord, apple_distance, segment_coord, 1 / segment_distance)
 
     def get_vision_lines(self, vision_line_number: int, return_type: str) -> {}:
@@ -235,12 +230,6 @@ class Model:
             nn_input.append(vision_lines[line].apple_distance)
             nn_input.append(vision_lines[line].segment_distance)
 
-        for direction in MAIN_DIRECTIONS:
-            if self.snake.direction == direction:
-                nn_input.append(1.0)
-            else:
-                nn_input.append(0.0)
-
         return np.reshape(nn_input, (len(nn_input), 1))
 
     def get_nn_output(self) -> np.ndarray:
@@ -252,10 +241,12 @@ class Model:
         output = self.snake.brain.feed_forward(nn_input)
 
         direction_index = list(output).index(max(list(output)))
+        print(direction_index)
 
+        # STRAIGHT
         if direction_index == 0:
             return self.snake.direction
-
+        # LEFT
         if direction_index == 1:
             match self.snake.direction:
                 case Direction.UP:
@@ -266,7 +257,7 @@ class Model:
                     return Direction.RIGHT
                 case Direction.RIGHT:
                     return Direction.UP
-
+        # RIGHT
         if direction_index == 2:
             match self.snake.direction:
                 case Direction.UP:

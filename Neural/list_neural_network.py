@@ -74,7 +74,6 @@ class NeuralNetwork:
         nn_input = input
         for layer in self.layers:
             nn_input = layer.forward(nn_input)
-
         return nn_input
 
     def predict(self, input):
@@ -91,10 +90,27 @@ class NeuralNetwork:
                 error += loss(y, output)
 
                 # backward
-                grad = loss_prime(y, output)
+                gradient = loss_prime(y, output)
                 for layer in reversed(self.layers):
-                    grad = layer.backward(grad, learning_rate)
+                    gradient = layer.backward(gradient, learning_rate)
 
             error /= len(x_train)
 
-            print(f"{i + 1}/{epochs}, error={error}")
+            print(f"epoch = {i + 1}/{epochs}, error = {error}")
+        print()
+
+    def print_weights_and_biases(self):
+        dense_layers = []
+        for layer in self.layers:
+            if type(layer) is Dense:
+                dense_layers.append(layer)
+
+        for i, layer in enumerate(dense_layers):
+            print("Dense layer : " + str(i + 1))
+            print("===============WEIGHTS===============")
+            print(layer.weights)
+
+            print("==========BIASES==========")
+            print(layer.bias)
+            print("==============")
+            print()

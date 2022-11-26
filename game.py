@@ -6,24 +6,37 @@ from Neural.neural_network_utils import *
 
 
 class Game:
-    def __init__(self, model_size: int, snake_size: int):
+    def __init__(self, model_size: int, snake_size: int, net: NeuralNetwork):
         pygame.init()
         self.window = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Snake Game")
         self.fps_clock = pygame.time.Clock()
 
-        net = NeuralNetwork()
-        net.add(Dense(28, 16))
-        net.add(Activation(sigmoid, sigmoid_prime))
-        net.add(Dense(16, 3))
-        net.add(Activation(sigmoid, sigmoid_prime))
-
         self.running = True
         self.model = Model(model_size, snake_size, net)
-        self.direction = Direction.UP
+
+    def run(self) -> None:
+        while self.running:
+            self.__manage_key_inputs()
+            self.window.fill(COLOR_BACKGROUND)
+            # self.model.move_random_direction()
+
+            next_direction = self.model.get_neural_network_direction_output_3()
+            self.model.move_in_direction(next_direction)
+
+            if self.running:
+                self.__draw_board()
+                # self.__draw_vision_lines()
+                # self.__draw_network()
+            else:
+                self.running = True
+                self.model.reinit_model()
+
+            pygame.display.update()
+            self.fps_clock.tick(MAX_FPS)
 
     def __draw_network(self):
-        nn_font = pygame.font.SysFont("arial", 16)
+        writing_font = pygame.font.SysFont("arial", 16)
 
         input_label_offset_x = 550
         input_label_offset_y = 20
@@ -40,19 +53,19 @@ class Game:
         param_type = ["Wall", "Apple", "Segment"]
         for line in self.model.get_vision_lines(8, "boolean"):
             for param in param_type:
-                line_label = nn_font.render(line + " " + param, True, (255, 255, 255))
+                line_label = writing_font.render(line + " " + param, True, (255, 255, 255))
                 self.window.blit(line_label, [input_label_offset_x, label_height_between * count + input_label_offset_y - 10])
                 count += 1
 
         main_direction_names = ["UP", "DOWN", "LEFT", "RIGHT"]
         for direction in main_direction_names:
-            line_label = nn_font.render(direction, True, (255, 255, 255))
+            line_label = writing_font.render(direction, True, (255, 255, 255))
             self.window.blit(line_label, [input_label_offset_x, label_height_between * count + input_label_offset_y - 10])
             count += 1
 
-        self.__draw_neurons(neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, nn_font)
+        self.__draw_neurons(neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, writing_font)
 
-    def __draw_neurons(self, neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, nn_font):
+    def __draw_neurons(self, neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, font):
         dense_layers = []
         for layer in self.model.snake.brain.layers:
             if type(layer) is Dense:
@@ -120,7 +133,7 @@ class Game:
                         case _:
                             direction = None
 
-                    line_label = nn_font.render(direction, True, (255, 255, 255))
+                    line_label = font.render(direction, True, (255, 255, 255))
                     self.window.blit(line_label, [neuron_offset_x + 15, neuron_height_between * j + neuron_offset_y + hidden_offset_y - 5])
                 # Draw NN hidden layers outputs
                 else:
@@ -227,24 +240,3 @@ class Game:
                         self.direction = Direction.LEFT
                     case pygame.K_RIGHT:
                         self.direction = Direction.RIGHT
-
-    def run(self) -> None:
-        while self.running:
-            self.__manage_key_inputs()
-            self.window.fill(COLOR_BACKGROUND)
-
-            next_direction = self.model.get_neural_network_direction_output_3()
-            self.running = self.model.move_in_direction(next_direction)
-
-            # self.model.move_random_direction()
-
-            if self.running:
-                self.__draw_board()
-                self.__draw_vision_lines()
-                self.__draw_network()
-            else:
-                self.running = True
-                self.model.reinit_model()
-
-            pygame.display.update()
-            self.fps_clock.tick(MAX_FPS)
