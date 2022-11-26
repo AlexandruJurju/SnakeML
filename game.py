@@ -190,8 +190,7 @@ class Game:
             line_label = font.render(line, True, COLOR_BLACK)
 
             # render vision line text at wall position
-            self.window.blit(line_label, [vision_lines[line].wall_coord[1] * SQUARE_SIZE + OFFSET_BOARD_X,
-                                          vision_lines[line].wall_coord[0] * SQUARE_SIZE + OFFSET_BOARD_Y])
+            self.window.blit(line_label, [vision_lines[line].wall_coord[1] * SQUARE_SIZE + OFFSET_BOARD_X, vision_lines[line].wall_coord[0] * SQUARE_SIZE + OFFSET_BOARD_Y])
 
             # draw line from head to wall, draw before body and apple lines
             # drawing uses SQUARE_SIZE//2 so that lines go through the middle of the squares
@@ -201,28 +200,13 @@ class Game:
             # draw line form snake head until wall block
             self.__draw_vision_line(COLOR_APPLE, 1, vision_lines[line].wall_coord[1], vision_lines[line].wall_coord[0], line_end_x, line_end_y)
 
-            # pygame.draw.line(self.window, COLOR_APPLE,
-            #                  ((vision_lines[line].wall_coord[1]) * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
-            #                   (vision_lines[line].wall_coord[0]) * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
-            #                  (line_end_x, line_end_y), width=1)
-
             # draw another line from snake head to first segment found
             if vision_lines[line].segment_coord is not None:
                 self.__draw_vision_line(COLOR_RED, 5, vision_lines[line].segment_coord[1], vision_lines[line].segment_coord[0], line_end_x, line_end_y)
 
-                # pygame.draw.line(self.window, COLOR_RED,
-                #                  (vision_lines[line].segment_coord[1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
-                #                   vision_lines[line].segment_coord[0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
-                #                  (line_end_x, line_end_y), width=5)
-
             # draw another line from snake to apple if apple is found
             if vision_lines[line].apple_coord is not None:
                 self.__draw_vision_line(COLOR_GREEN, 5, vision_lines[line].apple_coord[1], vision_lines[line].apple_coord[0], line_end_x, line_end_y)
-                
-                # pygame.draw.line(self.window, COLOR_GREEN,
-                #                  (vision_lines[line].apple_coord[1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
-                #                   vision_lines[line].apple_coord[0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
-                #                  (line_end_x, line_end_y), width=5)
 
     def __draw_vision_line(self, color, width, line_coord_1, line_coord_0, line_end_x, line_end_y):
         pygame.draw.line(self.window, color,

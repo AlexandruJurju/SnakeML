@@ -22,12 +22,12 @@ def tanh(x):
 
 
 def tanh_prime(x):
-    return 1 - np.tanh(x) ^ 2
+    return 1 - np.tanh(x) ** 2
 
 
-def mean_squared_root(y_real, y_predicted):
+def mse(y_real, y_predicted):
     return np.mean(np.power(y_real - y_predicted, 2))
 
 
-def mean_squared_root_prime(y_real, y_predicted):
-    return 2 * (y_predicted - y_real) / y_real.size
+def mse_prime(y_true, y_pred):
+    return 2 * (y_pred - y_true) / np.size(y_true)
