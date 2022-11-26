@@ -110,14 +110,18 @@ def read_training_models():
     y = []
 
     for row in rows:
-        positions_string_list = row[0].split(" ")
-        inputs = []
-        for position_string in positions_string_list:
-            position_string_split = position_string.split(",")
-            val0 = int(position_string_split[0])
-            val1 = int(position_string_split[1])
-            inputs.append([val0, val1])
-        x.append(inputs)
+        temp_board = np.empty((10 + 2, 10 + 2), dtype=object)
+        model_string = row[0]
+        model_string = model_string.replace("[", "")
+        model_string = model_string.replace("]", "")
+        model_string = model_string.replace("'", "")
+        row_list = model_string.split("\n")
+
+        for i, model_row in enumerate(row_list):
+            values_in_row = model_row.split(" ")
+            for j, model_column in enumerate(values_in_row):
+                temp_board[i, j] = model_column
+        x.append(temp_board)
 
         outputs_string_list = row[1].split(" ")
         outputs = []
@@ -127,9 +131,7 @@ def read_training_models():
 
     x_train = []
     for config in x:
-        board = make_board(board_size)
-        put_snake_on_board(board, config)
-        x_train.append(board_to_nn_input(board))
+        x_train.append(board_to_nn_input(config))
 
     return x_train, y
 
@@ -144,6 +146,7 @@ if __name__ == "__main__":
     board_size = 10 + 2
     board = make_board(board_size)
     print(board)
+    print()
 
     X, Y = read_training_models()
 
