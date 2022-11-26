@@ -18,7 +18,7 @@ class VisionLine:
 
 
 class Model:
-    def __init__(self, board_size: int, snake_size: int, neural_net: KerasNetwork):
+    def __init__(self, board_size: int, snake_size: int, neural_net: NeuralNetwork):
         self.snake_size = snake_size
 
         self.size = board_size + 2
@@ -247,14 +247,7 @@ class Model:
         nn_input = self.get_parameters_in_nn_input_form()
         return self.snake.brain.feed_forward(nn_input)
 
-    # def get_direction_from_nn_output(self) -> Direction:
-    #     nn_input = self.get_parameters_in_nn_input_form()
-    #     output = self.snake.brain.feed_forward(nn_input)
-    #
-    #     next_direction = MAIN_DIRECTIONS[list(output).index(max(list(output)))]
-    #     return next_direction
-
-    def get_3_directions_from_neural_net(self) -> Direction:
+    def get_neural_network_direction_output_3(self) -> Direction:
         nn_input = self.get_parameters_in_nn_input_form()
         output = self.snake.brain.feed_forward(nn_input)
 

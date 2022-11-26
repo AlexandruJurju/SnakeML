@@ -12,7 +12,7 @@ class Game:
         pygame.display.set_caption("Snake Game")
         self.fps_clock = pygame.time.Clock()
 
-        net = KerasNetwork()
+        net = NeuralNetwork()
         net.add(Dense(28, 16))
         net.add(Activation(sigmoid, sigmoid_prime))
         net.add(Dense(16, 3))
@@ -50,10 +50,9 @@ class Game:
             self.window.blit(line_label, [input_label_offset_x, label_height_between * count + input_label_offset_y - 10])
             count += 1
 
-        self.draw_neurons(neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, nn_font)
+        self.__draw_neurons(neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, nn_font)
 
-    def draw_neurons(self, neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, nn_font):
-
+    def __draw_neurons(self, neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, nn_font):
         dense_layers = []
         for layer in self.model.snake.brain.layers:
             if type(layer) is Dense:
@@ -234,7 +233,7 @@ class Game:
             self.__manage_key_inputs()
             self.window.fill(COLOR_BACKGROUND)
 
-            next_direction = self.model.get_3_directions_from_neural_net()
+            next_direction = self.model.get_neural_network_direction_output_3()
             self.running = self.model.move_in_direction(next_direction)
 
             # self.model.move_random_direction()
