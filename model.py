@@ -134,27 +134,29 @@ class Model:
         wall_coord = current_block
 
         if return_type == "boolean":
+            wall_distance_output = 1 / wall_distance
             apple_boolean = 1.0 if apple_found else 0.0
             segment_boolean = 1.0 if segment_found else 0.0
-            wall_distance_output = 1 / wall_distance
 
-            vision = {
-                "W": [wall_coord, wall_distance_output],
-                "A": [apple_coord, apple_boolean],
-                "S": [segment_coord, segment_boolean]
-            }
+            # vision = {
+            #     "W": [wall_coord, wall_distance_output],
+            #     "A": [apple_coord, apple_boolean],
+            #     "S": [segment_coord, segment_boolean]
+            # }
+
             return VisionLine(wall_coord, 1 / wall_distance, apple_coord, apple_boolean, segment_coord, segment_boolean)
 
         elif return_type == "distance":
             wall_distance_output = 1 / wall_distance
-            apple_distance_output = 1 / apple_distance
-            segment_distance_output = 1 / segment_distance
-            vision = {
-                "W": [wall_coord, 1 / wall_distance_output],
-                "A": [apple_coord, 1 / apple_distance_output],
-                "S": [segment_coord, 1 / segment_distance_output]
-            }
-            return VisionLine(wall_coord, 1 / wall_distance, apple_coord, 1 / apple_distance, segment_coord, 1 / segment_distance)
+            apple_distance_output = apple_distance
+            segment_distance_output = segment_distance
+
+            # vision = {
+            #     "W": [wall_coord, 1 / wall_distance_output],
+            #     "A": [apple_coord, apple_distance_output],
+            #     "S": [segment_coord, 1 / segment_distance_output]
+            # }
+            return VisionLine(wall_coord, 1 / wall_distance, apple_coord, apple_distance, segment_coord, 1 / segment_distance)
 
     def get_vision_lines(self, vision_line_number: int, return_type: str) -> {}:
         if vision_line_number == 8:
@@ -204,7 +206,6 @@ class Model:
 
         return True
 
-    # TODO have only 3 moves Left, Right, Forward
     def move_in_direction(self, new_direction: Direction) -> bool:
         self.snake.direction = new_direction
 
@@ -246,24 +247,23 @@ class Model:
         nn_input = self.get_parameters_in_nn_input_form()
         return self.snake.brain.feed_forward(nn_input)
 
-    def get_direction_from_nn_output(self) -> Direction:
-        nn_input = self.get_parameters_in_nn_input_form()
-        output = self.snake.brain.feed_forward(nn_input)
+    # def get_direction_from_nn_output(self) -> Direction:
+    #     nn_input = self.get_parameters_in_nn_input_form()
+    #     output = self.snake.brain.feed_forward(nn_input)
+    #
+    #     next_direction = MAIN_DIRECTIONS[list(output).index(max(list(output)))]
+    #     return next_direction
 
-        next_direction = MAIN_DIRECTIONS[list(output).index(max(list(output)))]
-        return next_direction
-
-    def get_3_directions(self) -> Direction:
+    def get_3_directions_from_neural_net(self) -> Direction:
         nn_input = self.get_parameters_in_nn_input_form()
         output = self.snake.brain.feed_forward(nn_input)
 
         direction_index = list(output).index(max(list(output)))
 
         if direction_index == 0:
-            print("STRAIGHT")
             return self.snake.direction
+
         if direction_index == 1:
-            print("LEFT")
             match self.snake.direction:
                 case Direction.UP:
                     return Direction.LEFT
@@ -273,8 +273,8 @@ class Model:
                     return Direction.RIGHT
                 case Direction.RIGHT:
                     return Direction.UP
+
         if direction_index == 2:
-            print("RIGHT")
             match self.snake.direction:
                 case Direction.UP:
                     return Direction.RIGHT
