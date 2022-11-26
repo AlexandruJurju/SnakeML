@@ -26,14 +26,14 @@ class Dense(Layer):
         self.inputs = inputs
         return np.dot(self.weights, self.inputs) + self.bias
 
-    def backward(self, output_error, learning_rate):
-        input_error = np.dot(output_error, self.weights.T)
-        weights_error = np.dot(self.inputs.T, output_error)
+    def backward(self, output_gradient, learning_rate):
+        input_gradient = np.dot(output_gradient, self.weights.T)
+        weights_gradient = np.dot(self.inputs.T, output_gradient)
 
-        self.weights -= learning_rate * weights_error
-        self.bias -= learning_rate * output_error
+        self.weights -= learning_rate * weights_gradient
+        self.bias -= learning_rate * output_gradient
 
-        return input_error
+        return input_gradient
 
 
 class Activation(Layer):
@@ -48,8 +48,8 @@ class Activation(Layer):
         self.output = self.activation(inputs)
         return self.output
 
-    def backward(self, output_error, learning_rate):
-        return np.multiply(self.activation_derivated(self.inputs), output_error)
+    def backward(self, output_gradient, learning_rate):
+        return np.multiply(self.activation_derivated(self.inputs), output_gradient)
 
 
 class KerasNetwork:
