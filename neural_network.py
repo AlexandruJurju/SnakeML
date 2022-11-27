@@ -21,14 +21,8 @@ class Dense(Layer):
         self.input_size = input_size
         self.output_size = output_size
 
-        self.weights = np.random.uniform(-0.05, 0.05, (output_size, input_size))
-        self.bias = np.random.uniform(-0.05, 0.05, (output_size, 1))
-
-        # self.weights = np.random.randn(output_size, input_size)
-        # self.bias = np.random.randn(output_size, 1)
-
-        # self.weights = np.random.uniform(-1, 1, (output_size, input_size))
-        # self.bias = np.random.uniform(-1, 1, (output_size, 1))
+        self.weights = np.random.uniform(-1, 1, (output_size, input_size))
+        self.bias = np.random.uniform(-1, 1, (output_size, 1))
 
     def forward(self, input):
         self.input = input
@@ -64,20 +58,8 @@ class NeuralNetwork:
     def __init__(self):
         self.layers = []
 
-    def add(self, layer: Layer):
+    def add_layer(self, layer: Layer):
         self.layers.append(layer)
-
-    def reinit_layers(self):
-        for layer in self.layers:
-            if type(layer) is Dense:
-                layer.weights = np.random.uniform(-1, 1, (layer.output_size, layer.input_size))
-                layer.bias = np.random.uniform(-1, 1, (layer.output_size, 1))
-
-                # layer.weights = np.random.randn(layer.output_size, layer.input_size)
-                # layer.bias = np.random.randn(layer.output_size, 1)
-
-                # layer.weights = np.random.uniform(-0.05, 0.05, (layer.output_size, layer.input_size))
-                # layer.bias = np.random.uniform(-0.05, 0.05, (layer.output_size, 1))
 
     def feed_forward(self, input) -> np.ndarray:
         nn_input = input
@@ -86,7 +68,7 @@ class NeuralNetwork:
         return nn_input
 
     def train(self, loss, loss_prime, x_train, y_train, epochs, learning_rate):
-        error = 10
+        error = 1
         while error > 0.0001:
             error = 0
             for x, y in zip(x_train, y_train):
@@ -100,8 +82,8 @@ class NeuralNetwork:
 
             error /= len(x_train)
 
-            # print(f"error = {error}")
-        # print()
+            print(f"error = {error}")
+        print()
 
     def print_weights_and_biases(self):
         dense_layers = []

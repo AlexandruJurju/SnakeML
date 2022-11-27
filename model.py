@@ -1,37 +1,33 @@
-import math
 import random
 from typing import Tuple, List
 
-from Neural.list_neural_network import *
-from constants import MAIN_DIRECTIONS, Direction
+from constants import MAIN_DIRECTIONS
 from snake import Snake
-
-
-class VisionLine:
-    def __init__(self, wall_coord, wall_distance, apple_coord, apple_distance, segment_coord, segment_distance):
-        self.wall_coord = wall_coord
-        self.wall_distance = wall_distance
-        self.apple_coord = apple_coord
-        self.apple_distance = apple_distance
-        self.segment_coord = segment_coord
-        self.segment_distance = segment_distance
+from vision import *
 
 
 class Model:
-    def __init__(self, board_size: int, snake_size: int, neural_net: NeuralNetwork):
-        self.snake_size = snake_size
+    def __init__(self, *args):
 
-        self.size = board_size + 2
-        self.board = np.empty((self.size, self.size), dtype=object)
-        self.snake = Snake(neural_net)
+        if len(args) > 1:
+            self.size = args[0] + 2
+            self.board = np.empty((self.size, self.size), dtype=object)
 
-        self.__make_board()
-        # self.__place_new_apple()
-        # self.__create_random_snake(snake_size)
-        self.__place_snake_on_given_locations([[10, 10], [10, 9], [10, 8]], Direction.RIGHT)
-        self.__update_board_from_snake()
+            self.snake_size = args[1]
+            self.snake = Snake(args[2], None)
 
-    def __make_board(self) -> None:
+            self.make_board()
+            # self.place_new_apple()
+            # self.create_random_snake(self.snake_size)
+            self.place_apple_at_coords([5, 5])
+            self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
+            self.update_board_from_snake()
+
+        else:
+            self.size = args[0] + 2
+            self.board = np.empty((self.size, self.size), dtype=object)
+
+    def make_board(self) -> None:
         for i in range(0, self.size):
             for j in range(0, self.size):
                 # place walls on the borders and nothing inside
@@ -40,35 +36,38 @@ class Model:
                 else:
                     self.board[i, j] = "X"
 
-    def __place_snake_on_given_locations(self, positions: [], direction) -> None:
-        self.snake.direction = direction
+    def place_apple_at_coords(self, position):
+        self.board[position[0], position[1]] = "A"
+
+    def place_snake_in_given_position(self, positions: [], direction: Direction) -> None:
         for i, position in enumerate(positions):
-            self.board[position[0], position[1]] = "S"
+            if i == 0:
+                self.board[position[0], position[1]] = "H"
+            else:
+                self.board[position[0], position[1]] = "S"
             self.snake.body.append([position[0], position[1]])
+        self.snake.direction = direction
 
-    def __clear_snake_on_board(self):
-        for i in range(1, self.size):
-            for j in range(1, self.size):
-                if self.board[i, j] == "S":
-                    self.board[i, j] = "X"
+    def find_snake_head(self):
+        for i in range(0, self.size):
+            for j in range(0, self.size):
+                if self.board[i, j] == "H":
+                    return [i, j]
 
-    def __get_random_empty_block(self) -> []:
+    def get_random_empty_block(self) -> []:
         empty = []
-
-        # find all empty spots on the board
         for i in range(1, self.size):
             for j in range(1, self.size):
                 if self.board[i, j] == "X":
                     empty.append([i, j])
 
-        # return random empty block from found empty blocks
         return random.choice(empty)
 
-    def __place_new_apple(self) -> None:
-        rand_block = self.__get_random_empty_block()
+    def place_new_apple(self) -> None:
+        rand_block = self.get_random_empty_block()
         self.board[rand_block[0], rand_block[1]] = "A"
 
-    def __get_valid_direction_for_block(self, block: Tuple) -> List[Direction]:
+    def get_valid_direction_for_block(self, block: Tuple) -> List[Direction]:
         valid_directions = []
 
         # check all main direction that the block has
@@ -81,14 +80,14 @@ class Model:
 
         return valid_directions
 
-    def __create_random_snake(self, snake_size: int) -> None:
+    def create_random_snake(self, snake_size):
         # head is the first block of the snake, the block where the search starts
-        head = self.__get_random_empty_block()
+        head = self.get_random_empty_block()
         self.snake.body.append(head)
 
         while len(self.snake.body) < snake_size:
             # get all possible directions of block
-            valid_directions = self.__get_valid_direction_for_block(head)
+            valid_directions = self.get_valid_direction_for_block(head)
 
             # choose random direction for new snake piece position
             random_direction = random.choice(valid_directions)
@@ -101,106 +100,22 @@ class Model:
                 self.snake.body.append(new_block)
                 head = new_block
 
-    def __update_board_from_snake(self):
+    def update_board_from_snake(self) -> None:
         # remove previous snake position on board
-        self.__clear_snake_on_board()
+        self.clear_snake_on_board()
 
         # loop all snake pieces and put S on board using their coordinates
         for piece in self.snake.body:
-            self.board[piece[0], piece[1]] = "S"
+            if piece == self.snake.body[0]:
+                self.board[piece[0], piece[1]] = "H"
+            else:
+                self.board[piece[0], piece[1]] = "S"
 
-    def __look_in_direction(self, direction: Direction, return_type: str) -> {}:
-        apple_distance = np.inf
-        segment_distance = np.inf
-
-        apple_coord = None
-        segment_coord = None
-
-        # search starts at one block in the given direction
-        # otherwise head is also check in the loop
-        head = self.snake.body[0]
-        current_block = [head[0] + direction.value[0], head[1] + direction.value[1]]
-
-        # booleans are used to store the first value found
-        apple_found = False
-        segment_found = False
-
-        # loop are blocks in the given direction and store position and coordinates of apple and snake segments
-        while self.board[current_block[0], current_block[1]] != "W":
-            if self.board[current_block[0], current_block[1]] == "A" and apple_found == False:
-                apple_distance = math.dist(head, current_block)
-                apple_coord = current_block
-                apple_found = True
-            elif self.board[current_block[0], current_block[1]] == "S" and segment_found == False:
-                segment_distance = math.dist(head, current_block)
-                segment_coord = current_block
-                segment_found = True
-            current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
-
-        wall_distance = math.dist(head, current_block)
-        wall_coord = current_block
-
-        if return_type == "boolean":
-            wall_distance_output = 1 / wall_distance
-            apple_boolean = 1.0 if apple_found else 0.0
-            segment_boolean = 1.0 if segment_found else 0.0
-
-            return VisionLine(wall_coord, wall_distance, apple_coord, apple_boolean, segment_coord, segment_boolean)
-
-        elif return_type == "distance":
-            wall_distance_output = 1 / wall_distance
-            apple_distance_output = apple_distance
-            segment_distance_output = segment_distance
-
-            return VisionLine(wall_coord, 1 / wall_distance, apple_coord, 1 / apple_distance, segment_coord, 1 / segment_distance)
-
-    def get_vision_lines(self, vision_line_number: int, return_type: str) -> {}:
-        if vision_line_number == 8:
-            return {
-                "+X": self.__look_in_direction(Direction.RIGHT, return_type),
-                "-X": self.__look_in_direction(Direction.LEFT, return_type),
-                "-Y": self.__look_in_direction(Direction.DOWN, return_type),
-                "+Y": self.__look_in_direction(Direction.UP, return_type),
-                "Q1": self.__look_in_direction(Direction.Q1, return_type),
-                "Q2": self.__look_in_direction(Direction.Q2, return_type),
-                "Q3": self.__look_in_direction(Direction.Q3, return_type),
-                "Q4": self.__look_in_direction(Direction.Q4, return_type)
-            }
-        else:
-            return {
-                "+X": self.__look_in_direction(Direction.RIGHT, return_type),
-                "-X": self.__look_in_direction(Direction.LEFT, return_type),
-                "-Y": self.__look_in_direction(Direction.DOWN, return_type),
-                "+Y": self.__look_in_direction(Direction.UP, return_type)
-            }
-
-    def move_random_direction(self) -> bool:
-        head = self.snake.body[0]
-        valid_directions = self.__get_valid_direction_for_block(head)
-
-        # if block has no valid directions then snake is dead, return false
-        if len(valid_directions) == 0:
-            return False
-
-        direction = random.choice(valid_directions)
-
-        # new head is the next block in the chosen direction
-        new_head = [head[0] + direction.value[0], head[1] + direction.value[1]]
-
-        # insert new head at the start of the list for moving other segments
-        self.snake.body.insert(0, new_head)
-
-        # if snake doesn't find an apple then all segments except last are moved one position forward, old_head old1 old2 -> new_head old_head old1 ; same as moving
-        # if snake finds an apple then the last segments is not removed when moving
-        if self.board[new_head[0], new_head[1]] == "A":
-            self.__update_board_from_snake()
-            self.__place_new_apple()
-        else:
-            self.snake.body = self.snake.body[:-1]
-
-        self.__update_board_from_snake()
-
-        return True
+    def clear_snake_on_board(self) -> None:
+        for i in range(1, self.size):
+            for j in range(1, self.size):
+                if self.board[i, j] == "S" or self.board[i, j] == "H":
+                    self.board[i, j] = "X"
 
     def move_in_direction(self, new_direction: Direction) -> bool:
         self.snake.direction = new_direction
@@ -215,36 +130,19 @@ class Model:
         self.snake.body.insert(0, next_head)
 
         if new_head_value == "A":
-            self.__update_board_from_snake()
-            self.__place_new_apple()
+            self.update_board_from_snake()
+            self.place_new_apple()
         else:
             self.snake.body = self.snake.body[:-1]
-            self.__update_board_from_snake()
+            self.update_board_from_snake()
 
         return True
 
-    def get_parameters_in_nn_input_form(self) -> np.ndarray:
-        nn_input = []
-        vision_lines = self.get_vision_lines(8, "boolean")
-        for line in vision_lines:
-            nn_input.append(vision_lines[line].wall_distance)
-            nn_input.append(vision_lines[line].apple_distance)
-            nn_input.append(vision_lines[line].segment_distance)
-
-        return np.reshape(nn_input, (len(nn_input), 1))
-
-    def get_nn_output(self) -> np.ndarray:
-        nn_input = self.get_parameters_in_nn_input_form()
-        return self.snake.brain.feed_forward(nn_input)
-
-    def get_neural_network_direction_output_3(self) -> Direction:
-        nn_input = self.get_parameters_in_nn_input_form()
+    def get_neural_network_direction_output_3(self, vision_line_number: int, return_type: str) -> Direction:
+        nn_input = Vision.get_parameters_in_nn_input_form(self.board, vision_line_number, return_type)
         output = self.snake.brain.feed_forward(nn_input)
-
         direction_index = list(output).index(max(list(output)))
-        print(direction_index)
 
-        # TODO what direction is snake initialized
         # STRAIGHT
         if direction_index == 0:
             return self.snake.direction
@@ -270,13 +168,3 @@ class Model:
                     return Direction.LEFT
                 case Direction.RIGHT:
                     return Direction.DOWN
-
-    def reinit_model(self):
-        self.board = np.empty((self.size, self.size), dtype=object)
-        self.__make_board()
-        self.__place_new_apple()
-        self.snake.body = []
-        self.snake.direction = random.choice(MAIN_DIRECTIONS)
-        self.__create_random_snake(self.snake_size)
-        self.__update_board_from_snake()
-        self.snake.brain.reinit_layers()
