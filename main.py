@@ -131,6 +131,9 @@ def read_training_models():
 
     x_train = []
     for config in x:
+        print(config)
+        print(board_to_nn_input(config))
+        print()
         x_train.append(board_to_nn_input(config))
 
     return x_train, y
@@ -145,8 +148,6 @@ if __name__ == "__main__":
 
     board_size = 10 + 2
     board = make_board(board_size)
-    print(board)
-    print()
 
     X, Y = read_training_models()
 
@@ -155,16 +156,16 @@ if __name__ == "__main__":
     X = np.reshape(X, (len(X), 24, 1))
     Y = np.reshape(Y, (len(Y), 3, 1))
 
-    net.train(mse, mse_prime, X, Y, 100, 0.1)
+    net.train(mse, mse_prime, X, Y, 250, 0.1)
 
     for x_test, y_test in zip(X, Y):
-        output = net.predict(x_test)
+        output = net.feed_forward(x_test)
         output_index = list(output).index(max(list(output)))
         target_index = list(y_test).index(max(list(y_test)))
         print(f"target = {target_index}, output = {output_index}")
         print("============================================")
 
-    output = net.predict(X[0])
+    output = net.feed_forward(X[0])
     output_index = list(output).index(max(list(output)))
     print(output_index)
 

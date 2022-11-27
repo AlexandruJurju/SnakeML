@@ -26,9 +26,9 @@ class Model:
         self.snake = Snake(neural_net)
 
         self.__make_board()
-        self.__place_new_apple()
+        # self.__place_new_apple()
         # self.__create_random_snake(snake_size)
-        self.__place_snake_on_given_locations([[10, 2], [10, 1], [9, 1]], Direction.RIGHT)
+        self.__place_snake_on_given_locations([[10, 10], [10, 9], [10, 8]], Direction.RIGHT)
         self.__update_board_from_snake()
 
     def __make_board(self) -> None:
@@ -152,7 +152,7 @@ class Model:
             apple_distance_output = apple_distance
             segment_distance_output = segment_distance
 
-            return VisionLine(wall_coord, 1 / wall_distance, apple_coord, apple_distance, segment_coord, 1 / segment_distance)
+            return VisionLine(wall_coord, 1 / wall_distance, apple_coord, 1 / apple_distance, segment_coord, 1 / segment_distance)
 
     def get_vision_lines(self, vision_line_number: int, return_type: str) -> {}:
         if vision_line_number == 8:
