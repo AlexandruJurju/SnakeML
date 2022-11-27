@@ -90,7 +90,7 @@ class Vision:
             }
 
     @staticmethod
-    def get_parameters_in_nn_input_form(model, vision_line_number: int, return_type: str) -> np.ndarray:
+    def get_parameters_in_nn_input_form(model: [str], vision_line_number: int, return_type: str) -> np.ndarray:
         nn_input = []
         vision_lines = Vision.get_vision_lines(model, vision_line_number, return_type)
         for line in vision_lines:

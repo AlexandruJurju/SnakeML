@@ -58,7 +58,7 @@ class NeuralNetwork:
     def __init__(self):
         self.layers = []
 
-    def add_layer(self, layer: Layer):
+    def add_layer(self, layer: Layer) -> None:
         self.layers.append(layer)
 
     def feed_forward(self, input) -> np.ndarray:
@@ -67,7 +67,14 @@ class NeuralNetwork:
             nn_input = layer.forward(nn_input)
         return nn_input
 
-    def train(self, loss, loss_prime, x_train, y_train, epochs, learning_rate):
+    def get_dense_layers(self) -> [Layer]:
+        dense_layers = []
+        for layer in self.layers:
+            if type(layer) is Dense:
+                dense_layers.append(layer)
+        return dense_layers
+
+    def train(self, loss, loss_prime, x_train, y_train, epochs, learning_rate) -> None:
         error = 1
         while error > 0.0001:
             error = 0
@@ -85,7 +92,7 @@ class NeuralNetwork:
             print(f"error = {error}")
         print()
 
-    def print_weights_and_biases(self):
+    def print_weights_and_biases(self) -> None:
         dense_layers = []
         for layer in self.layers:
             if type(layer) is Dense:
