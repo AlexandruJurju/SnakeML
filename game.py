@@ -54,7 +54,7 @@ class Game:
 
             if self.running:
                 self.draw_board()
-                # self.__draw_vision_lines()
+                self.draw_vision_lines(Vision.get_vision_lines(self.model.board, VISION_LINES_COUNT, VISION_LINES_RETURN))
                 # self.__draw_network()
             else:
                 # self.running = True
@@ -63,3 +63,35 @@ class Game:
 
             pygame.display.update()
             self.fps_clock.tick(MAX_FPS)
+
+    def draw_vision_lines(self, vision_lines):
+        font = pygame.font.SysFont("arial", 18)
+
+        # loop over all lines in given vision lines
+        for line in vision_lines:
+            line_label = font.render(line, True, COLOR_BLACK)
+
+            # render vision line text at wall position
+            self.window.blit(line_label, [vision_lines[line].wall_coord[1] * SQUARE_SIZE + OFFSET_BOARD_X, vision_lines[line].wall_coord[0] * SQUARE_SIZE + OFFSET_BOARD_Y])
+
+            # draw line from head to wall, draw before body and apple lines
+            # drawing uses SQUARE_SIZE//2 so that lines go through the middle of the squares
+            line_end_x = self.model.snake.body[0][1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X
+            line_end_y = self.model.snake.body[0][0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y
+
+            # draw line form snake head until wall block
+            self.__draw_vision_line(COLOR_APPLE, 1, vision_lines[line].wall_coord[1], vision_lines[line].wall_coord[0], line_end_x, line_end_y)
+
+            # draw another line from snake head to first segment found
+            if vision_lines[line].segment_coord is not None:
+                self.__draw_vision_line(COLOR_RED, 5, vision_lines[line].segment_coord[1], vision_lines[line].segment_coord[0], line_end_x, line_end_y)
+
+            # draw another line from snake to apple if apple is found
+            if vision_lines[line].apple_coord is not None:
+                self.__draw_vision_line(COLOR_GREEN, 5, vision_lines[line].apple_coord[1], vision_lines[line].apple_coord[0], line_end_x, line_end_y)
+
+    def __draw_vision_line(self, color, width, line_coord_1, line_coord_0, line_end_x, line_end_y):
+        pygame.draw.line(self.window, color,
+                         (line_coord_1 * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X,
+                          line_coord_0 * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
+                         (line_end_x, line_end_y), width=width)
