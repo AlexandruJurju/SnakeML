@@ -4,28 +4,23 @@ from typing import Tuple, List
 from constants import MAIN_DIRECTIONS
 from snake import Snake
 from vision import *
+from Neural.neural_network import NeuralNetwork
 
 
 class Model:
-    def __init__(self, *args):
+    def __init__(self, model_size, snake_size, net: NeuralNetwork):
+        self.size = model_size + 2
+        self.board = np.empty((self.size, self.size), dtype=object)
 
-        if len(args) > 1:
-            self.size = args[0] + 2
-            self.board = np.empty((self.size, self.size), dtype=object)
+        self.snake_size = snake_size
+        self.snake = Snake(net, None)
 
-            self.snake_size = args[1]
-            self.snake = Snake(args[2], None)
-
-            self.make_board()
-            # self.place_new_apple()
-            # self.create_random_snake(self.snake_size)
-            self.place_apple_at_coords([5, 5])
-            self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
-            self.update_board_from_snake()
-
-        else:
-            self.size = args[0] + 2
-            self.board = np.empty((self.size, self.size), dtype=object)
+        self.make_board()
+        # self.place_new_apple()
+        # self.create_random_snake(self.snake_size)
+        self.place_apple_at_coords([5, 5])
+        self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
+        self.update_board_from_snake()
 
     def make_board(self) -> None:
         for i in range(0, self.size):
@@ -146,6 +141,7 @@ class Model:
         # STRAIGHT
         if direction_index == 0:
             return self.snake.direction
+
         # LEFT
         if direction_index == 1:
             match self.snake.direction:

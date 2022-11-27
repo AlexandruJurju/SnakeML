@@ -1,12 +1,7 @@
 import csv
-
-import numpy as np
-
-from Neural.neural_network import NeuralNetwork
-from Neural.neural_network_functions import *
-from model import Model
-from vision import Vision
+from Neural.neural_network import *
 from constants import *
+from vision import Vision
 
 
 def read_training_models():
@@ -17,7 +12,7 @@ def read_training_models():
     for row in csvreader:
         rows.append(row)
 
-    x_train = []
+    x = []
     y = []
 
     for row in rows:
@@ -32,9 +27,9 @@ def read_training_models():
             values_in_row = model_row.split(" ")
             for j, model_column in enumerate(values_in_row):
                 temp_board[i, j] = model_column
-        x_train.append(Vision.get_parameters_in_nn_input_form(temp_board, VISION_LINES_COUNT, VISION_LINES_RETURN))
+        x.append(Vision.get_parameters_in_nn_input_form(temp_board, VISION_LINES_COUNT, VISION_LINES_RETURN))
         print(temp_board)
-        print(x_train[-1])
+        print(x[-1])
         print()
 
         outputs_string_list = row[1].split(" ")
@@ -43,18 +38,18 @@ def read_training_models():
             outputs.append(float(tuple_string))
         y.append(outputs)
 
-    return x_train, y
+    return x, y
 
 
 def train_network(network: NeuralNetwork):
-    X, Y = read_training_models()
+    x, y = read_training_models()
 
-    X = np.reshape(X, (len(X), 12, 1))
-    Y = np.reshape(Y, (len(Y), 3, 1))
+    x = np.reshape(x, (len(x), VISION_LINES_COUNT * 3, 1))
+    y = np.reshape(y, (len(y), 3, 1))
 
-    network.train(mse, mse_prime, X, Y, 250, 0.1)
+    network.train(mse, mse_prime, x, y, 0.1)
 
-    for x_test, y_test in zip(X, Y):
+    for x_test, y_test in zip(x, y):
         output = network.feed_forward(x_test)
         output_index = list(output).index(max(list(output)))
         target_index = list(y_test).index(max(list(y_test)))

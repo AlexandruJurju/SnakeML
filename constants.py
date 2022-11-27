@@ -19,6 +19,7 @@ OFFSET_BOARD_Y = 50
 
 VISION_LINES_COUNT = 4
 VISION_LINES_RETURN = "boolean"
+BOARD_SIZE = 10
 
 
 class Direction(Enum):

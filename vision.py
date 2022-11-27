@@ -62,8 +62,8 @@ class Vision:
             return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean)
 
         elif return_type == "distance":
-            wall_distance_output = 1 / wall_distance
-            apple_distance_output = apple_distance
+            wall_distance_output = wall_distance
+            apple_distance_output = 1 / apple_distance
             segment_distance_output = segment_distance
 
             return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_distance_output, segment_coord, segment_distance_output)

@@ -115,7 +115,7 @@ class Game:
         param_type = ["WALL", "APPLE", "SEGMENT"]
         for line in vision_lines:
             for param in param_type:
-                line_label = font.render(line + " " + param, True, (255, 255, 255))
+                line_label = font.render(line + " " + param, True, COLOR_WHITE)
                 self.window.blit(line_label, [input_label_offset_x, label_height_between * label_count + input_label_offset_y - 10])
                 label_count += 1
 
@@ -137,7 +137,6 @@ class Game:
 
         # draw neurons
         for i, layer in enumerate(dense_layers):
-
             # if it's the first layer, draw neurons using input
             if i == 0:
                 for j in range(layer.input_size):
