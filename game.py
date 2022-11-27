@@ -102,13 +102,13 @@ class Game:
         font = pygame.font.SysFont("arial", 16)
 
         input_label_offset_x = 550
-        input_label_offset_y = 50
+        input_label_offset_y = 100
         label_height_between = 27.5
 
         neuron_width_between = 75
         neuron_height_between = label_height_between
-        neuron_offset_x = input_label_offset_x + 95
-        neuron_offset_y = 50
+        neuron_offset_x = input_label_offset_x + 100
+        neuron_offset_y = input_label_offset_y
         neuron_radius = 12
 
         label_count = 0
