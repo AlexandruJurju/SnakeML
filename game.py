@@ -1,6 +1,5 @@
 import pygame
 
-from Neural.neural_network import NeuralNetwork
 from constants import *
 from model import *
 
