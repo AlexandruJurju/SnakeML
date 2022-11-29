@@ -30,7 +30,6 @@ def mse(y_real, y_predicted):
     return np.mean(np.power(y_real - y_predicted, 2))
 
 
-# TODO dc imparte la np.size
 def mse_prime(y_true, y_pred):
     return 2 * (y_pred - y_true) / np.size(y_true)
 
@@ -55,7 +54,6 @@ class Dense(Layer):
         self.input_size = input_size
         self.output_size = output_size
 
-        # TODO cum se initializeaza greutatile
         self.weights = np.random.uniform(-1, 1, (output_size, input_size))
         self.bias = np.random.uniform(-1, 1, (output_size, 1))
 
@@ -127,7 +125,6 @@ class NeuralNetwork:
                 for layer in reversed(self.layers):
                     gradient = layer.backward(gradient, learning_rate)
 
-            # TODO dc imparte eroarea la nr de date de antrenament
             error /= len(x_train)
 
             print(f"epoch = {epoch}, error = {error}")

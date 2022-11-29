@@ -122,6 +122,7 @@ class Game:
         self.draw_neurons(neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, font)
 
     # TODO more efficient function calls for inputs and outputs
+    # TODO doesnt work for more than 1 hidden layer
     def draw_neurons(self, neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, font):
         dense_layers = self.model.snake.brain.get_dense_layers()
         inputs = Vision.get_parameters_in_nn_input_form(self.model.board, VISION_LINES_COUNT, VISION_LINES_RETURN)
