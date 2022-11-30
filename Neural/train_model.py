@@ -28,9 +28,6 @@ def read_training_models():
             for j, model_column in enumerate(values_in_row):
                 temp_board[i, j] = model_column
         x.append(Vision.get_parameters_in_nn_input_form(temp_board, VISION_LINES_COUNT, VISION_LINES_RETURN))
-        print(temp_board)
-        print(x[-1])
-        print()
 
         outputs_string_list = row[1].split(" ")
         outputs = []
@@ -43,6 +40,12 @@ def read_training_models():
 
 def train_network(network: NeuralNetwork):
     x, y = read_training_models()
+
+    # example for points
+    # x is (10000,2) 10000 lines, 2 columns ; 10000 examples each with x coord and y coord
+    # when using a single example x_test from x, x_test is (2,)
+    # resizing can be done for the whole training data resize(10000,2,1)
+    # or for just one example resize(2,1)
 
     x = np.reshape(x, (len(x), VISION_LINES_COUNT * 3, 1))
     y = np.reshape(y, (len(y), 3, 1))
