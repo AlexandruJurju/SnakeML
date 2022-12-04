@@ -90,9 +90,8 @@ class Vision:
             }
 
     @staticmethod
-    def get_parameters_in_nn_input_form(model: [str], vision_line_number: int, return_type: str) -> np.ndarray:
+    def get_parameters_in_nn_input_form(vision_lines) -> np.ndarray:
         nn_input = []
-        vision_lines = Vision.get_vision_lines(model, vision_line_number, return_type)
         for line in vision_lines:
             nn_input.append(vision_lines[line].wall_distance)
             nn_input.append(vision_lines[line].apple_distance)

@@ -27,7 +27,8 @@ def read_training_models():
             values_in_row = model_row.split(" ")
             for j, model_column in enumerate(values_in_row):
                 temp_board[i, j] = model_column
-        x.append(Vision.get_parameters_in_nn_input_form(temp_board, VISION_LINES_COUNT, VISION_LINES_RETURN))
+        vision_lines = Vision.get_vision_lines(temp_board, VISION_LINES_COUNT, VISION_LINES_RETURN)
+        x.append(Vision.get_parameters_in_nn_input_form(vision_lines))
 
         outputs_string_list = row[1].split(" ")
         outputs = []
@@ -58,3 +59,17 @@ def train_network(network: NeuralNetwork):
         target_index = list(y_test).index(max(list(y_test)))
         print(f"target = {target_index}, output = {output_index}")
         print("============================================")
+
+
+def write_model_predictions(model: [[]], prediction: np.ndarray) -> None:
+    model_string = str(model)
+    model_string = model_string.replace("[[", "\"[")
+    model_string = model_string.replace("]]", "]\"")
+    model_string = model_string.replace(" [", "[")
+
+    prediction_string = str(np.reshape(prediction, (1, 3)))
+    prediction_string = prediction_string.replace("[[", "")
+    prediction_string = prediction_string.replace("]]", "")
+
+    output = (model_string + "," + prediction_string)
+    print(output)

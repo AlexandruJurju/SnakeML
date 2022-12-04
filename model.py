@@ -133,8 +133,14 @@ class Model:
 
         return True
 
-    def get_neural_network_direction_output_3(self, vision_line_number: int, return_type: str) -> Direction:
-        nn_input = Vision.get_parameters_in_nn_input_form(self.board, vision_line_number, return_type)
+    def get_nn_output(self, vision_lines) -> np.ndarray:
+        nn_input = Vision.get_parameters_in_nn_input_form(vision_lines)
+        output = self.snake.brain.feed_forward(nn_input)
+
+        return output
+
+    def get_neural_network_direction_output_3(self, vision_lines) -> Direction:
+        nn_input = Vision.get_parameters_in_nn_input_form(vision_lines)
         output = self.snake.brain.feed_forward(nn_input)
         direction_index = list(output).index(max(list(output)))
 

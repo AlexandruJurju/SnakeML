@@ -2,6 +2,7 @@ import pygame
 
 from constants import *
 from model import *
+from Neural.train_model import write_model_predictions
 
 
 class Game:
@@ -35,35 +36,81 @@ class Game:
                 pygame.draw.rect(self.window, COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE), width=1)
 
     def run(self):
-        self.draw_board()
-        pygame.display.update()
-        self.fps_clock.tick(MAX_FPS)
-
-        # print(self.model.board)
-        # print(Vision.get_parameters_in_nn_input_form(self.model.board, VISION_LINES_COUNT, VISION_LINES_RETURN))
-
         while self.running:
             self.window.fill(COLOR_BACKGROUND)
 
-            # TODO more efficient function calls for Vision functions
-            next_direction = self.model.get_neural_network_direction_output_3(VISION_LINES_COUNT, VISION_LINES_RETURN)
+            vision_lines = Vision.get_vision_lines(self.model.board, VISION_LINES_COUNT, VISION_LINES_RETURN)
+            self.draw_board()
+            self.draw_vision_lines(vision_lines)
+
+            # print(self.model.board)
+            # print(self.model.get_nn_output(vision_lines))
+            # print("============")
+
+            next_direction = self.model.get_neural_network_direction_output_3(vision_lines)
             self.running = self.model.move_in_direction(next_direction)
 
-            vision_lines = Vision.get_vision_lines(self.model.board, VISION_LINES_COUNT, VISION_LINES_RETURN)
-            # print(self.model.board)
-            # print(Vision.get_parameters_in_nn_input_form(self.model.board, VISION_LINES_COUNT, VISION_LINES_RETURN))
-
-            if self.running:
-                self.draw_board()
-                self.draw_vision_lines(vision_lines)
-                self.draw_network(vision_lines)
-            else:
+            if not self.running:
+                # self.draw_board()
+                # self.draw_vision_lines(vision_lines)
                 # self.running = True
                 # self.model.reinit_model()
+                self.draw_dead()
                 pass
 
             pygame.display.update()
             self.fps_clock.tick(MAX_FPS)
+
+    # def run(self):
+    #     self.draw_board()
+    #     pygame.display.update()
+    #     self.fps_clock.tick(MAX_FPS)
+    #
+    #     # print(self.model.board)
+    #     # print(Vision.get_parameters_in_nn_input_form(self.model.board, VISION_LINES_COUNT, VISION_LINES_RETURN))
+    #
+    #     while self.running:
+    #         self.window.fill(COLOR_BACKGROUND)
+    #
+    #         # TODO more efficient function calls for Vision functions
+    #         current_vision_lines = Vision.get_vision_lines(self.model.board, VISION_LINES_COUNT, VISION_LINES_RETURN)
+    #         print(self.model.board)
+    #
+    #         next_direction = self.model.get_neural_network_direction_output_3(current_vision_lines)
+    #         self.running = self.model.move_in_direction(next_direction)
+    #
+    #         after_move_vision_lines = Vision.get_vision_lines(self.model.board, VISION_LINES_COUNT, VISION_LINES_RETURN)
+    #         print(self.model.board)
+    #
+    #         if self.running:
+    #             # print(self.model.board)
+    #             # print(self.model.get_nn_output(vision_lines))
+    #             # write_model_predictions(self.model.board, self.model.get_nn_output(old_vision_lines))
+    #
+    #             self.draw_board()
+    #             self.draw_vision_lines(after_move_vision_lines)
+    #             # self.draw_network(vision_lines)
+    #         else:
+    #             # self.running = True
+    #             # self.model.reinit_model()
+    #             pass
+    #
+    #         pygame.display.update()
+    #         self.fps_clock.tick(MAX_FPS)
+
+    def draw_dead(self):
+        for x in range(self.model.size):
+            for y in range(self.model.size):
+                x_position = x * SQUARE_SIZE + OFFSET_BOARD_X
+                y_position = y * SQUARE_SIZE + OFFSET_BOARD_Y
+
+                match self.model.board[y, x]:
+                    case "S":
+                        pygame.draw.rect(self.window, COLOR_RED, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
+                    case "H":
+                        pygame.draw.rect(self.window, COLOR_RED, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
+                # draw lines between squares
+                pygame.draw.rect(self.window, COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE), width=1)
 
     def draw_vision_lines(self, vision_lines):
         font = pygame.font.SysFont("arial", 18)
