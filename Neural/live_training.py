@@ -25,7 +25,7 @@ def write_model_predictions(model: [[]], prediction: np.ndarray) -> None:
 
 
 def write_examples_to_csv(examples: List[TrainingExample]):
-    file = open("Neural/train_data2.csv", "w")
+    file = open("Neural/train_data2.csv", "w", newline='')
     writer = csv.writer(file)
 
     correct_examples = []
@@ -79,7 +79,7 @@ def reorient_board(board, current_direction: Direction) -> [[]]:
 def evaluate_live_examples(examples: List[TrainingExample]):
     evaluated = []
 
-    for example in examples:
+    for example in examples[:-1]:
         print(example.model)
         print(example.prediction)
         print()
@@ -87,6 +87,8 @@ def evaluate_live_examples(examples: List[TrainingExample]):
 
         if target_string == "":
             target_output = example.prediction
+        elif target_string == "x":
+            break
         else:
             target_output = [0.0, 0.0, 0.0]
             if target_string.__contains__("s"):
