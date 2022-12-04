@@ -139,10 +139,8 @@ class Model:
 
         return output
 
-    def get_neural_network_direction_output_3(self, vision_lines) -> Direction:
-        nn_input = Vision.get_parameters_in_nn_input_form(vision_lines)
-        output = self.snake.brain.feed_forward(nn_input)
-        direction_index = list(output).index(max(list(output)))
+    def get_neural_network_direction_output_3(self, nn_output) -> Direction:
+        direction_index = list(nn_output).index(max(list(nn_output)))
 
         # STRAIGHT
         if direction_index == 0:

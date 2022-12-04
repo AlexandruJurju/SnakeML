@@ -1,8 +1,10 @@
+import copy
+
 import pygame
 
 from constants import *
 from model import *
-from Neural.train_model import write_model_predictions
+from Neural.live_training import *
 
 
 class Game:
@@ -36,6 +38,7 @@ class Game:
                 pygame.draw.rect(self.window, COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE), width=1)
 
     def run(self):
+        training_examples = []
         while self.running:
             self.window.fill(COLOR_BACKGROUND)
 
@@ -43,11 +46,12 @@ class Game:
             self.draw_board()
             self.draw_vision_lines(vision_lines)
 
-            # print(self.model.board)
-            # print(self.model.get_nn_output(vision_lines))
-            # print("============")
+            neural_net_prediction = self.model.get_nn_output(vision_lines)
 
-            next_direction = self.model.get_neural_network_direction_output_3(vision_lines)
+            example = TrainingExample(copy.deepcopy(self.model.board), neural_net_prediction)
+            training_examples.append(example)
+
+            next_direction = self.model.get_neural_network_direction_output_3(neural_net_prediction)
             self.running = self.model.move_in_direction(next_direction)
 
             if not self.running:
@@ -56,7 +60,9 @@ class Game:
                 # self.running = True
                 # self.model.reinit_model()
                 self.draw_dead()
-                pass
+                evaluate_live_examples(training_examples)
+
+                training_examples = []
 
             pygame.display.update()
             self.fps_clock.tick(MAX_FPS)

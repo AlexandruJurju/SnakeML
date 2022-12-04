@@ -53,23 +53,9 @@ def train_network(network: NeuralNetwork):
 
     network.train(mse, mse_prime, x, y, 0.1)
 
-    for x_test, y_test in zip(x, y):
-        output = network.feed_forward(x_test)
-        output_index = list(output).index(max(list(output)))
-        target_index = list(y_test).index(max(list(y_test)))
-        print(f"target = {target_index}, output = {output_index}")
-        print("============================================")
-
-
-def write_model_predictions(model: [[]], prediction: np.ndarray) -> None:
-    model_string = str(model)
-    model_string = model_string.replace("[[", "\"[")
-    model_string = model_string.replace("]]", "]\"")
-    model_string = model_string.replace(" [", "[")
-
-    prediction_string = str(np.reshape(prediction, (1, 3)))
-    prediction_string = prediction_string.replace("[[", "")
-    prediction_string = prediction_string.replace("]]", "")
-
-    output = (model_string + "," + prediction_string)
-    print(output)
+    # for x_test, y_test in zip(x, y):
+    #     output = network.feed_forward(x_test)
+    #     output_index = list(output).index(max(list(output)))
+    #     target_index = list(y_test).index(max(list(y_test)))
+    #     print(f"target = {target_index}, output = {output_index}")
+    #     print("============================================")
