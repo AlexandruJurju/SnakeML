@@ -3,12 +3,14 @@ from typing import List
 import numpy as np
 from constants import Direction
 import csv
+from termcolor import colored, cprint
 
 
 class TrainingExample:
-    def __init__(self, model, prediction):
+    def __init__(self, model, prediction, current_direction):
         self.model = model
         self.prediction = prediction
+        self.current_direction = current_direction
 
 
 def write_model_predictions(model: [[]], prediction: np.ndarray) -> None:
@@ -35,11 +37,14 @@ def write_examples_to_csv(examples: List[TrainingExample]):
         model_string = model_string.replace("]]", "]")
         model_string = model_string.replace(" [", "[")
 
+        direction_string = str(example.current_direction)
+        direction_string = direction_string.replace('\'', "")
+
         prediction_string = str(np.reshape(example.prediction, (1, 3)))
         prediction_string = prediction_string.replace("[[", "")
         prediction_string = prediction_string.replace("]]", "")
 
-        correct_examples.append([model_string, prediction_string])
+        correct_examples.append([model_string, direction_string, prediction_string])
 
     writer.writerows(correct_examples)
     file.close()
@@ -76,12 +81,17 @@ def reorient_board(board, current_direction: Direction) -> [[]]:
     return board
 
 
+def print_example_smart(model, current_direction: Direction):
+    pass
+
+
 def evaluate_live_examples(examples: List[TrainingExample]):
     evaluated = []
 
     for example in examples[:-1]:
         print(example.model)
         print(example.prediction)
+        print(example.current_direction)
         print()
         target_string = input("S L R : ")
 
@@ -100,6 +110,6 @@ def evaluate_live_examples(examples: List[TrainingExample]):
 
         print(target_output)
         print()
-        evaluated.append(TrainingExample(copy.deepcopy(example.model), target_output))
+        evaluated.append(TrainingExample(copy.deepcopy(example.model), target_output, example.current_direction))
 
     write_examples_to_csv(evaluated)

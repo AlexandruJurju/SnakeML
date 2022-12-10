@@ -63,7 +63,7 @@ class Vision:
         wall_coord = current_block
 
         if return_type == "boolean":
-            wall_distance_output = wall_distance
+            wall_distance_output = 1 / wall_distance
             apple_boolean = 1.0 if apple_found else 0.0
             segment_boolean = 1.0 if segment_found else 0.0
 

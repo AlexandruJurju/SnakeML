@@ -46,11 +46,9 @@ class Game:
             self.draw_board()
             self.draw_vision_lines(vision_lines)
 
-            print(vision_lines["-Y"].wall_distance)
-
             neural_net_prediction = self.model.get_nn_output(vision_lines)
 
-            example = TrainingExample(copy.deepcopy(self.model.board), neural_net_prediction)
+            example = TrainingExample(copy.deepcopy(self.model.board), neural_net_prediction, self.model.snake.direction)
             training_examples.append(example)
 
             next_direction = self.model.get_neural_network_direction_output_3(neural_net_prediction)
@@ -69,42 +67,6 @@ class Game:
             pygame.display.update()
             self.fps_clock.tick(MAX_FPS)
 
-    # def run(self):
-    #     self.draw_board()
-    #     pygame.display.update()
-    #     self.fps_clock.tick(MAX_FPS)
-    #
-    #     # print(self.model.board)
-    #     # print(Vision.get_parameters_in_nn_input_form(self.model.board, VISION_LINES_COUNT, VISION_LINES_RETURN))
-    #
-    #     while self.running:
-    #         self.window.fill(COLOR_BACKGROUND)
-    #
-    #         # TODO more efficient function calls for Vision functions
-    #         current_vision_lines = Vision.get_vision_lines(self.model.board, VISION_LINES_COUNT, VISION_LINES_RETURN)
-    #         print(self.model.board)
-    #
-    #         next_direction = self.model.get_neural_network_direction_output_3(current_vision_lines)
-    #         self.running = self.model.move_in_direction(next_direction)
-    #
-    #         after_move_vision_lines = Vision.get_vision_lines(self.model.board, VISION_LINES_COUNT, VISION_LINES_RETURN)
-    #         print(self.model.board)
-    #
-    #         if self.running:
-    #             # print(self.model.board)
-    #             # print(self.model.get_nn_output(vision_lines))
-    #             # write_model_predictions(self.model.board, self.model.get_nn_output(old_vision_lines))
-    #
-    #             self.draw_board()
-    #             self.draw_vision_lines(after_move_vision_lines)
-    #             # self.draw_network(vision_lines)
-    #         else:
-    #             # self.running = True
-    #             # self.model.reinit_model()
-    #             pass
-    #
-    #         pygame.display.update()
-    #         self.fps_clock.tick(MAX_FPS)
 
     def draw_dead(self):
         for x in range(self.model.size):
