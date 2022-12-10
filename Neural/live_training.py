@@ -5,6 +5,8 @@ from constants import Direction
 import csv
 from termcolor import colored, cprint
 
+from vision import Vision
+
 
 class TrainingExample:
     def __init__(self, model, prediction, current_direction):
@@ -82,13 +84,21 @@ def reorient_board(board, current_direction: Direction) -> [[]]:
 
 
 def print_example_smart(model, current_direction: Direction):
-    pass
+    head = Vision.find_snake_head_poz(model)
+    color_positions = []
+
+    match current_direction:
+        case Direction.UP:
+            color_positions.append([head[0] - 1, head[1]])
+            color_positions.append([head[0], head[1] - 1])
+            color_positions.append([head[0], head[1] + 1])
 
 
 def evaluate_live_examples(examples: List[TrainingExample]):
     evaluated = []
+    np.set_printoptions(suppress=True)
 
-    for example in examples[:-1]:
+    for example in examples:
         print(example.model)
         print(example.prediction)
         print(example.current_direction)
