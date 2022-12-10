@@ -98,6 +98,34 @@ class Vision:
             }
 
     @staticmethod
+    def get_dynamic_vision_lines(model, current_direction: Direction) -> {}:
+        match current_direction:
+            case Direction.UP:
+                return {
+                    "+X": Vision.look_in_direction(model, Direction.RIGHT, "boolean"),
+                    "-X": Vision.look_in_direction(model, Direction.LEFT, "boolean"),
+                    "+Y": Vision.look_in_direction(model, Direction.UP, "boolean")
+                }
+            case Direction.DOWN:
+                return {
+                    "+X": Vision.look_in_direction(model, Direction.RIGHT, "boolean"),
+                    "-X": Vision.look_in_direction(model, Direction.LEFT, "boolean"),
+                    "-Y": Vision.look_in_direction(model, Direction.DOWN, "boolean")
+                }
+            case Direction.RIGHT:
+                return {
+                    "+X": Vision.look_in_direction(model, Direction.RIGHT, "boolean"),
+                    "-Y": Vision.look_in_direction(model, Direction.DOWN, "boolean"),
+                    "+Y": Vision.look_in_direction(model, Direction.UP, "boolean")
+                }
+            case Direction.LEFT:
+                return {
+                    "-X": Vision.look_in_direction(model, Direction.LEFT, "boolean"),
+                    "-Y": Vision.look_in_direction(model, Direction.DOWN, "boolean"),
+                    "+Y": Vision.look_in_direction(model, Direction.UP, "boolean")
+                }
+
+    @staticmethod
     def get_parameters_in_nn_input_form(vision_lines, current_direction: Direction) -> np.ndarray:
         nn_input = []
         for line in vision_lines:

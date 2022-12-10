@@ -42,7 +42,7 @@ class Game:
         while self.running:
             self.window.fill(COLOR_BACKGROUND)
 
-            vision_lines = Vision.get_vision_lines(self.model.board, VISION_LINES_COUNT, VISION_LINES_RETURN)
+            vision_lines = Vision.get_dynamic_vision_lines(self.model.board, self.model.snake.direction)
             self.draw_board()
             self.draw_vision_lines(vision_lines)
 

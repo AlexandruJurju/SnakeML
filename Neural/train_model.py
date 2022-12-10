@@ -28,7 +28,6 @@ def read_training_models():
             values_in_row = model_row.split(" ")
             for j, model_column in enumerate(values_in_row):
                 temp_board[i, j] = model_column
-        vision_lines = Vision.get_vision_lines(temp_board, VISION_LINES_COUNT, VISION_LINES_RETURN)
 
         # direction is saved as Direction.UP, but direction.name is just UP, use split to get second part
         direction_string = row[1].split(".")[1]
@@ -38,6 +37,8 @@ def read_training_models():
             if direction_string == direction_enum_name:
                 real_direction = direction
                 break
+
+        vision_lines = Vision.get_dynamic_vision_lines(temp_board, real_direction)
 
         x.append(Vision.get_parameters_in_nn_input_form(vision_lines, real_direction))
 
