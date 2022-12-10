@@ -46,6 +46,8 @@ class Game:
             self.draw_board()
             self.draw_vision_lines(vision_lines)
 
+            print(vision_lines["-Y"].wall_distance)
+
             neural_net_prediction = self.model.get_nn_output(vision_lines)
 
             example = TrainingExample(copy.deepcopy(self.model.board), neural_net_prediction)
