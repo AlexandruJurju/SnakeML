@@ -2,7 +2,7 @@ import math
 
 import numpy as np
 
-from constants import Direction
+from constants import Direction, MAIN_DIRECTIONS
 
 
 def distance(a, b):
@@ -98,11 +98,17 @@ class Vision:
             }
 
     @staticmethod
-    def get_parameters_in_nn_input_form(vision_lines) -> np.ndarray:
+    def get_parameters_in_nn_input_form(vision_lines, current_direction: Direction) -> np.ndarray:
         nn_input = []
         for line in vision_lines:
             nn_input.append(vision_lines[line].wall_distance)
             nn_input.append(vision_lines[line].apple_distance)
             nn_input.append(vision_lines[line].segment_distance)
+
+        for direction in MAIN_DIRECTIONS:
+            if current_direction == direction:
+                nn_input.append(1)
+            else:
+                nn_input.append(0)
 
         return np.reshape(nn_input, (len(nn_input), 1))

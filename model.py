@@ -134,7 +134,7 @@ class Model:
         return True
 
     def get_nn_output(self, vision_lines) -> np.ndarray:
-        nn_input = Vision.get_parameters_in_nn_input_form(vision_lines)
+        nn_input = Vision.get_parameters_in_nn_input_form(vision_lines, self.snake.direction)
         output = self.snake.brain.feed_forward(nn_input)
 
         return output
