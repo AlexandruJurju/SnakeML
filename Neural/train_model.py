@@ -5,7 +5,7 @@ from vision import Vision
 
 
 def read_training_models():
-    file = open("Neural/train_data.csv")
+    file = open("Neural/train_data2.csv")
     csvreader = csv.reader(file)
 
     rows = []
