@@ -125,7 +125,7 @@ class NeuralNetwork:
                 for layer in reversed(self.layers):
                     gradient = layer.backward(gradient, learning_rate)
 
-            error /= len(x_train)
+            # error /= len(x_train)
             epoch += 1
 
             print(f"epoch = {epoch}, error = {error}")
