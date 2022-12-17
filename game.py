@@ -1,6 +1,8 @@
 import pygame
 
 from Neural.live_training import *
+from Neural.neural_network import Dense, Activation, tanh, sigmoid, tanh_prime, sigmoid_prime
+from Neural.train_model import train_network
 from constants import *
 from model import *
 
@@ -12,10 +14,49 @@ class Game:
         pygame.display.set_caption("Snake Game")
         self.fps_clock = pygame.time.Clock()
 
-
-
         self.running = True
         self.model = Model(model_size, snake_size, net)
+
+    def run(self):
+        training_examples = []
+        while self.running:
+            self.window.fill(COLOR_BACKGROUND)
+
+            vision_lines = Vision.get_dynamic_vision_lines(self.model.board, self.model.snake.direction)
+            self.draw_board()
+            self.draw_vision_lines(vision_lines)
+
+            neural_net_prediction = self.model.get_nn_output(vision_lines)
+
+            example = TrainingExample(copy.deepcopy(self.model.board), neural_net_prediction, self.model.snake.direction)
+            training_examples.append(example)
+
+            next_direction = self.model.get_neural_network_direction_output_3(neural_net_prediction)
+            self.running = self.model.move_in_direction(next_direction)
+
+            if not self.running:
+                self.draw_dead()
+                pygame.display.update()
+
+                evaluate_live_examples(training_examples)
+                training_examples = []
+
+                # TODO BAD REINIT, TO BE REMOVED
+                # TODO train data , search file like a dictionary to find if there are conflicting data
+                net = NeuralNetwork()
+                net.add_layer(Dense(VISION_LINES_COUNT * 3 + 4, 16))
+                net.add_layer(Activation(tanh, tanh_prime))
+                net.add_layer(Dense(16, 3))
+                net.add_layer(Activation(sigmoid, sigmoid_prime))
+
+                train_network(net)
+
+                self.model = Model(10, 3, net)
+
+                self.running = True
+
+            pygame.display.update()
+            self.fps_clock.tick(MAX_FPS)
 
     def draw_board(self):
         # use y,x for index in board instead of x,y because of changed logic
@@ -36,38 +77,6 @@ class Game:
                         pygame.draw.rect(self.window, COLOR_SNAKE_HEAD, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
                 # draw lines between squares
                 pygame.draw.rect(self.window, COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE), width=1)
-
-    def run(self):
-        training_examples = []
-        while self.running:
-            self.window.fill(COLOR_BACKGROUND)
-
-            vision_lines = Vision.get_dynamic_vision_lines(self.model.board, self.model.snake.direction)
-            self.draw_board()
-            self.draw_vision_lines(vision_lines)
-
-            neural_net_prediction = self.model.get_nn_output(vision_lines)
-
-            example = TrainingExample(copy.deepcopy(self.model.board), neural_net_prediction, self.model.snake.direction)
-            training_examples.append(example)
-
-            next_direction = self.model.get_neural_network_direction_output_3(neural_net_prediction)
-            self.running = self.model.move_in_direction(next_direction)
-
-            if not self.running:
-                # self.draw_board()
-                # self.draw_vision_lines(vision_lines)
-                # self.running = True
-                # self.model.reinit_model()
-                self.draw_dead()
-                pygame.display.update()
-
-                evaluate_live_examples(training_examples)
-                training_examples = []
-
-
-            pygame.display.update()
-            self.fps_clock.tick(MAX_FPS)
 
     def draw_dead(self):
         for x in range(self.model.size):

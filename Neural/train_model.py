@@ -45,7 +45,8 @@ def read_training_models():
         outputs_string_list = row[2].split(" ")
         outputs = []
         for tuple_string in outputs_string_list:
-            outputs.append(float(tuple_string))
+            if tuple_string!= "":
+                outputs.append(float(tuple_string))
         y.append(outputs)
 
     return x, y

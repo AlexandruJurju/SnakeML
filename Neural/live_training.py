@@ -41,10 +41,12 @@ def write_examples_to_csv(examples: List[TrainingExample]):
 
         direction_string = str(example.current_direction)
         direction_string = direction_string.replace('\'', "")
+        direction_string = direction_string.strip()
 
         prediction_string = str(np.reshape(example.prediction, (1, 3)))
         prediction_string = prediction_string.replace("[[", "")
         prediction_string = prediction_string.replace("]]", "")
+        prediction_string = prediction_string.strip()
 
         correct_examples.append([model_string, direction_string, prediction_string])
 
