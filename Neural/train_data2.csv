@@ -50,11 +50,11 @@
 ['W' 'X' 'X' 'X' 'X' 'H' 'X' 'X' 'X' 'X' 'X' 'W']
 ['W' 'X' 'X' 'X' 'X' 'S' 'X' 'X' 'X' 'X' 'X' 'W']
 ['W' 'X' 'X' 'X' 'X' 'S' 'X' 'X' 'X' 'X' 'X' 'W']
-['W' 'X' 'X' 'X' 'X' 'S' 'X' 'X' 'X' 'X' 'X' 'W']
 ['W' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'W']
 ['W' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'W']
 ['W' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'W']
 ['W' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'W']
 ['W' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'W']
 ['W' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'W']
-['W' 'W' 'W' 'W' 'W' 'W' 'W' 'W' 'W' 'W' 'W' 'W']",Direction.UP,0. 1. 0.
+['W' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'X' 'W']
+['W' 'W' 'W' 'W' 'W' 'W' 'W' 'W' 'W' 'W' 'W' 'W']",Direction.UP,0. 0.5 0.5

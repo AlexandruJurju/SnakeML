@@ -1,10 +1,9 @@
 import random
 from typing import Tuple, List
 
-from constants import MAIN_DIRECTIONS
+from Neural.neural_network import NeuralNetwork
 from snake import Snake
 from vision import *
-from Neural.neural_network import NeuralNetwork
 
 
 class Model:

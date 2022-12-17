@@ -1,10 +1,8 @@
-import copy
-
 import pygame
 
+from Neural.live_training import *
 from constants import *
 from model import *
-from Neural.live_training import *
 
 
 class Game:
@@ -13,6 +11,8 @@ class Game:
         self.window = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Snake Game")
         self.fps_clock = pygame.time.Clock()
+
+
 
         self.running = True
         self.model = Model(model_size, snake_size, net)
@@ -61,9 +61,10 @@ class Game:
                 # self.model.reinit_model()
                 self.draw_dead()
                 pygame.display.update()
-                evaluate_live_examples(training_examples)
 
+                evaluate_live_examples(training_examples)
                 training_examples = []
+
 
             pygame.display.update()
             self.fps_clock.tick(MAX_FPS)
