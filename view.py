@@ -1,69 +1,31 @@
 import pygame
-
-from Neural.train_model import *
-from Neural.neural_network import Dense, Activation, tanh, sigmoid, tanh_prime, sigmoid_prime
-from Neural.train_model import train_network
 from constants import *
-from model import *
+import numpy as np
 
 
-class Game:
-    def __init__(self, model_size: int, snake_size: int, net: NeuralNetwork):
+class View:
+    def __init__(self):
         pygame.init()
         self.window = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("Snake Game")
         self.fps_clock = pygame.time.Clock()
 
-        self.running = True
-        self.model = Model(model_size, snake_size, net)
+    def clear_window(self):
+        self.window.fill(COLOR_BACKGROUND)
 
-    def run(self):
-        training_examples = []
-        while self.running:
-            self.window.fill(COLOR_BACKGROUND)
+    def update_window(self):
+        pygame.display.update()
+        self.fps_clock.tick(MAX_FPS)
 
-            vision_lines = Vision.get_dynamic_vision_lines(self.model.board, self.model.snake.direction)
-            self.draw_board()
-            self.draw_vision_lines(vision_lines)
-
-            neural_net_prediction = self.model.get_nn_output(vision_lines)
-            nn_input = Vision.get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
-            self.draw_neural_network(vision_lines, nn_input, neural_net_prediction)
-
-            example = TrainingExample(copy.deepcopy(self.model.board), neural_net_prediction, self.model.snake.direction)
-            training_examples.append(example)
-
-            next_direction = self.model.get_nn_output_3directions_dynamic(neural_net_prediction)
-            self.running = self.model.move_in_direction(next_direction)
-
-            if not self.running:
-                self.draw_dead()
-                pygame.display.update()
-
-                evaluate_live_examples(training_examples)
-                training_examples = []
-
-                # TODO BAD REINIT, TO BE REMOVED
-                # TODO train data , search file like a dictionary to find if there are conflicting data
-                self.model.snake.brain.reinit_weights_and_biases()
-                train_network(self.model.snake.brain)
-
-                self.model = Model(10, 3, self.model.snake.brain)
-
-                self.running = True
-
-            pygame.display.update()
-            self.fps_clock.tick(MAX_FPS)
-
-    def draw_board(self):
+    def draw_board(self, model):
         # use y,x for index in board instead of x,y because of changed logic
         # x is line y is column ; drawing x is column and y is line
-        for x in range(self.model.size):
-            for y in range(self.model.size):
+        for x in range(model.size):
+            for y in range(model.size):
                 x_position = x * SQUARE_SIZE + OFFSET_BOARD_X
                 y_position = y * SQUARE_SIZE + OFFSET_BOARD_Y
 
-                match self.model.board[y, x]:
+                match model.board[y, x]:
                     case "S":
                         pygame.draw.rect(self.window, COLOR_SNAKE, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
                     case "W":
@@ -75,13 +37,13 @@ class Game:
                 # draw lines between squares
                 pygame.draw.rect(self.window, COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE), width=1)
 
-    def draw_dead(self):
-        for x in range(self.model.size):
-            for y in range(self.model.size):
+    def draw_dead(self, model):
+        for x in range(model.size):
+            for y in range(model.size):
                 x_position = x * SQUARE_SIZE + OFFSET_BOARD_X
                 y_position = y * SQUARE_SIZE + OFFSET_BOARD_Y
 
-                match self.model.board[y, x]:
+                match model.board[y, x]:
                     case "S":
                         pygame.draw.rect(self.window, COLOR_RED, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
                     case "H":
@@ -89,7 +51,7 @@ class Game:
                 # draw lines between squares
                 pygame.draw.rect(self.window, COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE), width=1)
 
-    def draw_vision_lines(self, vision_lines):
+    def draw_vision_lines(self, model, vision_lines):
         font = pygame.font.SysFont("arial", 18)
 
         # loop over all lines in given vision lines
@@ -101,8 +63,8 @@ class Game:
 
             # draw line from head to wall, draw before body and apple lines
             # drawing uses SQUARE_SIZE//2 so that lines go through the middle of the squares
-            line_end_x = self.model.snake.body[0][1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X
-            line_end_y = self.model.snake.body[0][0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y
+            line_end_x = model.snake.body[0][1] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_X
+            line_end_y = model.snake.body[0][0] * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y
 
             # draw line form snake head until wall block
             self.draw_vision_line(COLOR_APPLE, 1, vision_lines[line].wall_coord[1], vision_lines[line].wall_coord[0], line_end_x, line_end_y)
@@ -122,7 +84,7 @@ class Game:
                          (line_end_x, line_end_y), width=width)
 
     # TODO draw lines between neurons
-    def draw_neural_network(self, vision_lines, nn_input, nn_output):
+    def draw_neural_network(self, model, vision_lines, nn_input, nn_output):
         font = pygame.font.SysFont("arial", 16)
 
         input_label_offset_x = 550
@@ -144,10 +106,10 @@ class Game:
                 self.window.blit(line_label, [input_label_offset_x, label_height_between * label_count + input_label_offset_y - 10])
                 label_count += 1
 
-        self.draw_neurons(neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, font, nn_input, nn_output)
+        self.draw_neurons(model, neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, font, nn_input, nn_output)
 
-    def draw_neurons(self, neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, font, nn_input, nn_output):
-        dense_layers = self.model.snake.brain.get_dense_layers()
+    def draw_neurons(self, model, neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, font, nn_input, nn_output):
+        dense_layers = model.snake.brain.get_dense_layers()
 
         # max distance is used to center the neurons in the next layers, formula for new yOffset is (yLengthPrevious - yLengthCurrent) / 2
         max_y_distance = 0
@@ -212,7 +174,7 @@ class Game:
                 # Draw NN hidden layers outputs
                 else:
                     # hidden neuron activation color
-                    if self.model.snake.brain.layers[i + 1].output[j] <= 0:
+                    if model.snake.brain.layers[i + 1].output[j] <= 0:
                         color = (0, 0, 0)
                     else:
                         color = (0, 255, 0)

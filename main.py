@@ -1,5 +1,7 @@
 from Neural.train_model import *
-from game import Game
+from controller import Controller
+from view import View
+from model import Model
 
 if __name__ == '__main__':
     net = NeuralNetwork()
@@ -10,5 +12,8 @@ if __name__ == '__main__':
 
     train_network(net)
 
-    game = Game(BOARD_SIZE, START_SNAKE_SIZE, net)
+    view = View()
+    model = Model(BOARD_SIZE, START_SNAKE_SIZE, net)
+
+    game = Controller(model, view)
     game.run()
