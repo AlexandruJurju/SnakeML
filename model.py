@@ -129,6 +129,10 @@ class Model:
         else:
             self.snake.body = self.snake.body[:-1]
             self.update_board_from_snake()
+            self.snake.ttl = self.snake.ttl - 1
+
+        if self.snake.ttl == 0:
+            return False
 
         return True
 

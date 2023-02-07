@@ -45,15 +45,10 @@ class Game:
 
                 # TODO BAD REINIT, TO BE REMOVED
                 # TODO train data , search file like a dictionary to find if there are conflicting data
-                net = NeuralNetwork()
-                net.add_layer(Dense(VISION_LINES_COUNT * 3 + 4, 16))
-                net.add_layer(Activation(sigmoid, sigmoid_prime))
-                net.add_layer(Dense(16, 3))
-                net.add_layer(Activation(sigmoid, sigmoid_prime))
+                self.model.snake.brain.reinit_weights_and_biases()
+                train_network(self.model.snake.brain)
 
-                train_network(net)
-
-                self.model = Model(10, 3, net)
+                self.model = Model(10, 3, self.model.snake.brain)
 
                 self.running = True
 

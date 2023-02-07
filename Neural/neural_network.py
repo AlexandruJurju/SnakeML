@@ -57,11 +57,11 @@ class Dense(Layer):
         self.input_size = input_size
         self.output_size = output_size
 
-        # self.weights = np.random.uniform(-1, 1, (output_size, input_size))
-        # self.bias = np.random.uniform(-1, 1, (output_size, 1))
+        self.weights = np.random.uniform(-1, 1, (output_size, input_size))
+        self.bias = np.random.uniform(-1, 1, (output_size, 1))
 
-        self.weights = np.random.randn(output_size, input_size)
-        self.bias = np.random.randn(output_size, 1)
+        # self.weights = np.random.randn(output_size, input_size)
+        # self.bias = np.random.randn(output_size, 1)
 
     def forward(self, input):
         self.input = input
@@ -119,6 +119,13 @@ class NeuralNetwork:
             if type(layer) is Dense:
                 dense_layers.append(layer)
         return dense_layers
+
+    def reinit_weights_and_biases(self):
+        dense_layers = self.get_dense_layers()
+
+        for layer in dense_layers:
+            layer.weights = np.random.uniform(-1, 1, (layer.output_size, layer.input_size))
+            layer.bias = np.random.uniform(-1, 1, (layer.output_size, 1))
 
     def train(self, loss, loss_prime, x_train, y_train, learning_rate) -> None:
         error = 10000
