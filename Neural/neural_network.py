@@ -141,7 +141,7 @@ class NeuralNetwork:
             epoch += 1
 
             print(f"epoch = {epoch}, error = {error}")
-        print(f"final error {error}")
+        print(f"final error {error} + \n")
 
     def print_weights_and_biases(self) -> None:
         dense_layers = []
