@@ -45,7 +45,8 @@ class Controller:
                 self.model.snake.brain.reinit_weights_and_biases()
                 train_network(self.model.snake.brain)
 
-                self.model = Model(10, 3, self.model.snake.brain)
+                # TODO add reinit function in model
+                self.model = Model(BOARD_SIZE, START_SNAKE_SIZE, self.model.snake.brain)
 
                 self.running = True
 
