@@ -126,6 +126,7 @@ class Game:
                           line_coord_0 * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
                          (line_end_x, line_end_y), width=width)
 
+    # TODO draw lines between neurons
     def draw_neural_network(self, vision_lines, nn_input, nn_output):
         font = pygame.font.SysFont("arial", 16)
 

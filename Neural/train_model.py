@@ -67,9 +67,8 @@ def train_network(network: NeuralNetwork):
     # when using a single example x_test from x, x_test is (2,)
     # resizing can be done for the whole training data resize(10000,2,1)
     # or for just one example resize(2,1)
-    # TODO reshape based on network layers
-    x = np.reshape(x, (len(x), VISION_LINES_COUNT * 3 + 4, 1))
-    y = np.reshape(y, (len(y), 3, 1))
+    x = np.reshape(x, (len(x), NN_INPUT_NEURON_COUNT, 1))
+    y = np.reshape(y, (len(y), NN_OUTPUT_NEURON_COUNT, 1))
 
     network.train(mse, mse_prime, x, y, 0.5)
 
