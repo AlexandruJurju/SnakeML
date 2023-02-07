@@ -3,13 +3,12 @@ from game import Game
 
 if __name__ == '__main__':
     net = NeuralNetwork()
-    net.add_layer(Dense(VISION_LINES_COUNT * 3 + 4, 16))
-    net.add_layer(Activation(tanh, tanh_prime))
-    net.add_layer(Dense(16, 3))
+    net.add_layer(Dense(NN_INPUT_NEURON_COUNT, NN_HIDDEN_NEURON_COUNT))
+    net.add_layer(Activation(sigmoid, sigmoid_prime))
+    net.add_layer(Dense(NN_HIDDEN_NEURON_COUNT, NN_OUTPUT_NEURON_COUNT))
     net.add_layer(Activation(sigmoid, sigmoid_prime))
 
-    # TODO 70% train 30% test
     train_network(net)
 
-    game = Game(BOARD_SIZE, 3, net)
+    game = Game(BOARD_SIZE, START_SNAKE_SIZE, net)
     game.run()
