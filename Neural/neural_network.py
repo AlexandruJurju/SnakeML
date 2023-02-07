@@ -26,12 +26,15 @@ def tanh_prime(x):
 
 
 # use np because y_real and y_predicted are vectors of values
-def mse(y_real, y_predicted):
-    return np.mean(np.power(y_real - y_predicted, 2))
+# mse returns a scalar, MSE of all errors in output
+def mse(target_y, predicted_y):
+    real_mse = np.mean(np.power(target_y - predicted_y, 2))
+    return real_mse
 
 
-def mse_prime(y_true, y_pred):
-    return 2 * (y_pred - y_true) / np.size(y_true)
+# mse prime returns a vector of dE/dY, output gradient vector for output vector
+def mse_prime(target_y, predicted_y):
+    return (2 / np.size(target_y)) * (predicted_y - target_y)
 
 
 class Layer:
@@ -54,8 +57,11 @@ class Dense(Layer):
         self.input_size = input_size
         self.output_size = output_size
 
-        self.weights = np.random.uniform(-1, 1, (output_size, input_size))
-        self.bias = np.random.uniform(-1, 1, (output_size, 1))
+        # self.weights = np.random.uniform(-1, 1, (output_size, input_size))
+        # self.bias = np.random.uniform(-1, 1, (output_size, 1))
+
+        self.weights = np.random.randn(output_size, input_size)
+        self.bias = np.random.randn(output_size, 1)
 
     def forward(self, input):
         self.input = input
@@ -85,8 +91,13 @@ class Activation(Layer):
         self.output = self.activation(inputs)
         return self.output
 
+    # compute input gradient dE/dX = dE/dY * f'(X)
+    # self.output seems to work better
     def backward(self, output_gradient, learning_rate):
-        return np.multiply(output_gradient, self.activation_prime(self.input))
+        input_gradient = output_gradient * self.activation_prime(self.input)
+        # input_gradient = np.multiply(output_gradient, self.activation_prime(self.input))
+
+        return input_gradient
 
 
 class NeuralNetwork:
@@ -110,17 +121,18 @@ class NeuralNetwork:
         return dense_layers
 
     def train(self, loss, loss_prime, x_train, y_train, learning_rate) -> None:
-        error = 1
-        epoch = 1
-        while error > 0.001:
+        error = 10000
+        epoch = 0
+        # error doesn't have to be too small, when it gets rounded it doesn't matter too much
+        while error > 0.1:
             error = 0
             for x, y in zip(x_train, y_train):
                 output = self.feed_forward(x)
 
                 error += loss(y, output)
 
-                # gradient is used as the output of the whole network
-                # for the penultimate layer the input gradient of the last layer is used as the output of the penultimate one
+                # gradient is used as the output error / dE/dY of the whole network
+                # input gradient of last layer is considered output gradient of penultimate layer
                 gradient = loss_prime(y, output)
                 for layer in reversed(self.layers):
                     gradient = layer.backward(gradient, learning_rate)
@@ -129,7 +141,7 @@ class NeuralNetwork:
             epoch += 1
 
             print(f"epoch = {epoch}, error = {error}")
-        print()
+        print(f"final error {error}")
 
     def print_weights_and_biases(self) -> None:
         dense_layers = []
