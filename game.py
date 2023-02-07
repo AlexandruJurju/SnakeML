@@ -1,6 +1,6 @@
 import pygame
 
-from Neural.live_training import *
+from Neural.train_model import *
 from Neural.neural_network import Dense, Activation, tanh, sigmoid, tanh_prime, sigmoid_prime
 from Neural.train_model import train_network
 from constants import *
@@ -27,6 +27,8 @@ class Game:
             self.draw_vision_lines(vision_lines)
 
             neural_net_prediction = self.model.get_nn_output(vision_lines)
+            nn_input = Vision.get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
+            self.draw_neural_network(vision_lines, nn_input, neural_net_prediction)
 
             example = TrainingExample(copy.deepcopy(self.model.board), neural_net_prediction, self.model.snake.direction)
             training_examples.append(example)
@@ -45,7 +47,7 @@ class Game:
                 # TODO train data , search file like a dictionary to find if there are conflicting data
                 net = NeuralNetwork()
                 net.add_layer(Dense(VISION_LINES_COUNT * 3 + 4, 16))
-                net.add_layer(Activation(tanh, tanh_prime))
+                net.add_layer(Activation(sigmoid, sigmoid_prime))
                 net.add_layer(Dense(16, 3))
                 net.add_layer(Activation(sigmoid, sigmoid_prime))
 
@@ -124,112 +126,109 @@ class Game:
                           line_coord_0 * SQUARE_SIZE + SQUARE_SIZE // 2 + OFFSET_BOARD_Y),
                          (line_end_x, line_end_y), width=width)
 
-    # def draw_network(self, vision_lines):
-    #     font = pygame.font.SysFont("arial", 16)
-    #
-    #     input_label_offset_x = 550
-    #     input_label_offset_y = 100
-    #     label_height_between = 27.5
-    #
-    #     neuron_width_between = 75
-    #     neuron_height_between = label_height_between
-    #     neuron_offset_x = input_label_offset_x + 100
-    #     neuron_offset_y = input_label_offset_y
-    #     neuron_radius = 12
-    #
-    #     label_count = 0
-    #     param_type = ["WALL", "APPLE", "SEGMENT"]
-    #     for line in vision_lines:
-    #         for param in param_type:
-    #             line_label = font.render(line + " " + param, True, COLOR_WHITE)
-    #             self.window.blit(line_label, [input_label_offset_x, label_height_between * label_count + input_label_offset_y - 10])
-    #             label_count += 1
-    #
-    #     self.draw_neurons(neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, font)
-    #
-    # # TODO more efficient function calls for inputs and outputs
-    # # TODO doesnt work for more than 1 hidden layer
-    # def draw_neurons(self, neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, font):
-    #     dense_layers = self.model.snake.brain.get_dense_layers()
-    #     inputs = Vision.get_parameters_in_nn_input_form(self.model.board, VISION_LINES_COUNT, VISION_LINES_RETURN)
-    #     outputs = self.model.snake.brain.feed_forward(inputs)
-    #
-    #     # max distance is used to center the neurons in the next layers, formula for new yOffset is (yLengthPrevious - yLengthCurrent) / 2
-    #     max_y_distance = 0
-    #
-    #     # line start and line end are lists that contain the positions of the neurons
-    #     # the lists are used for drawing the lines between neurons
-    #     line_start = []
-    #     line_end = []
-    #
-    #     # draw neurons
-    #     for i, layer in enumerate(dense_layers):
-    #         # if it's the first layer, draw neurons using input
-    #         if i == 0:
-    #             for j in range(layer.input_size):
-    #                 # draw the neuron
-    #                 pygame.draw.circle(self.window, COLOR_WHITE, (neuron_offset_x, neuron_height_between * j + neuron_offset_y), neuron_radius, width=1)
-    #
-    #                 # calculate neuron green color intensity using input parameters
-    #                 activation_color = (0, round(255 * inputs[j][0]), 0)
-    #
-    #                 # draw green circle inside neuron with activation color
-    #                 pygame.draw.circle(self.window, activation_color, (neuron_offset_x, neuron_height_between * j + neuron_offset_y), neuron_radius - 1)
-    #
-    #                 # append neuron position to start list
-    #                 line_start.append([neuron_offset_x, neuron_height_between * j + neuron_offset_y])
-    #
-    #             # increment current offset to obtain OX offset for next layer
-    #             neuron_offset_x += neuron_width_between
-    #
-    #             # calculate maxYDistance for centering neurons of next layer
-    #             max_y_distance = neuron_height_between * layer.input_size
-    #
-    #         # calculate current y distance for centering neurons
-    #         current_y_distance = layer.output_size * neuron_height_between
-    #
-    #         # calculate offset using distance of prev layer and distance of current layer
-    #         hidden_offset_y = (max_y_distance - current_y_distance) // 2
-    #
-    #         for j in range(layer.output_size):
-    #             # if it's the output layer
-    #             if i == len(dense_layers) - 1:
-    #                 outputs[np.where(outputs != np.max(outputs))] = 0
-    #                 outputs[np.where(outputs == np.max(outputs))] = 1
-    #
-    #                 pygame.draw.circle(self.window, (0, 255 * outputs[j], 0), (neuron_offset_x, neuron_height_between * j + neuron_offset_y + hidden_offset_y),
-    #                                    neuron_radius - 1)
-    #                 pygame.draw.circle(self.window, COLOR_WHITE, (neuron_offset_x, neuron_height_between * j + neuron_offset_y + hidden_offset_y), neuron_radius - 1, width=1)
-    #
-    #                 # write direction name in output
-    #                 match j:
-    #                     case 0:
-    #                         direction = "STRAIGHT"
-    #                     case 1:
-    #                         direction = "LEFT"
-    #                     case 2:
-    #                         direction = "RIGHT"
-    #                     case _:
-    #                         direction = None
-    #
-    #                 line_label = font.render(direction, True, (255, 255, 255))
-    #                 self.window.blit(line_label, [neuron_offset_x + 15, neuron_height_between * j + neuron_offset_y + hidden_offset_y - 5])
-    #             # Draw NN hidden layers outputs
-    #             else:
-    #                 # hidden neuron activation color
-    #                 if self.model.snake.brain.layers[i + 1].output[j] <= 0:
-    #                     color = (0, 0, 0)
-    #                 else:
-    #                     color = (0, 255, 0)
-    #                 pygame.draw.circle(self.window, color, (neuron_offset_x, neuron_height_between * j + neuron_offset_y + hidden_offset_y), neuron_radius - 1)
-    #                 pygame.draw.circle(self.window, COLOR_WHITE, (neuron_offset_x, neuron_height_between * j + neuron_offset_y + hidden_offset_y), neuron_radius - 1, width=1)
-    #
-    #             # line end for drawing lines
-    #             line_end.append([neuron_offset_x, neuron_height_between * j + neuron_offset_y + hidden_offset_y])
-    #         neuron_offset_x += neuron_width_between
-    #
-    #         # self.__draw_colored_lines_between_neurons(layer, line_end, line_start)
-    #         # self.__draw_lines_between_neurons(line_end, line_start)
-    #
-    #         line_start = line_end
-    #         line_end = []
+    def draw_neural_network(self, vision_lines, nn_input, nn_output):
+        font = pygame.font.SysFont("arial", 16)
+
+        input_label_offset_x = 550
+        input_label_offset_y = 100
+        label_height_between = 27.5
+
+        neuron_width_between = 75
+        neuron_height_between = label_height_between
+        neuron_offset_x = input_label_offset_x + 100
+        neuron_offset_y = input_label_offset_y
+        neuron_radius = 12
+
+        # TODO bug with param type changing
+        label_count = 0
+        param_type = ["WALL", "APPLE", "SEGMENT"]
+        for line in vision_lines:
+            for param in param_type:
+                line_label = font.render(line + " " + param, True, COLOR_WHITE)
+                self.window.blit(line_label, [input_label_offset_x, label_height_between * label_count + input_label_offset_y - 10])
+                label_count += 1
+
+        self.draw_neurons(neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, font, nn_input, nn_output)
+
+    def draw_neurons(self, neuron_height_between, neuron_offset_x, neuron_offset_y, neuron_radius, neuron_width_between, font, nn_input, nn_output):
+        dense_layers = self.model.snake.brain.get_dense_layers()
+
+        # max distance is used to center the neurons in the next layers, formula for new yOffset is (yLengthPrevious - yLengthCurrent) / 2
+        max_y_distance = 0
+
+        # line start and line end are lists that contain the positions of the neurons
+        # the lists are used for drawing the lines between neurons
+        line_start = []
+        line_end = []
+
+        # draw neurons
+        for i, layer in enumerate(dense_layers):
+            # if it's the first layer, draw neurons using input
+            if i == 0:
+                for j in range(layer.input_size):
+                    # draw the neuron
+                    pygame.draw.circle(self.window, COLOR_WHITE, (neuron_offset_x, neuron_height_between * j + neuron_offset_y), neuron_radius, width=1)
+
+                    # calculate neuron green color intensity using input parameters
+                    activation_color = (0, round(255 * nn_input[j][0]), 0)
+
+                    # draw green circle inside neuron with activation color
+                    pygame.draw.circle(self.window, activation_color, (neuron_offset_x, neuron_height_between * j + neuron_offset_y), neuron_radius - 1)
+
+                    # append neuron position to start list
+                    line_start.append([neuron_offset_x, neuron_height_between * j + neuron_offset_y])
+
+                # increment current offset to obtain OX offset for next layer
+                neuron_offset_x += neuron_width_between
+
+                # calculate maxYDistance for centering neurons of next layer
+                max_y_distance = neuron_height_between * layer.input_size
+
+            # calculate current y distance for centering neurons
+            current_y_distance = layer.output_size * neuron_height_between
+
+            # calculate offset using distance of prev layer and distance of current layer
+            hidden_offset_y = (max_y_distance - current_y_distance) // 2
+
+            for j in range(layer.output_size):
+                # if it's the output layer
+                if i == len(dense_layers) - 1:
+                    nn_output[np.where(nn_output != np.max(nn_output))] = 0
+                    nn_output[np.where(nn_output == np.max(nn_output))] = 1
+
+                    pygame.draw.circle(self.window, (0, 255 * nn_output[j], 0), (neuron_offset_x, neuron_height_between * j + neuron_offset_y + hidden_offset_y),
+                                       neuron_radius - 1)
+                    pygame.draw.circle(self.window, COLOR_WHITE, (neuron_offset_x, neuron_height_between * j + neuron_offset_y + hidden_offset_y), neuron_radius - 1, width=1)
+
+                    # write direction name in output
+                    match j:
+                        case 0:
+                            direction = "STRAIGHT"
+                        case 1:
+                            direction = "LEFT"
+                        case 2:
+                            direction = "RIGHT"
+                        case _:
+                            direction = None
+
+                    line_label = font.render(direction, True, (255, 255, 255))
+                    self.window.blit(line_label, [neuron_offset_x + 15, neuron_height_between * j + neuron_offset_y + hidden_offset_y - 5])
+                # Draw NN hidden layers outputs
+                else:
+                    # hidden neuron activation color
+                    if self.model.snake.brain.layers[i + 1].output[j] <= 0:
+                        color = (0, 0, 0)
+                    else:
+                        color = (0, 255, 0)
+                    pygame.draw.circle(self.window, color, (neuron_offset_x, neuron_height_between * j + neuron_offset_y + hidden_offset_y), neuron_radius - 1)
+                    pygame.draw.circle(self.window, COLOR_WHITE, (neuron_offset_x, neuron_height_between * j + neuron_offset_y + hidden_offset_y), neuron_radius - 1, width=1)
+
+                # line end for drawing lines
+                line_end.append([neuron_offset_x, neuron_height_between * j + neuron_offset_y + hidden_offset_y])
+            neuron_offset_x += neuron_width_between
+
+            # self.__draw_colored_lines_between_neurons(layer, line_end, line_start)
+            # self.__draw_lines_between_neurons(line_end, line_start)
+
+            line_start = line_end
+            line_end = []
