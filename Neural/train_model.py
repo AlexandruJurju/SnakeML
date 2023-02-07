@@ -1,19 +1,14 @@
 import copy
+import csv
 from typing import List
-import numpy as np
-from constants import Direction
-import csv
-from termcolor import colored, cprint
-import csv
+
 from Neural.neural_network import *
 from constants import *
 from vision import Vision
 
-from vision import Vision
-
 
 def read_training_models():
-    file = open("Neural/train_data.csv")
+    file = open("Neural/train_data_3d.csv")
     csvreader = csv.reader(file)
 
     rows = []
@@ -95,7 +90,7 @@ class TrainingExample:
 
 
 def write_examples_to_csv(examples: List[TrainingExample]):
-    file = open("Neural/train_data.csv", "w", newline='')
+    file = open("Neural/train_data_3d.csv", "w", newline='')
     writer = csv.writer(file)
 
     correct_examples = []

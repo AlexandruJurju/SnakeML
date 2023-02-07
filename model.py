@@ -6,6 +6,7 @@ from snake import Snake
 from vision import *
 
 
+# TODO add reinit function
 class Model:
     def __init__(self, model_size, snake_size, net: NeuralNetwork):
         self.size = model_size + 2

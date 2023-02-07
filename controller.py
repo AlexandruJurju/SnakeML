@@ -6,6 +6,8 @@ from model import *
 from view import View
 
 
+# TODO add options for using different neural networks
+# TODO add options for using different directions 4,8,16
 class Controller:
     def __init__(self, model: Model, view: View):
         self.running = True

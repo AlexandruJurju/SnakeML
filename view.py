@@ -3,6 +3,11 @@ from constants import *
 import numpy as np
 
 
+# TODO add view for board training examples
+# TODO add dropdown for options
+# TODO add buttons
+# TODO add highscore
+# TODO add dropdown for board size
 class View:
     def __init__(self):
         pygame.init()
