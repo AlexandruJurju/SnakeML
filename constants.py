@@ -28,6 +28,7 @@ NN_HIDDEN_NEURON_COUNT = 16
 NN_OUTPUT_NEURON_COUNT = 3
 
 START_SNAKE_SIZE = 3
+SNAKE_BASE_TTL = 50
 
 
 class Direction(Enum):
@@ -43,3 +44,4 @@ class Direction(Enum):
 
 MAIN_DIRECTIONS = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
 ALL_DIRECTIONS = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT, Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
+DYNAMIC_DIRECTIONS = ["STRAIGHT", "LEFT", "RIGHT"]

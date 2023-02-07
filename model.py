@@ -126,6 +126,7 @@ class Model:
         if new_head_value == "A":
             self.update_board_from_snake()
             self.place_new_apple()
+            self.snake.ttl = 50
         else:
             self.snake.body = self.snake.body[:-1]
             self.update_board_from_snake()
@@ -142,7 +143,20 @@ class Model:
 
         return output
 
-    def get_neural_network_direction_output_3(self, nn_output) -> Direction:
+    def get_nn_output_4directions(self, nn_output):
+        direction_index = list(nn_output).index(max(list(nn_output)))
+
+        match direction_index:
+            case 0:
+                return Direction.UP
+            case 1:
+                return Direction.DOWN
+            case 2:
+                return Direction.LEFT
+            case 3:
+                return Direction.RIGHT
+
+    def get_nn_output_3directions_dynamic(self, nn_output) -> Direction:
         direction_index = list(nn_output).index(max(list(nn_output)))
 
         # STRAIGHT

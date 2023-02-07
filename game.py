@@ -33,7 +33,7 @@ class Game:
             example = TrainingExample(copy.deepcopy(self.model.board), neural_net_prediction, self.model.snake.direction)
             training_examples.append(example)
 
-            next_direction = self.model.get_neural_network_direction_output_3(neural_net_prediction)
+            next_direction = self.model.get_nn_output_3directions_dynamic(neural_net_prediction)
             self.running = self.model.move_in_direction(next_direction)
 
             if not self.running:

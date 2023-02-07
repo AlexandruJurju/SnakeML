@@ -49,12 +49,19 @@ def read_training_models():
 
         x.append(Vision.get_parameters_in_nn_input_form(vision_lines, real_direction))
 
-        outputs_string_list = row[2].split(" ")
+        # dynamic loop over columns in csv, skips board and current direction
         outputs = []
-        for tuple_string in outputs_string_list:
-            if tuple_string != "":
-                outputs.append(float(tuple_string))
+        for i in range(2, len(row)):
+            outputs.append(float(row[i]))
         y.append(outputs)
+
+        # old loop in csv
+        # outputs_string_list = row[2].split(" ")
+        # outputs = []
+        # for tuple_string in outputs_string_list:
+        #     if tuple_string != "":
+        #         outputs.append(float(tuple_string))
+        # y.append(outputs)
 
     return x, y
 
@@ -106,8 +113,11 @@ def write_examples_to_csv(examples: List[TrainingExample]):
         prediction_string = prediction_string.replace("[[", "")
         prediction_string = prediction_string.replace("]]", "")
         prediction_string = prediction_string.strip()
+        straight = prediction_string.split(' ')[0]
+        left = prediction_string.split(' ')[1]
+        right = prediction_string.split(' ')[2]
 
-        correct_examples.append([model_string, direction_string, prediction_string])
+        correct_examples.append([model_string, direction_string, straight, left, right])
 
     writer.writerows(correct_examples)
     file.close()
