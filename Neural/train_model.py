@@ -8,7 +8,7 @@ from vision import Vision
 
 
 def read_training_models():
-    file = open("Neural/train_data_3d.csv")
+    file = open("Neural/train_data_4d.csv")
     csvreader = csv.reader(file)
 
     rows = []
@@ -40,7 +40,7 @@ def read_training_models():
                 real_direction = direction
                 break
 
-        vision_lines = Vision.get_dynamic_vision_lines(temp_board, real_direction)
+        vision_lines = Vision.get_vision_lines(temp_board)
 
         x.append(Vision.get_parameters_in_nn_input_form(vision_lines, real_direction))
 
@@ -83,10 +83,40 @@ def train_network(network: NeuralNetwork):
 
 
 class TrainingExample:
-    def __init__(self, model, prediction, current_direction):
+    def __init__(self, model, predictions, current_direction):
         self.model = model
-        self.prediction = prediction
+        self.predictions = predictions
         self.current_direction = current_direction
+
+
+def write_examples_to_csv_4d(examples: List[TrainingExample]):
+    file = open("Neural/train_data_4d.csv", "w", newline='')
+    writer = csv.writer(file)
+
+    correct_examples = []
+    for example in examples:
+        model_string = str(example.model)
+        model_string = model_string.replace("[[", "[")
+        model_string = model_string.replace("]]", "]")
+        model_string = model_string.replace(" [", "[")
+
+        direction_string = str(example.current_direction)
+        direction_string = direction_string.replace('\'', "")
+        direction_string = direction_string.strip()
+
+        prediction_string = str(np.reshape(example.predictions, (1, 4)))
+        prediction_string = prediction_string.replace("[[", "")
+        prediction_string = prediction_string.replace("]]", "")
+        prediction_string = prediction_string.strip()
+        up = prediction_string.split(' ')[0]
+        down = prediction_string.split(' ')[1]
+        left = prediction_string.split(' ')[2]
+        right = prediction_string.split(' ')[3]
+
+        correct_examples.append([model_string, direction_string, up, down, left, right])
+
+    writer.writerows(correct_examples)
+    file.close()
 
 
 def write_examples_to_csv(examples: List[TrainingExample]):
@@ -104,7 +134,7 @@ def write_examples_to_csv(examples: List[TrainingExample]):
         direction_string = direction_string.replace('\'', "")
         direction_string = direction_string.strip()
 
-        prediction_string = str(np.reshape(example.prediction, (1, 3)))
+        prediction_string = str(np.reshape(example.predictions, (1, 3)))
         prediction_string = prediction_string.replace("[[", "")
         prediction_string = prediction_string.replace("]]", "")
         prediction_string = prediction_string.strip()
@@ -118,6 +148,45 @@ def write_examples_to_csv(examples: List[TrainingExample]):
     file.close()
 
 
+def evaluate_live_examples_4d(examples: List[TrainingExample]):
+    evaluated = []
+    np.set_printoptions(suppress=True)
+
+    for example in examples:
+        print(f"Model \n {example.model} \n")
+        print(f"Current Direction : {example.current_direction} \n")
+        print(f"Prediction UP : {example.predictions[0]}")
+        print(f"Prediction DOWN : {example.predictions[1]}")
+        print(f"Prediction LEFT : {example.predictions[2]}")
+        print(f"Prediction RIGHT : {example.predictions[3]}")
+        print()
+
+        print("Enter target outputs for neural network in form")
+        print("UP DOWN LEFT RIGHT ")
+        target_string = input("")
+
+        if target_string == "":
+            target_output = example.predictions
+        elif target_string == "x":
+            break
+        else:
+            target_output = [0.0, 0.0, 0.0, 0.0]
+            if target_string.__contains__("u"):
+                target_output[0] = 1.0
+            if target_string.__contains__("d"):
+                target_output[1] = 1.0
+            if target_string.__contains__("l"):
+                target_output[2] = 1.0
+            if target_string.__contains__("r"):
+                target_output[3] = 1.0
+
+        print(target_output)
+        print()
+        evaluated.append(TrainingExample(copy.deepcopy(example.model), target_output, example.current_direction))
+
+    write_examples_to_csv_4d(evaluated)
+
+
 def evaluate_live_examples(examples: List[TrainingExample]):
     evaluated = []
     np.set_printoptions(suppress=True)
@@ -125,9 +194,9 @@ def evaluate_live_examples(examples: List[TrainingExample]):
     for example in examples:
         print(f"Model \n {example.model} \n")
         print(f"Current Direction : {example.current_direction} \n")
-        print(f"Prediction Straight : {example.prediction[0]}")
-        print(f"Prediction Left : {example.prediction[1]}")
-        print(f"Prediction Right : {example.prediction[2]}")
+        print(f"Prediction Straight : {example.predictions[0]}")
+        print(f"Prediction Left : {example.predictions[1]}")
+        print(f"Prediction Right : {example.predictions[2]}")
         print()
 
         print("Enter target outputs for neural network in form")
@@ -135,7 +204,7 @@ def evaluate_live_examples(examples: List[TrainingExample]):
         target_string = input("")
 
         if target_string == "":
-            target_output = example.prediction
+            target_output = example.predictions
         elif target_string == "x":
             break
         else:

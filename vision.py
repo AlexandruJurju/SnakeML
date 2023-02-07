@@ -1,8 +1,7 @@
 import math
 
 import numpy as np
-
-from constants import Direction, MAIN_DIRECTIONS
+from constants import *
 
 
 def distance(a, b):
@@ -32,7 +31,7 @@ class Vision:
                     return [i, j]
 
     @staticmethod
-    def look_in_direction(model, direction: Direction, return_type: str) -> {}:
+    def look_in_direction(model, direction: Direction) -> {}:
         apple_distance = np.inf
         segment_distance = np.inf
         apple_coord = None
@@ -62,14 +61,14 @@ class Vision:
         wall_distance = distance(head, current_block)
         wall_coord = current_block
 
-        if return_type == "boolean":
+        if VISION_LINES_RETURN_TYPE == "boolean":
             wall_distance_output = 1 / wall_distance
             apple_boolean = 1.0 if apple_found else 0.0
             segment_boolean = 1.0 if segment_found else 0.0
 
             return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean)
 
-        elif return_type == "distance":
+        elif VISION_LINES_RETURN_TYPE == "distance":
             wall_distance_output = wall_distance
             apple_distance_output = 1 / apple_distance
             segment_distance_output = segment_distance
@@ -77,24 +76,24 @@ class Vision:
             return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_distance_output, segment_coord, segment_distance_output)
 
     @staticmethod
-    def get_vision_lines(model, vision_line_number: int, return_type: str) -> {}:
-        if vision_line_number == 8:
+    def get_vision_lines(model) -> {}:
+        if INPUT_DIRECTION_COUNT == 8:
             return {
-                "+X": Vision.look_in_direction(model, Direction.RIGHT, return_type),
-                "-X": Vision.look_in_direction(model, Direction.LEFT, return_type),
-                "-Y": Vision.look_in_direction(model, Direction.DOWN, return_type),
-                "+Y": Vision.look_in_direction(model, Direction.UP, return_type),
-                "Q1": Vision.look_in_direction(model, Direction.Q1, return_type),
-                "Q2": Vision.look_in_direction(model, Direction.Q2, return_type),
-                "Q3": Vision.look_in_direction(model, Direction.Q3, return_type),
-                "Q4": Vision.look_in_direction(model, Direction.Q4, return_type)
+                "+X": Vision.look_in_direction(model, Direction.RIGHT),
+                "-X": Vision.look_in_direction(model, Direction.LEFT),
+                "-Y": Vision.look_in_direction(model, Direction.DOWN),
+                "+Y": Vision.look_in_direction(model, Direction.UP),
+                "Q1": Vision.look_in_direction(model, Direction.Q1),
+                "Q2": Vision.look_in_direction(model, Direction.Q2),
+                "Q3": Vision.look_in_direction(model, Direction.Q3),
+                "Q4": Vision.look_in_direction(model, Direction.Q4)
             }
         else:
             return {
-                "+X": Vision.look_in_direction(model, Direction.RIGHT, return_type),
-                "-X": Vision.look_in_direction(model, Direction.LEFT, return_type),
-                "-Y": Vision.look_in_direction(model, Direction.DOWN, return_type),
-                "+Y": Vision.look_in_direction(model, Direction.UP, return_type)
+                "+X": Vision.look_in_direction(model, Direction.RIGHT),
+                "-X": Vision.look_in_direction(model, Direction.LEFT),
+                "-Y": Vision.look_in_direction(model, Direction.DOWN),
+                "+Y": Vision.look_in_direction(model, Direction.UP)
             }
 
     @staticmethod
@@ -102,27 +101,27 @@ class Vision:
         match current_direction:
             case Direction.UP:
                 return {
-                    "+X": Vision.look_in_direction(model, Direction.RIGHT, "boolean"),
-                    "-X": Vision.look_in_direction(model, Direction.LEFT, "boolean"),
-                    "+Y": Vision.look_in_direction(model, Direction.UP, "boolean")
+                    "+X": Vision.look_in_direction(model, Direction.RIGHT),
+                    "-X": Vision.look_in_direction(model, Direction.LEFT),
+                    "+Y": Vision.look_in_direction(model, Direction.UP)
                 }
             case Direction.DOWN:
                 return {
-                    "+X": Vision.look_in_direction(model, Direction.RIGHT, "boolean"),
-                    "-X": Vision.look_in_direction(model, Direction.LEFT, "boolean"),
-                    "-Y": Vision.look_in_direction(model, Direction.DOWN, "boolean")
+                    "+X": Vision.look_in_direction(model, Direction.RIGHT),
+                    "-X": Vision.look_in_direction(model, Direction.LEFT),
+                    "-Y": Vision.look_in_direction(model, Direction.DOWN)
                 }
             case Direction.RIGHT:
                 return {
-                    "+X": Vision.look_in_direction(model, Direction.RIGHT, "boolean"),
-                    "-Y": Vision.look_in_direction(model, Direction.DOWN, "boolean"),
-                    "+Y": Vision.look_in_direction(model, Direction.UP, "boolean")
+                    "+X": Vision.look_in_direction(model, Direction.RIGHT),
+                    "-Y": Vision.look_in_direction(model, Direction.DOWN),
+                    "+Y": Vision.look_in_direction(model, Direction.UP)
                 }
             case Direction.LEFT:
                 return {
-                    "-X": Vision.look_in_direction(model, Direction.LEFT, "boolean"),
-                    "-Y": Vision.look_in_direction(model, Direction.DOWN, "boolean"),
-                    "+Y": Vision.look_in_direction(model, Direction.UP, "boolean")
+                    "-X": Vision.look_in_direction(model, Direction.LEFT),
+                    "-Y": Vision.look_in_direction(model, Direction.DOWN),
+                    "+Y": Vision.look_in_direction(model, Direction.UP)
                 }
 
     @staticmethod

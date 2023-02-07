@@ -19,7 +19,7 @@ class Controller:
         while self.running:
             self.view.clear_window()
 
-            vision_lines = Vision.get_dynamic_vision_lines(self.model.board, self.model.snake.direction)
+            vision_lines = Vision.get_vision_lines(self.model.board)
             self.view.draw_board(self.model)
             self.view.draw_vision_lines(self.model, vision_lines)
 
@@ -30,14 +30,14 @@ class Controller:
             example = TrainingExample(copy.deepcopy(self.model.board), neural_net_prediction, self.model.snake.direction)
             training_examples.append(example)
 
-            next_direction = self.model.get_nn_output_3directions_dynamic(neural_net_prediction)
+            next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
             self.running = self.model.move_in_direction(next_direction)
 
             if not self.running:
                 self.view.draw_dead(self.model)
                 pygame.display.update()
 
-                evaluate_live_examples(training_examples)
+                evaluate_live_examples_4d(training_examples)
                 training_examples = []
 
                 # TODO BAD REINIT, TO BE REMOVED
