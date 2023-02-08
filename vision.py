@@ -1,6 +1,6 @@
 import numpy as np
 from constants import *
-from typing import List
+from typing import List, Dict
 
 
 def distance(a, b):
@@ -28,7 +28,7 @@ class VisionLine:
         self.segment_distance = segment_distance
 
 
-def look_in_direction(board: List[str], direction: Direction) -> {}:
+def look_in_direction(board: List[str], direction: Direction) -> VisionLine:
     apple_distance = np.inf
     segment_distance = np.inf
     apple_coord = None
@@ -73,7 +73,7 @@ def look_in_direction(board: List[str], direction: Direction) -> {}:
         return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_distance_output, segment_coord, segment_distance_output)
 
 
-def get_vision_lines(board: List[str]) -> {VisionLine}:
+def get_vision_lines(board: List[str]) -> Dict[str, VisionLine]:
     if INPUT_DIRECTION_COUNT == 8:
         return {
             "+X": look_in_direction(board, Direction.RIGHT),
@@ -94,7 +94,7 @@ def get_vision_lines(board: List[str]) -> {VisionLine}:
         }
 
 
-def get_dynamic_vision_lines(board: List[str], current_direction: Direction) -> {VisionLine}:
+def get_dynamic_vision_lines(board: List[str], current_direction: Direction) -> Dict[str, VisionLine]:
     match current_direction:
         case Direction.UP:
             return {
