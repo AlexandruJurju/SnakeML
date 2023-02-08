@@ -1,4 +1,4 @@
-from Neural.train_model import *
+from Neural.train_network import *
 from controller import Controller
 from view import View
 from model import Model

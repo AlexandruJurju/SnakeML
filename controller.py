@@ -1,5 +1,5 @@
-from Neural.train_model import *
-from Neural.train_model import train_network
+from Neural.train_network import *
+from Neural.train_network import train_network
 from model import *
 from view import View
 

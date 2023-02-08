@@ -1,7 +1,7 @@
 import copy
 import csv
 from typing import List
-
+import numpy as np
 from Neural.neural_network import *
 from constants import *
 from vision import Vision
@@ -11,52 +11,35 @@ def read_training_models():
     file = open("Neural/train_data_4d.csv")
     csvreader = csv.reader(file)
 
-    rows = []
+    data = []
     for row in csvreader:
-        rows.append(row)
+        data.append(row)
 
     x = []
     y = []
 
-    for row in rows:
-        model_string = row[0]
-        model_string = model_string.replace("[", "")
-        model_string = model_string.replace("]", "")
-        model_string = model_string.replace("'", "")
-        row_list = model_string.split("\n")
+    if len(data) != 0:
+        for row in data:
+            board = eval(row[0])
 
-        temp_board = np.empty((len(row_list), len(row_list)), dtype=object)
-        for i, model_row in enumerate(row_list):
-            values_in_row = model_row.split(" ")
-            for j, model_column in enumerate(values_in_row):
-                temp_board[i, j] = model_column
+            # direction is saved as Direction.UP, but direction.name is just UP, use split to get second part
+            direction_string = row[1].split(".")[1]
+            real_direction = None
+            for direction in MAIN_DIRECTIONS:
+                direction_enum_name = direction.name
+                if direction_string == direction_enum_name:
+                    real_direction = direction
+                    break
 
-        # direction is saved as Direction.UP, but direction.name is just UP, use split to get second part
-        direction_string = row[1].split(".")[1]
-        real_direction = None
-        for direction in MAIN_DIRECTIONS:
-            direction_enum_name = direction.name
-            if direction_string == direction_enum_name:
-                real_direction = direction
-                break
+            vision_lines = Vision.get_vision_lines(board)
 
-        vision_lines = Vision.get_vision_lines(temp_board)
+            x.append(Vision.get_parameters_in_nn_input_form(vision_lines, real_direction))
 
-        x.append(Vision.get_parameters_in_nn_input_form(vision_lines, real_direction))
-
-        # dynamic loop over columns in csv, skips board and current direction
-        outputs = []
-        for i in range(2, len(row)):
-            outputs.append(float(row[i]))
-        y.append(outputs)
-
-        # old loop in csv
-        # outputs_string_list = row[2].split(" ")
-        # outputs = []
-        # for tuple_string in outputs_string_list:
-        #     if tuple_string != "":
-        #         outputs.append(float(tuple_string))
-        # y.append(outputs)
+            # dynamic loop over columns in csv, skips board and current direction
+            outputs = []
+            for i in range(2, len(row)):
+                outputs.append(float(row[i]))
+            y.append(outputs)
 
     return x, y
 
@@ -93,32 +76,20 @@ def write_examples_to_csv_4d(examples: List[TrainingExample]):
     file = open("Neural/train_data_4d.csv", "w", newline='')
     writer = csv.writer(file)
 
-    correct_examples = []
+    training_examples = []
     for example in examples:
-        model_string = str(example.model)
-        model_string = model_string.replace("[[", "[")
-        model_string = model_string.replace("]]", "]")
-        model_string = model_string.replace(" [", "[")
+        prediction_string = np.reshape(example.predictions, (1, 4))
+        up = prediction_string[0]
+        down = prediction_string[1]
+        left = prediction_string[2]
+        right = prediction_string[3]
 
-        direction_string = str(example.current_direction)
-        direction_string = direction_string.replace('\'', "")
-        direction_string = direction_string.strip()
+        training_examples.append([example.model, example.current_direction, up, down, left, right])
 
-        prediction_string = str(np.reshape(example.predictions, (1, 4)))
-        prediction_string = prediction_string.replace("[[", "")
-        prediction_string = prediction_string.replace("]]", "")
-        prediction_string = prediction_string.strip()
-        up = prediction_string.split(' ')[0]
-        down = prediction_string.split(' ')[1]
-        left = prediction_string.split(' ')[2]
-        right = prediction_string.split(' ')[3]
-
-        correct_examples.append([model_string, direction_string, up, down, left, right])
-
-    writer.writerows(correct_examples)
+    writer.writerows(training_examples)
     file.close()
 
-
+# TODO remake to look like 4d
 def write_examples_to_csv(examples: List[TrainingExample]):
     file = open("Neural/train_data_3d.csv", "w", newline='')
     writer = csv.writer(file)
@@ -153,7 +124,7 @@ def evaluate_live_examples_4d(examples: List[TrainingExample]):
     np.set_printoptions(suppress=True)
 
     for example in examples:
-        print(f"Model \n {example.model} \n")
+        print(f"Model \n {np.matrix(example.model)} \n")
         print(f"Current Direction : {example.current_direction} \n")
         print(f"Prediction UP : {example.predictions[0]}")
         print(f"Prediction DOWN : {example.predictions[1]}")
