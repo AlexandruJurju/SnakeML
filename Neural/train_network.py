@@ -7,8 +7,7 @@ from vision import get_parameters_in_nn_input_form, get_vision_lines
 
 
 def read_training_models() -> Tuple:
-    file_location = "Neural/train_data_" + str(INPUT_DIRECTION_COUNT) + "d.csv"
-    file = open(file_location)
+    file = open(TRAIN_DATA_FILE_LOCATION)
     csvreader = csv.reader(file)
 
     data = []
@@ -74,8 +73,7 @@ class TrainingExample:
 
 
 def write_examples_to_csv_4d(examples: List[TrainingExample]) -> None:
-    file_location = "Neural/train_data_" + str(INPUT_DIRECTION_COUNT) + "d.csv"
-    file = open(file_location, "w+", newline='')
+    file = open(TRAIN_DATA_FILE_LOCATION, "w+", newline='')
     writer = csv.writer(file)
 
     training_examples = []
@@ -130,7 +128,7 @@ def evaluate_live_examples_4d(examples: List[TrainingExample]) -> None:
 
 # TODO remake to look like 4d
 # def write_examples_to_csv(examples: List[TrainingExample]) -> None:
-#     file = open("Neural/train_data_3d.csv", "w", newline='')
+#     file = open("Neural/train_data_3_output_directions.csv", "w", newline='')
 #     writer = csv.writer(file)
 #
 #     correct_examples = []
