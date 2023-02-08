@@ -1,13 +1,12 @@
 import copy
 import csv
-from typing import List
-import numpy as np
+from typing import List, Tuple
 from Neural.neural_network import *
 from constants import *
 from vision import Vision
 
 
-def read_training_models():
+def read_training_models() -> Tuple:
     file = open("Neural/train_data_4d.csv")
     csvreader = csv.reader(file)
 
@@ -38,13 +37,14 @@ def read_training_models():
             # dynamic loop over columns in csv, skips board and current direction
             outputs = []
             for i in range(2, len(row)):
+                print(row[i])
                 outputs.append(float(row[i]))
             y.append(outputs)
 
     return x, y
 
 
-def train_network(network: NeuralNetwork):
+def train_network(network: NeuralNetwork) -> {}:
     x, y = read_training_models()
 
     # example for points
@@ -66,13 +66,13 @@ def train_network(network: NeuralNetwork):
 
 
 class TrainingExample:
-    def __init__(self, model, predictions, current_direction):
+    def __init__(self, model: List[str], predictions: List[float], current_direction: Direction):
         self.model = model
         self.predictions = predictions
         self.current_direction = current_direction
 
 
-def write_examples_to_csv_4d(examples: List[TrainingExample]):
+def write_examples_to_csv_4d(examples: List[TrainingExample]) -> {}:
     file = open("Neural/train_data_4d.csv", "w", newline='')
     writer = csv.writer(file)
 
@@ -87,6 +87,45 @@ def write_examples_to_csv_4d(examples: List[TrainingExample]):
 
     writer.writerows(training_examples)
     file.close()
+
+
+def evaluate_live_examples_4d(examples: List[TrainingExample]) -> {}:
+    evaluated = []
+
+    for example in examples:
+        print(f"Model \n {np.matrix(example.model)} \n")
+        print(f"Current Direction : {example.current_direction} \n")
+        print(f"Prediction UP : {example.predictions[0]}")
+        print(f"Prediction DOWN : {example.predictions[1]}")
+        print(f"Prediction LEFT : {example.predictions[2]}")
+        print(f"Prediction RIGHT : {example.predictions[3]}")
+        print()
+
+        print("Enter target outputs for neural network in form")
+        print("UP DOWN LEFT RIGHT ")
+        target_string = input("")
+
+        # TODO bug, need simple array not numpy array
+        if target_string == "":
+            target_output = example.predictions
+        elif target_string == "x":
+            break
+        else:
+            target_output = [0.0, 0.0, 0.0, 0.0]
+            if target_string.__contains__("u"):
+                target_output[0] = 1.0
+            if target_string.__contains__("d"):
+                target_output[1] = 1.0
+            if target_string.__contains__("l"):
+                target_output[2] = 1.0
+            if target_string.__contains__("r"):
+                target_output[3] = 1.0
+
+        print(target_output)
+        print()
+        evaluated.append(TrainingExample(copy.deepcopy(example.model), target_output, example.current_direction))
+
+    write_examples_to_csv_4d(evaluated)
 
 
 # TODO remake to look like 4d
@@ -117,45 +156,6 @@ def write_examples_to_csv(examples: List[TrainingExample]):
 
     writer.writerows(correct_examples)
     file.close()
-
-
-def evaluate_live_examples_4d(examples: List[TrainingExample]):
-    evaluated = []
-    np.set_printoptions(suppress=True)
-
-    for example in examples:
-        print(f"Model \n {np.matrix(example.model)} \n")
-        print(f"Current Direction : {example.current_direction} \n")
-        print(f"Prediction UP : {example.predictions[0]}")
-        print(f"Prediction DOWN : {example.predictions[1]}")
-        print(f"Prediction LEFT : {example.predictions[2]}")
-        print(f"Prediction RIGHT : {example.predictions[3]}")
-        print()
-
-        print("Enter target outputs for neural network in form")
-        print("UP DOWN LEFT RIGHT ")
-        target_string = input("")
-
-        if target_string == "":
-            target_output = example.predictions
-        elif target_string == "x":
-            break
-        else:
-            target_output = [0.0, 0.0, 0.0, 0.0]
-            if target_string.__contains__("u"):
-                target_output[0] = 1.0
-            if target_string.__contains__("d"):
-                target_output[1] = 1.0
-            if target_string.__contains__("l"):
-                target_output[2] = 1.0
-            if target_string.__contains__("r"):
-                target_output[3] = 1.0
-
-        print(target_output)
-        print()
-        evaluated.append(TrainingExample(copy.deepcopy(example.model), target_output, example.current_direction))
-
-    write_examples_to_csv_4d(evaluated)
 
 
 def evaluate_live_examples(examples: List[TrainingExample]):

@@ -25,7 +25,7 @@ class Controller:
             nn_input = Vision.get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
             self.view.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
 
-            example = TrainingExample(copy.deepcopy(self.model.board), neural_net_prediction, self.model.snake.direction)
+            example = TrainingExample(copy.deepcopy(self.model.board), neural_net_prediction.ravel().tolist(), self.model.snake.direction)
             training_examples.append(example)
 
             next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
