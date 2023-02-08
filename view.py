@@ -33,13 +33,13 @@ class View:
                 y_position = y * SQUARE_SIZE + OFFSET_BOARD_Y
 
                 match board[y][x]:
-                    case "S":
+                    case BoardLetters.SNAKE_BODY:
                         pygame.draw.rect(self.window, COLOR_SNAKE, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
-                    case "W":
+                    case BoardLetters.WALL:
                         pygame.draw.rect(self.window, COLOR_WHITE, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
-                    case "A":
+                    case BoardLetters.APPLE:
                         pygame.draw.rect(self.window, COLOR_APPLE, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
-                    case "H":
+                    case BoardLetters.SNAKE_HEAD:
                         pygame.draw.rect(self.window, COLOR_SNAKE_HEAD, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
                 # draw lines between squares
                 pygame.draw.rect(self.window, COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE), width=1)
@@ -51,9 +51,9 @@ class View:
                 y_position = y * SQUARE_SIZE + OFFSET_BOARD_Y
 
                 match board[y][x]:
-                    case "S":
+                    case BoardLetters.SNAKE_BODY:
                         pygame.draw.rect(self.window, COLOR_RED, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
-                    case "H":
+                    case BoardLetters.SNAKE_HEAD:
                         pygame.draw.rect(self.window, COLOR_RED, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
                 # draw lines between squares
                 pygame.draw.rect(self.window, COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE), width=1)

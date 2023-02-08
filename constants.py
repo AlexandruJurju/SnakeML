@@ -31,6 +31,14 @@ START_SNAKE_SIZE = 3
 SNAKE_BASE_TTL = 50
 
 
+class BoardLetters:
+    APPLE = "A"
+    WALL = "W"
+    EMPTY = "."
+    SNAKE_BODY = "S"
+    SNAKE_HEAD = "H"
+
+
 class Direction(Enum):
     UP = [-1, 0]
     DOWN = [1, 0]
