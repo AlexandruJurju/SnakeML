@@ -1,6 +1,8 @@
 import pygame
 from constants import *
 import numpy as np
+from typing import List
+from model import Model
 
 
 # TODO add view for board training examples
@@ -22,15 +24,15 @@ class View:
         pygame.display.update()
         self.fps_clock.tick(MAX_FPS)
 
-    def draw_board(self, model):
+    def draw_board(self, board: List):
         # use y,x for index in board instead of x,y because of changed logic
         # x is line y is column ; drawing x is column and y is line
-        for x in range(model.size):
-            for y in range(model.size):
+        for x in range(len(board)):
+            for y in range(len(board)):
                 x_position = x * SQUARE_SIZE + OFFSET_BOARD_X
                 y_position = y * SQUARE_SIZE + OFFSET_BOARD_Y
 
-                match model.board[y, x]:
+                match board[y][x]:
                     case "S":
                         pygame.draw.rect(self.window, COLOR_SNAKE, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
                     case "W":
@@ -42,13 +44,13 @@ class View:
                 # draw lines between squares
                 pygame.draw.rect(self.window, COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE), width=1)
 
-    def draw_dead(self, model):
-        for x in range(model.size):
-            for y in range(model.size):
+    def draw_dead(self, board: List):
+        for x in range(len(board)):
+            for y in range(len(board)):
                 x_position = x * SQUARE_SIZE + OFFSET_BOARD_X
                 y_position = y * SQUARE_SIZE + OFFSET_BOARD_Y
 
-                match model.board[y, x]:
+                match board[y][x]:
                     case "S":
                         pygame.draw.rect(self.window, COLOR_RED, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
                     case "H":
@@ -57,7 +59,7 @@ class View:
                 pygame.draw.rect(self.window, COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE), width=1)
         pygame.display.update()
 
-    def draw_vision_lines(self, model, vision_lines):
+    def draw_vision_lines(self, model: Model, vision_lines):
         font = pygame.font.SysFont("arial", 18)
 
         # loop over all lines in given vision lines

@@ -18,7 +18,7 @@ class Controller:
             self.view.clear_window()
 
             vision_lines = Vision.get_vision_lines(self.model.board)
-            self.view.draw_board(self.model)
+            self.view.draw_board(self.model.board)
             self.view.draw_vision_lines(self.model, vision_lines)
 
             neural_net_prediction = self.model.get_nn_output(vision_lines)
@@ -32,7 +32,7 @@ class Controller:
             self.running = self.model.move_in_direction(next_direction)
 
             if not self.running:
-                self.view.draw_dead(self.model)
+                self.view.draw_dead(self.model.board)
 
                 evaluate_live_examples_4d(training_examples)
                 training_examples = []
