@@ -117,6 +117,7 @@ class View:
 
         self.draw_neurons(model, neuron_offset_x, font, nn_input, nn_output)
 
+    # TODO color when using distance
     def draw_neurons(self, model: Model, neuron_offset_x, font, nn_input, nn_output: np.ndarray) -> None:
         dense_layers = model.snake.brain.get_dense_layers()
 
@@ -167,9 +168,11 @@ class View:
                     nn_output[np.where(nn_output != np.max(nn_output))] = 0
                     nn_output[np.where(nn_output == np.max(nn_output))] = 1
 
-                    pygame.draw.circle(self.window, (0, 255, 0) * nn_output[j],
+                    # draw color inside the neuron
+                    pygame.draw.circle(self.window, ViewConsts.COLOR_GREEN * nn_output[j],
                                        (neuron_offset_x, ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewConsts.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y),
                                        ViewConsts.NN_DISPLAY_NEURON_RADIUS - 1)
+                    # draw white neuron outline
                     pygame.draw.circle(self.window, ViewConsts.COLOR_WHITE,
                                        (neuron_offset_x, ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewConsts.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y),
                                        ViewConsts.NN_DISPLAY_NEURON_RADIUS - 1, width=1)
@@ -194,12 +197,16 @@ class View:
                 else:
                     # hidden neuron activation color
                     if model.snake.brain.layers[i + 1].output[j] <= 0:
-                        color = ViewConsts.COLOR_BLACK
+                        inside_color = ViewConsts.COLOR_BLACK
                     else:
-                        color = ViewConsts.COLOR_GREEN
-                    pygame.draw.circle(self.window, color,
+                        inside_color = ViewConsts.COLOR_GREEN
+
+                    # draw color inside the neuron
+                    pygame.draw.circle(self.window, inside_color,
                                        (neuron_offset_x, ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewConsts.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y),
                                        ViewConsts.NN_DISPLAY_NEURON_RADIUS - 1)
+
+                    # draw neuron outline
                     pygame.draw.circle(self.window, ViewConsts.COLOR_WHITE,
                                        (neuron_offset_x, ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewConsts.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y),
                                        ViewConsts.NN_DISPLAY_NEURON_RADIUS - 1, width=1)
