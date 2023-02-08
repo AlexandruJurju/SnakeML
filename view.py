@@ -1,4 +1,6 @@
 import pygame
+
+from Neural.neural_network import Dense
 from constants import *
 import numpy as np
 from typing import List
@@ -115,7 +117,7 @@ class View:
 
         self.draw_neurons(model, neuron_offset_x, font, nn_input, nn_output)
 
-    def draw_neurons(self, model, neuron_offset_x, font, nn_input, nn_output) -> None:
+    def draw_neurons(self, model: Model, neuron_offset_x, font, nn_input, nn_output: np.ndarray) -> None:
         dense_layers = model.snake.brain.get_dense_layers()
 
         # max distance is used to center the neurons in the next layers, formula for new yOffset is (yLengthPrevious - yLengthCurrent) / 2
@@ -206,8 +208,23 @@ class View:
                 line_end.append([neuron_offset_x, ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewConsts.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y])
             neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
 
-            # self.__draw_colored_lines_between_neurons(layer, line_end, line_start)
-            # self.__draw_lines_between_neurons(line_end, line_start)
+            # self.draw_colored_lines_between_neurons(layer, line_end, line_start)
+            # self.draw_lines_between_neurons(line_end, line_start)
 
             line_start = line_end
             line_end = []
+
+    def draw_lines_between_neurons(self, line_end: List, line_start: List):
+        for i in range(len(line_end)):
+            for j in range(len(line_start)):
+                pygame.draw.line(self.window, ViewConsts.COLOR_WHITE, line_start[j], line_end[i], width=1)
+
+    def draw_colored_lines_between_neurons(self, layer: Dense, line_end: List, line_start: List):
+        for i in range(len(line_end)):
+            for j in range(len(line_start)):
+                if layer.weights[i][j] < 0:
+                    color = (255, 0, 0)
+                else:
+                    color = (0, 255, 0)
+
+                pygame.draw.line(self.window, color, line_start[j], line_end[i], width=1)
