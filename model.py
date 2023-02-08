@@ -127,7 +127,7 @@ class Model:
         if new_head_value == BoardLetters.APPLE:
             self.update_board_from_snake()
             self.place_new_apple()
-            self.snake.ttl = 50
+            self.snake.ttl = SNAKE_MAX_TTL
         else:
             self.snake.body = self.snake.body[:-1]
             self.update_board_from_snake()

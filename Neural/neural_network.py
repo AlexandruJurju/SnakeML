@@ -148,19 +148,3 @@ class NeuralNetwork:
 
             print(f"epoch = {epoch}, error = {error}")
         print(f"final error {error}  \n")
-
-    def print_weights_and_biases(self) -> None:
-        dense_layers = []
-        for layer in self.layers:
-            if type(layer) is Dense:
-                dense_layers.append(layer)
-
-        for i, layer in enumerate(dense_layers):
-            print("Dense layer : " + str(i + 1))
-            print("=============== WEIGHTS ===============")
-            print(layer.weights)
-
-            print("=============== BIASES ===============")
-            print(layer.bias)
-            print("===============")
-            print()
