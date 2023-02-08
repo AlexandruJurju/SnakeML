@@ -93,12 +93,13 @@ class View:
                          (line_end_x, line_end_y), width=width)
 
     # TODO draw lines between neurons
+    # TODO write direction in inputs
     def draw_neural_network(self, model, vision_lines, nn_input, nn_output) -> None:
         font = pygame.font.SysFont("arial", 16)
 
         neuron_offset_x = ViewConsts.NN_DISPLAY_OFFSET_X + 100
 
-        # TODO bug with param type changing
+        # TODO bug with param type changing, not a bug just something that happens when using dynamic directions
         label_count = 0
         param_type = ["WALL", "APPLE", "SEGMENT"]
         for line in vision_lines:
@@ -106,6 +107,11 @@ class View:
                 line_label = font.render(line + " " + param, True, ViewConsts.COLOR_WHITE)
                 self.window.blit(line_label, [ViewConsts.NN_DISPLAY_OFFSET_X, ViewConsts.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewConsts.NN_DISPLAY_OFFSET_Y - 10])
                 label_count += 1
+
+        for direction in MAIN_DIRECTIONS:
+            line_label = font.render(direction.name, True, ViewConsts.COLOR_WHITE)
+            self.window.blit(line_label, [ViewConsts.NN_DISPLAY_OFFSET_X, ViewConsts.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewConsts.NN_DISPLAY_OFFSET_Y - 10])
+            label_count += 1
 
         self.draw_neurons(model, neuron_offset_x, font, nn_input, nn_output)
 
