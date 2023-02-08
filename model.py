@@ -32,7 +32,7 @@ class Model:
                 else:
                     self.board[i][j] = "X"
 
-    def place_apple_at_coords(self, position):
+    def place_apple_at_coords(self, position) -> None:
         self.board[position[0]][position[1]] = "A"
 
     def place_snake_in_given_position(self, positions: [], direction: Direction) -> None:
@@ -44,7 +44,7 @@ class Model:
             self.snake.body.append([position[0], position[1]])
         self.snake.direction = direction
 
-    def find_snake_head(self):
+    def find_snake_head(self) -> []:
         for i in range(0, self.size):
             for j in range(0, self.size):
                 if self.board[i][j] == "H":
@@ -76,7 +76,7 @@ class Model:
 
         return valid_directions
 
-    def create_random_snake(self, snake_size):
+    def create_random_snake(self, snake_size) -> None:
         # head is the first block of the snake, the block where the search starts
         head = self.get_random_empty_block()
         self.snake.body.append(head)

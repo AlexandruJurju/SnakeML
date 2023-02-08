@@ -120,7 +120,7 @@ class NeuralNetwork:
                 dense_layers.append(layer)
         return dense_layers
 
-    def reinit_weights_and_biases(self):
+    def reinit_weights_and_biases(self) -> None:
         dense_layers = self.get_dense_layers()
 
         for layer in dense_layers:
@@ -130,7 +130,6 @@ class NeuralNetwork:
     def train(self, loss, loss_prime, x_train, y_train, learning_rate) -> None:
         error = 10000
         epoch = 0
-        # error doesn't have to be too small, when it gets rounded it doesn't matter too much
         while error > 0.1:
             error = 0
             for x, y in zip(x_train, y_train):

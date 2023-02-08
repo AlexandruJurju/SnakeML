@@ -44,7 +44,7 @@ def read_training_models() -> Tuple:
     return x, y
 
 
-def train_network(network: NeuralNetwork) -> {}:
+def train_network(network: NeuralNetwork) -> None:
     x, y = read_training_models()
 
     # example for points
@@ -72,7 +72,7 @@ class TrainingExample:
         self.current_direction = current_direction
 
 
-def write_examples_to_csv_4d(examples: List[TrainingExample]) -> {}:
+def write_examples_to_csv_4d(examples: List[TrainingExample]) -> None:
     file = open("Neural/train_data_4d.csv", "w", newline='')
     writer = csv.writer(file)
 
@@ -89,7 +89,7 @@ def write_examples_to_csv_4d(examples: List[TrainingExample]) -> {}:
     file.close()
 
 
-def evaluate_live_examples_4d(examples: List[TrainingExample]) -> {}:
+def evaluate_live_examples_4d(examples: List[TrainingExample]) -> None:
     evaluated = []
 
     for example in examples:
@@ -105,7 +105,6 @@ def evaluate_live_examples_4d(examples: List[TrainingExample]) -> {}:
         print("UP DOWN LEFT RIGHT ")
         target_string = input("")
 
-        # TODO bug, need simple array not numpy array
         if target_string == "":
             target_output = example.predictions
         elif target_string == "x":
@@ -129,7 +128,7 @@ def evaluate_live_examples_4d(examples: List[TrainingExample]) -> {}:
 
 
 # TODO remake to look like 4d
-def write_examples_to_csv(examples: List[TrainingExample]):
+def write_examples_to_csv(examples: List[TrainingExample]) -> None:
     file = open("Neural/train_data_3d.csv", "w", newline='')
     writer = csv.writer(file)
 
@@ -158,7 +157,7 @@ def write_examples_to_csv(examples: List[TrainingExample]):
     file.close()
 
 
-def evaluate_live_examples(examples: List[TrainingExample]):
+def evaluate_live_examples(examples: List[TrainingExample]) -> None:
     evaluated = []
     np.set_printoptions(suppress=True)
 

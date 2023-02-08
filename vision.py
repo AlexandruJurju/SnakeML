@@ -23,7 +23,7 @@ class VisionLine:
 
 class Vision:
     @staticmethod
-    def find_snake_head_poz(board: List[str]):
+    def find_snake_head_poz(board: List[str]) -> []:
         for i in range(len(board)):
             for j in range(len(board)):
                 if board[i][j] == "H":

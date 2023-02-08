@@ -12,7 +12,7 @@ class Controller:
         self.model = model
         self.view = view
 
-    def run(self):
+    def run(self) -> None:
         training_examples = []
         while self.running:
             self.view.clear_window()
