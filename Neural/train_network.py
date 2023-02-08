@@ -3,7 +3,7 @@ import csv
 from typing import List, Tuple
 from Neural.neural_network import *
 from constants import *
-from vision import Vision
+from vision import get_parameters_in_nn_input_form, get_vision_lines
 
 
 def read_training_models() -> Tuple:
@@ -30,9 +30,9 @@ def read_training_models() -> Tuple:
                     real_direction = direction
                     break
 
-            vision_lines = Vision.get_vision_lines(board)
+            vision_lines = get_vision_lines(board)
 
-            x.append(Vision.get_parameters_in_nn_input_form(vision_lines, real_direction))
+            x.append(get_parameters_in_nn_input_form(vision_lines, real_direction))
 
             # dynamic loop over columns in csv, skips board and current direction
             outputs = []
