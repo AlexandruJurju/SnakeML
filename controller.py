@@ -1,5 +1,3 @@
-import pygame
-
 from Neural.train_model import *
 from Neural.train_model import train_network
 from model import *
@@ -35,7 +33,6 @@ class Controller:
 
             if not self.running:
                 self.view.draw_dead(self.model)
-                pygame.display.update()
 
                 evaluate_live_examples_4d(training_examples)
                 training_examples = []

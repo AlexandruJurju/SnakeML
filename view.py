@@ -55,6 +55,7 @@ class View:
                         pygame.draw.rect(self.window, COLOR_RED, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE))
                 # draw lines between squares
                 pygame.draw.rect(self.window, COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, SQUARE_SIZE, SQUARE_SIZE), width=1)
+        pygame.display.update()
 
     def draw_vision_lines(self, model, vision_lines):
         font = pygame.font.SysFont("arial", 18)
