@@ -78,16 +78,16 @@ def write_examples_to_csv_4d(examples: List[TrainingExample]):
 
     training_examples = []
     for example in examples:
-        prediction_string = np.reshape(example.predictions, (1, 4))
-        up = prediction_string[0]
-        down = prediction_string[1]
-        left = prediction_string[2]
-        right = prediction_string[3]
+        up = example.predictions[0]
+        down = example.predictions[1]
+        left = example.predictions[2]
+        right = example.predictions[3]
 
         training_examples.append([example.model, example.current_direction, up, down, left, right])
 
     writer.writerows(training_examples)
     file.close()
+
 
 # TODO remake to look like 4d
 def write_examples_to_csv(examples: List[TrainingExample]):
