@@ -30,6 +30,12 @@ class View:
         pygame.display.update()
         self.fps_clock.tick(ViewConsts.MAX_FPS)
 
+    def draw_ttl(self, ttl: int):
+        font = pygame.font.SysFont("arial", 18)
+
+        score_text = font.render("Moves Left: " + str(ttl), True, ViewConsts.COLOR_WHITE)
+        self.window.blit(score_text, [ViewConsts.OFFSET_BOARD_X + 25, ViewConsts.OFFSET_BOARD_Y - 75])
+
     def draw_score(self, score: int) -> None:
         font = pygame.font.SysFont("arial", 18)
 
