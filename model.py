@@ -1,5 +1,5 @@
 import random
-from typing import Tuple, List
+from typing import Tuple
 
 from Neural.neural_network import NeuralNetwork
 from snake import Snake

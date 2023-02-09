@@ -2,7 +2,6 @@ from Neural.train_network import *
 from Neural.train_network import train_network
 from model import *
 from view import View
-import os
 
 
 # TODO add options for using different neural networks
@@ -23,7 +22,9 @@ class Controller:
             neural_net_prediction = self.model.get_nn_output(vision_lines)
             nn_input = get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
 
-            example = TrainingExample(copy.deepcopy(self.model.board), neural_net_prediction.ravel().tolist(), self.model.snake.direction)
+            # max maximum in neural net output 1, others 0
+            example_prediction = np.where(neural_net_prediction == np.max(neural_net_prediction), 1, 0)
+            example = TrainingExample(copy.deepcopy(self.model.board), example_prediction.ravel().tolist(), self.model.snake.direction)
             training_examples.append(example)
 
             if DRAW:
