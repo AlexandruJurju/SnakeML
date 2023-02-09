@@ -26,6 +26,12 @@ class View:
         pygame.display.update()
         self.fps_clock.tick(ViewConsts.MAX_FPS)
 
+    def draw_score(self, score: int) -> None:
+        font = pygame.font.SysFont("arial", 18)
+
+        score_text = font.render("Score: " + str(score), True, ViewConsts.COLOR_WHITE)
+        self.window.blit(score_text, [ViewConsts.OFFSET_BOARD_X + 25, ViewConsts.OFFSET_BOARD_Y - 50])
+
     def draw_board(self, board: List) -> None:
         # use y,x for index in board instead of x,y because of changed logic
         # x is line y is column ; drawing x is column and y is line

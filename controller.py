@@ -30,6 +30,7 @@ class Controller:
 
             next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
             self.running = self.model.move_in_direction(next_direction)
+            self.view.draw_score(self.model.snake.score)
 
             if not self.running:
                 self.view.draw_dead(self.model.board)

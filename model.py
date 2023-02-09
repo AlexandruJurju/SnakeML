@@ -128,6 +128,7 @@ class Model:
             self.update_board_from_snake()
             self.place_new_apple()
             self.snake.ttl = SNAKE_MAX_TTL
+            self.snake.score = self.snake.score + 1
         else:
             self.snake.body = self.snake.body[:-1]
             self.update_board_from_snake()
