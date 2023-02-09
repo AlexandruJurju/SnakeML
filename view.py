@@ -4,9 +4,25 @@ import pygame
 from Neural.neural_network import Dense
 from constants import *
 import numpy as np
-from typing import List
+from typing import List, Tuple
 from model import Model
 import os
+
+
+class Button:
+    def __init__(self, position: Tuple, width: int, height: int, text: str, font: pygame.font, text_color, rectangle_color: Tuple):
+        self.position = position
+
+        self.button_rectangle = pygame.Rect(position, (width, height))
+        self.button_rectangle_color = rectangle_color
+
+        # text is a surface, I use text rectangle to center it
+        self.text_surface = font.render(text, True, text_color)
+        self.text_rectangle = self.text_surface.get_rect(center=self.button_rectangle.center)
+
+    def draw(self, surface: pygame.surface):
+        pygame.draw.rect(surface, self.button_rectangle_color, self.button_rectangle)
+        surface.blit(self.text_surface, self.text_rectangle)
 
 
 # TODO add view for board training examples
@@ -26,21 +42,28 @@ class View:
     def clear_window(self) -> None:
         self.window.fill(ViewVars.COLOR_BACKGROUND)
 
+    def check_running(self) -> bool:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+        return True
+
     def update_window(self) -> None:
         pygame.display.update()
         self.fps_clock.tick(ViewVars.MAX_FPS)
 
     def draw_ttl(self, ttl: int):
         font = pygame.font.SysFont("arial", 18)
-
         score_text = font.render("Moves Left: " + str(ttl), True, ViewVars.COLOR_WHITE)
         self.window.blit(score_text, [ViewVars.OFFSET_BOARD_X + 25, ViewVars.OFFSET_BOARD_Y - 75])
 
     def draw_score(self, score: int) -> None:
         font = pygame.font.SysFont("arial", 18)
-
         score_text = font.render("Score: " + str(score), True, ViewVars.COLOR_WHITE)
         self.window.blit(score_text, [ViewVars.OFFSET_BOARD_X + 25, ViewVars.OFFSET_BOARD_Y - 50])
+
+        btn = Button((20, 20), 50, 50, "ALEX", font, ViewVars.COLOR_BLACK, ViewVars.COLOR_WHITE)
+        btn.draw(self.window)
 
     def draw_board(self, board: List) -> None:
         # use y,x for index in board instead of x,y because of changed logic

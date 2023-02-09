@@ -26,11 +26,9 @@ class Controller:
     def run(self) -> None:
         training_examples = []
         while self.running:
-            if ViewVars.DRAW:
-                self.view.clear_window()
+            self.view.check_running()
 
             vision_lines = get_vision_lines(self.model.board)
-
             neural_net_prediction = self.model.get_nn_output(vision_lines)
             nn_input = get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
 
@@ -40,6 +38,7 @@ class Controller:
             training_examples.append(example)
 
             if ViewVars.DRAW:
+                self.view.clear_window()
                 self.view.draw_board(self.model.board)
                 self.view.draw_vision_lines(self.model, vision_lines)
                 self.view.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
@@ -61,7 +60,6 @@ class Controller:
                 # TODO train data , search file like a dictionary to find if there are conflicting data
                 self.model.snake.brain.reinit_weights_and_biases()
                 self.train_network(self.model.snake.brain)
-
                 # TODO add reinit function in model
                 self.model = Model(BoardVars.BOARD_SIZE, START_SNAKE_SIZE, self.model.snake.brain)
 
