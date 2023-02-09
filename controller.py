@@ -27,7 +27,7 @@ class Controller:
             example = TrainingExample(copy.deepcopy(self.model.board), example_prediction.ravel().tolist(), self.model.snake.direction)
             training_examples.append(example)
 
-            if DRAW:
+            if ViewConsts.DRAW:
                 self.view.draw_board(self.model.board)
                 self.view.draw_vision_lines(self.model, vision_lines)
                 self.view.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
@@ -38,7 +38,7 @@ class Controller:
             self.running = self.model.move_in_direction(next_direction)
 
             if not self.running:
-                if DRAW:
+                if ViewConsts.DRAW:
                     self.view.draw_dead(self.model.board)
 
                 evaluate_live_examples_4d(training_examples)

@@ -12,12 +12,12 @@ NN_OUTPUT_NEURON_COUNT = 4 if INPUT_DIRECTION_COUNT == 4 or INPUT_DIRECTION_COUN
 TRAIN_DATA_FILE_LOCATION = "Neural/train_data_" + str(NN_OUTPUT_NEURON_COUNT) + "_output_directions.csv"
 
 START_SNAKE_SIZE = 3
-SNAKE_MAX_TTL = 50
-
-DRAW = True
+SNAKE_MAX_TTL = 150
 
 
 class ViewConsts:
+    DRAW = True
+
     MAX_FPS = 20
     OFFSET_BOARD_X = 500
     OFFSET_BOARD_Y = 100

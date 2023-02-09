@@ -102,7 +102,7 @@ def evaluate_live_examples_4d(examples: List[TrainingExample]) -> None:
         print()
 
         print("Enter target outputs for neural network in form")
-        print("UP DOWN LEFT RIGHT ")
+        print("UP=W DOWN=S LEFT=A RIGHT=D")
         target_string = input("")
 
         if target_string == "":
@@ -111,13 +111,13 @@ def evaluate_live_examples_4d(examples: List[TrainingExample]) -> None:
             break
         else:
             target_output = [0.0, 0.0, 0.0, 0.0]
-            if target_string.__contains__("u"):
+            if target_string.__contains__("w"):
                 target_output[0] = 1.0
-            if target_string.__contains__("d"):
+            if target_string.__contains__("s"):
                 target_output[1] = 1.0
-            if target_string.__contains__("l"):
+            if target_string.__contains__("a"):
                 target_output[2] = 1.0
-            if target_string.__contains__("r"):
+            if target_string.__contains__("d"):
                 target_output[3] = 1.0
 
         print(target_output)
