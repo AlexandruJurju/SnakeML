@@ -12,6 +12,8 @@ import os
 class Button:
     def __init__(self, position: Tuple, width: int, height: int, text: str, font: pygame.font, text_color, rectangle_color: Tuple):
         self.position = position
+        # used for solving a bug, where the button is pressed twice for one click
+        self.pressed = False
 
         self.button_rectangle = pygame.Rect(position, (width, height))
         self.button_rectangle_color = rectangle_color
@@ -20,9 +22,22 @@ class Button:
         self.text_surface = font.render(text, True, text_color)
         self.text_rectangle = self.text_surface.get_rect(center=self.button_rectangle.center)
 
-    def draw(self, surface: pygame.surface):
+    def draw(self, surface: pygame.surface) -> bool:
         pygame.draw.rect(surface, self.button_rectangle_color, self.button_rectangle)
         surface.blit(self.text_surface, self.text_rectangle)
+        # only call it once, button is redraw multiple times during execution
+        return self.check_clicked()
+
+    def check_clicked(self) -> bool:
+        action = False
+        mouse_position = pygame.mouse.get_pos()
+        if self.button_rectangle.collidepoint(mouse_position):
+            if pygame.mouse.get_pressed()[0] and self.pressed == False:
+                self.pressed = True
+                action = True
+            if pygame.mouse.get_pressed()[0] == 0:
+                self.pressed = False
+        return action
 
 
 # TODO add view for board training examples
@@ -32,6 +47,7 @@ class Button:
 # TODO add dropdown for board size
 class View:
     def __init__(self):
+        # set start window position using variables from ViewVars
         os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (ViewVars.WINDOW_START_X, ViewVars.WINDOW_START_Y)
 
         pygame.init()
@@ -42,6 +58,7 @@ class View:
     def clear_window(self) -> None:
         self.window.fill(ViewVars.COLOR_BACKGROUND)
 
+    # function is needed so that the program doesnt freeze
     def check_running(self) -> bool:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -63,7 +80,7 @@ class View:
         self.window.blit(score_text, [ViewVars.OFFSET_BOARD_X + 25, ViewVars.OFFSET_BOARD_Y - 50])
 
         btn = Button((20, 20), 50, 50, "ALEX", font, ViewVars.COLOR_BLACK, ViewVars.COLOR_WHITE)
-        btn.draw(self.window)
+        print(btn.draw(self.window))
 
     def draw_board(self, board: List) -> None:
         # use y,x for index in board instead of x,y because of changed logic
