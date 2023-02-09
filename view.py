@@ -118,6 +118,7 @@ class View:
         self.draw_neurons(model, neuron_offset_x, font, nn_input, nn_output)
 
     # TODO color when using distance
+    # TODO find neuron positions first then draw them, more efficient
     def draw_neurons(self, model: Model, neuron_offset_x, font, nn_input, nn_output: np.ndarray) -> None:
         dense_layers = model.snake.brain.get_dense_layers()
 
