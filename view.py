@@ -1,10 +1,12 @@
-import pygame
+import time
 
+import pygame
 from Neural.neural_network import Dense
 from constants import *
 import numpy as np
 from typing import List
 from model import Model
+import os
 
 
 # TODO add view for board training examples
@@ -14,6 +16,8 @@ from model import Model
 # TODO add dropdown for board size
 class View:
     def __init__(self):
+        os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (50, 50)
+
         pygame.init()
         self.window = pygame.display.set_mode((ViewConsts.WIDTH, ViewConsts.HEIGHT))
         pygame.display.set_caption("Snake Game")

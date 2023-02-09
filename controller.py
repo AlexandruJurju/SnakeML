@@ -2,6 +2,7 @@ from Neural.train_network import *
 from Neural.train_network import train_network
 from model import *
 from view import View
+import os
 
 
 # TODO add options for using different neural networks
@@ -30,6 +31,7 @@ class Controller:
                 self.view.draw_vision_lines(self.model, vision_lines)
                 self.view.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
                 self.view.draw_score(self.model.snake.score)
+                self.view.update_window()
 
             next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
             self.running = self.model.move_in_direction(next_direction)
@@ -50,6 +52,3 @@ class Controller:
                 self.model = Model(BOARD_SIZE, START_SNAKE_SIZE, self.model.snake.brain)
 
                 self.running = True
-
-            if DRAW:
-                self.view.update_window()
