@@ -16,7 +16,7 @@ import os
 # TODO add dropdown for board size
 class View:
     def __init__(self):
-        os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (50, 50)
+        os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (ViewConsts.WINDOW_START_X, ViewConsts.WINDOW_START_Y)
 
         pygame.init()
         self.window = pygame.display.set_mode((ViewConsts.WIDTH, ViewConsts.HEIGHT))
