@@ -26,7 +26,8 @@ class Controller:
     def run(self) -> None:
         training_examples = []
         while self.running:
-            self.view.clear_window()
+            if ViewConsts.DRAW:
+                self.view.clear_window()
 
             vision_lines = get_vision_lines(self.model.board)
 
@@ -54,7 +55,7 @@ class Controller:
                     self.view.draw_dead(self.model.board)
 
                 self.evaluate_live_examples_4d(training_examples)
-                training_examples = []
+                training_examples.clear()
 
                 # TODO BAD REINIT, TO BE REMOVED
                 # TODO train data , search file like a dictionary to find if there are conflicting data
@@ -151,9 +152,10 @@ class Controller:
             print(f"Prediction RIGHT : {example.predictions[3]}")
             print()
 
-            self.view.clear_window()
-            self.view.draw_board(example.model)
-            self.view.update_window()
+            if ViewConsts.DRAW:
+                self.view.clear_window()
+                self.view.draw_board(example.model)
+                self.view.update_window()
 
             print("Enter target outputs for neural network in form")
             print("UP=W DOWN=S LEFT=A RIGHT=D")
