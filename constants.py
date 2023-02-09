@@ -14,6 +14,8 @@ TRAIN_DATA_FILE_LOCATION = "Neural/train_data_" + str(NN_OUTPUT_NEURON_COUNT) + 
 START_SNAKE_SIZE = 3
 SNAKE_MAX_TTL = 50
 
+DRAW = True
+
 
 class ViewConsts:
     MAX_FPS = 20

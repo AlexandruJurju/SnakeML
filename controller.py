@@ -18,22 +18,25 @@ class Controller:
             self.view.clear_window()
 
             vision_lines = get_vision_lines(self.model.board)
-            self.view.draw_board(self.model.board)
-            self.view.draw_vision_lines(self.model, vision_lines)
 
             neural_net_prediction = self.model.get_nn_output(vision_lines)
             nn_input = get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
-            self.view.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
 
             example = TrainingExample(copy.deepcopy(self.model.board), neural_net_prediction.ravel().tolist(), self.model.snake.direction)
             training_examples.append(example)
 
+            if DRAW:
+                self.view.draw_board(self.model.board)
+                self.view.draw_vision_lines(self.model, vision_lines)
+                self.view.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
+                self.view.draw_score(self.model.snake.score)
+
             next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
             self.running = self.model.move_in_direction(next_direction)
-            self.view.draw_score(self.model.snake.score)
 
             if not self.running:
-                self.view.draw_dead(self.model.board)
+                if DRAW:
+                    self.view.draw_dead(self.model.board)
 
                 evaluate_live_examples_4d(training_examples)
                 training_examples = []
@@ -48,4 +51,5 @@ class Controller:
 
                 self.running = True
 
-            self.view.update_window()
+            if DRAW:
+                self.view.update_window()
