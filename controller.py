@@ -26,7 +26,7 @@ class Controller:
     def run(self) -> None:
         training_examples = []
         while self.running:
-            if ViewConsts.DRAW:
+            if ViewVars.DRAW:
                 self.view.clear_window()
 
             vision_lines = get_vision_lines(self.model.board)
@@ -39,7 +39,7 @@ class Controller:
             example = TrainingExample(copy.deepcopy(self.model.board), example_prediction.ravel().tolist(), self.model.snake.direction)
             training_examples.append(example)
 
-            if ViewConsts.DRAW:
+            if ViewVars.DRAW:
                 self.view.draw_board(self.model.board)
                 self.view.draw_vision_lines(self.model, vision_lines)
                 self.view.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
@@ -51,7 +51,7 @@ class Controller:
             self.running = self.model.move_in_direction(next_direction)
 
             if not self.running:
-                if ViewConsts.DRAW:
+                if ViewVars.DRAW:
                     self.view.draw_dead(self.model.board)
 
                 self.evaluate_live_examples_4d(training_examples)
@@ -63,12 +63,12 @@ class Controller:
                 self.train_network(self.model.snake.brain)
 
                 # TODO add reinit function in model
-                self.model = Model(BOARD_SIZE, START_SNAKE_SIZE, self.model.snake.brain)
+                self.model = Model(BoardVars.BOARD_SIZE, START_SNAKE_SIZE, self.model.snake.brain)
 
                 self.running = True
 
     def read_training_models(self) -> Tuple:
-        file = open(TRAIN_DATA_FILE_LOCATION)
+        file = open(NNVars.TRAIN_DATA_FILE_LOCATION)
         csvreader = csv.reader(file)
 
         data = []
@@ -112,8 +112,8 @@ class Controller:
         # when using a single example x_test from x, x_test is (2,)
         # resizing can be done for the whole training data resize(10000,2,1)
         # or for just one example resize(2,1)
-        x = np.reshape(x, (len(x), NN_INPUT_NEURON_COUNT, 1))
-        y = np.reshape(y, (len(y), NN_OUTPUT_NEURON_COUNT, 1))
+        x = np.reshape(x, (len(x), NNVars.NN_INPUT_NEURON_COUNT, 1))
+        y = np.reshape(y, (len(y), NNVars.NN_OUTPUT_NEURON_COUNT, 1))
 
         network.train(mse, mse_prime, x, y, 0.5)
 
@@ -125,7 +125,7 @@ class Controller:
         #     print("============================================")
 
     def write_examples_to_csv_4d(self, examples: List[TrainingExample]) -> None:
-        file = open(TRAIN_DATA_FILE_LOCATION, "w+", newline='')
+        file = open(NNVars.TRAIN_DATA_FILE_LOCATION, "w+", newline='')
         writer = csv.writer(file)
 
         training_examples = []
@@ -152,7 +152,7 @@ class Controller:
             print(f"Prediction RIGHT : {example.predictions[3]}")
             print()
 
-            if ViewConsts.DRAW:
+            if ViewVars.DRAW:
                 self.view.clear_window()
                 self.view.draw_board(example.model)
                 self.view.update_window()

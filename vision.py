@@ -14,7 +14,7 @@ def manhattan_distance(a, b):
 def find_snake_head_poz(board: List[str]) -> []:
     for i in range(len(board)):
         for j in range(len(board)):
-            if board[i][j] == BoardConsts.SNAKE_HEAD:
+            if board[i][j] == BoardVars.SNAKE_HEAD:
                 return [i, j]
 
 
@@ -44,12 +44,12 @@ def look_in_direction(board: List[str], direction: Direction) -> VisionLine:
     segment_found = False
 
     # loop are blocks in the given direction and store position and coordinates of apple and snake segments
-    while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
-        if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_found == False:
+    while board[current_block[0]][current_block[1]] != BoardVars.WALL:
+        if board[current_block[0]][current_block[1]] == BoardVars.APPLE and apple_found == False:
             apple_distance = distance(head_position, current_block)
             apple_coord = current_block
             apple_found = True
-        elif board[current_block[0]][current_block[1]] == BoardConsts.SNAKE_BODY and segment_found == False:
+        elif board[current_block[0]][current_block[1]] == BoardVars.SNAKE_BODY and segment_found == False:
             segment_distance = distance(head_position, current_block)
             segment_coord = current_block
             segment_found = True

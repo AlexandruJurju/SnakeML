@@ -1,21 +1,21 @@
 from enum import Enum
 
-BOARD_SIZE = 10
-
 INPUT_DIRECTION_COUNT = 4
 VISION_LINES_RETURN_TYPE = "boolean"
 VISION_LINES_COUNT = INPUT_DIRECTION_COUNT
-
-NN_INPUT_NEURON_COUNT = VISION_LINES_COUNT * 3 + 4
-NN_HIDDEN_NEURON_COUNT = 24
-NN_OUTPUT_NEURON_COUNT = 4 if INPUT_DIRECTION_COUNT == 4 or INPUT_DIRECTION_COUNT == 8 else 3
-TRAIN_DATA_FILE_LOCATION = "Neural/train_data_" + str(NN_OUTPUT_NEURON_COUNT) + "_output_directions.csv"
 
 START_SNAKE_SIZE = 3
 SNAKE_MAX_TTL = 150
 
 
-class ViewConsts:
+class NNVars:
+    NN_INPUT_NEURON_COUNT = VISION_LINES_COUNT * 3 + 4
+    NN_HIDDEN_NEURON_COUNT = 24
+    NN_OUTPUT_NEURON_COUNT = 4 if INPUT_DIRECTION_COUNT == 4 or INPUT_DIRECTION_COUNT == 8 else 3
+    TRAIN_DATA_FILE_LOCATION = "Neural/train_data_" + str(NN_OUTPUT_NEURON_COUNT) + "_output_directions.csv"
+
+
+class ViewVars:
     DRAW = True
 
     MAX_FPS = 20
@@ -45,7 +45,9 @@ class ViewConsts:
     COLOR_RED = (255, 0, 0)
 
 
-class BoardConsts:
+class BoardVars:
+    BOARD_SIZE = 10
+
     APPLE = "A"
     WALL = "W"
     EMPTY = "."
