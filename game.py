@@ -163,7 +163,7 @@ class Game:
                 case States.RUNNING:
                     self.run()
                 case States.BACKWARD_TRAIN:
-                    self.train()
+                    self.train_backpropagation()
 
             pygame.display.flip()
             self.fps_clock.tick(ViewVars.MAX_FPS)
@@ -226,13 +226,52 @@ class Game:
                         case pygame.K_x:
                             return "X"
 
-    def train(self):
+    def draw_board_with_directions(self, board: List) -> None:
+        # use y,x for index in board instead of x,y because of changed logic
+        # x is line y is column ; drawing x is column and y is line
+        for x in range(len(board)):
+            for y in range(len(board)):
+                x_position = x * ViewVars.SQUARE_SIZE + ViewVars.OFFSET_BOARD_X
+                y_position = y * ViewVars.SQUARE_SIZE + ViewVars.OFFSET_BOARD_Y
+
+                match board[y][x]:
+                    case BoardVars.SNAKE_BODY:
+                        pygame.draw.rect(self.window, ViewVars.COLOR_SNAKE, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
+                    case BoardVars.WALL:
+                        pygame.draw.rect(self.window, ViewVars.COLOR_WHITE, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
+                    case BoardVars.APPLE:
+                        pygame.draw.rect(self.window, ViewVars.COLOR_APPLE, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
+                    case BoardVars.SNAKE_HEAD:
+                        pygame.draw.rect(self.window, ViewVars.COLOR_SNAKE_HEAD, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
+
+                        pygame.draw.rect(self.window, ViewVars.COLOR_APPLE,
+                                         pygame.Rect(x_position + ViewVars.SQUARE_SIZE, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
+                        right_text = self.universal_font.render("D", True, ViewVars.COLOR_WHITE)
+                        self.window.blit(right_text, (x_position + ViewVars.SQUARE_SIZE, y_position))
+
+                        left_text = self.universal_font.render("A", True, ViewVars.COLOR_GREEN)
+                        self.window.blit(left_text, (x_position - ViewVars.SQUARE_SIZE, y_position))
+
+                        up_text = self.universal_font.render("W", True, ViewVars.COLOR_GREEN)
+                        self.window.blit(up_text, (x_position, y_position - ViewVars.SQUARE_SIZE))
+
+                        down_text = self.universal_font.render("S", True, ViewVars.COLOR_GREEN)
+                        self.window.blit(down_text, (x_position, y_position + ViewVars.SQUARE_SIZE))
+
+                # draw lines between squares
+                pygame.draw.rect(self.window, ViewVars.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE), width=1)
+
+    def train_backpropagation(self):
         self.window.fill(ViewVars.COLOR_BACKGROUND)
+
+        window_title = self.universal_font.render("TRAIN BACKPROPAGATION", True, ViewVars.COLOR_WHITE)
+        self.window.blit(window_title, [ViewVars.WINDOW_TITLE_X, ViewVars.WINDOW_TITLE_Y])
 
         current_example = training_examples[0]
         training_examples.pop(0)
 
-        self.draw_board(current_example.board)
+        self.draw_board_with_directions(current_example.board)
+
         # TODO BAD UPDATE
         pygame.display.update()
 
@@ -288,6 +327,8 @@ class Game:
 
         button_back = Button((100, 50), 50, 50, "BACK", self.universal_font, ViewVars.COLOR_WHITE, ViewVars.COLOR_RED)
         button_back.draw(self.window)
+        window_title = self.universal_font.render("MAIN RUN", True, ViewVars.COLOR_WHITE)
+        self.window.blit(window_title, [ViewVars.WINDOW_TITLE_X, ViewVars.WINDOW_TITLE_Y])
 
         vision_lines = get_vision_lines(self.model.board)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
