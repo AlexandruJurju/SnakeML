@@ -1,7 +1,7 @@
 import random
 
 from Neural.neural_network import *
-from constants import MAIN_DIRECTIONS, SNAKE_MAX_TTL
+from settings import MAIN_DIRECTIONS, SNAKE_MAX_TTL
 
 
 class Snake:

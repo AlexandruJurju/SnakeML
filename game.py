@@ -1,86 +1,251 @@
-import time
+import copy
+import csv
+import sys
 
-import pygame
-from Neural.neural_network import Dense
-from constants import *
-import numpy as np
-from typing import List, Tuple
-from model import Model
+from Neural.neural_network import mse, mse_prime, Dense
+from model import *
+from button import Button
 import os
+import pygame
 
 
-class Button:
-    def __init__(self, position: Tuple, width: int, height: int, text: str, font: pygame.font, text_color, rectangle_color: Tuple):
-        self.position = position
-        # used for solving a bug, where the button is pressed twice for one click
-        self.pressed = False
-
-        self.button_rectangle = pygame.Rect(position, (width, height))
-        self.button_rectangle_color = rectangle_color
-
-        # text is a surface, I use text rectangle to center it
-        self.text_surface = font.render(text, True, text_color)
-        self.text_rectangle = self.text_surface.get_rect(center=self.button_rectangle.center)
-
-    def draw(self, surface: pygame.surface) -> bool:
-        pygame.draw.rect(surface, self.button_rectangle_color, self.button_rectangle)
-        surface.blit(self.text_surface, self.text_rectangle)
-        # only call it once, button is redraw multiple times during execution
-        return self.check_clicked()
-
-    def check_clicked(self) -> bool:
-        action = False
-        mouse_position = pygame.mouse.get_pos()
-        if self.button_rectangle.collidepoint(mouse_position):
-            if pygame.mouse.get_pressed()[0] and self.pressed == False:
-                self.pressed = True
-                action = True
-            if pygame.mouse.get_pressed()[0] == 0:
-                self.pressed = False
-        return action
+class TrainingExample:
+    def __init__(self, model: List[str], predictions: List[float], current_direction: Direction):
+        self.model = model
+        self.predictions = predictions
+        self.current_direction = current_direction
 
 
-# TODO add view for board training examples
-# TODO add dropdown for options
-# TODO add buttons
-# TODO add highscore
-# TODO add dropdown for board size
-class View:
-    def __init__(self):
+def read_training_models() -> Tuple:
+    file = open(NNVars.TRAIN_DATA_FILE_LOCATION)
+    csvreader = csv.reader(file)
+
+    data = []
+    for row in csvreader:
+        data.append(row)
+
+    x = []
+    y = []
+
+    if len(data) != 0:
+        for row in data:
+            board = eval(row[0])
+
+            # direction is saved as Direction.UP, but direction.name is just UP, use split to get second part
+            direction_string = row[1].split(".")[1]
+            real_direction = None
+            for direction in MAIN_DIRECTIONS:
+                direction_enum_name = direction.name
+                if direction_string == direction_enum_name:
+                    real_direction = direction
+                    break
+
+            vision_lines = get_vision_lines(board)
+
+            x.append(get_parameters_in_nn_input_form(vision_lines, real_direction))
+
+            # dynamic loop over columns in csv, skips board and current direction
+            outputs = []
+            for i in range(2, len(row)):
+                print(row[i])
+                outputs.append(float(row[i]))
+            y.append(outputs)
+
+    return x, y
+
+
+def train_network(network: NeuralNetwork) -> None:
+    x, y = read_training_models()
+
+    # example for points
+    # x is (10000,2) 10000 lines, 2 columns ; 10000 examples each with x coord and y coord
+    # when using a single example x_test from x, x_test is (2,)
+    # resizing can be done for the whole training data resize(10000,2,1)
+    # or for just one example resize(2,1)
+    x = np.reshape(x, (len(x), NNVars.NN_INPUT_NEURON_COUNT, 1))
+    y = np.reshape(y, (len(y), NNVars.NN_OUTPUT_NEURON_COUNT, 1))
+
+    network.train(mse, mse_prime, x, y, 0.5)
+
+    # for x_test, y_test in zip(x, y):
+    #     output = network.feed_forward(x_test)
+    #     output_index = list(output).index(max(list(output)))
+    #     target_index = list(y_test).index(max(list(y_test)))
+    #     print(f"target = {target_index}, output = {output_index}")
+    #     print("============================================")
+
+
+def write_examples_to_csv_4d(examples: List[TrainingExample]) -> None:
+    file = open(NNVars.TRAIN_DATA_FILE_LOCATION, "w+", newline='')
+    writer = csv.writer(file)
+
+    training_examples = []
+    for example in examples:
+        up = example.predictions[0]
+        down = example.predictions[1]
+        left = example.predictions[2]
+        right = example.predictions[3]
+
+        training_examples.append([example.model, example.current_direction, up, down, left, right])
+
+    writer.writerows(training_examples)
+    file.close()
+
+
+def evaluate_live_examples_4d(examples: List[TrainingExample]) -> None:
+    evaluated = []
+
+    for example in examples:
+        print(f"Model \n {np.matrix(example.model)} \n")
+        print(f"Current Direction : {example.current_direction} \n")
+        print(f"Prediction UP : {example.predictions[0]}")
+        print(f"Prediction DOWN : {example.predictions[1]}")
+        print(f"Prediction LEFT : {example.predictions[2]}")
+        print(f"Prediction RIGHT : {example.predictions[3]}")
+        print()
+
+        # if ViewVars.DRAW:
+        #     self.view.clear_window()
+        #     self.view.draw_board(example.model)
+        #     self.view.update_window()
+
+        print("Enter target outputs for neural network in form")
+        print("UP=W DOWN=S LEFT=A RIGHT=D")
+        target_string = input("")
+
+        if target_string == "":
+            target_output = example.predictions
+        elif target_string == "x":
+            break
+        else:
+            target_output = [0.0, 0.0, 0.0, 0.0]
+            if target_string.__contains__("w"):
+                target_output[0] = 1.0
+            if target_string.__contains__("s"):
+                target_output[1] = 1.0
+            if target_string.__contains__("a"):
+                target_output[2] = 1.0
+            if target_string.__contains__("d"):
+                target_output[3] = 1.0
+
+        print(target_output)
+        print()
+        evaluated.append(TrainingExample(copy.deepcopy(example.model), target_output, example.current_direction))
+
+    write_examples_to_csv_4d(evaluated)
+
+
+# TODO add options for using different neural networks
+# TODO add options for using different directions 4,8,16
+
+
+class Game:
+    def __init__(self, model: Model, state: Enum):
+        self.model = model
+        self.state = state
+
         # set start window position using variables from ViewVars
         os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (ViewVars.WINDOW_START_X, ViewVars.WINDOW_START_Y)
-
         pygame.init()
         self.window = pygame.display.set_mode((ViewVars.WIDTH, ViewVars.HEIGHT))
         pygame.display.set_caption("Snake Game")
         self.fps_clock = pygame.time.Clock()
 
-    def clear_window(self) -> None:
+        self.universal_font = pygame.font.SysFont("arial", 18)
+
+    def state_machine(self):
+        while True:
+            match self.state:
+                case States.MAIN_MENU:
+                    self.main_menu()
+                case States.RUNNING:
+                    self.run()
+
+            pygame.display.flip()
+            self.fps_clock.tick(ViewVars.MAX_FPS)
+
+    def main_menu(self):
+        pygame.display.set_caption("Main Menu")
+
         self.window.fill(ViewVars.COLOR_BACKGROUND)
 
-    # function is needed so that the program doesnt freeze
-    def check_running(self) -> bool:
+        button_run = Button((50, 50), 50, 50, "RUN", self.universal_font, ViewVars.COLOR_WHITE, ViewVars.COLOR_BLACK)
+        button_run.draw(self.window)
+
+        button_options = Button((50, 125), 50, 50, "OPTIONS", self.universal_font, ViewVars.COLOR_WHITE, ViewVars.COLOR_BLACK)
+        button_options.draw(self.window)
+
+        button_quit = Button((50, 200), 50, 50, "QUIT", self.universal_font, ViewVars.COLOR_WHITE, ViewVars.COLOR_BLACK)
+        button_quit.draw(self.window)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return False
-        return True
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if button_run.check_clicked():
+                    self.state = States.RUNNING
+                if button_options.check_clicked():
+                    pass
+                if button_quit.check_clicked():
+                    pygame.quit()
+                    sys.exit()
 
-    def update_window(self) -> None:
-        pygame.display.update()
-        self.fps_clock.tick(ViewVars.MAX_FPS)
+    def options(self):
+        pass
+
+    def train(self):
+        pass
+
+    def run(self):
+        training_examples = []
+
+        self.window.fill(ViewVars.COLOR_BACKGROUND)
+
+        vision_lines = get_vision_lines(self.model.board)
+        neural_net_prediction = self.model.get_nn_output(vision_lines)
+        nn_input = get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
+
+        example_prediction = np.where(neural_net_prediction == np.max(neural_net_prediction), 1, 0)
+        example = TrainingExample(copy.deepcopy(self.model.board), example_prediction.ravel().tolist(), self.model.snake.direction)
+        training_examples.append(example)
+
+        self.draw_board(self.model.board)
+        self.draw_vision_lines(self.model, vision_lines)
+        self.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
+
+        next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
+        is_dead = self.model.move_in_direction(next_direction)
+
+        if not is_dead:
+            evaluate_live_examples_4d(training_examples)
+
+            # TODO BAD REINIT, TO BE REMOVED
+            # TODO train data , search file like a dictionary to find if there are conflicting data
+            self.model.snake.brain.reinit_weights_and_biases()
+            train_network(self.model.snake.brain)
+            self.model = Model(10, 3, self.model.snake.brain)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
 
     def draw_ttl(self, ttl: int):
-        font = pygame.font.SysFont("arial", 18)
-        score_text = font.render("Moves Left: " + str(ttl), True, ViewVars.COLOR_WHITE)
+        score_text = self.universal_font.render("Moves Left: " + str(ttl), True, ViewVars.COLOR_WHITE)
         self.window.blit(score_text, [ViewVars.OFFSET_BOARD_X + 25, ViewVars.OFFSET_BOARD_Y - 75])
 
     def draw_score(self, score: int) -> None:
-        font = pygame.font.SysFont("arial", 18)
-        score_text = font.render("Score: " + str(score), True, ViewVars.COLOR_WHITE)
+        score_text = self.universal_font.render("Score: " + str(score), True, ViewVars.COLOR_WHITE)
         self.window.blit(score_text, [ViewVars.OFFSET_BOARD_X + 25, ViewVars.OFFSET_BOARD_Y - 50])
-
-        btn = Button((20, 20), 50, 50, "ALEX", font, ViewVars.COLOR_BLACK, ViewVars.COLOR_WHITE)
-        print(btn.draw(self.window))
 
     def draw_board(self, board: List) -> None:
         # use y,x for index in board instead of x,y because of changed logic
@@ -115,14 +280,12 @@ class View:
                         pygame.draw.rect(self.window, ViewVars.COLOR_RED, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
                 # draw lines between squares
                 pygame.draw.rect(self.window, ViewVars.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE), width=1)
-        pygame.display.update()
 
     def draw_vision_lines(self, model: Model, vision_lines) -> None:
-        font = pygame.font.SysFont("arial", 18)
 
         # loop over all lines in given vision lines
         for line in vision_lines:
-            line_label = font.render(line, True, ViewVars.COLOR_BLACK)
+            line_label = self.universal_font.render(line, True, ViewVars.COLOR_BLACK)
 
             # render vision line text at wall position
             self.window.blit(line_label, [vision_lines[line].wall_coord[1] * ViewVars.SQUARE_SIZE + ViewVars.OFFSET_BOARD_X,
@@ -153,8 +316,6 @@ class View:
     # TODO draw lines between neurons
     # TODO write direction in inputs
     def draw_neural_network(self, model, vision_lines, nn_input, nn_output) -> None:
-        font = pygame.font.SysFont("arial", 16)
-
         neuron_offset_x = ViewVars.NN_DISPLAY_OFFSET_X + 100
 
         # TODO bug with param type changing, not a bug just something that happens when using dynamic directions
@@ -162,20 +323,20 @@ class View:
         param_type = ["WALL", "APPLE", "SEGMENT"]
         for line in vision_lines:
             for param in param_type:
-                line_label = font.render(line + " " + param, True, ViewVars.COLOR_WHITE)
+                line_label = self.universal_font.render(line + " " + param, True, ViewVars.COLOR_WHITE)
                 self.window.blit(line_label, [ViewVars.NN_DISPLAY_OFFSET_X, ViewVars.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewVars.NN_DISPLAY_OFFSET_Y - 10])
                 label_count += 1
 
         for direction in MAIN_DIRECTIONS:
-            line_label = font.render(direction.name, True, ViewVars.COLOR_WHITE)
+            line_label = self.universal_font.render(direction.name, True, ViewVars.COLOR_WHITE)
             self.window.blit(line_label, [ViewVars.NN_DISPLAY_OFFSET_X, ViewVars.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewVars.NN_DISPLAY_OFFSET_Y - 10])
             label_count += 1
 
-        self.draw_neurons(model, neuron_offset_x, font, nn_input, nn_output)
+        self.draw_neurons(model, neuron_offset_x, nn_input, nn_output)
 
     # TODO color when using distance
     # TODO find neuron positions first then draw them, more efficient
-    def draw_neurons(self, model: Model, neuron_offset_x, font, nn_input, nn_output: np.ndarray) -> None:
+    def draw_neurons(self, model: Model, neuron_offset_x, nn_input, nn_output: np.ndarray) -> None:
         dense_layers = model.snake.brain.get_dense_layers()
 
         # max distance is used to center the neurons in the next layers, formula for new yOffset is (yLengthPrevious - yLengthCurrent) / 2
@@ -247,7 +408,7 @@ class View:
                         case _:
                             direction = None
 
-                    line_label = font.render(direction, True, ViewVars.COLOR_WHITE)
+                    line_label = self.universal_font.render(direction, True, ViewVars.COLOR_WHITE)
                     self.window.blit(line_label,
                                      [neuron_offset_x + 15, ViewVars.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewVars.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y - 5])
                 # Draw NN hidden layers outputs
@@ -292,3 +453,43 @@ class View:
                     color = (0, 255, 0)
 
                 pygame.draw.line(self.window, color, line_start[j], line_end[i], width=1)
+
+    # def run2(self) -> None:
+    #     training_examples = []
+    #
+    #         vision_lines = get_vision_lines(self.model.board)
+    #         neural_net_prediction = self.model.get_nn_output(vision_lines)
+    #         nn_input = get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
+    #
+    #         # max maximum in neural net output 1, others 0
+    #         example_prediction = np.where(neural_net_prediction == np.max(neural_net_prediction), 1, 0)
+    #         example = TrainingExample(copy.deepcopy(self.model.board), example_prediction.ravel().tolist(), self.model.snake.direction)
+    #         training_examples.append(example)
+    #
+    #         if ViewVars.DRAW:
+    #             self.view.clear_window()
+    #             self.view.draw_board(self.model.board)
+    #             self.view.draw_vision_lines(self.model, vision_lines)
+    #             self.view.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
+    #             self.view.draw_score(self.model.snake.score)
+    #             self.view.draw_ttl(self.model.snake.ttl)
+    #             self.view.update_window()
+    #
+    #         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
+    #         self.running = self.model.move_in_direction(next_direction)
+    #
+    #         if not self.running:
+    #             if ViewVars.DRAW:
+    #                 self.view.draw_dead(self.model.board)
+    #
+    #             self.evaluate_live_examples_4d(training_examples)
+    #             training_examples.clear()
+    #
+    #             # TODO BAD REINIT, TO BE REMOVED
+    #             # TODO train data , search file like a dictionary to find if there are conflicting data
+    #             self.model.snake.brain.reinit_weights_and_biases()
+    #             self.train_network(self.model.snake.brain)
+    #             # TODO add reinit function in model
+    #             self.model = Model(BoardVars.BOARD_SIZE, START_SNAKE_SIZE, self.model.snake.brain)
+    #
+    #             self.running = True
