@@ -14,7 +14,6 @@ if __name__ == '__main__':
     model = Model(BoardVars.BOARD_SIZE, START_SNAKE_SIZE, net)
 
     train_network(model.snake.brain)
-    print(type(States.MAIN_MENU))
 
     game = Game(model, States.MAIN_MENU)
     game.state_machine()

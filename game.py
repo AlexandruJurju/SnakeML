@@ -47,7 +47,6 @@ def read_training_models() -> Tuple:
             # dynamic loop over columns in csv, skips board and current direction
             outputs = []
             for i in range(2, len(row)):
-                print(row[i])
                 outputs.append(float(row[i]))
             y.append(outputs)
 
@@ -203,8 +202,10 @@ class Game:
 
     def run(self):
         training_examples = []
-
         self.window.fill(ViewVars.COLOR_BACKGROUND)
+
+        button_back = Button((100, 50), 50, 50, "BACK", self.universal_font, ViewVars.COLOR_WHITE, ViewVars.COLOR_RED)
+        button_back.draw(self.window)
 
         vision_lines = get_vision_lines(self.model.board)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
@@ -238,6 +239,9 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if button_back.check_clicked():
+                    self.state = States.MAIN_MENU
 
     def draw_ttl(self, ttl: int):
         score_text = self.universal_font.render("Moves Left: " + str(ttl), True, ViewVars.COLOR_WHITE)
