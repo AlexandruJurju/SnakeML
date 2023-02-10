@@ -43,8 +43,3 @@ class Button:
                 self.clicked = False
         return action
 
-# TODO add view for board training examples
-# TODO add dropdown for options
-# TODO add buttons
-# TODO add highscore
-# TODO add dropdown for board size

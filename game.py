@@ -4,7 +4,7 @@ import sys
 
 from Neural.neural_network import mse, mse_prime, Dense
 from model import *
-from button import Button
+from view_tools import Button
 import os
 import pygame
 
@@ -78,67 +78,69 @@ def write_examples_to_csv_4d(examples: List[TrainingExample]) -> None:
     file = open(NNVars.TRAIN_DATA_FILE_LOCATION, "w+", newline='')
     writer = csv.writer(file)
 
-    training_examples = []
+    examples_to_write = []
     for example in examples:
         up = example.predictions[0]
         down = example.predictions[1]
         left = example.predictions[2]
         right = example.predictions[3]
 
-        training_examples.append([example.board, example.current_direction, up, down, left, right])
+        examples_to_write.append([example.board, example.current_direction, up, down, left, right])
 
-    writer.writerows(training_examples)
+    writer.writerows(examples_to_write)
     file.close()
 
 
-def evaluate_live_examples_4d(examples: List[TrainingExample]) -> None:
-    evaluated = []
+# def evaluate_live_examples_4d(examples: List[TrainingExample]) -> None:
+#     evaluated = []
+#
+#     for example in examples:
+#         print(f"Model \n {np.matrix(example.board)} \n")
+#         print(f"Current Direction : {example.current_direction} \n")
+#         print(f"Prediction UP : {example.predictions[0]}")
+#         print(f"Prediction DOWN : {example.predictions[1]}")
+#         print(f"Prediction LEFT : {example.predictions[2]}")
+#         print(f"Prediction RIGHT : {example.predictions[3]}")
+#         print()
+#
+#         # if ViewVars.DRAW:
+#         #     self.view.clear_window()
+#         #     self.view.draw_board(example.model)
+#         #     self.view.update_window()
+#
+#         print("Enter target outputs for neural network in form")
+#         print("UP=W DOWN=S LEFT=A RIGHT=D")
+#         target_string = input("")
+#
+#         if target_string == "":
+#             target_output = example.predictions
+#         elif target_string == "x":
+#             break
+#         else:
+#             target_output = [0.0, 0.0, 0.0, 0.0]
+#             if target_string.__contains__("w"):
+#                 target_output[0] = 1.0
+#             if target_string.__contains__("s"):
+#                 target_output[1] = 1.0
+#             if target_string.__contains__("a"):
+#                 target_output[2] = 1.0
+#             if target_string.__contains__("d"):
+#                 target_output[3] = 1.0
+#
+#         print(target_output)
+#         print()
+#         evaluated.append(TrainingExample(copy.deepcopy(example.board), target_output, example.current_direction))
+#
+#     write_examples_to_csv_4d(evaluated)
 
-    for example in examples:
-        print(f"Model \n {np.matrix(example.board)} \n")
-        print(f"Current Direction : {example.current_direction} \n")
-        print(f"Prediction UP : {example.predictions[0]}")
-        print(f"Prediction DOWN : {example.predictions[1]}")
-        print(f"Prediction LEFT : {example.predictions[2]}")
-        print(f"Prediction RIGHT : {example.predictions[3]}")
-        print()
 
-        # if ViewVars.DRAW:
-        #     self.view.clear_window()
-        #     self.view.draw_board(example.model)
-        #     self.view.update_window()
-
-        print("Enter target outputs for neural network in form")
-        print("UP=W DOWN=S LEFT=A RIGHT=D")
-        target_string = input("")
-
-        if target_string == "":
-            target_output = example.predictions
-        elif target_string == "x":
-            break
-        else:
-            target_output = [0.0, 0.0, 0.0, 0.0]
-            if target_string.__contains__("w"):
-                target_output[0] = 1.0
-            if target_string.__contains__("s"):
-                target_output[1] = 1.0
-            if target_string.__contains__("a"):
-                target_output[2] = 1.0
-            if target_string.__contains__("d"):
-                target_output[3] = 1.0
-
-        print(target_output)
-        print()
-        evaluated.append(TrainingExample(copy.deepcopy(example.board), target_output, example.current_direction))
-
-    write_examples_to_csv_4d(evaluated)
-
-
-# TODO add options for using different neural networks
-# TODO add options for using different directions 4,8,16
-
+# TODO add options for using different neural networks, for using different directions 4,8,16
 training_examples = []
 evaluated = []
+
+
+# TODO add dropdown for options
+# TODO add dropdown for board size
 
 
 class Game:
@@ -439,7 +441,6 @@ class Game:
     def draw_neural_network(self, model, vision_lines, nn_input, nn_output) -> None:
         neuron_offset_x = ViewVars.NN_DISPLAY_OFFSET_X + 100
 
-        # TODO bug with param type changing, not a bug just something that happens when using dynamic directions
         label_count = 0
         param_type = ["WALL", "APPLE", "SEGMENT"]
         for line in vision_lines:
@@ -574,43 +575,3 @@ class Game:
                     color = (0, 255, 0)
 
                 pygame.draw.line(self.window, color, line_start[j], line_end[i], width=1)
-
-    # def run2(self) -> None:
-    #     training_examples = []
-    #
-    #         vision_lines = get_vision_lines(self.model.board)
-    #         neural_net_prediction = self.model.get_nn_output(vision_lines)
-    #         nn_input = get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
-    #
-    #         # max maximum in neural net output 1, others 0
-    #         example_prediction = np.where(neural_net_prediction == np.max(neural_net_prediction), 1, 0)
-    #         example = TrainingExample(copy.deepcopy(self.model.board), example_prediction.ravel().tolist(), self.model.snake.direction)
-    #         training_examples.append(example)
-    #
-    #         if ViewVars.DRAW:
-    #             self.view.clear_window()
-    #             self.view.draw_board(self.model.board)
-    #             self.view.draw_vision_lines(self.model, vision_lines)
-    #             self.view.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
-    #             self.view.draw_score(self.model.snake.score)
-    #             self.view.draw_ttl(self.model.snake.ttl)
-    #             self.view.update_window()
-    #
-    #         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
-    #         self.running = self.model.move_in_direction(next_direction)
-    #
-    #         if not self.running:
-    #             if ViewVars.DRAW:
-    #                 self.view.draw_dead(self.model.board)
-    #
-    #             self.evaluate_live_examples_4d(training_examples)
-    #             training_examples.clear()
-    #
-    #             # TODO BAD REINIT, TO BE REMOVED
-    #             # TODO train data , search file like a dictionary to find if there are conflicting data
-    #             self.model.snake.brain.reinit_weights_and_biases()
-    #             self.train_network(self.model.snake.brain)
-    #             # TODO add reinit function in model
-    #             self.model = Model(BoardVars.BOARD_SIZE, START_SNAKE_SIZE, self.model.snake.brain)
-    #
-    #             self.running = True
