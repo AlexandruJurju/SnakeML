@@ -138,6 +138,7 @@ def evaluate_live_examples_4d(examples: List[TrainingExample]) -> None:
 # TODO add options for using different directions 4,8,16
 
 training_examples = []
+evaluated = []
 
 
 class Game:
@@ -201,23 +202,85 @@ class Game:
     def options(self):
         pass
 
+    def wait_for_key(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if event.type == pygame.KEYDOWN:
+                    match event.key:
+                        case pygame.K_ESCAPE:
+                            pygame.quit()
+                            sys.exit()
+                        case pygame.K_w:
+                            return "W"
+                        case pygame.K_s:
+                            return "S"
+                        case pygame.K_a:
+                            return "A"
+                        case pygame.K_d:
+                            return "D"
+                        case pygame.K_RETURN:
+                            return ""
+                        case pygame.K_x:
+                            return "X"
+
     def train(self):
         self.window.fill(ViewVars.COLOR_BACKGROUND)
+
         current_example = training_examples[0]
         training_examples.pop(0)
 
         self.draw_board(current_example.board)
+        # TODO BAD UPDATE
+        pygame.display.update()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
+        print(f"Model \n {np.matrix(current_example.board)} \n")
+        print(f"Current Direction : {current_example.current_direction} \n")
+        print(f"Prediction UP : {current_example.predictions[0]}")
+        print(f"Prediction DOWN : {current_example.predictions[1]}")
+        print(f"Prediction LEFT : {current_example.predictions[2]}")
+        print(f"Prediction RIGHT : {current_example.predictions[3]}")
+        print()
 
-        if len(training_examples) == 0:
+        print("Enter target outputs for neural network in form")
+        print("UP=W DOWN=S LEFT=A RIGHT=D")
+
+        input_string = self.wait_for_key()
+        skip = False
+
+        if input_string == "X":
+            skip = True
+        else:
+            if input_string == "":
+                target_output = current_example.predictions
+            else:
+                target_output = [0.0, 0.0, 0.0, 0.0]
+                if input_string == "W":
+                    target_output[0] = 1.0
+                if input_string == "S":
+                    target_output[1] = 1.0
+                if input_string == "A":
+                    target_output[2] = 1.0
+                if input_string == "D":
+                    target_output[3] = 1.0
+
+            print(target_output)
+            print()
+            evaluated.append(TrainingExample(copy.deepcopy(current_example.board), target_output, current_example.current_direction))
+
+        if len(training_examples) == 0 or skip:
+            training_examples.clear()
+            write_examples_to_csv_4d(evaluated)
+            evaluated.clear()
+
+            # TODO BAD REINIT
+            self.model.snake.brain.reinit_weights_and_biases()
+            train_network(self.model.snake.brain)
+            # TODO add reinit function in model
+            self.model = Model(BoardVars.BOARD_SIZE, START_SNAKE_SIZE, self.model.snake.brain)
+
             self.state = States.RUNNING
 
     def run(self):
