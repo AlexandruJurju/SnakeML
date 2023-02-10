@@ -2,7 +2,7 @@ from Neural.neural_network import *
 from settings import NNVars, BoardVars, START_SNAKE_SIZE
 from game import Game, train_network
 from model import Model
-from settings import States
+from settings import State
 
 if __name__ == '__main__':
     net = NeuralNetwork()
@@ -15,5 +15,5 @@ if __name__ == '__main__':
 
     train_network(model.snake.brain)
 
-    game = Game(model, States.MAIN_MENU)
+    game = Game(model, State.MAIN_MENU)
     game.state_machine()

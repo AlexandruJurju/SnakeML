@@ -8,7 +8,7 @@ START_SNAKE_SIZE = 3
 SNAKE_MAX_TTL = 150
 
 
-class States(Enum):
+class State(Enum):
     MAIN_MENU = 1
     RUNNING = 2
     OPTIONS = 3

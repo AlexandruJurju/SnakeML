@@ -160,12 +160,14 @@ class Game:
     def state_machine(self):
         while True:
             match self.state:
-                case States.MAIN_MENU:
+                case State.MAIN_MENU:
                     self.main_menu()
-                case States.RUNNING:
+                case State.RUNNING:
                     self.run()
-                case States.BACKWARD_TRAIN:
+                case State.BACKWARD_TRAIN:
                     self.train_backpropagation()
+                case State.OPTIONS:
+                    self.options()
 
             pygame.display.flip()
             self.fps_clock.tick(ViewVars.MAX_FPS)
@@ -194,15 +196,35 @@ class Game:
                     sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_run.check_clicked():
-                    self.state = States.RUNNING
+                    self.state = State.RUNNING
                 if button_options.check_clicked():
-                    pass
+                    self.state = State.OPTIONS
                 if button_quit.check_clicked():
                     pygame.quit()
                     sys.exit()
 
     def options(self):
-        pass
+        pygame.display.set_caption("Options")
+
+        self.window.fill(ViewVars.COLOR_BACKGROUND)
+
+        button_back = Button((50, 50), 50, 50, "BACK", self.universal_font, ViewVars.COLOR_WHITE, ViewVars.COLOR_BLACK)
+        button_back.draw(self.window)
+
+        window_title = self.universal_font.render("OPTIONS", True, ViewVars.COLOR_WHITE)
+        self.window.blit(window_title, [ViewVars.WINDOW_TITLE_X, ViewVars.WINDOW_TITLE_Y])
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if button_back.check_clicked():
+                    self.state = State.MAIN_MENU
 
     def wait_for_key(self):
         while True:
@@ -322,7 +344,7 @@ class Game:
             # TODO add reinit function in model
             self.model = Model(BoardVars.BOARD_SIZE, START_SNAKE_SIZE, self.model.snake.brain)
 
-            self.state = States.RUNNING
+            self.state = State.RUNNING
 
     def run(self):
         self.window.fill(ViewVars.COLOR_BACKGROUND)
@@ -348,7 +370,7 @@ class Game:
         is_alive = self.model.move_in_direction(next_direction)
 
         if not is_alive:
-            self.state = States.BACKWARD_TRAIN
+            self.state = State.BACKWARD_TRAIN
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -360,7 +382,7 @@ class Game:
                     sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_back.check_clicked():
-                    self.state = States.MAIN_MENU
+                    self.state = State.MAIN_MENU
 
     def draw_ttl(self, ttl: int):
         score_text = self.universal_font.render("Moves Left: " + str(ttl), True, ViewVars.COLOR_WHITE)
