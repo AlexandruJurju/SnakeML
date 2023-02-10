@@ -4,6 +4,7 @@ from typing import Tuple
 from Neural.neural_network import NeuralNetwork
 from snake import Snake
 from vision import *
+import numpy as np
 
 
 # TODO add reinit function
