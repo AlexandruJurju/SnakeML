@@ -10,8 +10,8 @@ import pygame
 
 
 class TrainingExample:
-    def __init__(self, model: List[str], predictions: List[float], current_direction: Direction):
-        self.model = model
+    def __init__(self, board: List[str], predictions: List[float], current_direction: Direction):
+        self.board = board
         self.predictions = predictions
         self.current_direction = current_direction
 
@@ -85,7 +85,7 @@ def write_examples_to_csv_4d(examples: List[TrainingExample]) -> None:
         left = example.predictions[2]
         right = example.predictions[3]
 
-        training_examples.append([example.model, example.current_direction, up, down, left, right])
+        training_examples.append([example.board, example.current_direction, up, down, left, right])
 
     writer.writerows(training_examples)
     file.close()
@@ -95,7 +95,7 @@ def evaluate_live_examples_4d(examples: List[TrainingExample]) -> None:
     evaluated = []
 
     for example in examples:
-        print(f"Model \n {np.matrix(example.model)} \n")
+        print(f"Model \n {np.matrix(example.board)} \n")
         print(f"Current Direction : {example.current_direction} \n")
         print(f"Prediction UP : {example.predictions[0]}")
         print(f"Prediction DOWN : {example.predictions[1]}")
@@ -129,13 +129,15 @@ def evaluate_live_examples_4d(examples: List[TrainingExample]) -> None:
 
         print(target_output)
         print()
-        evaluated.append(TrainingExample(copy.deepcopy(example.model), target_output, example.current_direction))
+        evaluated.append(TrainingExample(copy.deepcopy(example.board), target_output, example.current_direction))
 
     write_examples_to_csv_4d(evaluated)
 
 
 # TODO add options for using different neural networks
 # TODO add options for using different directions 4,8,16
+
+training_examples = []
 
 
 class Game:
@@ -159,6 +161,8 @@ class Game:
                     self.main_menu()
                 case States.RUNNING:
                     self.run()
+                case States.BACKWARD_TRAIN:
+                    self.train()
 
             pygame.display.flip()
             self.fps_clock.tick(ViewVars.MAX_FPS)
@@ -198,10 +202,25 @@ class Game:
         pass
 
     def train(self):
-        pass
+        self.window.fill(ViewVars.COLOR_BACKGROUND)
+        current_example = training_examples[0]
+        training_examples.pop(0)
+
+        self.draw_board(current_example.board)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+
+        if len(training_examples) == 0:
+            self.state = States.RUNNING
 
     def run(self):
-        training_examples = []
         self.window.fill(ViewVars.COLOR_BACKGROUND)
 
         button_back = Button((100, 50), 50, 50, "BACK", self.universal_font, ViewVars.COLOR_WHITE, ViewVars.COLOR_RED)
@@ -220,16 +239,10 @@ class Game:
         self.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
-        is_dead = self.model.move_in_direction(next_direction)
+        is_alive = self.model.move_in_direction(next_direction)
 
-        if not is_dead:
-            evaluate_live_examples_4d(training_examples)
-
-            # TODO BAD REINIT, TO BE REMOVED
-            # TODO train data , search file like a dictionary to find if there are conflicting data
-            self.model.snake.brain.reinit_weights_and_biases()
-            train_network(self.model.snake.brain)
-            self.model = Model(10, 3, self.model.snake.brain)
+        if not is_alive:
+            self.state = States.BACKWARD_TRAIN
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

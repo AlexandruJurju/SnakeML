@@ -12,7 +12,7 @@ class States(Enum):
     MAIN_MENU = 1
     RUNNING = 2
     OPTIONS = 3
-    EVALUATION = 4
+    BACKWARD_TRAIN = 4
 
 
 class NNVars:
