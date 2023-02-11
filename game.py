@@ -366,6 +366,8 @@ class Game:
         self.draw_board(self.model.board)
         self.draw_vision_lines(self.model, vision_lines)
         self.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
+        self.write_ttl(self.model.snake.ttl)
+        self.write_score(self.model.snake.score)
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move_in_direction(next_direction)
@@ -385,11 +387,11 @@ class Game:
                 if button_back.check_clicked():
                     self.state = State.MAIN_MENU
 
-    def draw_ttl(self, ttl: int):
+    def write_ttl(self, ttl: int):
         score_text = self.universal_font.render("Moves Left: " + str(ttl), True, ViewConsts.COLOR_WHITE)
         self.window.blit(score_text, [ViewConsts.OFFSET_BOARD_X + 25, ViewConsts.OFFSET_BOARD_Y - 75])
 
-    def draw_score(self, score: int) -> None:
+    def write_score(self, score: int) -> None:
         score_text = self.universal_font.render("Score: " + str(score), True, ViewConsts.COLOR_WHITE)
         self.window.blit(score_text, [ViewConsts.OFFSET_BOARD_X + 25, ViewConsts.OFFSET_BOARD_Y - 50])
 

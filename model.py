@@ -2,11 +2,32 @@ import random
 from typing import Tuple
 
 from Neural.neural_network import NeuralNetwork
-from constants import *
 from settings import SnakeSettings
-from snake import Snake
 from vision import *
-import numpy as np
+
+
+class Individual:
+    def __init__(self, neural_network: NeuralNetwork):
+        self.score = 0
+        self.fitness = 0
+        self.brain = neural_network
+
+    def calculate_fitness(self):
+        pass
+
+
+class Snake(Individual):
+    def __init__(self, neural_network: NeuralNetwork, starting_direction: None):
+        super().__init__(neural_network)
+        self.body = []
+        self.ttl = SnakeSettings.SNAKE_MAX_TTL
+
+        # TODO BAD direction , can cause collisions
+        if starting_direction is None:
+            self.direction = random.choice(DYNAMIC_DIRECTIONS)
+
+    def calculate_fitness(self):
+        pass
 
 
 # TODO add reinit function

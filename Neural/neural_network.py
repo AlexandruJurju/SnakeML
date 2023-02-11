@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 
 
@@ -113,7 +115,7 @@ class NeuralNetwork:
             nn_input = layer.forward(nn_input)
         return nn_input
 
-    def get_dense_layers(self) -> [Layer]:
+    def get_dense_layers(self) -> List[Dense]:
         dense_layers = []
         for layer in self.layers:
             if type(layer) is Dense:
