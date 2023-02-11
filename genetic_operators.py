@@ -2,6 +2,8 @@ import copy
 import random
 from typing import List, Tuple
 
+import numpy as np
+
 from Neural.neural_network import *
 from model import Individual
 
@@ -63,58 +65,76 @@ def elitist_selection(population: List[Individual], selection_count: int) -> Lis
     return selected[:selection_count]
 
 
-def one_point_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple[NeuralNetwork, NeuralNetwork]:
-    child1 = copy.deepcopy(parent1)
-    child2 = copy.deepcopy(parent2)
+def one_point_crossover(parent1: np.ndarray, parent2: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    matrix_row, matrix_col = np.shape(parent1)
 
-    child1_dense_layers = child1.get_dense_layers()
-    child2_dense_layers = child2.get_dense_layers()
+    child1 = parent1.copy()
+    child2 = parent2.copy()
 
-    parent1_dense_layers = parent1.get_dense_layers()
-    parent2_dense_layers = parent2.get_dense_layers()
+    crossover_row = np.random.randint(0, matrix_row)
+    crossover_col = np.random.randint(0, matrix_col)
 
-    for i in range(len(parent1_dense_layers)):
-        matrix_rows, matrix_cols = np.shape(parent1_dense_layers[i].weights)
-        crossover_row = np.random.randint(0, matrix_rows)
-        crossover_col = np.random.randint(0, matrix_cols)
+    child1[:crossover_row, :] = parent2[:crossover_row, :]
+    child1[crossover_row, :crossover_col] = parent2[crossover_row, :crossover_col]
 
-        # this method interchanges all values until index
-        # x x x x   y y y y     x x x x
-        # x x x x   y y y y     x x y y
-        # x x x x   y y y y     y y y y
-        # x x x x   y y y y     y y y y
-        child1_dense_layers[i].weights[:crossover_row, :] = parent2_dense_layers[i].weights[:crossover_row, :]
-        child1_dense_layers[i].weights[crossover_row, :crossover_col] = parent2_dense_layers[i].weights[crossover_row, :crossover_col]
-
-        child2_dense_layers[i].weights[:crossover_row, :] = parent1_dense_layers[i].weights[:crossover_row, :]
-        child2_dense_layers[i].weights[crossover_row, :crossover_col] = parent1_dense_layers[i].weights[crossover_row, :crossover_col]
-
-        # This method interchanges just FULL rows
-        # child1_dense_layers[i].weights = np.concatenate((parent1_dense_layers[i].weights[:rand_row, :], parent2_dense_layers[i].weights[rand_row:, :]), axis=0)
-        # child2_dense_layers[i].weights = np.concatenate((parent2_dense_layers[i].weights[:rand_row, :], parent1_dense_layers[i].weights[rand_row:, :]), axis=0)
-
-        # this method interchanges both rows and cols, maybe bad because it interchanges blocks between parents, this is two point
-        # x x x x   y y y y     x x x x
-        # x x x x   y y y y     x y y x
-        # x x x x   y y y y     x y y x
-        # x x x x   y y y y     x x x x
-        # child1_dense_layers[i].weights[:crossover_row, :crossover_col] = parent1_dense_layers[i].weights[:crossover_row, :crossover_col]
-        # child1_dense_layers[i].weights[crossover_row:, crossover_col:] = parent2_dense_layers[i].weights[crossover_row:, crossover_col:]
-        # child2_dense_layers[i].weights[:crossover_row, :crossover_col] = parent2_dense_layers[i].weights[:crossover_row, :crossover_col]
-        # child2_dense_layers[i].weights[crossover_row:, crossover_col:] = parent1_dense_layers[i].weights[crossover_row:, crossover_col:]
-
-        matrix_rows, matrix_cols = np.shape(parent1_dense_layers[i].bias)
-        crossover_row = np.random.randint(0, matrix_rows)
-        crossover_col = np.random.randint(0, matrix_cols)
-
-        child1_dense_layers[i].bias[:crossover_row, :] = parent2_dense_layers[i].bias[:crossover_row, :]
-        child1_dense_layers[i].bias[crossover_row, :crossover_col] = parent2_dense_layers[i].bias[crossover_row, :crossover_col]
-
-        child2_dense_layers[i].bias[:crossover_row, :] = parent1_dense_layers[i].bias[:crossover_row, :]
-        child2_dense_layers[i].bias[crossover_row, :crossover_col] = parent1_dense_layers[i].bias[crossover_row, :crossover_col]
+    child2[:crossover_row, :] = parent1[:crossover_row, :]
+    child2[crossover_row, :crossover_col] = parent1[crossover_row, :crossover_col]
 
     return child1, child2
 
+
+# def one_point_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple[NeuralNetwork, NeuralNetwork]:
+#     child1 = copy.deepcopy(parent1)
+#     child2 = copy.deepcopy(parent2)
+#
+#     child1_dense_layers = child1.get_dense_layers()
+#     child2_dense_layers = child2.get_dense_layers()
+#
+#     parent1_dense_layers = parent1.get_dense_layers()
+#     parent2_dense_layers = parent2.get_dense_layers()
+#
+#     for i in range(len(parent1_dense_layers)):
+#         matrix_rows, matrix_cols = np.shape(parent1_dense_layers[i].weights)
+#         crossover_row = np.random.randint(0, matrix_rows)
+#         crossover_col = np.random.randint(0, matrix_cols)
+#
+#         # this method interchanges all values until index
+#         # x x x x   y y y y     x x x x
+#         # x x x x   y y y y     x x y y
+#         # x x x x   y y y y     y y y y
+#         # x x x x   y y y y     y y y y
+#         child1_dense_layers[i].weights[:crossover_row, :] = parent2_dense_layers[i].weights[:crossover_row, :]
+#         child1_dense_layers[i].weights[crossover_row, :crossover_col] = parent2_dense_layers[i].weights[crossover_row, :crossover_col]
+#
+#         child2_dense_layers[i].weights[:crossover_row, :] = parent1_dense_layers[i].weights[:crossover_row, :]
+#         child2_dense_layers[i].weights[crossover_row, :crossover_col] = parent1_dense_layers[i].weights[crossover_row, :crossover_col]
+#
+#         # This method interchanges just FULL rows
+#         # child1_dense_layers[i].weights = np.concatenate((parent1_dense_layers[i].weights[:rand_row, :], parent2_dense_layers[i].weights[rand_row:, :]), axis=0)
+#         # child2_dense_layers[i].weights = np.concatenate((parent2_dense_layers[i].weights[:rand_row, :], parent1_dense_layers[i].weights[rand_row:, :]), axis=0)
+#
+#         # this method interchanges both rows and cols, maybe bad because it interchanges blocks between parents, this is two point
+#         # x x x x   y y y y     x x x x
+#         # x x x x   y y y y     x y y x
+#         # x x x x   y y y y     x y y x
+#         # x x x x   y y y y     x x x x
+#         # child1_dense_layers[i].weights[:crossover_row, :crossover_col] = parent1_dense_layers[i].weights[:crossover_row, :crossover_col]
+#         # child1_dense_layers[i].weights[crossover_row:, crossover_col:] = parent2_dense_layers[i].weights[crossover_row:, crossover_col:]
+#         # child2_dense_layers[i].weights[:crossover_row, :crossover_col] = parent2_dense_layers[i].weights[:crossover_row, :crossover_col]
+#         # child2_dense_layers[i].weights[crossover_row:, crossover_col:] = parent1_dense_layers[i].weights[crossover_row:, crossover_col:]
+#
+#         matrix_rows, matrix_cols = np.shape(parent1_dense_layers[i].bias)
+#         crossover_row = np.random.randint(0, matrix_rows)
+#         crossover_col = np.random.randint(0, matrix_cols)
+#
+#         child1_dense_layers[i].bias[:crossover_row, :] = parent2_dense_layers[i].bias[:crossover_row, :]
+#         child1_dense_layers[i].bias[crossover_row, :crossover_col] = parent2_dense_layers[i].bias[crossover_row, :crossover_col]
+#
+#         child2_dense_layers[i].bias[:crossover_row, :] = parent1_dense_layers[i].bias[:crossover_row, :]
+#         child2_dense_layers[i].bias[crossover_row, :crossover_col] = parent1_dense_layers[i].bias[crossover_row, :crossover_col]
+#
+#     return child1, child2
+#
 
 def two_point_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple[NeuralNetwork, NeuralNetwork]:
     child1 = copy.deepcopy(parent1)
@@ -146,7 +166,7 @@ def two_point_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple
     return child1, child2
 
 
-def uniform_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple[NeuralNetwork, NeuralNetwork]:
+def uniform_crossover(parent1: np.ndarray, parent2: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     pass
 
 
