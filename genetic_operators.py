@@ -170,8 +170,31 @@ def uniform_crossover(parent1: np.ndarray, parent2: np.ndarray) -> Tuple[np.ndar
     pass
 
 
-def simulated_binary_crossover():
-    pass
+def calculate_bq(u: float, eta: float):
+    if u <= 0.5:
+        return np.power(2 * u, (1 / (eta + 1)))
+    else:
+        return np.power(1 / (2 * (1 - u)), (1 / (eta + 1)))
+
+
+def sbx(parent1: np.ndarray, parent2: np.ndarray, eta: float) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    For large values of eta there is a higher probability that offspring will be created near the parents.
+    For small values of eta, offspring will be more distant from parents
+    https://stackoverflow.com/questions/56263132/what-does-crossover-index-of-0-25-means-in-genetic-algorithm-for-real-encoding
+
+    :param parent1:
+    :param parent2:
+    :param eta:
+    :return:
+    """
+    u = np.random.uniform(0, 1)
+    bq = calculate_bq(u, eta)
+
+    child1 = 0.5 * ((1 + bq) * parent1 + (1 - bq) * parent2)
+    child2 = 0.5 * ((1 - bq) * parent1 + (1 + bq) * parent2)
+
+    return child1, child2
 
 
 def gaussian_mutation():

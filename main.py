@@ -20,17 +20,10 @@ if __name__ == '__main__':
     net2.add_layer(Dense(8, 4))
     net2.add_layer(Activation(sigmoid, sigmoid_prime))
 
-    off1, off2 = genetic_operators.one_point_crossover(net, net2)
+    weight1 = net.get_dense_layers()[0].weights
+    weight2 = net2.get_dense_layers()[0].weights
 
-    print(net.get_dense_layers()[0].weights)
-    print()
-    print(net2.get_dense_layers()[0].weights)
-    print("\n")
 
-    print(off1.get_dense_layers()[0].weights)
-    print()
-    print(off2.get_dense_layers()[0].weights)
-    print()
 
     # model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, net)
     #
