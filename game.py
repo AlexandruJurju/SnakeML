@@ -1,12 +1,13 @@
 import copy
 import csv
+import os
 import sys
+
+import pygame
 
 from Neural.neural_network import mse, mse_prime, Dense
 from model import *
 from view_tools import Button
-import os
-import pygame
 
 
 class TrainingExample:
@@ -17,7 +18,7 @@ class TrainingExample:
 
 
 def read_training_models() -> Tuple:
-    file = open(NNVars.TRAIN_DATA_FILE_LOCATION)
+    file = open(NNSettings.TRAIN_DATA_FILE_LOCATION)
     csvreader = csv.reader(file)
 
     data = []
@@ -61,8 +62,8 @@ def train_network(network: NeuralNetwork) -> None:
     # when using a single example x_test from x, x_test is (2,)
     # resizing can be done for the whole training data resize(10000,2,1)
     # or for just one example resize(2,1)
-    x = np.reshape(x, (len(x), NNVars.NN_INPUT_NEURON_COUNT, 1))
-    y = np.reshape(y, (len(y), NNVars.NN_OUTPUT_NEURON_COUNT, 1))
+    x = np.reshape(x, (len(x), NNSettings.NN_INPUT_NEURON_COUNT, 1))
+    y = np.reshape(y, (len(y), NNSettings.NN_OUTPUT_NEURON_COUNT, 1))
 
     network.train(mse, mse_prime, x, y, 0.5)
 
@@ -75,7 +76,7 @@ def train_network(network: NeuralNetwork) -> None:
 
 
 def write_examples_to_csv_4d(examples: List[TrainingExample]) -> None:
-    file = open(NNVars.TRAIN_DATA_FILE_LOCATION, "w+", newline='')
+    file = open(NNSettings.TRAIN_DATA_FILE_LOCATION, "w+", newline='')
     writer = csv.writer(file)
 
     examples_to_write = []
@@ -149,9 +150,9 @@ class Game:
         self.state = state
 
         # set start window position using variables from ViewVars
-        os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (ViewVars.WINDOW_START_X, ViewVars.WINDOW_START_Y)
+        os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (ViewConsts.WINDOW_START_X, ViewConsts.WINDOW_START_Y)
         pygame.init()
-        self.window = pygame.display.set_mode((ViewVars.WIDTH, ViewVars.HEIGHT))
+        self.window = pygame.display.set_mode((ViewConsts.WIDTH, ViewConsts.HEIGHT))
         pygame.display.set_caption("Snake Game")
         self.fps_clock = pygame.time.Clock()
 
@@ -170,20 +171,20 @@ class Game:
                     self.options()
 
             pygame.display.flip()
-            self.fps_clock.tick(ViewVars.MAX_FPS)
+            self.fps_clock.tick(ViewConsts.MAX_FPS)
 
     def main_menu(self):
         pygame.display.set_caption("Main Menu")
 
-        self.window.fill(ViewVars.COLOR_BACKGROUND)
+        self.window.fill(ViewConsts.COLOR_BACKGROUND)
 
-        button_run = Button((50, 50), 50, 50, "RUN", self.universal_font, ViewVars.COLOR_WHITE, ViewVars.COLOR_BLACK)
+        button_run = Button((50, 50), 50, 50, "RUN", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
         button_run.draw(self.window)
 
-        button_options = Button((50, 125), 50, 50, "OPTIONS", self.universal_font, ViewVars.COLOR_WHITE, ViewVars.COLOR_BLACK)
+        button_options = Button((50, 125), 50, 50, "OPTIONS", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
         button_options.draw(self.window)
 
-        button_quit = Button((50, 200), 50, 50, "QUIT", self.universal_font, ViewVars.COLOR_WHITE, ViewVars.COLOR_BLACK)
+        button_quit = Button((50, 200), 50, 50, "QUIT", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
         button_quit.draw(self.window)
 
         for event in pygame.event.get():
@@ -206,13 +207,13 @@ class Game:
     def options(self):
         pygame.display.set_caption("Options")
 
-        self.window.fill(ViewVars.COLOR_BACKGROUND)
+        self.window.fill(ViewConsts.COLOR_BACKGROUND)
 
-        button_back = Button((50, 50), 50, 50, "BACK", self.universal_font, ViewVars.COLOR_WHITE, ViewVars.COLOR_BLACK)
+        button_back = Button((50, 50), 50, 50, "BACK", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
         button_back.draw(self.window)
 
-        window_title = self.universal_font.render("OPTIONS", True, ViewVars.COLOR_WHITE)
-        self.window.blit(window_title, [ViewVars.WINDOW_TITLE_X, ViewVars.WINDOW_TITLE_Y])
+        window_title = self.universal_font.render("OPTIONS", True, ViewConsts.COLOR_WHITE)
+        self.window.blit(window_title, [ViewConsts.WINDOW_TITLE_X, ViewConsts.WINDOW_TITLE_Y])
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -255,41 +256,41 @@ class Game:
         # x is line y is column ; drawing x is column and y is line
         for x in range(len(board)):
             for y in range(len(board)):
-                x_position = x * ViewVars.SQUARE_SIZE + ViewVars.OFFSET_BOARD_X
-                y_position = y * ViewVars.SQUARE_SIZE + ViewVars.OFFSET_BOARD_Y
+                x_position = x * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X
+                y_position = y * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y
 
                 match board[y][x]:
-                    case BoardVars.SNAKE_BODY:
-                        pygame.draw.rect(self.window, ViewVars.COLOR_SNAKE, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
-                    case BoardVars.WALL:
-                        pygame.draw.rect(self.window, ViewVars.COLOR_WHITE, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
-                    case BoardVars.APPLE:
-                        pygame.draw.rect(self.window, ViewVars.COLOR_APPLE, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
-                    case BoardVars.SNAKE_HEAD:
-                        pygame.draw.rect(self.window, ViewVars.COLOR_SNAKE_HEAD, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
+                    case BoardConsts.SNAKE_BODY:
+                        pygame.draw.rect(self.window, ViewConsts.COLOR_SNAKE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+                    case BoardConsts.WALL:
+                        pygame.draw.rect(self.window, ViewConsts.COLOR_WHITE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+                    case BoardConsts.APPLE:
+                        pygame.draw.rect(self.window, ViewConsts.COLOR_APPLE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+                    case BoardConsts.SNAKE_HEAD:
+                        pygame.draw.rect(self.window, ViewConsts.COLOR_SNAKE_HEAD, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
 
-                        pygame.draw.rect(self.window, ViewVars.COLOR_APPLE,
-                                         pygame.Rect(x_position + ViewVars.SQUARE_SIZE, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
-                        right_text = self.universal_font.render("D", True, ViewVars.COLOR_WHITE)
-                        self.window.blit(right_text, (x_position + ViewVars.SQUARE_SIZE, y_position))
+                        # pygame.draw.rect(self.window, ViewConsts.COLOR_APPLE,
+                        #                  pygame.Rect(x_position + ViewConsts.SQUARE_SIZE, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+                        right_text = self.universal_font.render("D", True, ViewConsts.COLOR_WHITE)
+                        self.window.blit(right_text, (x_position + ViewConsts.SQUARE_SIZE, y_position))
 
-                        left_text = self.universal_font.render("A", True, ViewVars.COLOR_GREEN)
-                        self.window.blit(left_text, (x_position - ViewVars.SQUARE_SIZE, y_position))
+                        left_text = self.universal_font.render("A", True, ViewConsts.COLOR_GREEN)
+                        self.window.blit(left_text, (x_position - ViewConsts.SQUARE_SIZE, y_position))
 
-                        up_text = self.universal_font.render("W", True, ViewVars.COLOR_GREEN)
-                        self.window.blit(up_text, (x_position, y_position - ViewVars.SQUARE_SIZE))
+                        up_text = self.universal_font.render("W", True, ViewConsts.COLOR_GREEN)
+                        self.window.blit(up_text, (x_position, y_position - ViewConsts.SQUARE_SIZE))
 
-                        down_text = self.universal_font.render("S", True, ViewVars.COLOR_GREEN)
-                        self.window.blit(down_text, (x_position, y_position + ViewVars.SQUARE_SIZE))
+                        down_text = self.universal_font.render("S", True, ViewConsts.COLOR_GREEN)
+                        self.window.blit(down_text, (x_position, y_position + ViewConsts.SQUARE_SIZE))
 
                 # draw lines between squares
-                pygame.draw.rect(self.window, ViewVars.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE), width=1)
+                pygame.draw.rect(self.window, ViewConsts.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE), width=1)
 
     def train_backpropagation(self):
-        self.window.fill(ViewVars.COLOR_BACKGROUND)
+        self.window.fill(ViewConsts.COLOR_BACKGROUND)
 
-        window_title = self.universal_font.render("TRAIN BACKPROPAGATION", True, ViewVars.COLOR_WHITE)
-        self.window.blit(window_title, [ViewVars.WINDOW_TITLE_X, ViewVars.WINDOW_TITLE_Y])
+        window_title = self.universal_font.render("TRAIN BACKPROPAGATION", True, ViewConsts.COLOR_WHITE)
+        self.window.blit(window_title, [ViewConsts.WINDOW_TITLE_X, ViewConsts.WINDOW_TITLE_Y])
 
         current_example = training_examples[0]
         training_examples.pop(0)
@@ -342,17 +343,17 @@ class Game:
             self.model.snake.brain.reinit_weights_and_biases()
             train_network(self.model.snake.brain)
             # TODO add reinit function in model
-            self.model = Model(BoardVars.BOARD_SIZE, START_SNAKE_SIZE, self.model.snake.brain)
+            self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)
 
             self.state = State.RUNNING
 
     def run(self):
-        self.window.fill(ViewVars.COLOR_BACKGROUND)
+        self.window.fill(ViewConsts.COLOR_BACKGROUND)
 
-        button_back = Button((100, 50), 50, 50, "BACK", self.universal_font, ViewVars.COLOR_WHITE, ViewVars.COLOR_RED)
+        button_back = Button((100, 50), 50, 50, "BACK", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_RED)
         button_back.draw(self.window)
-        window_title = self.universal_font.render("MAIN RUN", True, ViewVars.COLOR_WHITE)
-        self.window.blit(window_title, [ViewVars.WINDOW_TITLE_X, ViewVars.WINDOW_TITLE_Y])
+        window_title = self.universal_font.render("MAIN RUN", True, ViewConsts.COLOR_WHITE)
+        self.window.blit(window_title, [ViewConsts.WINDOW_TITLE_X, ViewConsts.WINDOW_TITLE_Y])
 
         vision_lines = get_vision_lines(self.model.board)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
@@ -385,95 +386,95 @@ class Game:
                     self.state = State.MAIN_MENU
 
     def draw_ttl(self, ttl: int):
-        score_text = self.universal_font.render("Moves Left: " + str(ttl), True, ViewVars.COLOR_WHITE)
-        self.window.blit(score_text, [ViewVars.OFFSET_BOARD_X + 25, ViewVars.OFFSET_BOARD_Y - 75])
+        score_text = self.universal_font.render("Moves Left: " + str(ttl), True, ViewConsts.COLOR_WHITE)
+        self.window.blit(score_text, [ViewConsts.OFFSET_BOARD_X + 25, ViewConsts.OFFSET_BOARD_Y - 75])
 
     def draw_score(self, score: int) -> None:
-        score_text = self.universal_font.render("Score: " + str(score), True, ViewVars.COLOR_WHITE)
-        self.window.blit(score_text, [ViewVars.OFFSET_BOARD_X + 25, ViewVars.OFFSET_BOARD_Y - 50])
+        score_text = self.universal_font.render("Score: " + str(score), True, ViewConsts.COLOR_WHITE)
+        self.window.blit(score_text, [ViewConsts.OFFSET_BOARD_X + 25, ViewConsts.OFFSET_BOARD_Y - 50])
 
     def draw_board(self, board: List) -> None:
         # use y,x for index in board instead of x,y because of changed logic
         # x is line y is column ; drawing x is column and y is line
         for x in range(len(board)):
             for y in range(len(board)):
-                x_position = x * ViewVars.SQUARE_SIZE + ViewVars.OFFSET_BOARD_X
-                y_position = y * ViewVars.SQUARE_SIZE + ViewVars.OFFSET_BOARD_Y
+                x_position = x * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X
+                y_position = y * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y
 
                 match board[y][x]:
-                    case BoardVars.SNAKE_BODY:
-                        pygame.draw.rect(self.window, ViewVars.COLOR_SNAKE, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
-                    case BoardVars.WALL:
-                        pygame.draw.rect(self.window, ViewVars.COLOR_WHITE, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
-                    case BoardVars.APPLE:
-                        pygame.draw.rect(self.window, ViewVars.COLOR_APPLE, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
-                    case BoardVars.SNAKE_HEAD:
-                        pygame.draw.rect(self.window, ViewVars.COLOR_SNAKE_HEAD, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
+                    case BoardConsts.SNAKE_BODY:
+                        pygame.draw.rect(self.window, ViewConsts.COLOR_SNAKE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+                    case BoardConsts.WALL:
+                        pygame.draw.rect(self.window, ViewConsts.COLOR_WHITE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+                    case BoardConsts.APPLE:
+                        pygame.draw.rect(self.window, ViewConsts.COLOR_APPLE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+                    case BoardConsts.SNAKE_HEAD:
+                        pygame.draw.rect(self.window, ViewConsts.COLOR_SNAKE_HEAD, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
                 # draw lines between squares
-                pygame.draw.rect(self.window, ViewVars.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE), width=1)
+                pygame.draw.rect(self.window, ViewConsts.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE), width=1)
 
-    def draw_dead(self, board: List) -> None:
-        for x in range(len(board)):
-            for y in range(len(board)):
-                x_position = x * ViewVars.SQUARE_SIZE + ViewVars.OFFSET_BOARD_X
-                y_position = y * ViewVars.SQUARE_SIZE + ViewVars.OFFSET_BOARD_Y
-
-                match board[y][x]:
-                    case BoardVars.SNAKE_BODY:
-                        pygame.draw.rect(self.window, ViewVars.COLOR_RED, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
-                    case BoardVars.SNAKE_HEAD:
-                        pygame.draw.rect(self.window, ViewVars.COLOR_RED, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE))
-                # draw lines between squares
-                pygame.draw.rect(self.window, ViewVars.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewVars.SQUARE_SIZE, ViewVars.SQUARE_SIZE), width=1)
+    # def draw_dead(self, board: List) -> None:
+    #     for x in range(len(board)):
+    #         for y in range(len(board)):
+    #             x_position = x * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X
+    #             y_position = y * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y
+    #
+    #             match board[y][x]:
+    #                 case BoardConsts.SNAKE_BODY:
+    #                     pygame.draw.rect(self.window, ViewConsts.COLOR_RED, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+    #                 case BoardConsts.SNAKE_HEAD:
+    #                     pygame.draw.rect(self.window, ViewConsts.COLOR_RED, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+    #             # draw lines between squares
+    #             pygame.draw.rect(self.window, ViewConsts.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE), width=1)
 
     def draw_vision_lines(self, model: Model, vision_lines) -> None:
 
         # loop over all lines in given vision lines
         for line in vision_lines:
-            line_label = self.universal_font.render(line, True, ViewVars.COLOR_BLACK)
+            line_label = self.universal_font.render(line, True, ViewConsts.COLOR_BLACK)
 
             # render vision line text at wall position
-            self.window.blit(line_label, [vision_lines[line].wall_coord[1] * ViewVars.SQUARE_SIZE + ViewVars.OFFSET_BOARD_X,
-                                          vision_lines[line].wall_coord[0] * ViewVars.SQUARE_SIZE + ViewVars.OFFSET_BOARD_Y])
+            self.window.blit(line_label, [vision_lines[line].wall_coord[1] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X,
+                                          vision_lines[line].wall_coord[0] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y])
 
             # draw line from head to wall, draw before body and apple lines
             # drawing uses SQUARE_SIZE//2 so that lines go through the middle of the squares
-            line_end_x = model.snake.body[0][1] * ViewVars.SQUARE_SIZE + ViewVars.SQUARE_SIZE // 2 + ViewVars.OFFSET_BOARD_X
-            line_end_y = model.snake.body[0][0] * ViewVars.SQUARE_SIZE + ViewVars.SQUARE_SIZE // 2 + ViewVars.OFFSET_BOARD_Y
+            line_end_x = model.snake.body[0][1] * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + ViewConsts.OFFSET_BOARD_X
+            line_end_y = model.snake.body[0][0] * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + ViewConsts.OFFSET_BOARD_Y
 
             # draw line form snake head until wall block
-            self.draw_vision_line(ViewVars.COLOR_APPLE, 1, vision_lines[line].wall_coord[1], vision_lines[line].wall_coord[0], line_end_x, line_end_y)
+            self.draw_vision_line(ViewConsts.COLOR_APPLE, 1, vision_lines[line].wall_coord[1], vision_lines[line].wall_coord[0], line_end_x, line_end_y)
 
             # draw another line from snake head to first segment found
             if vision_lines[line].segment_coord is not None:
-                self.draw_vision_line(ViewVars.COLOR_RED, 5, vision_lines[line].segment_coord[1], vision_lines[line].segment_coord[0], line_end_x, line_end_y)
+                self.draw_vision_line(ViewConsts.COLOR_RED, 5, vision_lines[line].segment_coord[1], vision_lines[line].segment_coord[0], line_end_x, line_end_y)
 
             # draw another line from snake to apple if apple is found
             if vision_lines[line].apple_coord is not None:
-                self.draw_vision_line(ViewVars.COLOR_GREEN, 5, vision_lines[line].apple_coord[1], vision_lines[line].apple_coord[0], line_end_x, line_end_y)
+                self.draw_vision_line(ViewConsts.COLOR_GREEN, 5, vision_lines[line].apple_coord[1], vision_lines[line].apple_coord[0], line_end_x, line_end_y)
 
     def draw_vision_line(self, color, width, line_coord_1, line_coord_0, line_end_x, line_end_y) -> None:
         pygame.draw.line(self.window, color,
-                         (line_coord_1 * ViewVars.SQUARE_SIZE + ViewVars.SQUARE_SIZE // 2 + ViewVars.OFFSET_BOARD_X,
-                          line_coord_0 * ViewVars.SQUARE_SIZE + ViewVars.SQUARE_SIZE // 2 + ViewVars.OFFSET_BOARD_Y),
+                         (line_coord_1 * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + ViewConsts.OFFSET_BOARD_X,
+                          line_coord_0 * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + ViewConsts.OFFSET_BOARD_Y),
                          (line_end_x, line_end_y), width=width)
 
     # TODO draw lines between neurons
     # TODO write direction in inputs
     def draw_neural_network(self, model, vision_lines, nn_input, nn_output) -> None:
-        neuron_offset_x = ViewVars.NN_DISPLAY_OFFSET_X + 100
+        neuron_offset_x = ViewConsts.NN_DISPLAY_OFFSET_X + 100
 
         label_count = 0
         param_type = ["WALL", "APPLE", "SEGMENT"]
         for line in vision_lines:
             for param in param_type:
-                line_label = self.universal_font.render(line + " " + param, True, ViewVars.COLOR_WHITE)
-                self.window.blit(line_label, [ViewVars.NN_DISPLAY_OFFSET_X, ViewVars.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewVars.NN_DISPLAY_OFFSET_Y - 10])
+                line_label = self.universal_font.render(line + " " + param, True, ViewConsts.COLOR_WHITE)
+                self.window.blit(line_label, [ViewConsts.NN_DISPLAY_OFFSET_X, ViewConsts.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewConsts.NN_DISPLAY_OFFSET_Y - 10])
                 label_count += 1
 
         for direction in MAIN_DIRECTIONS:
-            line_label = self.universal_font.render(direction.name, True, ViewVars.COLOR_WHITE)
-            self.window.blit(line_label, [ViewVars.NN_DISPLAY_OFFSET_X, ViewVars.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewVars.NN_DISPLAY_OFFSET_Y - 10])
+            line_label = self.universal_font.render(direction.name, True, ViewConsts.COLOR_WHITE)
+            self.window.blit(line_label, [ViewConsts.NN_DISPLAY_OFFSET_X, ViewConsts.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewConsts.NN_DISPLAY_OFFSET_Y - 10])
             label_count += 1
 
         self.draw_neurons(model, neuron_offset_x, nn_input, nn_output)
@@ -497,29 +498,29 @@ class Game:
             if i == 0:
                 for j in range(layer.input_size):
                     # draw the neuron
-                    pygame.draw.circle(self.window, ViewVars.COLOR_WHITE,
-                                       (neuron_offset_x, ViewVars.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewVars.NN_DISPLAY_NEURON_OFFSET_Y),
-                                       ViewVars.NN_DISPLAY_NEURON_RADIUS, width=1)
+                    pygame.draw.circle(self.window, ViewConsts.COLOR_WHITE,
+                                       (neuron_offset_x, ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewConsts.NN_DISPLAY_NEURON_OFFSET_Y),
+                                       ViewConsts.NN_DISPLAY_NEURON_RADIUS, width=1)
 
                     # calculate neuron green color intensity using input parameters
                     activation_color = (0, round(255 * nn_input[j][0]), 0)
 
                     # draw green circle inside neuron with activation color
                     pygame.draw.circle(self.window, activation_color,
-                                       (neuron_offset_x, ViewVars.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewVars.NN_DISPLAY_NEURON_OFFSET_Y),
-                                       ViewVars.NN_DISPLAY_NEURON_RADIUS - 1)
+                                       (neuron_offset_x, ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewConsts.NN_DISPLAY_NEURON_OFFSET_Y),
+                                       ViewConsts.NN_DISPLAY_NEURON_RADIUS - 1)
 
                     # append neuron position to start list
-                    line_start.append([neuron_offset_x, ViewVars.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewVars.NN_DISPLAY_NEURON_OFFSET_Y])
+                    line_start.append([neuron_offset_x, ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewConsts.NN_DISPLAY_NEURON_OFFSET_Y])
 
                 # increment current offset to obtain OX offset for next layer
-                neuron_offset_x += ViewVars.NN_DISPLAY_NEURON_WIDTH_BETWEEN
+                neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
 
                 # calculate maxYDistance for centering neurons of next layer
-                max_y_distance = ViewVars.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * layer.input_size
+                max_y_distance = ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * layer.input_size
 
             # calculate current y distance for centering neurons
-            current_y_distance = layer.output_size * ViewVars.NN_DISPLAY_NEURON_HEIGHT_BETWEEN
+            current_y_distance = layer.output_size * ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN
 
             # calculate offset using distance of prev layer and distance of current layer
             hidden_offset_y = (max_y_distance - current_y_distance) // 2
@@ -531,13 +532,13 @@ class Game:
                     nn_output[np.where(nn_output == np.max(nn_output))] = 1
 
                     # draw color inside the neuron
-                    pygame.draw.circle(self.window, ViewVars.COLOR_GREEN * nn_output[j],
-                                       (neuron_offset_x, ViewVars.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewVars.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y),
-                                       ViewVars.NN_DISPLAY_NEURON_RADIUS - 1)
+                    pygame.draw.circle(self.window, ViewConsts.COLOR_GREEN * nn_output[j],
+                                       (neuron_offset_x, ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewConsts.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y),
+                                       ViewConsts.NN_DISPLAY_NEURON_RADIUS - 1)
                     # draw white neuron outline
-                    pygame.draw.circle(self.window, ViewVars.COLOR_WHITE,
-                                       (neuron_offset_x, ViewVars.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewVars.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y),
-                                       ViewVars.NN_DISPLAY_NEURON_RADIUS - 1, width=1)
+                    pygame.draw.circle(self.window, ViewConsts.COLOR_WHITE,
+                                       (neuron_offset_x, ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewConsts.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y),
+                                       ViewConsts.NN_DISPLAY_NEURON_RADIUS - 1, width=1)
 
                     # write direction name in output
                     match j:
@@ -552,30 +553,30 @@ class Game:
                         case _:
                             direction = None
 
-                    line_label = self.universal_font.render(direction, True, ViewVars.COLOR_WHITE)
+                    line_label = self.universal_font.render(direction, True, ViewConsts.COLOR_WHITE)
                     self.window.blit(line_label,
-                                     [neuron_offset_x + 15, ViewVars.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewVars.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y - 5])
+                                     [neuron_offset_x + 15, ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewConsts.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y - 5])
                 # Draw NN hidden layers outputs
                 else:
                     # hidden neuron activation color
                     if model.snake.brain.layers[i + 1].output[j] <= 0:
-                        inside_color = ViewVars.COLOR_BLACK
+                        inside_color = ViewConsts.COLOR_BLACK
                     else:
-                        inside_color = ViewVars.COLOR_GREEN
+                        inside_color = ViewConsts.COLOR_GREEN
 
                     # draw color inside the neuron
                     pygame.draw.circle(self.window, inside_color,
-                                       (neuron_offset_x, ViewVars.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewVars.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y),
-                                       ViewVars.NN_DISPLAY_NEURON_RADIUS - 1)
+                                       (neuron_offset_x, ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewConsts.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y),
+                                       ViewConsts.NN_DISPLAY_NEURON_RADIUS - 1)
 
                     # draw neuron outline
-                    pygame.draw.circle(self.window, ViewVars.COLOR_WHITE,
-                                       (neuron_offset_x, ViewVars.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewVars.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y),
-                                       ViewVars.NN_DISPLAY_NEURON_RADIUS - 1, width=1)
+                    pygame.draw.circle(self.window, ViewConsts.COLOR_WHITE,
+                                       (neuron_offset_x, ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewConsts.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y),
+                                       ViewConsts.NN_DISPLAY_NEURON_RADIUS - 1, width=1)
 
                 # line end for drawing lines
-                line_end.append([neuron_offset_x, ViewVars.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewVars.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y])
-            neuron_offset_x += ViewVars.NN_DISPLAY_NEURON_WIDTH_BETWEEN
+                line_end.append([neuron_offset_x, ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN * j + ViewConsts.NN_DISPLAY_NEURON_OFFSET_Y + hidden_offset_y])
+            neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
 
             # self.draw_colored_lines_between_neurons(layer, line_end, line_start)
             # self.draw_lines_between_neurons(line_end, line_start)
@@ -586,7 +587,7 @@ class Game:
     def draw_lines_between_neurons(self, line_end: List, line_start: List):
         for i in range(len(line_end)):
             for j in range(len(line_start)):
-                pygame.draw.line(self.window, ViewVars.COLOR_WHITE, line_start[j], line_end[i], width=1)
+                pygame.draw.line(self.window, ViewConsts.COLOR_WHITE, line_start[j], line_end[i], width=1)
 
     def draw_colored_lines_between_neurons(self, layer: Dense, line_end: List, line_start: List):
         for i in range(len(line_end)):

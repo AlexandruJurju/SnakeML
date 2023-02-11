@@ -1,6 +1,7 @@
-import numpy as np
-from settings import *
 from typing import List, Dict
+from constants import *
+from settings import NNSettings
+import numpy as np
 
 
 def distance(a, b):
@@ -14,7 +15,7 @@ def manhattan_distance(a, b):
 def find_snake_head_poz(board: List[str]) -> []:
     for i in range(len(board)):
         for j in range(len(board)):
-            if board[i][j] == BoardVars.SNAKE_HEAD:
+            if board[i][j] == BoardConsts.SNAKE_HEAD:
                 return [i, j]
 
 
@@ -44,12 +45,12 @@ def look_in_direction(board: List[str], direction: Direction) -> VisionLine:
     segment_found = False
 
     # loop are blocks in the given direction and store position and coordinates of apple and snake segments
-    while board[current_block[0]][current_block[1]] != BoardVars.WALL:
-        if board[current_block[0]][current_block[1]] == BoardVars.APPLE and apple_found == False:
+    while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
+        if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_found == False:
             apple_distance = distance(head_position, current_block)
             apple_coord = current_block
             apple_found = True
-        elif board[current_block[0]][current_block[1]] == BoardVars.SNAKE_BODY and segment_found == False:
+        elif board[current_block[0]][current_block[1]] == BoardConsts.SNAKE_BODY and segment_found == False:
             segment_distance = distance(head_position, current_block)
             segment_coord = current_block
             segment_found = True
@@ -58,14 +59,14 @@ def look_in_direction(board: List[str], direction: Direction) -> VisionLine:
     wall_distance = distance(head_position, current_block)
     wall_coord = current_block
 
-    if VISION_LINES_RETURN_TYPE == "boolean":
+    if NNSettings.VISION_LINES_RETURN_TYPE == "boolean":
         wall_distance_output = 1 / wall_distance
         apple_boolean = 1.0 if apple_found else 0.0
         segment_boolean = 1.0 if segment_found else 0.0
 
         return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean)
 
-    elif VISION_LINES_RETURN_TYPE == "distance":
+    elif NNSettings.VISION_LINES_RETURN_TYPE == "distance":
         wall_distance_output = wall_distance
         apple_distance_output = 1 / apple_distance
         segment_distance_output = segment_distance
@@ -74,7 +75,7 @@ def look_in_direction(board: List[str], direction: Direction) -> VisionLine:
 
 
 def get_vision_lines(board: List[str]) -> Dict[str, VisionLine]:
-    if INPUT_DIRECTION_COUNT == 8:
+    if NNSettings.INPUT_DIRECTION_COUNT == 8:
         return {
             "+X": look_in_direction(board, Direction.RIGHT),
             "-X": look_in_direction(board, Direction.LEFT),

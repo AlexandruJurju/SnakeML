@@ -2,7 +2,7 @@ from typing import Tuple
 
 import pygame
 
-from settings import *
+from constants import ViewConsts
 
 
 class Button:
@@ -29,7 +29,7 @@ class Button:
 
     def on_hover(self):
         if self.button_rectangle.collidepoint(pygame.mouse.get_pos()):
-            self.button_rectangle_color = ViewVars.COLOR_RED
+            self.button_rectangle_color = ViewConsts.COLOR_RED
 
     def check_clicked(self) -> bool:
         action = False
@@ -42,4 +42,3 @@ class Button:
             if pygame.mouse.get_pressed()[0] == 0:
                 self.clicked = False
         return action
-
