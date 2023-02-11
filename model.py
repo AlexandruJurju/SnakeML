@@ -21,13 +21,14 @@ class Snake(Individual):
         super().__init__(neural_network)
         self.body = []
         self.ttl = SnakeSettings.SNAKE_MAX_TTL
+        self.steps_taken = 0
 
         # TODO BAD direction , can cause collisions
         if starting_direction is None:
             self.direction = random.choice(DYNAMIC_DIRECTIONS)
 
-    def calculate_fitness(self):
-        pass
+    def calculate_fitness(self) -> None:
+        self.fitness = self.steps_taken * self.steps_taken * (2 ** self.score)
 
 
 # TODO add reinit function
@@ -40,10 +41,10 @@ class Model:
         self.snake = Snake(net, None)
 
         self.make_board()
-        # self.place_new_apple()
-        # self.create_random_snake(self.snake_size)
-        self.place_apple_at_coords([5, 5])
-        self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
+        self.place_new_apple()
+        self.create_random_snake(self.snake_size)
+        # self.place_apple_at_coords([5, 5])
+        # self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
         self.update_board_from_snake()
 
     def make_board(self) -> None:
@@ -119,6 +120,8 @@ class Model:
                 self.snake.body.append(new_block)
                 head = new_block
 
+        self.snake.direction = self.get_valid_direction_for_block(self.snake.body[0])
+
     def update_board_from_snake(self) -> None:
         # remove previous snake position on board
         self.clear_snake_on_board()
@@ -147,6 +150,7 @@ class Model:
             return False
 
         self.snake.body.insert(0, next_head)
+        self.snake.steps_taken += 1
 
         if new_head_value == BoardConsts.APPLE:
             self.update_board_from_snake()

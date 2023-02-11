@@ -7,6 +7,7 @@ import pygame
 
 from Neural.neural_network import mse, mse_prime, Dense
 from model import *
+from settings import GeneticSettings
 from view_tools import Button
 
 
@@ -62,8 +63,8 @@ def train_network(network: NeuralNetwork) -> None:
     # when using a single example x_test from x, x_test is (2,)
     # resizing can be done for the whole training data resize(10000,2,1)
     # or for just one example resize(2,1)
-    x = np.reshape(x, (len(x), NNSettings.NN_INPUT_NEURON_COUNT, 1))
-    y = np.reshape(y, (len(y), NNSettings.NN_OUTPUT_NEURON_COUNT, 1))
+    x = np.reshape(x, (len(x), NNSettings.INPUT_NEURON_COUNT, 1))
+    y = np.reshape(y, (len(y), NNSettings.OUTPUT_NEURON_COUNT, 1))
 
     network.train(mse, mse_prime, x, y, 0.5)
 
@@ -158,20 +159,72 @@ class Game:
 
         self.universal_font = pygame.font.SysFont("arial", 18)
 
+        self.generation = 0
+        self.parent_list = []
+        self.offspring_list = []
+
     def state_machine(self):
         while True:
             match self.state:
                 case State.MAIN_MENU:
                     self.main_menu()
-                case State.RUNNING:
-                    self.run()
+                case State.RUN_BACKPROPAGATION:
+                    self.run_backpropagation()
                 case State.BACKWARD_TRAIN:
                     self.train_backpropagation()
                 case State.OPTIONS:
                     self.options()
+                case State.RUN_GENETIC:
+                    self.run_genetic()
 
             pygame.display.flip()
             self.fps_clock.tick(ViewConsts.MAX_FPS)
+
+    def next_generation(self):
+        pass
+
+    def run_genetic(self):
+        self.window.fill(ViewConsts.COLOR_BACKGROUND)
+
+        # pygame.display.set_caption("GENETIC")
+        # window_title = self.universal_font.render("GENETIC", True, ViewConsts.COLOR_WHITE)
+        # self.window.blit(window_title, [ViewConsts.WINDOW_TITLE_X, ViewConsts.WINDOW_TITLE_Y])
+
+        vision_lines = get_vision_lines(self.model.board)
+        neural_net_prediction = self.model.get_nn_output(vision_lines)
+        nn_input = get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
+
+        self.draw_board(self.model.board)
+        self.draw_vision_lines(self.model, vision_lines)
+        self.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
+        self.write_ttl(self.model.snake.ttl)
+        self.write_score(self.model.snake.score)
+
+        next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
+        is_alive = self.model.move_in_direction(next_direction)
+
+        if not is_alive:
+            self.model.snake.calculate_fitness()
+            self.parent_list.append(self.model.snake)
+
+            if self.generation == 0:
+                self.model.snake.brain.reinit_weights_and_biases()
+                self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)
+            else:
+                self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.offspring_list[len(self.parent_list) - 1])
+
+            if len(self.parent_list) == GeneticSettings.POPULATION_COUNT:
+                self.offspring_list.clear()
+                self.next_generation()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
 
     def main_menu(self):
         pygame.display.set_caption("Main Menu")
@@ -187,6 +240,9 @@ class Game:
         button_quit = Button((50, 200), 50, 50, "QUIT", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
         button_quit.draw(self.window)
 
+        button_genetic = Button((50, 300), 50, 50, "GENETIC", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
+        button_genetic.draw(self.window)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -197,9 +253,11 @@ class Game:
                     sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_run.check_clicked():
-                    self.state = State.RUNNING
+                    self.state = State.RUN_BACKPROPAGATION
                 if button_options.check_clicked():
                     self.state = State.OPTIONS
+                if button_genetic.check_clicked():
+                    self.state = State.RUN_GENETIC
                 if button_quit.check_clicked():
                     pygame.quit()
                     sys.exit()
@@ -341,15 +399,15 @@ class Game:
 
             # TODO BAD REINIT
             self.model.snake.brain.reinit_weights_and_biases()
-            train_network(self.model.snake.brain)
             # TODO add reinit function in model
             self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)
 
-            self.state = State.RUNNING
+            train_network(self.model.snake.brain)
 
-    def run(self):
+            self.state = State.RUN_BACKPROPAGATION
+
+    def run_backpropagation(self):
         self.window.fill(ViewConsts.COLOR_BACKGROUND)
-
         button_back = Button((100, 50), 50, 50, "BACK", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_RED)
         button_back.draw(self.window)
         window_title = self.universal_font.render("MAIN RUN", True, ViewConsts.COLOR_WHITE)
@@ -371,7 +429,6 @@ class Game:
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move_in_direction(next_direction)
-
         if not is_alive:
             self.state = State.BACKWARD_TRAIN
 

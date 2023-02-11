@@ -3,9 +3,10 @@ from enum import Enum
 
 class State(Enum):
     MAIN_MENU = 1
-    RUNNING = 2
+    RUN_BACKPROPAGATION = 2
     OPTIONS = 3
     BACKWARD_TRAIN = 4
+    RUN_GENETIC = 5
 
 
 class ViewConsts:
