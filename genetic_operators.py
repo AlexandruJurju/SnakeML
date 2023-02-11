@@ -8,6 +8,9 @@ from Neural.neural_network import *
 from model import Individual
 
 
+# operators from pymoo
+# https://github.com/anyoptimization/pymoo/tree/main/pymoo/operators
+
 def roulette_selection(population: List[Individual], selection_count: int) -> List[Individual]:
     """
     In Roulette selection the chance for and individual to be selected is directly proportional with that individual's fitness
@@ -65,20 +68,20 @@ def elitist_selection(population: List[Individual], selection_count: int) -> Lis
     return selected[:selection_count]
 
 
-def one_point_crossover(parent1: np.ndarray, parent2: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-    matrix_row, matrix_col = np.shape(parent1)
+def one_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    matrix_row, matrix_col = np.shape(parent1_chromosome)
 
-    child1 = parent1.copy()
-    child2 = parent2.copy()
+    child1 = parent1_chromosome.copy()
+    child2 = parent2_chromosome.copy()
 
     crossover_row = np.random.randint(0, matrix_row)
     crossover_col = np.random.randint(0, matrix_col)
 
-    child1[:crossover_row, :] = parent2[:crossover_row, :]
-    child1[crossover_row, :crossover_col] = parent2[crossover_row, :crossover_col]
+    child1[:crossover_row, :] = parent2_chromosome[:crossover_row, :]
+    child1[crossover_row, :crossover_col] = parent2_chromosome[crossover_row, :crossover_col]
 
-    child2[:crossover_row, :] = parent1[:crossover_row, :]
-    child2[crossover_row, :crossover_col] = parent1[crossover_row, :crossover_col]
+    child2[:crossover_row, :] = parent1_chromosome[:crossover_row, :]
+    child2[crossover_row, :crossover_col] = parent1_chromosome[crossover_row, :crossover_col]
 
     return child1, child2
 
@@ -177,28 +180,35 @@ def calculate_bq(u: float, eta: float):
         return np.power(1 / (2 * (1 - u)), (1 / (eta + 1)))
 
 
-def sbx(parent1: np.ndarray, parent2: np.ndarray, eta: float) -> Tuple[np.ndarray, np.ndarray]:
+def sbx(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray, eta: float) -> Tuple[np.ndarray, np.ndarray]:
     """
     For large values of eta there is a higher probability that offspring will be created near the parents.
     For small values of eta, offspring will be more distant from parents
     https://stackoverflow.com/questions/56263132/what-does-crossover-index-of-0-25-means-in-genetic-algorithm-for-real-encoding
 
-    :param parent1:
-    :param parent2:
+    :param parent1_chromosome:
+    :param parent2_chromosome:
     :param eta:
     :return:
     """
+    # TODO maybe use a matrix vor values
     u = np.random.uniform(0, 1)
     bq = calculate_bq(u, eta)
 
-    child1 = 0.5 * ((1 + bq) * parent1 + (1 - bq) * parent2)
-    child2 = 0.5 * ((1 - bq) * parent1 + (1 + bq) * parent2)
+    child1 = 0.5 * ((1 + bq) * parent1_chromosome + (1 - bq) * parent2_chromosome)
+    child2 = 0.5 * ((1 - bq) * parent1_chromosome + (1 + bq) * parent2_chromosome)
 
     return child1, child2
 
 
-def gaussian_mutation():
-    pass
+def gaussian_mutation(chromosome: np.ndarray, mutation_rate: float) -> np.ndarray:
+    after_mutation = chromosome
+
+    mutation_array = np.random.random(after_mutation.shape) < mutation_rate
+    gauss_values = np.random.normal(size=after_mutation.shape)
+    after_mutation[mutation_array] += gauss_values[mutation_array]
+
+    return after_mutation
 
 
 def point_mutation():
