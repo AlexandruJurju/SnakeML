@@ -116,10 +116,8 @@ class Model:
             new_block = [head[0] + random_direction.value[0], head[1] + random_direction.value[1]]
 
             # redundant check if new position is empty and check if piece is already in body
-            if self.board[new_block[0]][new_block[1]] == BoardConsts.EMPTY and (new_block not in self.snake.body):
-                self.snake.body.append(new_block)
-                head = new_block
-        print("EXIT FIND BODY")
+            self.snake.body.append(new_block)
+            head = new_block
 
         self.snake.direction = random.choice(MAIN_DIRECTIONS)
 

@@ -1,15 +1,13 @@
-import copy
 import csv
 import os
 import sys
 
 import pygame
 
-from Neural.neural_network import mse, mse_prime, Dense
+from genetic_operators import *
 from model import *
 from settings import GeneticSettings
 from view_tools import Button
-from genetic_operators import *
 
 
 class TrainingExample:
@@ -188,7 +186,7 @@ class Game:
         sum_fitness = 0
         for individual in self.parent_list:
             sum_fitness += individual.fitness
-        print(f"SUM : {sum_fitness}")
+        print(f"GEN {self.generation - 1} SUM : {sum_fitness}")
 
         parents_for_mating = elitist_selection(self.parent_list, 500)
         np.random.shuffle(parents_for_mating)
@@ -243,7 +241,7 @@ class Game:
         nn_input = get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
 
         self.draw_board(self.model.board)
-        self.draw_vision_lines(self.model, vision_lines)
+        # self.draw_vision_lines(self.model, vision_lines)
         # self.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
         # self.write_ttl(self.model.snake.ttl)
         # self.write_score(self.model.snake.score)
@@ -252,19 +250,14 @@ class Game:
         is_alive = self.model.move_in_direction(next_direction)
 
         if not is_alive:
-            print(f"{self.generation} {len(self.parent_list)}")
             self.model.snake.calculate_fitness()
             self.parent_list.append(self.model.snake)
 
             if self.generation == 0:
-                print("REINIT")
                 self.model.snake.brain.reinit_weights_and_biases()
-                print("MODEL")
                 self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)
             else:
-                print("MODEL")
                 self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.offspring_list[len(self.parent_list) - 1])
-                print("AFTER MODEL")
 
             if len(self.parent_list) == GeneticSettings.POPULATION_COUNT:
                 self.offspring_list.clear()
