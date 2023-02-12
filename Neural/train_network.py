@@ -10,7 +10,7 @@ from vision import get_parameters_in_nn_input_form, VisionLine
 
 
 class TrainingExample:
-    def __init__(self, board: List[str], current_direction: Direction, vision_lines: List[VisionLine], predictions: List[float]):
+    def __init__(self, board: List[List[str]], current_direction: Direction, vision_lines: List[VisionLine], predictions: List[float]):
         self.board = board
         self.current_direction = current_direction
         self.vision_lines = vision_lines

@@ -237,7 +237,7 @@ class Game:
         current_example = training_examples[0]
         training_examples.pop(0)
 
-        self.draw_board_with_directions(current_example.board)
+        self.draw_board_with_directions(current_example.board, self.model.get_nn_output_4directions(current_example.predictions))
 
         # TODO BAD UPDATE
         pygame.display.update()
@@ -333,9 +333,7 @@ class Game:
         pygame.display.flip()
         self.fps_clock.tick(ViewConsts.MAX_FPS)
 
-    def draw_board_with_directions(self, board: List) -> None:
-        # use y,x for index in board instead of x,y because of changed logic
-        # x is line y is column ; drawing x is column and y is line
+    def draw_board_with_directions(self, board: List[List[str]], next_direction: Direction) -> None:
         for x in range(len(board)):
             for y in range(len(board)):
                 x_position = x * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X
@@ -353,7 +351,7 @@ class Game:
 
                         # pygame.draw.rect(self.window, ViewConsts.COLOR_APPLE,
                         #                  pygame.Rect(x_position + ViewConsts.SQUARE_SIZE, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
-                        right_text = self.universal_font.render("D", True, ViewConsts.COLOR_WHITE)
+                        right_text = self.universal_font.render("D", True, ViewConsts.COLOR_GREEN)
                         self.window.blit(right_text, (x_position + ViewConsts.SQUARE_SIZE, y_position))
 
                         left_text = self.universal_font.render("A", True, ViewConsts.COLOR_GREEN)
@@ -367,6 +365,13 @@ class Game:
 
                 # draw lines between squares
                 pygame.draw.rect(self.window, ViewConsts.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE), width=1)
+
+        # TODO dont use current direction, use prediction
+        head = find_snake_head_poz(board)
+        next_position = [head[0] + next_direction.value[0], head[1] + next_direction.value[1]]
+        next_x = next_position[1] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X
+        next_y = next_position[0] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y
+        pygame.draw.rect(self.window, ViewConsts.COLOR_SNAKE_HEAD, pygame.Rect(next_x, next_y, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
 
     def write_ttl(self, ttl: int) -> None:
         score_text = self.universal_font.render("Moves Left: " + str(ttl), True, ViewConsts.COLOR_WHITE)
