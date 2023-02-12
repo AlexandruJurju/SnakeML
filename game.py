@@ -21,9 +21,6 @@ class Game:
         self.model = model
         self.state = state
 
-        # TODO remove after testing
-        read_training_data_json()
-
         # set start window position using variables from ViewVars
         os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (ViewConsts.WINDOW_START_X, ViewConsts.WINDOW_START_Y)
         pygame.init()

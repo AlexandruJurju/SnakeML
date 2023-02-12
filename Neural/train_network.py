@@ -71,13 +71,13 @@ def write_examples_to_json_4d(examples: List[TrainingExample]) -> None:
         }
         dictionary_list.append(example_dictionary)
 
-    output_file = open("Neural/jsontest.json", "w")
+    output_file = open(NNSettings.TRAIN_DATA_FILE_LOCATION, "w")
     json.dump(dictionary_list, output_file)
     output_file.close()
 
 
 def read_training_data_json() -> Tuple[List, List]:
-    json_file = open("Neural/jsontest.json", "r")
+    json_file = open(NNSettings.TRAIN_DATA_FILE_LOCATION, "r")
     json_object = json.load(json_file)
 
     x = []
