@@ -1,11 +1,10 @@
 import copy
 import random
-from typing import List, Tuple
-
-import numpy as np
+from typing import Tuple
 
 from Neural.neural_network import *
 from model import Individual
+from settings import GeneticSettings
 
 
 # operators from pymoo
@@ -213,3 +212,28 @@ def gaussian_mutation(chromosome: np.ndarray, mutation_rate: float) -> np.ndarra
 
 def point_mutation():
     pass
+
+
+def full_mutation(individual: NeuralNetwork) -> None:
+    individual_dense_layers = individual.get_dense_layers()
+
+    for layer in individual_dense_layers:
+        layer.weights = gaussian_mutation(layer.weights, GeneticSettings.MUTATION_CHANCE)
+        layer.bias = gaussian_mutation(layer.bias, GeneticSettings.MUTATION_CHANCE)
+
+
+def full_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple[NeuralNetwork, NeuralNetwork]:
+    child1 = copy.deepcopy(parent1)
+    child2 = copy.deepcopy(parent2)
+
+    child1_dense_layers = child1.get_dense_layers()
+    child2_dense_layers = child2.get_dense_layers()
+
+    parent1_dense_layers = parent1.get_dense_layers()
+    parent2_dense_layers = parent2.get_dense_layers()
+
+    for i in range(len(parent1_dense_layers)):
+        child1_dense_layers[i].weights, child2_dense_layers[i].weights = one_point_crossover(parent1_dense_layers[i].weights, parent2_dense_layers[i].weights)
+        child1_dense_layers[i].bias, child2_dense_layers[i].bias = one_point_crossover(parent1_dense_layers[i].bias, parent2_dense_layers[i].bias)
+
+    return child1, child2

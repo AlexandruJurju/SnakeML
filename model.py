@@ -41,10 +41,10 @@ class Model:
         self.snake = Snake(net, None)
 
         self.make_board()
-        self.place_new_apple()
-        self.create_random_snake()
-        # self.place_apple_at_coords([5, 5])
-        # self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
+        # self.place_new_apple()
+        # self.create_random_snake()
+        self.place_apple_at_coords([5, 5])
+        self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
         self.update_board_from_snake()
 
     def make_board(self) -> None:

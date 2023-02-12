@@ -167,17 +167,44 @@ class Game:
             match self.state:
                 case State.MAIN_MENU:
                     self.main_menu()
+                case State.OPTIONS_BACKPROPAGATION:
+                    self.options_backpropagation()
+                case State.OPTIONS_GENETIC:
+                    self.options_genetic()
                 case State.RUN_BACKPROPAGATION:
                     self.run_backpropagation()
-                case State.BACKWARD_TRAIN:
+                case State.RUN_BACKWARD_TRAIN:
                     self.train_backpropagation()
-                case State.OPTIONS:
-                    self.options()
                 case State.RUN_GENETIC:
                     self.run_genetic()
 
             pygame.display.flip()
             self.fps_clock.tick(ViewConsts.MAX_FPS)
+
+    def options_genetic(self):
+        pygame.display.set_caption("OPTIONS GENETIC")
+
+        self.window.fill(ViewConsts.COLOR_BACKGROUND)
+
+        button_back = Button((50, 50), 50, 50, "BACK", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
+        button_back.draw(self.window)
+
+        button_run_genetic = Button((150, 150), 50, 50, "RUN GENETIC", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
+        button_run_genetic.draw(self.window)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if button_back.check_clicked():
+                    self.state = State.MAIN_MENU
+                if button_run_genetic.check_clicked():
+                    self.state = State.RUN_GENETIC
 
     def next_generation(self):
         self.generation += 1
@@ -193,10 +220,10 @@ class Game:
 
         while len(self.offspring_list) < GeneticSettings.POPULATION_COUNT:
             parent1, parent2 = roulette_selection(parents_for_mating, 2)
-            child1, child2 = self.full_crossover(parent1.brain, parent1.brain)
+            child1, child2 = full_crossover(parent1.brain, parent1.brain)
 
-            self.full_mutation(child1)
-            self.full_mutation(child2)
+            full_mutation(child1)
+            full_mutation(child2)
 
             self.offspring_list.append(child1)
             self.offspring_list.append(child2)
@@ -205,29 +232,6 @@ class Game:
         self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.offspring_list[0])
 
         self.parent_list.clear()
-
-    def full_mutation(self, individual: NeuralNetwork) -> None:
-        individual_dense_layers = individual.get_dense_layers()
-
-        for layer in individual_dense_layers:
-            layer.weights = gaussian_mutation(layer.weights, GeneticSettings.MUTATION_CHANCE)
-            layer.bias = gaussian_mutation(layer.bias, GeneticSettings.MUTATION_CHANCE)
-
-    def full_crossover(self, parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple[NeuralNetwork, NeuralNetwork]:
-        child1 = copy.deepcopy(parent1)
-        child2 = copy.deepcopy(parent2)
-
-        child1_dense_layers = child1.get_dense_layers()
-        child2_dense_layers = child2.get_dense_layers()
-
-        parent1_dense_layers = parent1.get_dense_layers()
-        parent2_dense_layers = parent2.get_dense_layers()
-
-        for i in range(len(parent1_dense_layers)):
-            child1_dense_layers[i].weights, child2_dense_layers[i].weights = one_point_crossover(parent1_dense_layers[i].weights, parent2_dense_layers[i].weights)
-            child1_dense_layers[i].bias, child2_dense_layers[i].bias = one_point_crossover(parent1_dense_layers[i].bias, parent2_dense_layers[i].bias)
-
-        return child1, child2
 
     def run_genetic(self):
         self.window.fill(ViewConsts.COLOR_BACKGROUND)
@@ -277,17 +281,14 @@ class Game:
 
         self.window.fill(ViewConsts.COLOR_BACKGROUND)
 
-        button_run = Button((50, 50), 50, 50, "RUN", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
-        button_run.draw(self.window)
+        button_options_backpropagation = Button((50, 125), 50, 50, "BACKPROPAGATION", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
+        button_options_backpropagation.draw(self.window)
 
-        button_options = Button((50, 125), 50, 50, "OPTIONS", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
-        button_options.draw(self.window)
+        button_options_genetic = Button((50, 200), 50, 50, "GENETIC", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
+        button_options_genetic.draw(self.window)
 
-        button_quit = Button((50, 200), 50, 50, "QUIT", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
+        button_quit = Button((50, 300), 50, 50, "QUIT", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
         button_quit.draw(self.window)
-
-        button_genetic = Button((50, 300), 50, 50, "GENETIC", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
-        button_genetic.draw(self.window)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -298,26 +299,24 @@ class Game:
                     pygame.quit()
                     sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if button_run.check_clicked():
-                    self.state = State.RUN_BACKPROPAGATION
-                if button_options.check_clicked():
-                    self.state = State.OPTIONS
-                if button_genetic.check_clicked():
-                    self.state = State.RUN_GENETIC
+                if button_options_backpropagation.check_clicked():
+                    self.state = State.OPTIONS_BACKPROPAGATION
+                if button_options_genetic.check_clicked():
+                    self.state = State.OPTIONS_GENETIC
                 if button_quit.check_clicked():
                     pygame.quit()
                     sys.exit()
 
-    def options(self):
-        pygame.display.set_caption("Options")
+    def options_backpropagation(self):
+        pygame.display.set_caption("OPTIONS BACKPROPAGATION")
 
         self.window.fill(ViewConsts.COLOR_BACKGROUND)
 
         button_back = Button((50, 50), 50, 50, "BACK", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
         button_back.draw(self.window)
 
-        window_title = self.universal_font.render("OPTIONS", True, ViewConsts.COLOR_WHITE)
-        self.window.blit(window_title, [ViewConsts.WINDOW_TITLE_X, ViewConsts.WINDOW_TITLE_Y])
+        button_run_backpropagation = Button((150, 150), 50, 50, "RUN BACKPROPAGATION", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
+        button_run_backpropagation.draw(self.window)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -330,6 +329,8 @@ class Game:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_back.check_clicked():
                     self.state = State.MAIN_MENU
+                if button_run_backpropagation.check_clicked():
+                    self.state = State.RUN_BACKPROPAGATION
 
     def wait_for_key(self):
         while True:
@@ -393,9 +394,6 @@ class Game:
     def train_backpropagation(self):
         self.window.fill(ViewConsts.COLOR_BACKGROUND)
 
-        window_title = self.universal_font.render("TRAIN BACKPROPAGATION", True, ViewConsts.COLOR_WHITE)
-        self.window.blit(window_title, [ViewConsts.WINDOW_TITLE_X, ViewConsts.WINDOW_TITLE_Y])
-
         current_example = training_examples[0]
         training_examples.pop(0)
 
@@ -456,8 +454,6 @@ class Game:
         self.window.fill(ViewConsts.COLOR_BACKGROUND)
         button_back = Button((100, 50), 50, 50, "BACK", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_RED)
         button_back.draw(self.window)
-        window_title = self.universal_font.render("MAIN RUN", True, ViewConsts.COLOR_WHITE)
-        self.window.blit(window_title, [ViewConsts.WINDOW_TITLE_X, ViewConsts.WINDOW_TITLE_Y])
 
         vision_lines = get_vision_lines(self.model.board)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
@@ -476,7 +472,7 @@ class Game:
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move_in_direction(next_direction)
         if not is_alive:
-            self.state = State.BACKWARD_TRAIN
+            self.state = State.RUN_BACKWARD_TRAIN
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -488,7 +484,7 @@ class Game:
                     sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_back.check_clicked():
-                    self.state = State.MAIN_MENU
+                    self.state = State.OPTIONS_BACKPROPAGATION
 
     def write_ttl(self, ttl: int):
         score_text = self.universal_font.render("Moves Left: " + str(ttl), True, ViewConsts.COLOR_WHITE)
