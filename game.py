@@ -311,8 +311,8 @@ class Game:
         training_examples.append(example)
 
         self.draw_board(self.model.board)
-        # self.draw_vision_lines(self.model, vision_lines)
-        # self.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
+        self.draw_vision_lines(self.model, vision_lines)
+        self.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
         self.write_ttl(self.model.snake.ttl)
         self.write_score(self.model.snake.score)
 
@@ -417,10 +417,11 @@ class Game:
 
         # loop over all lines in given vision lines
         for line in vision_lines:
-            # line_label = self.universal_font.render(line.direction.name, True, ViewConsts.COLOR_BLACK)
+            line_label = self.universal_font.render(line.direction.name[0], True, ViewConsts.COLOR_BLACK)
 
             # render vision line text at wall position
-            # self.window.blit(line_label, [line.wall_coord[1] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X,line.wall_coord[0] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y])
+            self.window.blit(line_label, [line.wall_coord[1] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X,
+                                          line.wall_coord[0] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y])
 
             # draw line from head to wall, draw before body and apple lines
             # drawing uses SQUARE_SIZE//2 so that lines go through the middle of the squares
