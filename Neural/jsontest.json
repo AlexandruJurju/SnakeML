@@ -171,6 +171,59 @@
       ]
     ],
     "current_direction": "DOWN",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          10,
+          11
+        ],
+        "wall_distance": 0.1,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          10,
+          0
+        ],
+        "wall_distance": 1.0,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          1
+        ],
+        "wall_distance": 1.0,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          1
+        ],
+        "wall_distance": 0.1,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          9,
+          1
+        ],
+        "segment_distance": 1.0
+      }
+    ],
     "up": 0.0,
     "down": 0.0,
     "left": 0.0,
@@ -348,6 +401,59 @@
       ]
     ],
     "current_direction": "RIGHT",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          10,
+          11
+        ],
+        "wall_distance": 0.1111111111111111,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          10,
+          0
+        ],
+        "wall_distance": 0.5,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          10,
+          1
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          2
+        ],
+        "wall_distance": 1.0,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          2
+        ],
+        "wall_distance": 0.1,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
     "up": 0.0,
     "down": 0.0,
     "left": 0.0,
@@ -525,6 +631,59 @@
       ]
     ],
     "current_direction": "RIGHT",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          10,
+          11
+        ],
+        "wall_distance": 0.125,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          10,
+          0
+        ],
+        "wall_distance": 0.3333333333333333,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          10,
+          2
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          3
+        ],
+        "wall_distance": 1.0,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          3
+        ],
+        "wall_distance": 0.1,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
     "up": 0.0,
     "down": 0.0,
     "left": 0.0,
@@ -702,6 +861,59 @@
       ]
     ],
     "current_direction": "RIGHT",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          10,
+          11
+        ],
+        "wall_distance": 0.14285714285714285,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          10,
+          0
+        ],
+        "wall_distance": 0.25,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          10,
+          3
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          4
+        ],
+        "wall_distance": 1.0,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          4
+        ],
+        "wall_distance": 0.1,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
     "up": 0.0,
     "down": 0.0,
     "left": 0.0,
@@ -879,6 +1091,62 @@
       ]
     ],
     "current_direction": "RIGHT",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          10,
+          11
+        ],
+        "wall_distance": 0.16666666666666666,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          10,
+          0
+        ],
+        "wall_distance": 0.2,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          10,
+          4
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          5
+        ],
+        "wall_distance": 1.0,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          5
+        ],
+        "wall_distance": 0.1,
+        "apple_coord": [
+          5,
+          5
+        ],
+        "apple_distance": 1.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
     "up": 1.0,
     "down": 0.0,
     "left": 0.0,
@@ -1056,6 +1324,62 @@
       ]
     ],
     "current_direction": "UP",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          9,
+          11
+        ],
+        "wall_distance": 0.16666666666666666,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          9,
+          0
+        ],
+        "wall_distance": 0.2,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          5
+        ],
+        "wall_distance": 0.5,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          10,
+          5
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          5
+        ],
+        "wall_distance": 0.1111111111111111,
+        "apple_coord": [
+          5,
+          5
+        ],
+        "apple_distance": 1.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
     "up": 1.0,
     "down": 0.0,
     "left": 0.0,
@@ -1233,6 +1557,62 @@
       ]
     ],
     "current_direction": "UP",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          8,
+          11
+        ],
+        "wall_distance": 0.16666666666666666,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          8,
+          0
+        ],
+        "wall_distance": 0.2,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          5
+        ],
+        "wall_distance": 0.3333333333333333,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          9,
+          5
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          5
+        ],
+        "wall_distance": 0.125,
+        "apple_coord": [
+          5,
+          5
+        ],
+        "apple_distance": 1.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
     "up": 1.0,
     "down": 0.0,
     "left": 0.0,
@@ -1410,6 +1790,62 @@
       ]
     ],
     "current_direction": "UP",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          7,
+          11
+        ],
+        "wall_distance": 0.16666666666666666,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          7,
+          0
+        ],
+        "wall_distance": 0.2,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          5
+        ],
+        "wall_distance": 0.25,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          8,
+          5
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          5
+        ],
+        "wall_distance": 0.14285714285714285,
+        "apple_coord": [
+          5,
+          5
+        ],
+        "apple_distance": 1.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
     "up": 1.0,
     "down": 0.0,
     "left": 0.0,
@@ -1587,6 +2023,62 @@
       ]
     ],
     "current_direction": "UP",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          6,
+          11
+        ],
+        "wall_distance": 0.16666666666666666,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          6,
+          0
+        ],
+        "wall_distance": 0.2,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          5
+        ],
+        "wall_distance": 0.2,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          7,
+          5
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          5
+        ],
+        "wall_distance": 0.16666666666666666,
+        "apple_coord": [
+          5,
+          5
+        ],
+        "apple_distance": 1.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
     "up": 1.0,
     "down": 0.0,
     "left": 0.0,
@@ -1640,14 +2132,662 @@
         "W",
         ".",
         ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        "H",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        "S",
+        ".",
+        ".",
+        ".",
         "A",
         ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        "S",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        "S",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
         ".",
         ".",
         ".",
         ".",
         ".",
         ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ]
+    ],
+    "current_direction": "UP",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          5,
+          11
+        ],
+        "wall_distance": 0.16666666666666666,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          5,
+          0
+        ],
+        "wall_distance": 0.2,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          5
+        ],
+        "wall_distance": 0.16666666666666666,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          6,
+          5
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          5
+        ],
+        "wall_distance": 0.2,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
+    "up": 1.0,
+    "down": 0.0,
+    "left": 0.0,
+    "right": 0.0
+  },
+  {
+    "board": [
+      [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        "H",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        "S",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        "S",
+        ".",
+        ".",
+        ".",
+        "A",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        "S",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ]
+    ],
+    "current_direction": "UP",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          4,
+          11
+        ],
+        "wall_distance": 0.16666666666666666,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          4,
+          0
+        ],
+        "wall_distance": 0.2,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          5
+        ],
+        "wall_distance": 0.14285714285714285,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          5,
+          5
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          5
+        ],
+        "wall_distance": 0.25,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
+    "up": 1.0,
+    "down": 0.0,
+    "left": 0.0,
+    "right": 0.0
+  },
+  {
+    "board": [
+      [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        "H",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        "S",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        "S",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        "S",
+        ".",
+        ".",
+        ".",
+        "A",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W"
+      ]
+    ],
+    "current_direction": "UP",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          3,
+          11
+        ],
+        "wall_distance": 0.16666666666666666,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          3,
+          0
+        ],
+        "wall_distance": 0.2,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          5
+        ],
+        "wall_distance": 0.125,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          4,
+          5
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          5
+        ],
+        "wall_distance": 0.3333333333333333,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
+    "up": 1.0,
+    "down": 0.0,
+    "left": 0.0,
+    "right": 0.0
+  },
+  {
+    "board": [
+      [
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
+        "W",
         "W"
       ],
       [
@@ -1730,320 +2870,8 @@
         ".",
         ".",
         ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ]
-    ],
-    "current_direction": "UP",
-    "up": 1.0,
-    "down": 0.0,
-    "left": 0.0,
-    "right": 0.0
-  },
-  {
-    "board": [
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
         "A",
         ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        "H",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ]
-    ],
-    "current_direction": "UP",
-    "up": 1.0,
-    "down": 0.0,
-    "left": 0.0,
-    "right": 0.0
-  },
-  {
-    "board": [
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        "A",
-        ".",
-        "H",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
         "W"
       ],
       [
@@ -2118,183 +2946,59 @@
       ]
     ],
     "current_direction": "UP",
-    "up": 1.0,
-    "down": 0.0,
-    "left": 0.0,
-    "right": 0.0
-  },
-  {
-    "board": [
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        "H",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        "A",
-        ".",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ]
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          2,
+          11
+        ],
+        "wall_distance": 0.16666666666666666,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          2,
+          0
+        ],
+        "wall_distance": 0.2,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          5
+        ],
+        "wall_distance": 0.1111111111111111,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          3,
+          5
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          5
+        ],
+        "wall_distance": 0.5,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
     ],
-    "current_direction": "UP",
     "up": 1.0,
     "down": 0.0,
     "left": 0.0,
@@ -2348,55 +3052,55 @@
         "W",
         ".",
         ".",
+        ".",
+        ".",
+        "S",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        "S",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
         "A",
-        ".",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
         ".",
         "W"
       ],
@@ -2472,6 +3176,59 @@
       ]
     ],
     "current_direction": "UP",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          1,
+          11
+        ],
+        "wall_distance": 0.16666666666666666,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          1,
+          0
+        ],
+        "wall_distance": 0.2,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          5
+        ],
+        "wall_distance": 0.1,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          2,
+          5
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          5
+        ],
+        "wall_distance": 1.0,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
     "up": 0.0,
     "down": 0.0,
     "left": 1.0,
@@ -2525,7 +3282,7 @@
         "W",
         ".",
         ".",
-        "A",
+        ".",
         ".",
         "S",
         ".",
@@ -2573,7 +3330,7 @@
         ".",
         ".",
         ".",
-        ".",
+        "A",
         ".",
         "W"
       ],
@@ -2649,6 +3406,59 @@
       ]
     ],
     "current_direction": "LEFT",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          1,
+          11
+        ],
+        "wall_distance": 0.14285714285714285,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          1,
+          5
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          1,
+          0
+        ],
+        "wall_distance": 0.25,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          4
+        ],
+        "wall_distance": 0.1,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          4
+        ],
+        "wall_distance": 1.0,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
     "up": 0.0,
     "down": 0.0,
     "left": 1.0,
@@ -2702,55 +3512,55 @@
         "W",
         ".",
         ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
         "A",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
         ".",
         "W"
       ],
@@ -2826,6 +3636,59 @@
       ]
     ],
     "current_direction": "LEFT",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          1,
+          11
+        ],
+        "wall_distance": 0.125,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          1,
+          4
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          1,
+          0
+        ],
+        "wall_distance": 0.3333333333333333,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          3
+        ],
+        "wall_distance": 0.1,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          3
+        ],
+        "wall_distance": 1.0,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
     "up": 0.0,
     "down": 0.0,
     "left": 1.0,
@@ -2879,55 +3742,55 @@
         "W",
         ".",
         ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
         "A",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
         ".",
         "W"
       ],
@@ -3003,6 +3866,59 @@
       ]
     ],
     "current_direction": "LEFT",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          1,
+          11
+        ],
+        "wall_distance": 0.1111111111111111,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          1,
+          3
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          1,
+          0
+        ],
+        "wall_distance": 0.5,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          2
+        ],
+        "wall_distance": 0.1,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          2
+        ],
+        "wall_distance": 1.0,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
     "up": 0.0,
     "down": 0.0,
     "left": 1.0,
@@ -3056,55 +3972,55 @@
         "W",
         ".",
         ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
         "A",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
         ".",
         "W"
       ],
@@ -3180,6 +4096,59 @@
       ]
     ],
     "current_direction": "LEFT",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          1,
+          11
+        ],
+        "wall_distance": 0.1,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          1,
+          2
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          1,
+          0
+        ],
+        "wall_distance": 1.0,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          1
+        ],
+        "wall_distance": 0.1,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          1
+        ],
+        "wall_distance": 1.0,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      }
+    ],
     "up": 0.0,
     "down": 1.0,
     "left": 0.0,
@@ -3233,55 +4202,55 @@
         "W",
         ".",
         ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
         "A",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
         ".",
         "W"
       ],
@@ -3357,183 +4326,59 @@
       ]
     ],
     "current_direction": "DOWN",
-    "up": 0.0,
-    "down": 1.0,
-    "left": 0.0,
-    "right": 0.0
-  },
-  {
-    "board": [
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "H",
-        ".",
-        "A",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ]
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          2,
+          11
+        ],
+        "wall_distance": 0.1,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          2,
+          0
+        ],
+        "wall_distance": 1.0,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          1
+        ],
+        "wall_distance": 0.1111111111111111,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          1
+        ],
+        "wall_distance": 0.5,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          1,
+          1
+        ],
+        "segment_distance": 1.0
+      }
     ],
-    "current_direction": "DOWN",
     "up": 0.0,
     "down": 1.0,
     "left": 0.0,
@@ -3558,976 +4403,7 @@
       [
         "W",
         "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
         "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        "A",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "H",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ]
-    ],
-    "current_direction": "DOWN",
-    "up": 0.0,
-    "down": 1.0,
-    "left": 0.0,
-    "right": 0.0
-  },
-  {
-    "board": [
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        "A",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "H",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ]
-    ],
-    "current_direction": "DOWN",
-    "up": 0.0,
-    "down": 1.0,
-    "left": 0.0,
-    "right": 0.0
-  },
-  {
-    "board": [
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        "A",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "H",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ]
-    ],
-    "current_direction": "DOWN",
-    "up": 0.0,
-    "down": 1.0,
-    "left": 0.0,
-    "right": 0.0
-  },
-  {
-    "board": [
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        "A",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "H",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ]
-    ],
-    "current_direction": "DOWN",
-    "up": 0.0,
-    "down": 1.0,
-    "left": 0.0,
-    "right": 0.0
-  },
-  {
-    "board": [
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        "A",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "H",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ]
-    ],
-    "current_direction": "DOWN",
-    "up": 0.0,
-    "down": 1.0,
-    "left": 0.0,
-    "right": 0.0
-  },
-  {
-    "board": [
-      [
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        "A",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        ".",
-        "W"
-      ],
-      [
-        "W",
-        "S",
-        ".",
         ".",
         ".",
         ".",
@@ -4542,6 +4418,90 @@
         "W",
         "S",
         "H",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "A",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        ".",
+        "W"
+      ],
+      [
+        "W",
+        ".",
+        ".",
         ".",
         ".",
         ".",
@@ -4596,6 +4556,62 @@
       ]
     ],
     "current_direction": "RIGHT",
+    "vision_lines": [
+      {
+        "direction": "RIGHT",
+        "wall_coord": [
+          2,
+          11
+        ],
+        "wall_distance": 0.1111111111111111,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "LEFT",
+        "wall_coord": [
+          2,
+          0
+        ],
+        "wall_distance": 0.5,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          2,
+          1
+        ],
+        "segment_distance": 1.0
+      },
+      {
+        "direction": "DOWN",
+        "wall_coord": [
+          11,
+          2
+        ],
+        "wall_distance": 0.1111111111111111,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": null,
+        "segment_distance": 0.0
+      },
+      {
+        "direction": "UP",
+        "wall_coord": [
+          0,
+          2
+        ],
+        "wall_distance": 0.5,
+        "apple_coord": null,
+        "apple_distance": 0.0,
+        "segment_coord": [
+          1,
+          2
+        ],
+        "segment_distance": 1.0
+      }
+    ],
     "up": 0.0,
     "down": 1.0,
     "left": 0.0,

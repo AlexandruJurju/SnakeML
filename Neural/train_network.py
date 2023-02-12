@@ -1,20 +1,20 @@
-import csv
 import json
 from typing import List, Tuple, Dict
 
 import numpy as np
 
 from Neural.neural_network import NeuralNetwork, mse, mse_prime
-from constants import Direction, MAIN_DIRECTIONS
+from constants import Direction
 from settings import NNSettings
-from vision import get_vision_lines, get_parameters_in_nn_input_form
+from vision import get_parameters_in_nn_input_form, VisionLine
 
 
 class TrainingExample:
-    def __init__(self, board: List[str], predictions: List[float], current_direction: Direction):
+    def __init__(self, board: List[str], current_direction: Direction, vision_lines: List[VisionLine], predictions: List[float]):
         self.board = board
-        self.predictions = predictions
         self.current_direction = current_direction
+        self.vision_lines = vision_lines
+        self.predictions = predictions
 
 
 def train_network(network: NeuralNetwork) -> None:
@@ -38,60 +38,6 @@ def train_network(network: NeuralNetwork) -> None:
     #     print("============================================")
 
 
-def read_training_data_csv() -> Tuple:
-    file = open(NNSettings.TRAIN_DATA_FILE_LOCATION)
-    csvreader = csv.reader(file)
-
-    data = []
-    for row in csvreader:
-        data.append(row)
-
-    x = []
-    y = []
-
-    if len(data) != 0:
-        for row in data:
-            board = eval(row[0])
-
-            # direction is saved as Direction.UP, but direction.name is just UP, use split to get second part
-            direction_string = row[1].split(".")[1]
-            real_direction = None
-            for direction in MAIN_DIRECTIONS:
-                direction_enum_name = direction.name
-                if direction_string == direction_enum_name:
-                    real_direction = direction
-                    break
-
-            vision_lines = get_vision_lines(board)
-
-            x.append(get_parameters_in_nn_input_form(vision_lines, real_direction))
-
-            # dynamic loop over columns in csv, skips board and current direction
-            outputs = []
-            for i in range(2, len(row)):
-                outputs.append(float(row[i]))
-            y.append(outputs)
-
-    return x, y
-
-
-def write_examples_to_csv_4d(examples: List[TrainingExample]) -> None:
-    file = open(NNSettings.TRAIN_DATA_FILE_LOCATION, "w+", newline='')
-    writer = csv.writer(file)
-
-    examples_to_write = []
-    for example in examples:
-        up = example.predictions[0]
-        down = example.predictions[1]
-        left = example.predictions[2]
-        right = example.predictions[3]
-
-        examples_to_write.append([example.board, example.current_direction, up, down, left, right])
-
-    writer.writerows(examples_to_write)
-    file.close()
-
-
 def write_examples_to_json_4d(examples: List[TrainingExample]) -> None:
     dictionary_list: List[Dict] = []
 
@@ -101,9 +47,23 @@ def write_examples_to_json_4d(examples: List[TrainingExample]) -> None:
         left = example.predictions[2]
         right = example.predictions[3]
 
+        vision_lines = []
+        for line in example.vision_lines:
+            line_dict = {
+                "direction": line.direction.name,
+                "wall_coord": line.wall_coord,
+                "wall_distance": line.wall_distance,
+                "apple_coord": line.apple_coord,
+                "apple_distance": line.apple_distance,
+                "segment_coord": line.segment_coord,
+                "segment_distance": line.segment_distance
+            }
+            vision_lines.append(line_dict)
+
         example_dictionary: Dict = {
             "board": example.board,
             "current_direction": example.current_direction.name,
+            "vision_lines": vision_lines,
             "up": up,
             "down": down,
             "left": left,
@@ -122,26 +82,19 @@ def read_training_data_json() -> Tuple[List, List]:
 
     x = []
     y = []
-    for example in json_object:
-        board = example["board"]
-        direction_string = example["current_direction"]
+    if json_object:
+        for example in json_object:
+            real_direction = Direction[example["current_direction"]]
 
-        real_direction = None
-        match direction_string:
-            case "UP":
-                real_direction = Direction.UP
-            case "DOWN":
-                real_direction = Direction.DOWN
-            case "LEFT":
-                real_direction = Direction.LEFT
-            case "RIGHT":
-                real_direction = Direction.RIGHT
+            vision_lines = []
+            for line in example["vision_lines"]:
+                line = VisionLine(line["wall_coord"], line["wall_distance"], line["apple_coord"], line["apple_distance"], line["segment_coord"], line["segment_distance"], Direction[line["direction"]])
+                vision_lines.append(line)
 
-        vision_lines = get_vision_lines(board)
-        x.append(get_parameters_in_nn_input_form(vision_lines, real_direction))
+            x.append(get_parameters_in_nn_input_form(vision_lines, real_direction))
 
-        outputs = [example["up"], example["down"], example["left"], example["right"]]
-        y.append(outputs)
+            outputs = [example["up"], example["down"], example["left"], example["right"]]
+            y.append(outputs)
 
     json_file.close()
 

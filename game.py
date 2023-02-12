@@ -21,6 +21,7 @@ class Game:
         self.model = model
         self.state = state
 
+        # TODO remove after testing
         read_training_data_json()
 
         # set start window position using variables from ViewVars
@@ -276,11 +277,10 @@ class Game:
 
             print(target_output)
             print()
-            evaluated.append(TrainingExample(copy.deepcopy(current_example.board), target_output, current_example.current_direction))
+            evaluated.append(TrainingExample(copy.deepcopy(current_example.board), current_example.current_direction, current_example.vision_lines, target_output))
 
         if len(training_examples) == 0 or skip:
             training_examples.clear()
-            write_examples_to_csv_4d(evaluated)
             write_examples_to_json_4d(evaluated)
 
             evaluated.clear()
@@ -307,12 +307,12 @@ class Game:
         nn_input = get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
 
         example_prediction = np.where(neural_net_prediction == np.max(neural_net_prediction), 1, 0)
-        example = TrainingExample(copy.deepcopy(self.model.board), example_prediction.ravel().tolist(), self.model.snake.direction)
+        example = TrainingExample(copy.deepcopy(self.model.board), self.model.snake.direction, vision_lines, example_prediction.ravel().tolist())
         training_examples.append(example)
 
         self.draw_board(self.model.board)
-        self.draw_vision_lines(self.model, vision_lines)
-        self.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
+        # self.draw_vision_lines(self.model, vision_lines)
+        # self.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
         self.write_ttl(self.model.snake.ttl)
         self.write_score(self.model.snake.score)
 
@@ -413,15 +413,14 @@ class Game:
     #             # draw lines between squares
     #             pygame.draw.rect(self.window, ViewConsts.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE), width=1)
 
-    def draw_vision_lines(self, model: Model, vision_lines) -> None:
+    def draw_vision_lines(self, model: Model, vision_lines: List[VisionLine]) -> None:
 
         # loop over all lines in given vision lines
         for line in vision_lines:
-            line_label = self.universal_font.render(line, True, ViewConsts.COLOR_BLACK)
+            # line_label = self.universal_font.render(line.direction.name, True, ViewConsts.COLOR_BLACK)
 
             # render vision line text at wall position
-            self.window.blit(line_label, [vision_lines[line].wall_coord[1] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X,
-                                          vision_lines[line].wall_coord[0] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y])
+            # self.window.blit(line_label, [line.wall_coord[1] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X,line.wall_coord[0] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y])
 
             # draw line from head to wall, draw before body and apple lines
             # drawing uses SQUARE_SIZE//2 so that lines go through the middle of the squares
@@ -429,15 +428,15 @@ class Game:
             line_end_y = model.snake.body[0][0] * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + ViewConsts.OFFSET_BOARD_Y
 
             # draw line form snake head until wall block
-            self.draw_vision_line(ViewConsts.COLOR_APPLE, 1, vision_lines[line].wall_coord[1], vision_lines[line].wall_coord[0], line_end_x, line_end_y)
+            self.draw_vision_line(ViewConsts.COLOR_APPLE, 1, line.wall_coord[1], line.wall_coord[0], line_end_x, line_end_y)
 
             # draw another line from snake head to first segment found
-            if vision_lines[line].segment_coord is not None:
-                self.draw_vision_line(ViewConsts.COLOR_RED, 5, vision_lines[line].segment_coord[1], vision_lines[line].segment_coord[0], line_end_x, line_end_y)
+            if line.segment_coord is not None:
+                self.draw_vision_line(ViewConsts.COLOR_RED, 5, line.segment_coord[1], line.segment_coord[0], line_end_x, line_end_y)
 
             # draw another line from snake to apple if apple is found
-            if vision_lines[line].apple_coord is not None:
-                self.draw_vision_line(ViewConsts.COLOR_GREEN, 5, vision_lines[line].apple_coord[1], vision_lines[line].apple_coord[0], line_end_x, line_end_y)
+            if line.apple_coord is not None:
+                self.draw_vision_line(ViewConsts.COLOR_GREEN, 5, line.apple_coord[1], line.apple_coord[0], line_end_x, line_end_y)
 
     def draw_vision_line(self, color, width, line_coord_1, line_coord_0, line_end_x, line_end_y) -> None:
         pygame.draw.line(self.window, color,
@@ -447,14 +446,14 @@ class Game:
 
     # TODO draw lines between neurons
     # TODO write direction in inputs
-    def draw_neural_network(self, model, vision_lines, nn_input, nn_output) -> None:
+    def draw_neural_network(self, model: Model, vision_lines: List[VisionLine], nn_input, nn_output) -> None:
         neuron_offset_x = ViewConsts.NN_DISPLAY_OFFSET_X + 100
 
         label_count = 0
         param_type = ["WALL", "APPLE", "SEGMENT"]
         for line in vision_lines:
             for param in param_type:
-                line_label = self.universal_font.render(line + " " + param, True, ViewConsts.COLOR_WHITE)
+                line_label = self.universal_font.render(line.direction.name + " " + param, True, ViewConsts.COLOR_WHITE)
                 self.window.blit(line_label, [ViewConsts.NN_DISPLAY_OFFSET_X, ViewConsts.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewConsts.NN_DISPLAY_OFFSET_Y - 10])
                 label_count += 1
 

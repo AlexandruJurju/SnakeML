@@ -1,7 +1,9 @@
 from typing import List, Dict
+
+import numpy as np
+
 from constants import *
 from settings import NNSettings
-import numpy as np
 
 
 def distance(a, b):
@@ -20,13 +22,14 @@ def find_snake_head_poz(board: List[str]) -> []:
 
 
 class VisionLine:
-    def __init__(self, wall_coord, wall_distance, apple_coord, apple_distance, segment_coord, segment_distance):
+    def __init__(self, wall_coord, wall_distance, apple_coord, apple_distance, segment_coord, segment_distance, direction: Direction):
         self.wall_coord = wall_coord
         self.wall_distance = wall_distance
         self.apple_coord = apple_coord
         self.apple_distance = apple_distance
         self.segment_coord = segment_coord
         self.segment_distance = segment_distance
+        self.direction = direction
 
 
 def look_in_direction(board: List[str], direction: Direction) -> VisionLine:
@@ -64,37 +67,27 @@ def look_in_direction(board: List[str], direction: Direction) -> VisionLine:
         apple_boolean = 1.0 if apple_found else 0.0
         segment_boolean = 1.0 if segment_found else 0.0
 
-        return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean)
+        return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
 
     elif NNSettings.VISION_LINES_RETURN_TYPE == "distance":
         wall_distance_output = wall_distance
         apple_distance_output = 1 / apple_distance
         segment_distance_output = segment_distance
 
-        return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_distance_output, segment_coord, segment_distance_output)
+        return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_distance_output, segment_coord, segment_distance_output, direction)
 
 
-def get_vision_lines(board: List[str]) -> Dict[str, VisionLine]:
+def get_vision_lines(board: List[str]) -> List[VisionLine]:
     if NNSettings.INPUT_DIRECTION_COUNT == 8:
-        return {
-            "+X": look_in_direction(board, Direction.RIGHT),
-            "-X": look_in_direction(board, Direction.LEFT),
-            "-Y": look_in_direction(board, Direction.DOWN),
-            "+Y": look_in_direction(board, Direction.UP),
-            "Q1": look_in_direction(board, Direction.Q1),
-            "Q2": look_in_direction(board, Direction.Q2),
-            "Q3": look_in_direction(board, Direction.Q3),
-            "Q4": look_in_direction(board, Direction.Q4)
-        }
+        vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.DOWN), look_in_direction(board, Direction.UP),
+                        look_in_direction(board, Direction.Q1), look_in_direction(board, Direction.Q2), look_in_direction(board, Direction.Q3), look_in_direction(board, Direction.Q4)]
     else:
-        return {
-            "+X": look_in_direction(board, Direction.RIGHT),
-            "-X": look_in_direction(board, Direction.LEFT),
-            "-Y": look_in_direction(board, Direction.DOWN),
-            "+Y": look_in_direction(board, Direction.UP)
-        }
+        vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.DOWN), look_in_direction(board, Direction.UP)]
+
+    return vision_lines
 
 
+# TODO remove dict, replace with attribute
 def get_dynamic_vision_lines(board: List[str], current_direction: Direction) -> Dict[str, VisionLine]:
     match current_direction:
         case Direction.UP:
@@ -123,12 +116,12 @@ def get_dynamic_vision_lines(board: List[str], current_direction: Direction) -> 
             }
 
 
-def get_parameters_in_nn_input_form(vision_lines, current_direction: Direction) -> np.ndarray:
+def get_parameters_in_nn_input_form(vision_lines: List[VisionLine], current_direction: Direction) -> np.ndarray:
     nn_input = []
     for line in vision_lines:
-        nn_input.append(vision_lines[line].wall_distance)
-        nn_input.append(vision_lines[line].apple_distance)
-        nn_input.append(vision_lines[line].segment_distance)
+        nn_input.append(line.wall_distance)
+        nn_input.append(line.apple_distance)
+        nn_input.append(line.segment_distance)
 
     for direction in MAIN_DIRECTIONS:
         if current_direction == direction:
