@@ -71,19 +71,19 @@ def elitist_selection(population: List[Individual], selection_count: int) -> Lis
 def one_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     matrix_row, matrix_col = np.shape(parent1_chromosome)
 
-    child1 = parent1_chromosome.copy()
-    child2 = parent2_chromosome.copy()
+    child1_chromosome = parent1_chromosome.copy()
+    child2_chromosome = parent2_chromosome.copy()
 
     crossover_row = np.random.randint(0, matrix_row)
     crossover_col = np.random.randint(0, matrix_col)
 
-    child1[:crossover_row, :] = parent2_chromosome[:crossover_row, :]
-    child1[crossover_row, :crossover_col] = parent2_chromosome[crossover_row, :crossover_col]
+    child1_chromosome[:crossover_row, :] = parent2_chromosome[:crossover_row, :]
+    child1_chromosome[crossover_row, :crossover_col] = parent2_chromosome[crossover_row, :crossover_col]
 
-    child2[:crossover_row, :] = parent1_chromosome[:crossover_row, :]
-    child2[crossover_row, :crossover_col] = parent1_chromosome[crossover_row, :crossover_col]
+    child2_chromosome[:crossover_row, :] = parent1_chromosome[:crossover_row, :]
+    child2_chromosome[crossover_row, :crossover_col] = parent1_chromosome[crossover_row, :crossover_col]
 
-    return child1, child2
+    return child1_chromosome, child2_chromosome
 
 
 # def one_point_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple[NeuralNetwork, NeuralNetwork]:

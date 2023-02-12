@@ -9,6 +9,7 @@ from Neural.neural_network import mse, mse_prime, Dense
 from model import *
 from settings import GeneticSettings
 from view_tools import Button
+from genetic_operators import *
 
 
 class TrainingExample:
@@ -160,8 +161,8 @@ class Game:
         self.universal_font = pygame.font.SysFont("arial", 18)
 
         self.generation = 0
-        self.parent_list = []
-        self.offspring_list = []
+        self.parent_list: List[Snake] = []
+        self.offspring_list: List[NeuralNetwork] = []
 
     def state_machine(self):
         while True:
@@ -181,7 +182,54 @@ class Game:
             self.fps_clock.tick(ViewConsts.MAX_FPS)
 
     def next_generation(self):
-        pass
+        self.generation += 1
+        self.offspring_list.clear()
+
+        sum_fitness = 0
+        for individual in self.parent_list:
+            sum_fitness += individual.fitness
+        print(f"SUM : {sum_fitness}")
+
+        parents_for_mating = elitist_selection(self.parent_list, 500)
+        np.random.shuffle(parents_for_mating)
+
+        while len(self.offspring_list) < GeneticSettings.POPULATION_COUNT:
+            parent1, parent2 = roulette_selection(parents_for_mating, 2)
+            child1, child2 = self.full_crossover(parent1.brain, parent1.brain)
+
+            self.full_mutation(child1)
+            self.full_mutation(child2)
+
+            self.offspring_list.append(child1)
+            self.offspring_list.append(child2)
+
+        self.model.snake.brain.reinit_weights_and_biases()
+        self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.offspring_list[0])
+
+        self.parent_list.clear()
+
+    def full_mutation(self, individual: NeuralNetwork) -> None:
+        individual_dense_layers = individual.get_dense_layers()
+
+        for layer in individual_dense_layers:
+            layer.weights = gaussian_mutation(layer.weights, GeneticSettings.MUTATION_CHANCE)
+            layer.bias = gaussian_mutation(layer.bias, GeneticSettings.MUTATION_CHANCE)
+
+    def full_crossover(self, parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple[NeuralNetwork, NeuralNetwork]:
+        child1 = copy.deepcopy(parent1)
+        child2 = copy.deepcopy(parent2)
+
+        child1_dense_layers = child1.get_dense_layers()
+        child2_dense_layers = child2.get_dense_layers()
+
+        parent1_dense_layers = parent1.get_dense_layers()
+        parent2_dense_layers = parent2.get_dense_layers()
+
+        for i in range(len(parent1_dense_layers)):
+            child1_dense_layers[i].weights, child2_dense_layers[i].weights = one_point_crossover(parent1_dense_layers[i].weights, parent2_dense_layers[i].weights)
+            child1_dense_layers[i].bias, child2_dense_layers[i].bias = one_point_crossover(parent1_dense_layers[i].bias, parent2_dense_layers[i].bias)
+
+        return child1, child2
 
     def run_genetic(self):
         self.window.fill(ViewConsts.COLOR_BACKGROUND)
@@ -196,22 +244,27 @@ class Game:
 
         self.draw_board(self.model.board)
         self.draw_vision_lines(self.model, vision_lines)
-        self.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
-        self.write_ttl(self.model.snake.ttl)
-        self.write_score(self.model.snake.score)
+        # self.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
+        # self.write_ttl(self.model.snake.ttl)
+        # self.write_score(self.model.snake.score)
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move_in_direction(next_direction)
 
         if not is_alive:
+            print(f"{self.generation} {len(self.parent_list)}")
             self.model.snake.calculate_fitness()
             self.parent_list.append(self.model.snake)
 
             if self.generation == 0:
+                print("REINIT")
                 self.model.snake.brain.reinit_weights_and_biases()
+                print("MODEL")
                 self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)
             else:
+                print("MODEL")
                 self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.offspring_list[len(self.parent_list) - 1])
+                print("AFTER MODEL")
 
             if len(self.parent_list) == GeneticSettings.POPULATION_COUNT:
                 self.offspring_list.clear()
