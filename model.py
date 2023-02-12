@@ -42,7 +42,7 @@ class Model:
 
         self.make_board()
         self.place_new_apple()
-        self.create_random_snake(self.snake_size)
+        self.create_random_snake()
         # self.place_apple_at_coords([5, 5])
         # self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
         self.update_board_from_snake()
@@ -95,17 +95,17 @@ class Model:
             new_block = [direction.value[0] + block[0], direction.value[1] + block[1]]
 
             #  if it's not a wall or a snake part then it's a valid direction
-            if (self.board[new_block[0]][new_block[1]] != BoardConsts.WALL) and (self.board[new_block[0]][new_block[1]] != BoardConsts.SNAKE_BODY):
+            if (self.board[new_block[0]][new_block[1]] != BoardConsts.WALL) and (self.board[new_block[0]][new_block[1]] != BoardConsts.SNAKE_BODY) and (new_block not in self.snake.body):
                 valid_directions.append(direction)
 
         return valid_directions
 
-    def create_random_snake(self, snake_size) -> None:
+    def create_random_snake(self) -> None:
         # head is the first block of the snake, the block where the search starts
         head = self.get_random_empty_block()
         self.snake.body.append(head)
 
-        while len(self.snake.body) < snake_size:
+        while len(self.snake.body) < self.snake_size:
             # get all possible directions of block
             valid_directions = self.get_valid_direction_for_block(head)
 
@@ -115,7 +115,6 @@ class Model:
             # get block in chosen direction
             new_block = [head[0] + random_direction.value[0], head[1] + random_direction.value[1]]
 
-            # redundant check if new position is empty and check if piece is already in body
             self.snake.body.append(new_block)
             head = new_block
 
