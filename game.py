@@ -1,149 +1,21 @@
-import csv
 import os
 import sys
 
 import pygame
 
+from Neural.train_network import TrainingExample, write_examples_to_csv_4d, train_network
 from genetic_operators import *
 from model import *
 from settings import GeneticSettings
 from view_tools import Button
 
-
-class TrainingExample:
-    def __init__(self, board: List[str], predictions: List[float], current_direction: Direction):
-        self.board = board
-        self.predictions = predictions
-        self.current_direction = current_direction
-
-
-def read_training_models() -> Tuple:
-    file = open(NNSettings.TRAIN_DATA_FILE_LOCATION)
-    csvreader = csv.reader(file)
-
-    data = []
-    for row in csvreader:
-        data.append(row)
-
-    x = []
-    y = []
-
-    if len(data) != 0:
-        for row in data:
-            board = eval(row[0])
-
-            # direction is saved as Direction.UP, but direction.name is just UP, use split to get second part
-            direction_string = row[1].split(".")[1]
-            real_direction = None
-            for direction in MAIN_DIRECTIONS:
-                direction_enum_name = direction.name
-                if direction_string == direction_enum_name:
-                    real_direction = direction
-                    break
-
-            vision_lines = get_vision_lines(board)
-
-            x.append(get_parameters_in_nn_input_form(vision_lines, real_direction))
-
-            # dynamic loop over columns in csv, skips board and current direction
-            outputs = []
-            for i in range(2, len(row)):
-                outputs.append(float(row[i]))
-            y.append(outputs)
-
-    return x, y
-
-
-def train_network(network: NeuralNetwork) -> None:
-    x, y = read_training_models()
-
-    # example for points
-    # x is (10000,2) 10000 lines, 2 columns ; 10000 examples each with x coord and y coord
-    # when using a single example x_test from x, x_test is (2,)
-    # resizing can be done for the whole training data resize(10000,2,1)
-    # or for just one example resize(2,1)
-    x = np.reshape(x, (len(x), NNSettings.INPUT_NEURON_COUNT, 1))
-    y = np.reshape(y, (len(y), NNSettings.OUTPUT_NEURON_COUNT, 1))
-
-    network.train(mse, mse_prime, x, y, 0.5)
-
-    # for x_test, y_test in zip(x, y):
-    #     output = network.feed_forward(x_test)
-    #     output_index = list(output).index(max(list(output)))
-    #     target_index = list(y_test).index(max(list(y_test)))
-    #     print(f"target = {target_index}, output = {output_index}")
-    #     print("============================================")
-
-
-def write_examples_to_csv_4d(examples: List[TrainingExample]) -> None:
-    file = open(NNSettings.TRAIN_DATA_FILE_LOCATION, "w+", newline='')
-    writer = csv.writer(file)
-
-    examples_to_write = []
-    for example in examples:
-        up = example.predictions[0]
-        down = example.predictions[1]
-        left = example.predictions[2]
-        right = example.predictions[3]
-
-        examples_to_write.append([example.board, example.current_direction, up, down, left, right])
-
-    writer.writerows(examples_to_write)
-    file.close()
-
-
-# def evaluate_live_examples_4d(examples: List[TrainingExample]) -> None:
-#     evaluated = []
-#
-#     for example in examples:
-#         print(f"Model \n {np.matrix(example.board)} \n")
-#         print(f"Current Direction : {example.current_direction} \n")
-#         print(f"Prediction UP : {example.predictions[0]}")
-#         print(f"Prediction DOWN : {example.predictions[1]}")
-#         print(f"Prediction LEFT : {example.predictions[2]}")
-#         print(f"Prediction RIGHT : {example.predictions[3]}")
-#         print()
-#
-#         # if ViewVars.DRAW:
-#         #     self.view.clear_window()
-#         #     self.view.draw_board(example.model)
-#         #     self.view.update_window()
-#
-#         print("Enter target outputs for neural network in form")
-#         print("UP=W DOWN=S LEFT=A RIGHT=D")
-#         target_string = input("")
-#
-#         if target_string == "":
-#             target_output = example.predictions
-#         elif target_string == "x":
-#             break
-#         else:
-#             target_output = [0.0, 0.0, 0.0, 0.0]
-#             if target_string.__contains__("w"):
-#                 target_output[0] = 1.0
-#             if target_string.__contains__("s"):
-#                 target_output[1] = 1.0
-#             if target_string.__contains__("a"):
-#                 target_output[2] = 1.0
-#             if target_string.__contains__("d"):
-#                 target_output[3] = 1.0
-#
-#         print(target_output)
-#         print()
-#         evaluated.append(TrainingExample(copy.deepcopy(example.board), target_output, example.current_direction))
-#
-#     write_examples_to_csv_4d(evaluated)
-
-
-# TODO add options for using different neural networks, for using different directions 4,8,16
 training_examples: List[TrainingExample] = []
 evaluated: List[TrainingExample] = []
 
 
+# TODO add options for using different neural networks, for using different directions 4,8,16
 # TODO add dropdown for options
 # TODO add dropdown for board size
-
-
 class Game:
     def __init__(self, model: Model, state: Enum):
         self.model = model
@@ -162,7 +34,7 @@ class Game:
         self.parent_list: List[Snake] = []
         self.offspring_list: List[NeuralNetwork] = []
 
-    def state_machine(self):
+    def state_machine(self) -> None:
         while True:
             match self.state:
                 case State.MAIN_MENU:
@@ -178,7 +50,7 @@ class Game:
                 case State.RUN_GENETIC:
                     self.run_genetic()
 
-    def options_genetic(self):
+    def options_genetic(self) -> None:
         pygame.display.set_caption("OPTIONS GENETIC")
 
         self.window.fill(ViewConsts.COLOR_BACKGROUND)
@@ -205,7 +77,7 @@ class Game:
         pygame.display.flip()
         self.fps_clock.tick(ViewConsts.MAX_FPS)
 
-    def next_generation(self):
+    def next_generation(self) -> None:
         self.generation += 1
         self.offspring_list.clear()
 
@@ -232,12 +104,8 @@ class Game:
 
         self.parent_list.clear()
 
-    def run_genetic(self):
+    def run_genetic(self) -> None:
         self.window.fill(ViewConsts.COLOR_BACKGROUND)
-
-        # pygame.display.set_caption("GENETIC")
-        # window_title = self.universal_font.render("GENETIC", True, ViewConsts.COLOR_WHITE)
-        # self.window.blit(window_title, [ViewConsts.WINDOW_TITLE_X, ViewConsts.WINDOW_TITLE_Y])
 
         vision_lines = get_vision_lines(self.model.board)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
@@ -277,7 +145,7 @@ class Game:
         pygame.display.flip()
         self.fps_clock.tick(ViewConsts.MAX_FPS)
 
-    def main_menu(self):
+    def main_menu(self) -> None:
         pygame.display.set_caption("Main Menu")
 
         self.window.fill(ViewConsts.COLOR_BACKGROUND)
@@ -311,7 +179,7 @@ class Game:
         pygame.display.flip()
         self.fps_clock.tick(ViewConsts.MAX_FPS)
 
-    def options_backpropagation(self):
+    def options_backpropagation(self) -> None:
         pygame.display.set_caption("OPTIONS BACKPROPAGATION")
 
         self.window.fill(ViewConsts.COLOR_BACKGROUND)
@@ -338,7 +206,7 @@ class Game:
         pygame.display.flip()
         self.fps_clock.tick(ViewConsts.MAX_FPS)
 
-    def wait_for_key(self):
+    def wait_for_key(self) -> str:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -362,42 +230,7 @@ class Game:
                         case pygame.K_x:
                             return "X"
 
-    def draw_board_with_directions(self, board: List) -> None:
-        # use y,x for index in board instead of x,y because of changed logic
-        # x is line y is column ; drawing x is column and y is line
-        for x in range(len(board)):
-            for y in range(len(board)):
-                x_position = x * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X
-                y_position = y * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y
-
-                match board[y][x]:
-                    case BoardConsts.SNAKE_BODY:
-                        pygame.draw.rect(self.window, ViewConsts.COLOR_SNAKE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
-                    case BoardConsts.WALL:
-                        pygame.draw.rect(self.window, ViewConsts.COLOR_WHITE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
-                    case BoardConsts.APPLE:
-                        pygame.draw.rect(self.window, ViewConsts.COLOR_APPLE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
-                    case BoardConsts.SNAKE_HEAD:
-                        pygame.draw.rect(self.window, ViewConsts.COLOR_SNAKE_HEAD, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
-
-                        # pygame.draw.rect(self.window, ViewConsts.COLOR_APPLE,
-                        #                  pygame.Rect(x_position + ViewConsts.SQUARE_SIZE, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
-                        right_text = self.universal_font.render("D", True, ViewConsts.COLOR_WHITE)
-                        self.window.blit(right_text, (x_position + ViewConsts.SQUARE_SIZE, y_position))
-
-                        left_text = self.universal_font.render("A", True, ViewConsts.COLOR_GREEN)
-                        self.window.blit(left_text, (x_position - ViewConsts.SQUARE_SIZE, y_position))
-
-                        up_text = self.universal_font.render("W", True, ViewConsts.COLOR_GREEN)
-                        self.window.blit(up_text, (x_position, y_position - ViewConsts.SQUARE_SIZE))
-
-                        down_text = self.universal_font.render("S", True, ViewConsts.COLOR_GREEN)
-                        self.window.blit(down_text, (x_position, y_position + ViewConsts.SQUARE_SIZE))
-
-                # draw lines between squares
-                pygame.draw.rect(self.window, ViewConsts.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE), width=1)
-
-    def train_backpropagation(self):
+    def train_backpropagation(self) -> None:
         self.window.fill(ViewConsts.COLOR_BACKGROUND)
 
         current_example = training_examples[0]
@@ -459,7 +292,7 @@ class Game:
         pygame.display.flip()
         self.fps_clock.tick(ViewConsts.MAX_FPS)
 
-    def run_backpropagation(self):
+    def run_backpropagation(self) -> None:
         self.window.fill(ViewConsts.COLOR_BACKGROUND)
         button_back = Button((100, 50), 50, 50, "BACK", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_RED)
         button_back.draw(self.window)
@@ -498,7 +331,42 @@ class Game:
         pygame.display.flip()
         self.fps_clock.tick(ViewConsts.MAX_FPS)
 
-    def write_ttl(self, ttl: int):
+    def draw_board_with_directions(self, board: List) -> None:
+        # use y,x for index in board instead of x,y because of changed logic
+        # x is line y is column ; drawing x is column and y is line
+        for x in range(len(board)):
+            for y in range(len(board)):
+                x_position = x * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X
+                y_position = y * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y
+
+                match board[y][x]:
+                    case BoardConsts.SNAKE_BODY:
+                        pygame.draw.rect(self.window, ViewConsts.COLOR_SNAKE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+                    case BoardConsts.WALL:
+                        pygame.draw.rect(self.window, ViewConsts.COLOR_WHITE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+                    case BoardConsts.APPLE:
+                        pygame.draw.rect(self.window, ViewConsts.COLOR_APPLE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+                    case BoardConsts.SNAKE_HEAD:
+                        pygame.draw.rect(self.window, ViewConsts.COLOR_SNAKE_HEAD, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+
+                        # pygame.draw.rect(self.window, ViewConsts.COLOR_APPLE,
+                        #                  pygame.Rect(x_position + ViewConsts.SQUARE_SIZE, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+                        right_text = self.universal_font.render("D", True, ViewConsts.COLOR_WHITE)
+                        self.window.blit(right_text, (x_position + ViewConsts.SQUARE_SIZE, y_position))
+
+                        left_text = self.universal_font.render("A", True, ViewConsts.COLOR_GREEN)
+                        self.window.blit(left_text, (x_position - ViewConsts.SQUARE_SIZE, y_position))
+
+                        up_text = self.universal_font.render("W", True, ViewConsts.COLOR_GREEN)
+                        self.window.blit(up_text, (x_position, y_position - ViewConsts.SQUARE_SIZE))
+
+                        down_text = self.universal_font.render("S", True, ViewConsts.COLOR_GREEN)
+                        self.window.blit(down_text, (x_position, y_position + ViewConsts.SQUARE_SIZE))
+
+                # draw lines between squares
+                pygame.draw.rect(self.window, ViewConsts.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE), width=1)
+
+    def write_ttl(self, ttl: int) -> None:
         score_text = self.universal_font.render("Moves Left: " + str(ttl), True, ViewConsts.COLOR_WHITE)
         self.window.blit(score_text, [ViewConsts.OFFSET_BOARD_X + 25, ViewConsts.OFFSET_BOARD_Y - 75])
 
