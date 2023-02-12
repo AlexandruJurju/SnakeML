@@ -3,7 +3,7 @@ import sys
 
 import pygame
 
-from Neural.train_network import TrainingExample, write_examples_to_csv_4d, train_network
+from Neural.train_network import *
 from genetic_operators import *
 from model import *
 from settings import GeneticSettings
@@ -20,6 +20,8 @@ class Game:
     def __init__(self, model: Model, state: Enum):
         self.model = model
         self.state = state
+
+        read_training_data_json()
 
         # set start window position using variables from ViewVars
         os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (ViewConsts.WINDOW_START_X, ViewConsts.WINDOW_START_Y)
@@ -74,6 +76,7 @@ class Game:
                     self.state = State.MAIN_MENU
                 if button_run_genetic.check_clicked():
                     self.state = State.RUN_GENETIC
+
         pygame.display.flip()
         self.fps_clock.tick(ViewConsts.MAX_FPS)
 
@@ -278,6 +281,8 @@ class Game:
         if len(training_examples) == 0 or skip:
             training_examples.clear()
             write_examples_to_csv_4d(evaluated)
+            write_examples_to_json_4d(evaluated)
+
             evaluated.clear()
 
             # TODO BAD REINIT
