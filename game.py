@@ -136,8 +136,8 @@ def write_examples_to_csv_4d(examples: List[TrainingExample]) -> None:
 
 
 # TODO add options for using different neural networks, for using different directions 4,8,16
-training_examples = []
-evaluated = []
+training_examples: List[TrainingExample] = []
+evaluated: List[TrainingExample] = []
 
 
 # TODO add dropdown for options
@@ -178,9 +178,6 @@ class Game:
                 case State.RUN_GENETIC:
                     self.run_genetic()
 
-            pygame.display.flip()
-            self.fps_clock.tick(ViewConsts.MAX_FPS)
-
     def options_genetic(self):
         pygame.display.set_caption("OPTIONS GENETIC")
 
@@ -205,6 +202,8 @@ class Game:
                     self.state = State.MAIN_MENU
                 if button_run_genetic.check_clicked():
                     self.state = State.RUN_GENETIC
+        pygame.display.flip()
+        self.fps_clock.tick(ViewConsts.MAX_FPS)
 
     def next_generation(self):
         self.generation += 1
@@ -275,6 +274,8 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
+        pygame.display.flip()
+        self.fps_clock.tick(ViewConsts.MAX_FPS)
 
     def main_menu(self):
         pygame.display.set_caption("Main Menu")
@@ -307,6 +308,9 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
+        pygame.display.flip()
+        self.fps_clock.tick(ViewConsts.MAX_FPS)
+
     def options_backpropagation(self):
         pygame.display.set_caption("OPTIONS BACKPROPAGATION")
 
@@ -331,6 +335,8 @@ class Game:
                     self.state = State.MAIN_MENU
                 if button_run_backpropagation.check_clicked():
                     self.state = State.RUN_BACKPROPAGATION
+        pygame.display.flip()
+        self.fps_clock.tick(ViewConsts.MAX_FPS)
 
     def wait_for_key(self):
         while True:
@@ -450,6 +456,9 @@ class Game:
 
             self.state = State.RUN_BACKPROPAGATION
 
+        pygame.display.flip()
+        self.fps_clock.tick(ViewConsts.MAX_FPS)
+
     def run_backpropagation(self):
         self.window.fill(ViewConsts.COLOR_BACKGROUND)
         button_back = Button((100, 50), 50, 50, "BACK", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_RED)
@@ -485,6 +494,9 @@ class Game:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if button_back.check_clicked():
                     self.state = State.OPTIONS_BACKPROPAGATION
+
+        pygame.display.flip()
+        self.fps_clock.tick(ViewConsts.MAX_FPS)
 
     def write_ttl(self, ttl: int):
         score_text = self.universal_font.render("Moves Left: " + str(ttl), True, ViewConsts.COLOR_WHITE)
