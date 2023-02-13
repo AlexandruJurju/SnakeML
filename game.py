@@ -419,7 +419,7 @@ class Game:
 
                 match board[y][x]:
                     case BoardConsts.SNAKE_BODY:
-                        pygame.draw.rect(self.window, ViewConsts.COLOR_SNAKE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+                        pygame.draw.rect(self.window, ViewConsts.COLOR_SNAKE_SEGMENT, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
                     case BoardConsts.WALL:
                         pygame.draw.rect(self.window, ViewConsts.COLOR_WHITE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
                     case BoardConsts.APPLE:
@@ -468,13 +468,13 @@ class Game:
         param_type = ["WALL", "APPLE", "SEGMENT"]
         for line in vision_lines:
             for param in param_type:
-                line_label = self.universal_font.render(line.direction.name + " " + param, True, ViewConsts.COLOR_WHITE)
-                self.window.blit(line_label, [ViewConsts.NN_DISPLAY_OFFSET_X, ViewConsts.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewConsts.NN_DISPLAY_OFFSET_Y - 10])
+                line_label = self.universal_font.render(line.direction.name + "  " + param, True, ViewConsts.COLOR_WHITE)
+                self.window.blit(line_label, [ViewConsts.NN_DISPLAY_lABEL_OFFSET_X, ViewConsts.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewConsts.NN_DISPLAY_OFFSET_Y - 10])
                 label_count += 1
 
         for direction in MAIN_DIRECTIONS:
             line_label = self.universal_font.render(direction.name, True, ViewConsts.COLOR_WHITE)
-            self.window.blit(line_label, [ViewConsts.NN_DISPLAY_OFFSET_X, ViewConsts.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewConsts.NN_DISPLAY_OFFSET_Y - 10])
+            self.window.blit(line_label, [ViewConsts.NN_DISPLAY_lABEL_OFFSET_X, ViewConsts.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewConsts.NN_DISPLAY_OFFSET_Y - 10])
             label_count += 1
 
         self.draw_neurons(model, neuron_offset_x, nn_input, nn_output)
