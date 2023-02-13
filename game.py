@@ -23,8 +23,6 @@ class Game:
         # set start window position using variables from ViewVars
         # os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (ViewConsts.WINDOW_START_X, ViewConsts.WINDOW_START_Y)
 
-        # read_neural_network_from_json()
-
         pygame.init()
         self.window = pygame.display.set_mode((ViewConsts.WIDTH, ViewConsts.HEIGHT))
         pygame.display.set_caption("Snake Game")
@@ -43,12 +41,14 @@ class Game:
                     self.main_menu()
                 case State.OPTIONS_BACKPROPAGATION:
                     self.options_backpropagation()
-                case State.OPTIONS_GENETIC:
-                    self.options_genetic()
                 case State.RUN_BACKPROPAGATION:
                     self.run_backpropagation()
                 case State.RUN_BACKWARD_TRAIN:
                     self.train_backpropagation()
+                case State.OPTIONS_GENETIC:
+                    self.options_genetic()
+                case State.RUN_BEST_GENETIC:
+                    self.run_best_genetic()
                 case State.RUN_GENETIC:
                     self.run_genetic()
 
@@ -63,6 +63,9 @@ class Game:
         button_run_genetic = Button((150, 150), 50, 50, "RUN GENETIC", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
         button_run_genetic.draw(self.window)
 
+        button_run_best_genetic = Button((150, 300), 50, 50, "RUN BEST GENETIC", self.universal_font, ViewConsts.COLOR_WHITE, ViewConsts.COLOR_BLACK)
+        button_run_best_genetic.draw(self.window)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -76,6 +79,41 @@ class Game:
                     self.state = State.MAIN_MENU
                 if button_run_genetic.check_clicked():
                     self.state = State.RUN_GENETIC
+                if button_run_best_genetic.check_clicked():
+                    self.state = State.RUN_BEST_GENETIC
+
+        pygame.display.flip()
+        self.fps_clock.tick(ViewConsts.MAX_FPS)
+
+    def run_best_genetic(self):
+        self.window.fill(ViewConsts.COLOR_BACKGROUND)
+
+        self.model.snake.brain = read_neural_network_from_json()
+
+        vision_lines = get_vision_lines(self.model.board)
+        neural_net_prediction = self.model.get_nn_output(vision_lines)
+        nn_input = get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
+
+        self.draw_board(self.model.board)
+        # self.draw_vision_lines(self.model, vision_lines)
+        # self.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
+        # self.write_ttl(self.model.snake.ttl)
+        # self.write_score(self.model.snake.score)
+
+        next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
+        is_alive = self.model.move_in_direction(next_direction)
+
+        if not is_alive:
+            self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
 
         pygame.display.flip()
         self.fps_clock.tick(ViewConsts.MAX_FPS)
@@ -83,12 +121,12 @@ class Game:
     def next_generation(self) -> None:
         self.offspring_list.clear()
 
-        total_fitness = sum(individual.fitness for individual in self.parent_list)
+        # total_fitness = sum(individual.fitness for individual in self.parent_list)
         best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
 
         save_neural_network_to_json(self.generation, best_individual.fitness, best_individual.brain)
 
-        print(f"GEN {self.generation + 1} SUM : {total_fitness}")
+        print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 
         parents_for_mating = elitist_selection(self.parent_list, 500)
         np.random.shuffle(parents_for_mating)
@@ -147,6 +185,7 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
+
         # pygame.display.flip()
         # self.fps_clock.tick(ViewConsts.MAX_FPS)
 
