@@ -280,7 +280,8 @@ class Game:
         current_example = training_examples[0]
         training_examples.pop(0)
 
-        self.draw_board_with_directions(current_example.board, self.model.get_nn_output_4directions(current_example.predictions))
+        self.draw_board(current_example.board)
+        self.draw_next_snake_direction(current_example.board, self.model.get_nn_output_4directions(current_example.predictions))
 
         # TODO BAD UPDATE
         pygame.display.update()
@@ -376,45 +377,29 @@ class Game:
         pygame.display.flip()
         self.fps_clock.tick(ViewConsts.MAX_FPS)
 
-    def draw_board_with_directions(self, board: List[List[str]], next_direction: Direction) -> None:
-        for x in range(len(board)):
-            for y in range(len(board)):
-                x_position = x * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X
-                y_position = y * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y
-
-                match board[y][x]:
-                    case BoardConsts.SNAKE_BODY:
-                        pygame.draw.rect(self.window, ViewConsts.COLOR_SNAKE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
-                    case BoardConsts.WALL:
-                        pygame.draw.rect(self.window, ViewConsts.COLOR_WHITE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
-                    case BoardConsts.APPLE:
-                        pygame.draw.rect(self.window, ViewConsts.COLOR_APPLE, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
-                    case BoardConsts.SNAKE_HEAD:
-                        pygame.draw.rect(self.window, ViewConsts.COLOR_SNAKE_HEAD, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
-
-                        # pygame.draw.rect(self.window, ViewConsts.COLOR_APPLE,
-                        #                  pygame.Rect(x_position + ViewConsts.SQUARE_SIZE, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
-                        right_text = self.universal_font.render("D", True, ViewConsts.COLOR_GREEN)
-                        self.window.blit(right_text, (x_position + ViewConsts.SQUARE_SIZE, y_position))
-
-                        left_text = self.universal_font.render("A", True, ViewConsts.COLOR_GREEN)
-                        self.window.blit(left_text, (x_position - ViewConsts.SQUARE_SIZE, y_position))
-
-                        up_text = self.universal_font.render("W", True, ViewConsts.COLOR_GREEN)
-                        self.window.blit(up_text, (x_position, y_position - ViewConsts.SQUARE_SIZE))
-
-                        down_text = self.universal_font.render("S", True, ViewConsts.COLOR_GREEN)
-                        self.window.blit(down_text, (x_position, y_position + ViewConsts.SQUARE_SIZE))
-
-                # draw lines between squares
-                pygame.draw.rect(self.window, ViewConsts.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE), width=1)
-
-        # TODO dont use current direction, use prediction
+    def draw_next_snake_direction(self, board: List[List[str]], prediction: Direction) -> None:
         head = find_snake_head_poz(board)
-        next_position = [head[0] + next_direction.value[0], head[1] + next_direction.value[1]]
+        current_x = head[1] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X
+        current_y = head[0] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y
+
+        # draw next position of snake
+        next_position = [head[0] + prediction.value[0], head[1] + prediction.value[1]]
         next_x = next_position[1] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X
         next_y = next_position[0] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y
         pygame.draw.rect(self.window, ViewConsts.COLOR_BLACK, pygame.Rect(next_x, next_y, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+
+        # write letters for directions
+        right_text = self.universal_font.render("D", True, ViewConsts.COLOR_GREEN)
+        self.window.blit(right_text, (current_x + ViewConsts.SQUARE_SIZE, current_y))
+
+        left_text = self.universal_font.render("A", True, ViewConsts.COLOR_GREEN)
+        self.window.blit(left_text, (current_x - ViewConsts.SQUARE_SIZE, current_y))
+
+        down_text = self.universal_font.render("S", True, ViewConsts.COLOR_GREEN)
+        self.window.blit(down_text, (current_x, current_y + ViewConsts.SQUARE_SIZE))
+
+        up_text = self.universal_font.render("W", True, ViewConsts.COLOR_GREEN)
+        self.window.blit(up_text, (current_x, current_y - ViewConsts.SQUARE_SIZE))
 
     def write_ttl(self, ttl: int) -> None:
         score_text = self.universal_font.render("Moves Left: " + str(ttl), True, ViewConsts.COLOR_WHITE)
@@ -444,22 +429,7 @@ class Game:
                 # draw lines between squares
                 pygame.draw.rect(self.window, ViewConsts.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE), width=1)
 
-    # def draw_dead(self, board: List) -> None:
-    #     for x in range(len(board)):
-    #         for y in range(len(board)):
-    #             x_position = x * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X
-    #             y_position = y * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y
-    #
-    #             match board[y][x]:
-    #                 case BoardConsts.SNAKE_BODY:
-    #                     pygame.draw.rect(self.window, ViewConsts.COLOR_RED, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
-    #                 case BoardConsts.SNAKE_HEAD:
-    #                     pygame.draw.rect(self.window, ViewConsts.COLOR_RED, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
-    #             # draw lines between squares
-    #             pygame.draw.rect(self.window, ViewConsts.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE), width=1)
-
     def draw_vision_lines(self, model: Model, vision_lines: List[VisionLine]) -> None:
-
         # loop over all lines in given vision lines
         for line in vision_lines:
             line_label = self.universal_font.render(line.direction.name[0], True, ViewConsts.COLOR_BLACK)
@@ -491,7 +461,6 @@ class Game:
                          (line_end_x, line_end_y), width=width)
 
     # TODO draw lines between neurons
-    # TODO write direction in inputs
     def draw_neural_network(self, model: Model, vision_lines: List[VisionLine], nn_input, nn_output) -> None:
         neuron_offset_x = ViewConsts.NN_DISPLAY_OFFSET_X + 100
 

@@ -25,7 +25,7 @@ class Snake(Individual):
 
         # TODO BAD direction , can cause collisions
         if starting_direction is None:
-            self.direction = random.choice(DYNAMIC_DIRECTIONS)
+            self.direction = random.choice(MAIN_DIRECTIONS)
 
     def calculate_fitness(self) -> None:
         self.fitness = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
