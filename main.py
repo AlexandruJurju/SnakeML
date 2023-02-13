@@ -1,6 +1,6 @@
 from constants import BoardConsts, State
-from game import Game, train_network
-from genetic_operators import *
+from game import Game
+from Neural.genetic_operators import *
 from model import Model
 from settings import NNSettings, SnakeSettings
 

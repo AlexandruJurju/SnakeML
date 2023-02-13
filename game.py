@@ -4,7 +4,7 @@ import sys
 import pygame
 
 from Neural.train_network import *
-from genetic_operators import *
+from Neural.genetic_operators import *
 from model import *
 from settings import GeneticSettings
 from view_tools import Button
@@ -79,13 +79,13 @@ class Game:
         self.fps_clock.tick(ViewConsts.MAX_FPS)
 
     def next_generation(self) -> None:
-        self.generation += 1
         self.offspring_list.clear()
 
-        sum_fitness = 0
-        for individual in self.parent_list:
-            sum_fitness += individual.fitness
-        print(f"GEN {self.generation - 1} SUM : {sum_fitness}")
+        total_fitness = sum(individual.fitness for individual in self.parent_list)
+        best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
+        save_neural_network_to_json(self.generation, best_individual.brain)
+
+        print(f"GEN {self.generation} SUM : {total_fitness}")
 
         parents_for_mating = elitist_selection(self.parent_list, 500)
         np.random.shuffle(parents_for_mating)
@@ -103,6 +103,7 @@ class Game:
         self.model.snake.brain.reinit_weights_and_biases()
         self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.offspring_list[0])
 
+        self.generation += 1
         self.parent_list.clear()
 
     def run_genetic(self) -> None:
@@ -112,7 +113,7 @@ class Game:
         neural_net_prediction = self.model.get_nn_output(vision_lines)
         nn_input = get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
 
-        self.draw_board(self.model.board)
+        # self.draw_board(self.model.board)
         # self.draw_vision_lines(self.model, vision_lines)
         # self.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
         # self.write_ttl(self.model.snake.ttl)
@@ -143,8 +144,8 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
-        pygame.display.flip()
-        self.fps_clock.tick(ViewConsts.MAX_FPS)
+        # pygame.display.flip()
+        # self.fps_clock.tick(ViewConsts.MAX_FPS)
 
     def main_menu(self) -> None:
         pygame.display.set_caption("Main Menu")

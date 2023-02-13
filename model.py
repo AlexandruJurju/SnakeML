@@ -41,10 +41,10 @@ class Model:
         self.snake = Snake(net, None)
 
         self.make_board()
-        # self.place_new_apple()
-        # self.create_random_snake()
-        self.place_apple_at_coords([5, 5])
-        self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
+        self.place_new_apple()
+        self.create_random_snake()
+        # self.place_apple_at_coords([5, 5])
+        # self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
         self.update_board_from_snake()
 
     def make_board(self) -> None:
@@ -118,7 +118,7 @@ class Model:
             self.snake.body.append(new_block)
             head = new_block
 
-        self.snake.direction = random.choice(MAIN_DIRECTIONS)
+        self.snake.direction = random.choice(self.get_valid_direction_for_block(self.snake.body[0]))
 
     def update_board_from_snake(self) -> None:
         # remove previous snake position on board

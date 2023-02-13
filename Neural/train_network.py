@@ -1,9 +1,7 @@
 import json
-from typing import List, Tuple, Dict
+from typing import Tuple, Dict
 
-import numpy as np
-
-from Neural.neural_network import NeuralNetwork, mse, mse_prime
+from Neural.neural_network import *
 from constants import Direction
 from settings import NNSettings
 from vision import get_parameters_in_nn_input_form, VisionLine
@@ -99,6 +97,39 @@ def read_training_data_json() -> Tuple[List, List]:
     json_file.close()
 
     return x, y
+
+
+def save_neural_network_to_json(generation: int, network: NeuralNetwork) -> None:
+    layer_list: List[Dict] = []
+    for layer in network.layers:
+        if type(layer) is Activation:
+            layer_dict = {
+                "layer": "activation",
+                "activation": layer.activation.__name__,
+                "activation_prime": layer.activation_prime.__name__
+            }
+        else:
+            layer_dict = {
+                "layer": "dense",
+                "input_size": layer.input_size,
+                "output_size": layer.output_size,
+                "weights": layer.weights.tolist(),
+                "bias": layer.bias.tolist()
+            }
+        layer_list.append(layer_dict)
+
+    network_dict = {
+        "generation": generation,
+        "network": layer_list
+    }
+
+    network_file = open("Neural/network.json", "w")
+    json.dump(network_dict, network_file)
+    network_file.close()
+
+
+def read_neural_network_from_json() -> NeuralNetwork:
+    pass
 
 # def evaluate_live_examples_4d(examples: List[TrainingExample]) -> None:
 #     evaluated = []
