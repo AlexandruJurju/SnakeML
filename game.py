@@ -469,6 +469,9 @@ class Game:
         neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
         neuron_positions: List[Tuple[int, int]] = []
 
+        line_start: List[Tuple[int, int]] = []
+        line_end: List[Tuple[int, int]] = []
+
         max_y = -1
         for layer in dense_layers:
             max_y_input = layer.input_size * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
@@ -479,12 +482,11 @@ class Game:
             if max_layer > max_y:
                 max_y = max_layer
 
-        print(max_y)
-
         for layer_count, layer in enumerate(dense_layers):
             input_neuron_count = layer.input_size
             output_neuron_count = layer.output_size
 
+            # if it's the first layer only draw input
             if layer_count == 0:
                 current_max_y = input_neuron_count * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
                 offset = (max_y - current_max_y) // 2
@@ -499,31 +501,18 @@ class Game:
                 neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
                 neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
 
-                current_max_y = output_neuron_count * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
-                offset = (max_y - current_max_y) // 2
-                neuron_offset_y += offset
-                
-                for j in range(output_neuron_count):
-                    neuron_x = neuron_offset_x
-                    neuron_y = neuron_offset_y
-                    neuron_offset_y += ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2
-                    neuron_positions.append((neuron_x, neuron_y))
+            # always draw output neurons
+            current_max_y = output_neuron_count * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
+            offset = (max_y - current_max_y) // 2
+            neuron_offset_y += offset
 
-                neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
-                neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
-
-            else:
-                current_max_y = output_neuron_count * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
-                offset = (max_y - current_max_y) // 2
-                neuron_offset_y += offset
-
-                for j in range(output_neuron_count):
-                    neuron_x = neuron_offset_x
-                    neuron_y = neuron_offset_y
-                    neuron_offset_y += ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2
-                    neuron_positions.append((neuron_x, neuron_y))
-                neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
-                neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
+            for j in range(output_neuron_count):
+                neuron_x = neuron_offset_x
+                neuron_y = neuron_offset_y
+                neuron_offset_y += ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2
+                neuron_positions.append((neuron_x, neuron_y))
+            neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
+            neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
 
         for neuron_position in neuron_positions:
             pygame.draw.circle(self.window, ViewConsts.COLOR_WHITE, (neuron_position[0], neuron_position[1]), ViewConsts.NN_DISPLAY_NEURON_RADIUS, width=1)
