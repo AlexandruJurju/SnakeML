@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List
 
 import numpy as np
 
@@ -32,7 +32,7 @@ class VisionLine:
         self.direction = direction
 
 
-def look_in_direction(board: List[str], direction: Direction) -> VisionLine:
+def look_in_direction(board: List[List[str]], direction: Direction) -> VisionLine:
     apple_distance = np.inf
     segment_distance = np.inf
     apple_coord = None
@@ -49,11 +49,11 @@ def look_in_direction(board: List[str], direction: Direction) -> VisionLine:
 
     # loop are blocks in the given direction and store position and coordinates of apple and snake segments
     while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
-        if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_found == False:
+        if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_found is False:
             apple_distance = distance(head_position, current_block)
             apple_coord = current_block
             apple_found = True
-        elif board[current_block[0]][current_block[1]] == BoardConsts.SNAKE_BODY and segment_found == False:
+        elif board[current_block[0]][current_block[1]] == BoardConsts.SNAKE_BODY and segment_found is False:
             segment_distance = distance(head_position, current_block)
             segment_coord = current_block
             segment_found = True
@@ -77,7 +77,7 @@ def look_in_direction(board: List[str], direction: Direction) -> VisionLine:
         return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_distance_output, segment_coord, segment_distance_output, direction)
 
 
-def get_vision_lines(board: List[str]) -> List[VisionLine]:
+def get_vision_lines(board: List[List[str]]) -> List[VisionLine]:
     if NNSettings.INPUT_DIRECTION_COUNT == 8:
         vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.DOWN), look_in_direction(board, Direction.UP),
                         look_in_direction(board, Direction.Q1), look_in_direction(board, Direction.Q2), look_in_direction(board, Direction.Q3), look_in_direction(board, Direction.Q4)]
@@ -87,33 +87,18 @@ def get_vision_lines(board: List[str]) -> List[VisionLine]:
     return vision_lines
 
 
-# TODO remove dict, replace with attribute
-def get_dynamic_vision_lines(board: List[str], current_direction: Direction) -> Dict[str, VisionLine]:
+def get_dynamic_vision_lines(board: List[List[str]], current_direction: Direction) -> List[VisionLine]:
+    vision_lines = []
     match current_direction:
         case Direction.UP:
-            return {
-                "+X": look_in_direction(board, Direction.RIGHT),
-                "-X": look_in_direction(board, Direction.LEFT),
-                "+Y": look_in_direction(board, Direction.UP)
-            }
+            vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.UP)]
         case Direction.DOWN:
-            return {
-                "+X": look_in_direction(board, Direction.RIGHT),
-                "-X": look_in_direction(board, Direction.LEFT),
-                "-Y": look_in_direction(board, Direction.DOWN)
-            }
+            vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.DOWN)]
         case Direction.RIGHT:
-            return {
-                "+X": look_in_direction(board, Direction.RIGHT),
-                "-Y": look_in_direction(board, Direction.DOWN),
-                "+Y": look_in_direction(board, Direction.UP)
-            }
+            vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.DOWN), look_in_direction(board, Direction.UP)]
         case Direction.LEFT:
-            return {
-                "-X": look_in_direction(board, Direction.LEFT),
-                "-Y": look_in_direction(board, Direction.DOWN),
-                "+Y": look_in_direction(board, Direction.UP)
-            }
+            vision_lines = [look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.DOWN), look_in_direction(board, Direction.UP)]
+    return vision_lines
 
 
 def get_parameters_in_nn_input_form(vision_lines: List[VisionLine], current_direction: Direction) -> np.ndarray:
