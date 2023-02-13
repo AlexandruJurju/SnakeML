@@ -1,10 +1,9 @@
-import os
 import sys
 
 import pygame
 
-from Neural.train_network import *
 from Neural.genetic_operators import *
+from Neural.train_network import *
 from model import *
 from settings import GeneticSettings
 from view_tools import Button
@@ -22,7 +21,10 @@ class Game:
         self.state = state
 
         # set start window position using variables from ViewVars
-        os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (ViewConsts.WINDOW_START_X, ViewConsts.WINDOW_START_Y)
+        # os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (ViewConsts.WINDOW_START_X, ViewConsts.WINDOW_START_Y)
+
+        # read_neural_network_from_json()
+
         pygame.init()
         self.window = pygame.display.set_mode((ViewConsts.WIDTH, ViewConsts.HEIGHT))
         pygame.display.set_caption("Snake Game")
@@ -83,6 +85,7 @@ class Game:
 
         total_fitness = sum(individual.fitness for individual in self.parent_list)
         best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
+
         save_neural_network_to_json(self.generation, best_individual.brain)
 
         print(f"GEN {self.generation} SUM : {total_fitness}")

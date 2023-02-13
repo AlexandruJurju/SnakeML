@@ -100,8 +100,8 @@ def read_training_data_json() -> Tuple[List, List]:
 
 
 def save_neural_network_to_json(generation: int, network: NeuralNetwork) -> None:
-    layer_list: List[Dict] = []
-    for layer in network.layers:
+    network_dict = []
+    for i, layer in enumerate(network.layers):
         if type(layer) is Activation:
             layer_dict = {
                 "layer": "activation",
@@ -116,59 +116,18 @@ def save_neural_network_to_json(generation: int, network: NeuralNetwork) -> None
                 "weights": layer.weights.tolist(),
                 "bias": layer.bias.tolist()
             }
-        layer_list.append(layer_dict)
+        network_dict.append(layer_dict)
 
-    network_dict = {
-        "generation": generation,
-        "network": layer_list
-    }
+    generation_network = {'generation': generation, "network": network_dict}
 
-    network_file = open("Neural/network.json", "w")
-    json.dump(network_dict, network_file)
+    network_file = open("Neural/Genetic/" + str(generation) + "_network.json", "w")
+    json.dump(generation_network, network_file)
     network_file.close()
 
 
 def read_neural_network_from_json() -> NeuralNetwork:
-    pass
+    json_file = open("Neural/network.json", "r")
+    json_object = json.load(json_file)
 
-# def evaluate_live_examples_4d(examples: List[TrainingExample]) -> None:
-#     evaluated = []
-#
-#     for example in examples:
-#         print(f"Model \n {np.matrix(example.board)} \n")
-#         print(f"Current Direction : {example.current_direction} \n")
-#         print(f"Prediction UP : {example.predictions[0]}")
-#         print(f"Prediction DOWN : {example.predictions[1]}")
-#         print(f"Prediction LEFT : {example.predictions[2]}")
-#         print(f"Prediction RIGHT : {example.predictions[3]}")
-#         print()
-#
-#         # if ViewVars.DRAW:
-#         #     self.view.clear_window()
-#         #     self.view.draw_board(example.model)
-#         #     self.view.update_window()
-#
-#         print("Enter target outputs for neural network in form")
-#         print("UP=W DOWN=S LEFT=A RIGHT=D")
-#         target_string = input("")
-#
-#         if target_string == "":
-#             target_output = example.predictions
-#         elif target_string == "x":
-#             break
-#         else:
-#             target_output = [0.0, 0.0, 0.0, 0.0]
-#             if target_string.__contains__("w"):
-#                 target_output[0] = 1.0
-#             if target_string.__contains__("s"):
-#                 target_output[1] = 1.0
-#             if target_string.__contains__("a"):
-#                 target_output[2] = 1.0
-#             if target_string.__contains__("d"):
-#                 target_output[3] = 1.0
-#
-#         print(target_output)
-#         print()
-#         evaluated.append(TrainingExample(copy.deepcopy(example.board), target_output, example.current_direction))
-#
-#     write_examples_to_csv_4d(evaluated)
+    if json_object:
+        print(json_object)
