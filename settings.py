@@ -10,7 +10,7 @@ class NNSettings:
     INPUT_NEURON_COUNT = INPUT_DIRECTION_COUNT * 3 + 4
     HIDDEN_NEURON_COUNT = 24
     OUTPUT_NEURON_COUNT = 4 if INPUT_DIRECTION_COUNT == 4 or INPUT_DIRECTION_COUNT == 8 else 3
-    TRAIN_DATA_FILE_LOCATION = "Neural/" + str(INPUT_DIRECTION_COUNT) + "_in_directions_" + str(OUTPUT_NEURON_COUNT) + "_out_directions.json"
+    TRAIN_DATA_FILE_LOCATION = "Backpropagation_Training/" + str(INPUT_DIRECTION_COUNT) + "_in_directions_" + str(OUTPUT_NEURON_COUNT) + "_out_directions.json"
 
 
 class GeneticSettings:

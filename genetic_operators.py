@@ -2,7 +2,7 @@ import copy
 import random
 from typing import Tuple
 
-from Neural.neural_network import *
+from neural_network import *
 from model import Individual
 from settings import GeneticSettings
 

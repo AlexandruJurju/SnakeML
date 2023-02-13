@@ -1,7 +1,7 @@
 import json
 from typing import Tuple, Dict
 
-from Neural.neural_network import *
+from neural_network import *
 from constants import Direction
 from settings import NNSettings
 from vision import get_parameters_in_nn_input_form, VisionLine
@@ -99,7 +99,7 @@ def read_training_data_json() -> Tuple[List, List]:
     return x, y
 
 
-def save_neural_network_to_json(generation: int, network: NeuralNetwork) -> None:
+def save_neural_network_to_json(generation: int, fitness, network: NeuralNetwork) -> None:
     network_dict = []
     for i, layer in enumerate(network.layers):
         if type(layer) is Activation:
@@ -118,9 +118,9 @@ def save_neural_network_to_json(generation: int, network: NeuralNetwork) -> None
             }
         network_dict.append(layer_dict)
 
-    generation_network = {'generation': generation, "network": network_dict}
+    generation_network = {"generation": generation, "fitness": fitness, "network": network_dict}
 
-    network_file = open("Neural/Genetic/" + str(generation) + "_network.json", "w")
+    network_file = open("Neural_Networks/" + str(generation) + "_network.json", "w")
     json.dump(generation_network, network_file)
     network_file.close()
 
@@ -131,3 +131,4 @@ def read_neural_network_from_json() -> NeuralNetwork:
 
     if json_object:
         print(json_object)
+    pass

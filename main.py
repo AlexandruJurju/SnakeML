@@ -1,7 +1,7 @@
 from constants import BoardConsts, State
 from game import Game
-from Neural.genetic_operators import *
 from model import Model
+from neural_network import *
 from settings import NNSettings, SnakeSettings
 
 if __name__ == '__main__':

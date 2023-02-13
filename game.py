@@ -2,8 +2,8 @@ import sys
 
 import pygame
 
-from Neural.genetic_operators import *
-from Neural.train_network import *
+from genetic_operators import *
+from train_network import *
 from model import *
 from settings import GeneticSettings
 from view_tools import Button
@@ -86,9 +86,9 @@ class Game:
         total_fitness = sum(individual.fitness for individual in self.parent_list)
         best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
 
-        save_neural_network_to_json(self.generation, best_individual.brain)
+        save_neural_network_to_json(self.generation, best_individual.fitness, best_individual.brain)
 
-        print(f"GEN {self.generation} SUM : {total_fitness}")
+        print(f"GEN {self.generation + 1} SUM : {total_fitness}")
 
         parents_for_mating = elitist_selection(self.parent_list, 500)
         np.random.shuffle(parents_for_mating)
