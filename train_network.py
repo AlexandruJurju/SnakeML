@@ -156,5 +156,6 @@ def read_neural_network_from_json() -> NeuralNetwork:
                     activation_prime = sigmoid_prime
 
                 activation_layer = Activation(activation, activation_prime)
+                output_network.add_layer(activation_layer)
 
     return output_network
