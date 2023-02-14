@@ -126,7 +126,7 @@ def save_neural_network_to_json(generation: int, fitness, network: NeuralNetwork
 
 
 def read_neural_network_from_json() -> NeuralNetwork:
-    json_file = open("Neural_Networks/204_network.json", "r")
+    json_file = open("Neural_Networks/388_network.json", "r")
     json_object = json.load(json_file)
 
     output_network = NeuralNetwork()
