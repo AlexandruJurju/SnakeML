@@ -3,9 +3,9 @@ import sys
 import pygame
 
 from genetic_operators import *
-from train_network import *
 from model import *
 from settings import GeneticSettings
+from train_network import *
 from view_tools import Button
 
 training_examples: List[TrainingExample] = []
@@ -92,7 +92,6 @@ class Game:
 
         vision_lines = get_vision_lines(self.model.board)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
-        nn_input = get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
 
         self.draw_board(self.model.board)
         # self.draw_vision_lines(self.model, vision_lines)
@@ -152,7 +151,6 @@ class Game:
 
         vision_lines = get_vision_lines(self.model.board)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
-        nn_input = get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
 
         # self.draw_board(self.model.board)
         # self.draw_vision_lines(self.model, vision_lines)
@@ -250,7 +248,8 @@ class Game:
         pygame.display.flip()
         self.fps_clock.tick(ViewConsts.MAX_FPS)
 
-    def wait_for_key(self) -> str:
+    @staticmethod
+    def wait_for_key() -> str:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -345,7 +344,6 @@ class Game:
 
         vision_lines = get_vision_lines(self.model.board)
         nn_output = self.model.get_nn_output(vision_lines)
-        nn_input = get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
 
         example_output = np.where(nn_output == np.max(nn_output), 1, 0)
         example = TrainingExample(copy.deepcopy(self.model.board), self.model.snake.direction, vision_lines, example_output.ravel().tolist())
@@ -463,7 +461,7 @@ class Game:
 
     def draw_neural_network(self, model: Model, vision_lines: List[VisionLine]):
         self.draw_neurons(model)
-        self.write_nn_input_names(model, vision_lines)
+        self.write_nn_labels(model, vision_lines)
 
     # TODO just calculate positions, then draw later -> more efficient if writing labels
     def draw_neurons(self, model: Model) -> None:
@@ -535,7 +533,7 @@ class Game:
                 line_start_positions = line_end_positions
                 line_end_positions = []
 
-    def write_nn_input_names(self, model: Model, vision_lines: List[VisionLine]):
+    def write_nn_labels(self, model: Model, vision_lines: List[VisionLine]):
         font = pygame.font.SysFont("arial", 12)
         nn_layers = model.snake.brain.layers
         dense_layers = model.snake.brain.get_dense_layers()

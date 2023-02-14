@@ -31,9 +31,8 @@ class Snake(Individual):
         self.fitness = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
 
 
-# TODO add reinit function
 class Model:
-    def __init__(self, model_size, snake_size, net: NeuralNetwork):
+    def __init__(self, model_size: int, snake_size: int, net: NeuralNetwork):
         self.size = model_size + 2
         self.board = [[BoardConsts.EMPTY for _ in range(self.size)] for _ in range(self.size)]
 
@@ -169,10 +168,10 @@ class Model:
     def get_nn_output(self, vision_lines) -> np.ndarray:
         nn_input = get_parameters_in_nn_input_form(vision_lines, self.snake.direction)
         output = self.snake.brain.feed_forward(nn_input)
-
         return output
 
-    def get_nn_output_4directions(self, nn_output) -> Direction:
+    @staticmethod
+    def get_nn_output_4directions(nn_output) -> Direction:
         direction_index = list(nn_output).index(max(list(nn_output)))
 
         match direction_index:

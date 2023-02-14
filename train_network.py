@@ -1,8 +1,8 @@
 import json
 from typing import Tuple, Dict
 
-from neural_network import *
 from constants import Direction
+from neural_network import *
 from settings import NNSettings
 from vision import get_parameters_in_nn_input_form, VisionLine
 

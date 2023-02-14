@@ -2,8 +2,8 @@ import copy
 import random
 from typing import Tuple
 
-from neural_network import *
 from model import Individual
+from neural_network import *
 from settings import GeneticSettings
 
 
