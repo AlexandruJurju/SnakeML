@@ -353,7 +353,7 @@ class Game:
 
         self.draw_board(self.model.board)
         self.draw_vision_lines(self.model, vision_lines)
-        self.draw_neural_network(self.model)
+        self.draw_neural_network(self.model, vision_lines)
         self.write_ttl(self.model.snake.ttl)
         self.write_score(self.model.snake.score)
 
@@ -460,7 +460,13 @@ class Game:
                          (line_end_x, line_end_y), width=width)
 
     # TODO color when using distance
-    def draw_neural_network(self, model: Model) -> None:
+
+    def draw_neural_network(self, model: Model, vision_lines: List[VisionLine]):
+        self.draw_neurons(model)
+        self.write_nn_input_names(model, vision_lines)
+
+    # TODO just calculate positions, then draw later -> more efficient if writing labels
+    def draw_neurons(self, model: Model) -> None:
         nn_layers = model.snake.brain.layers
         dense_layers = model.snake.brain.get_dense_layers()
         neuron_offset_x = 100 + ViewConsts.NN_DISPLAY_OFFSET_X
@@ -529,18 +535,66 @@ class Game:
                 line_start_positions = line_end_positions
                 line_end_positions = []
 
-    def write_nn_input_names(self, vision_lines):
-        label_count = 0
+    def write_nn_input_names(self, model: Model, vision_lines: List[VisionLine]):
+        font = pygame.font.SysFont("arial", 12)
+        nn_layers = model.snake.brain.layers
+        dense_layers = model.snake.brain.get_dense_layers()
+        neuron_offset_x = 100 + ViewConsts.NN_DISPLAY_OFFSET_X
+        neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
+
         param_type = ["WALL", "APPLE", "SEGMENT"]
-        for line in vision_lines:
-            for param in param_type:
-                line_label = self.universal_font.render(line.direction.name + "  " + param, True, ViewConsts.COLOR_WHITE)
-                self.window.blit(line_label, [ViewConsts.NN_DISPLAY_lABEL_OFFSET_X, ViewConsts.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewConsts.NN_DISPLAY_OFFSET_Y - 10])
-                label_count += 1
-        for direction in MAIN_DIRECTIONS:
-            line_label = self.universal_font.render(direction.name, True, ViewConsts.COLOR_WHITE)
-            self.window.blit(line_label, [ViewConsts.NN_DISPLAY_lABEL_OFFSET_X, ViewConsts.NN_DISPLAY_LABEL_HEIGHT_BETWEEN * label_count + ViewConsts.NN_DISPLAY_OFFSET_Y - 10])
-            label_count += 1
+
+        max_y = -1
+        for layer in dense_layers:
+            max_y_input = layer.input_size * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
+            max_y_output = layer.output_size * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
+            max_layer = max_y_input if max_y_input > max_y_output else max_y_output
+            if max_layer > max_y:
+                max_y = max_layer
+
+        for layer_count, layer in enumerate(nn_layers):
+            if type(layer) is Dense:
+                input_neuron_count = layer.input_size
+                output_neuron_count = layer.output_size
+
+                # if it's the first layer only draw input
+                if layer_count == 0:
+                    current_max_y = input_neuron_count * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
+                    offset = (max_y - current_max_y) // 2
+                    neuron_offset_y += offset
+
+                    # -4 because input also has 4 neurons for storing current direction
+                    for i in range(input_neuron_count):
+                        neuron_x = neuron_offset_x
+                        neuron_y = neuron_offset_y
+                        neuron_offset_y += ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2
+
+                        if i < input_neuron_count - 4:
+                            line_label = font.render(vision_lines[int(i / NNSettings.INPUT_DIRECTION_COUNT)].direction.name + " " + param_type[i % (len(param_type))], True, ViewConsts.COLOR_WHITE)
+                            self.window.blit(line_label, (neuron_x - 125, neuron_y - 10))
+                        else:
+                            line_label = font.render(MAIN_DIRECTIONS[i % 4].name, True, ViewConsts.COLOR_WHITE)
+                            self.window.blit(line_label, (neuron_x - 125, neuron_y - 10))
+
+                    neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
+                    neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
+
+                # always draw output neurons
+                current_max_y = output_neuron_count * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
+                offset = (max_y - current_max_y) // 2
+                neuron_offset_y += offset
+
+                for j in range(output_neuron_count):
+                    neuron_x = neuron_offset_x
+                    neuron_y = neuron_offset_y
+                    neuron_offset_y += ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2
+
+                    if layer_count == len(nn_layers) - 2:
+                        line_label = font.render(MAIN_DIRECTIONS[j].name, True, ViewConsts.COLOR_WHITE)
+                        self.window.blit(line_label, (neuron_x + 25, neuron_y - 10))
+
+                neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
+                neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
 
     def draw_lines_between_neurons(self, line_end: List[Tuple], line_start: List[Tuple]):
         for start_pos in line_start:
