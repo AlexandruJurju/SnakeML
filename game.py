@@ -147,7 +147,7 @@ class Game:
         self.parent_list.clear()
 
     def run_genetic(self) -> None:
-        self.window.fill(ViewConsts.COLOR_BACKGROUND)
+        # self.window.fill(ViewConsts.COLOR_BACKGROUND)
 
         vision_lines = get_vision_lines(self.model.board)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
