@@ -353,7 +353,7 @@ class Game:
 
         self.draw_board(self.model.board)
         self.draw_vision_lines(self.model, vision_lines)
-        self.draw_neural_network(self.model, vision_lines, nn_input, nn_output)
+        self.draw_neural_network(self.model)
         self.write_ttl(self.model.snake.ttl)
         self.write_score(self.model.snake.score)
 
@@ -459,10 +459,9 @@ class Game:
                          (line_coord_1 * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + ViewConsts.OFFSET_BOARD_X, line_coord_0 * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + ViewConsts.OFFSET_BOARD_Y),
                          (line_end_x, line_end_y), width=width)
 
-    # TODO draw lines between neurons
     # TODO color when using distance
-    # TODO find neuron positions first then draw them, more efficient
-    def draw_neural_network(self, model: Model, vision_lines: List[VisionLine], nn_input: np.ndarray, nn_output: np.ndarray) -> None:
+    def draw_neural_network(self, model: Model) -> None:
+        nn_layers = model.snake.brain.layers
         dense_layers = model.snake.brain.get_dense_layers()
         neuron_offset_x = 100 + ViewConsts.NN_DISPLAY_OFFSET_X
         neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
@@ -478,23 +477,47 @@ class Game:
             if max_layer > max_y:
                 max_y = max_layer
 
-        for layer_count, layer in enumerate(dense_layers):
-            input_neuron_count = layer.input_size
-            output_neuron_count = layer.output_size
+        for layer_count, layer in enumerate(nn_layers):
+            if type(layer) is Dense:
+                input_neuron_count = layer.input_size
+                output_neuron_count = layer.output_size
 
-            # if it's the first layer only draw input
-            if layer_count == 0:
-                current_max_y = input_neuron_count * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
+                # if it's the first layer only draw input
+                if layer_count == 0:
+                    current_max_y = input_neuron_count * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
+                    offset = (max_y - current_max_y) // 2
+                    neuron_offset_y += offset
+
+                    for i in range(input_neuron_count):
+                        neuron_x = neuron_offset_x
+                        neuron_y = neuron_offset_y
+                        neuron_offset_y += ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2
+                        line_start_positions.append((neuron_x, neuron_y))
+
+                        inner_color = ViewConsts.COLOR_GREEN * layer.input[i]
+                        pygame.draw.circle(self.window, inner_color, (neuron_x, neuron_y), ViewConsts.NN_DISPLAY_NEURON_RADIUS)
+
+                        pygame.draw.circle(self.window, ViewConsts.COLOR_WHITE, (neuron_x, neuron_y), ViewConsts.NN_DISPLAY_NEURON_RADIUS, width=1)
+
+                    neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
+                    neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
+
+                # always draw output neurons
+                current_max_y = output_neuron_count * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
                 offset = (max_y - current_max_y) // 2
                 neuron_offset_y += offset
 
-                for i in range(input_neuron_count):
+                for j in range(output_neuron_count):
                     neuron_x = neuron_offset_x
                     neuron_y = neuron_offset_y
                     neuron_offset_y += ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2
-                    line_start_positions.append((neuron_x, neuron_y))
+                    line_end_positions.append((neuron_x, neuron_y))
 
-                    inner_color = ViewConsts.COLOR_GREEN * nn_input[i]
+                    neuron_output = nn_layers[layer_count + 1].output[j]
+                    if neuron_output <= 0:
+                        inner_color = ViewConsts.COLOR_BLACK
+                    else:
+                        inner_color = ViewConsts.COLOR_GREEN * neuron_output
                     pygame.draw.circle(self.window, inner_color, (neuron_x, neuron_y), ViewConsts.NN_DISPLAY_NEURON_RADIUS)
 
                     pygame.draw.circle(self.window, ViewConsts.COLOR_WHITE, (neuron_x, neuron_y), ViewConsts.NN_DISPLAY_NEURON_RADIUS, width=1)
@@ -502,29 +525,9 @@ class Game:
                 neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
                 neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
 
-            # always draw output neurons
-            current_max_y = output_neuron_count * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
-            offset = (max_y - current_max_y) // 2
-            neuron_offset_y += offset
-
-            for j in range(output_neuron_count):
-                neuron_x = neuron_offset_x
-                neuron_y = neuron_offset_y
-                neuron_offset_y += ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2
-                line_end_positions.append((neuron_x, neuron_y))
-
-                if layer_count == len(dense_layers) - 1:
-                    inner_color = ViewConsts.COLOR_GREEN * nn_output[j]
-                    pygame.draw.circle(self.window, inner_color, (neuron_x, neuron_y), ViewConsts.NN_DISPLAY_NEURON_RADIUS)
-
-                pygame.draw.circle(self.window, ViewConsts.COLOR_WHITE, (neuron_x, neuron_y), ViewConsts.NN_DISPLAY_NEURON_RADIUS, width=1)
-
-            neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
-            neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
-
-            self.draw_lines_between_neurons(line_start_positions, line_end_positions)
-            line_start_positions = line_end_positions
-            line_end_positions = []
+                # self.draw_lines_between_neurons(line_start_positions, line_end_positions)
+                line_start_positions = line_end_positions
+                line_end_positions = []
 
     def write_nn_input_names(self, vision_lines):
         label_count = 0
