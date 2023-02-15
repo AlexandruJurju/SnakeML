@@ -5,6 +5,7 @@ from pygame_gui import UIManager
 
 from States.genetic_menu import MenuGenetic
 from States.genetic_run_trained_network import GeneticRunTrainedNetwork
+from States.genetic_train_network import GeneticTrainNetwork
 from States.main_menu import MainMenu
 from States.state_manager import StateManager
 from constants import ViewConsts, State
@@ -35,7 +36,8 @@ if __name__ == '__main__':
     state_manager.add_state(MainMenu(state_manager, ui_manager))
     state_manager.add_state(MenuGenetic(state_manager, ui_manager))
     state_manager.add_state(GeneticRunTrainedNetwork(state_manager, ui_manager))
-    state_manager.set_initial_state(State.MAIN_MENU)
+    state_manager.add_state(GeneticTrainNetwork(state_manager, ui_manager))
+    state_manager.set_initial_state(State.GENETIC_TRAIN_NETWORK)
 
     clock = pygame.time.Clock()
     running = True

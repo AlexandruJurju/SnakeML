@@ -21,8 +21,8 @@ class MenuGenetic(BaseState):
 
     def start(self):
         self.title_label = UILabel(pygame.Rect((87, 40), (800, 180)), "Genetic Menu", self.ui_manager, object_id="#window_label")
-        self.button_options_genetic = UIButton(pygame.Rect((600, 200), (150, 35)), "Options Genetic", self.ui_manager)
-        self.button_run_trained_network = UIButton(pygame.Rect((300, 200), (200, 35)), "Run Trained Network", self.ui_manager)
+        self.button_options_genetic = UIButton(pygame.Rect((600, 200), (150, 35)), "Train Network", self.ui_manager)
+        self.button_run_trained_network = UIButton(pygame.Rect((300, 200), (200, 35)), "Run Pretrained Networks", self.ui_manager)
         self.button_back = UIButton(pygame.Rect((437, 300), (150, 35)), "BACK", self.ui_manager)
 
     def end(self):
@@ -49,7 +49,7 @@ class MenuGenetic(BaseState):
                     self.set_target_state_name(State.GENETIC_RUN_TRAINED_NETWORK)
                     self.trigger_transition()
                 if event.ui_element == self.button_options_genetic:
-                    self.set_target_state_name(State.GENETIC_MENU)
+                    self.set_target_state_name(State.GENETIC_TRAIN_NETWORK)
                     self.trigger_transition()
                 if event.ui_element == self.button_back:
                     self.set_target_state_name(State.MAIN_MENU)
