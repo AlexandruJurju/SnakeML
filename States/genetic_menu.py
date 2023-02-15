@@ -6,6 +6,7 @@ from pygame_gui.elements import UILabel, UIButton
 from States.base_state import BaseState
 from States.state_manager import StateManager
 from constants import State
+from train_network import read_neural_network_from_json
 
 
 class MenuGenetic(BaseState):
@@ -47,6 +48,7 @@ class MenuGenetic(BaseState):
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_run_trained_network:
                     self.set_target_state_name(State.GENETIC_RUN_TRAINED_NETWORK)
+                    self.data_to_send = {"network": read_neural_network_from_json()}
                     self.trigger_transition()
                 if event.ui_element == self.button_options_genetic:
                     self.set_target_state_name(State.GENETIC_MENU)

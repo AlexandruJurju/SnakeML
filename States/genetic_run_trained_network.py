@@ -7,8 +7,7 @@ from States.base_state import BaseState
 from States.state_manager import StateManager
 from constants import BoardConsts, State
 from model import Model
-from neural_network import NeuralNetwork, Dense, Activation, tanh, tanh_prime, sigmoid_prime, sigmoid
-from settings import SnakeSettings, NNSettings
+from settings import SnakeSettings
 from train_network import read_neural_network_from_json
 from view import draw_board
 from vision import get_vision_lines
@@ -18,16 +17,7 @@ class GeneticRunTrainedNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.GENETIC_RUN_TRAINED_NETWORK, state_manager)
 
-        # TODO BAD model initialization
-        net = NeuralNetwork()
-        net.add_layer(Dense(NNSettings.INPUT_NEURON_COUNT, NNSettings.HIDDEN_NEURON_COUNT))
-        net.add_layer(Activation(tanh, tanh_prime))
-        net.add_layer(Dense(NNSettings.HIDDEN_NEURON_COUNT, NNSettings.OUTPUT_NEURON_COUNT))
-        net.add_layer(Activation(sigmoid, sigmoid_prime))
-
-        model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, net)
-
-        self.model = model
+        self.model = None
 
         self.ui_manager = ui_manager
 
@@ -39,6 +29,7 @@ class GeneticRunTrainedNetwork(BaseState):
         self.title_label = UILabel(pygame.Rect((87, 40), (800, 50)), "Trained Genetic Network", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect((50, 100), (150, 35)), "BACK", self.ui_manager)
         self.score_counter = UILabel(pygame.Rect((50, 150), (150, 35)), "Score: ", self.ui_manager)
+        self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, read_neural_network_from_json())
 
     def end(self):
         self.title_label.kill()
@@ -47,8 +38,6 @@ class GeneticRunTrainedNetwork(BaseState):
 
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
-
-        self.model.snake.brain = read_neural_network_from_json()
 
         vision_lines = get_vision_lines(self.model.board)
         neural_net_prediction = self.model.get_nn_output(vision_lines)

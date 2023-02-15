@@ -42,8 +42,6 @@ if __name__ == '__main__':
 
     while running:
         time_delta = clock.tick(ViewConsts.MAX_FPS) / 1000.0
-
         running = state_manager.run(screen, time_delta)
-
         pygame.display.flip()
     pygame.quit()
