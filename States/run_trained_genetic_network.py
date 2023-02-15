@@ -32,15 +32,18 @@ class RunTrainedGeneticNetwork(BaseState):
         self.ui_manager = ui_manager
 
         self.title_label = None
+        self.score_counter = None
         self.button_back = None
 
     def start(self):
         self.title_label = UILabel(pygame.Rect((87, 40), (800, 50)), "Trained Genetic Network", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect((50, 100), (150, 35)), "BACK", self.ui_manager)
+        self.score_counter = UILabel(pygame.Rect((50, 150), (150, 35)), "Score: ", self.ui_manager)
 
     def end(self):
         self.title_label.kill()
         self.button_back.kill()
+        self.score_counter.kill()
 
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
@@ -54,6 +57,7 @@ class RunTrainedGeneticNetwork(BaseState):
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move_in_direction(next_direction)
+        self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
             self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)

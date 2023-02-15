@@ -5,7 +5,7 @@ from pygame_gui import UIManager
 
 from States.main_menu import MainMenu
 from States.menu_genetic import MenuGenetic
-from States.run_trained_network import RunTrainedGeneticNetwork
+from States.run_trained_genetic_network import RunTrainedGeneticNetwork
 from States.state_manager import StateManager
 from constants import ViewConsts
 
