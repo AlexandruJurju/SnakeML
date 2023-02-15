@@ -4,6 +4,7 @@ import pygame
 from pygame_gui import UIManager
 
 from States.main_menu import MainMenu
+from States.menu_genetic import MenuGenetic
 from States.state_manager import StateManager
 
 if __name__ == '__main__':
@@ -31,7 +32,8 @@ if __name__ == '__main__':
     ui_manager = UIManager(screen.get_size())
 
     state_manager = StateManager()
-    MainMenu(state_manager, ui_manager)
+    state_manager.add_state(MainMenu(state_manager, ui_manager))
+    state_manager.add_state(MenuGenetic(state_manager, ui_manager))
     state_manager.set_initial_state("main_menu")
 
     clock = pygame.time.Clock()

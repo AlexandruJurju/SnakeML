@@ -19,8 +19,8 @@ class MainMenu(BaseState):
         self.button_quit = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect((87, 40), (850, 180)), "Main Menu", self.ui_manager, object_id="#game_title")
-        self.button_backpropagation_options = UIButton(pygame.Rect((437, 200), (150, 35)), "Option Back", self.ui_manager)
+        self.title_label = UILabel(pygame.Rect((87, 40), (850, 180)), "Main Menu", self.ui_manager, object_id="#window_label")
+        self.button_backpropagation_options = UIButton(pygame.Rect((437, 200), (150, 35)), "Option Backpropagation", self.ui_manager)
         self.button_genetic_options = UIButton(pygame.Rect((437, 250), (150, 35)), "Option Genetic", self.ui_manager)
         self.button_quit = UIButton(pygame.Rect((437, 300), (150, 35)), "QUIT", self.ui_manager)
 
@@ -48,7 +48,7 @@ class MainMenu(BaseState):
                     self.set_target_state_name("options_backpropagation")
                     self.trigger_transition()
                 if event.ui_element == self.button_genetic_options:
-                    self.set_target_state_name("options_genetic")
+                    self.set_target_state_name("menu_genetic")
                     self.trigger_transition()
                 if event.ui_element == self.button_quit:
                     self.set_target_state_name("quit")

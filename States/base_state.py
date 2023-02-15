@@ -3,7 +3,6 @@ class BaseState:
         self.name = name
         self.target_state_name = target_state_name
         self.state_manager = state_manager
-        self.state_manager.add_state(self)
 
         self.transition = False
 
