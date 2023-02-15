@@ -87,6 +87,8 @@ class GeneticRunTrainedNetwork(BaseState):
                 if event.ui_element == self.button_run:
                     self.execute_network = True
                 if event.ui_element == self.button_load:
+                    self.execute_network = False
+                    self.button_run.disable()
                     self.file_dialog = UIFileDialog(pygame.Rect((150, 50), (450, 450)), self.ui_manager, window_title="Load Network", initial_file_path="Neural_Networks/", allow_picking_directories=False,
                                                     allow_existing_files_only=True)
                     self.button_load.disable()
