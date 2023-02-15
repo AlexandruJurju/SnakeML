@@ -5,7 +5,7 @@ from pygame_gui.elements import UILabel, UIButton
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import BoardConsts
+from constants import BoardConsts, State
 from model import Model
 from neural_network import NeuralNetwork, Dense, Activation, tanh, tanh_prime, sigmoid_prime, sigmoid
 from settings import SnakeSettings, NNSettings
@@ -14,9 +14,9 @@ from view import draw_board
 from vision import get_vision_lines
 
 
-class RunTrainedGeneticNetwork(BaseState):
+class GeneticRunTrainedNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
-        super().__init__("run_trained_genetic_network", "quit", state_manager)
+        super().__init__(State.GENETIC_RUN_TRAINED_NETWORK, state_manager)
 
         # TODO BAD model initialization
         net = NeuralNetwork()
@@ -64,19 +64,19 @@ class RunTrainedGeneticNetwork(BaseState):
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.set_target_state_name("quit")
+                self.set_target_state_name(State.QUIT)
                 self.trigger_transition()
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self.set_target_state_name("quit")
+                    self.set_target_state_name(State.QUIT)
                     self.trigger_transition()
 
             self.ui_manager.process_events(event)
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_back:
-                    self.set_target_state_name("menu_genetic")
+                    self.set_target_state_name(State.GENETIC_MENU)
                     self.trigger_transition()
 
         self.ui_manager.update(time_delta)

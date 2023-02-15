@@ -3,11 +3,11 @@ import os
 import pygame
 from pygame_gui import UIManager
 
+from States.genetic_menu import MenuGenetic
+from States.genetic_run_trained_network import GeneticRunTrainedNetwork
 from States.main_menu import MainMenu
-from States.menu_genetic import MenuGenetic
-from States.run_trained_genetic_network import RunTrainedGeneticNetwork
 from States.state_manager import StateManager
-from constants import ViewConsts
+from constants import ViewConsts, State
 
 if __name__ == '__main__':
     # net = NeuralNetwork()
@@ -36,14 +36,14 @@ if __name__ == '__main__':
     state_manager = StateManager()
     state_manager.add_state(MainMenu(state_manager, ui_manager))
     state_manager.add_state(MenuGenetic(state_manager, ui_manager))
-    state_manager.add_state(RunTrainedGeneticNetwork(state_manager, ui_manager))
-    state_manager.set_initial_state("main_menu")
+    state_manager.add_state(GeneticRunTrainedNetwork(state_manager, ui_manager))
+    state_manager.set_initial_state(State.MAIN_MENU)
 
     clock = pygame.time.Clock()
     running = True
 
     while running:
-        time_delta = clock.tick(60) / 1000.0
+        time_delta = clock.tick(ViewConsts.MAX_FPS) / 1000.0
 
         running = state_manager.run(screen, time_delta)
 
