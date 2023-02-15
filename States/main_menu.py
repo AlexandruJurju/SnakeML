@@ -19,7 +19,7 @@ class MainMenu(BaseState):
         self.button_quit = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect((87, 40), (850, 180)), "Main Menu", self.ui_manager, object_id="#main_menu_title")
+        self.title_label = UILabel(pygame.Rect((87, 40), (850, 180)), "Main Menu", self.ui_manager, object_id="#game_title")
         self.button_backpropagation_options = UIButton(pygame.Rect((437, 200), (150, 35)), "Option Back", self.ui_manager)
         self.button_genetic_options = UIButton(pygame.Rect((437, 250), (150, 35)), "Option Genetic", self.ui_manager)
         self.button_quit = UIButton(pygame.Rect((437, 300), (150, 35)), "QUIT", self.ui_manager)
@@ -54,7 +54,7 @@ class MainMenu(BaseState):
                     self.set_target_state_name("quit")
                     self.trigger_transition()
 
-        # blit background ?
+        surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
         self.ui_manager.update(time_delta)
 
