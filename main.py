@@ -26,8 +26,6 @@ if __name__ == '__main__':
     pygame.init()
     os.environ['SDL_VIDEO_CENTERED'] = '1'
     pygame.key.set_repeat()
-    x_screen_size = 1024
-    y_screen_size = 600
     pygame.display.set_caption('Snake AI')
     screen = pygame.display.set_mode((ViewConsts.WIDTH, ViewConsts.HEIGHT))
 
