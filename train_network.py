@@ -120,13 +120,13 @@ def save_neural_network_to_json(generation: int, fitness, network: NeuralNetwork
 
     generation_network = {"generation": generation, "fitness": fitness, "network": network_dict}
 
-    network_file = open("Neural_Networks/" + str(generation) + "_network.json", "w")
+    network_file = open("Neural_Networks/great.json", "w")
     json.dump(generation_network, network_file)
     network_file.close()
 
 
 def read_neural_network_from_json() -> NeuralNetwork:
-    json_file = open("Neural_Networks/388_network.json", "r")
+    json_file = open("Neural_Networks/better.json", "r")
     json_object = json.load(json_file)
 
     output_network = NeuralNetwork()

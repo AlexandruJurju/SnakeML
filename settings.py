@@ -1,6 +1,6 @@
 class SnakeSettings:
     START_SNAKE_SIZE = 3
-    SNAKE_MAX_TTL = 150
+    SNAKE_MAX_TTL = 100
 
 
 class NNSettings:

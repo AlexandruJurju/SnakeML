@@ -22,12 +22,14 @@ class Snake(Individual):
         self.body = []
         self.ttl = SnakeSettings.SNAKE_MAX_TTL
         self.steps_taken = 0
+        self.won = False
 
         # TODO BAD direction , can cause collisions
         if starting_direction is None:
             self.direction = random.choice(MAIN_DIRECTIONS)
 
     def calculate_fitness(self) -> None:
+        win_bonus = 10000 if self.won else 0
         self.fitness = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
 
 
@@ -161,6 +163,11 @@ class Model:
             self.snake.ttl = self.snake.ttl - 1
 
         if self.snake.ttl == 0:
+            return False
+
+        # TODO replace with win condition
+        if self.get_random_empty_block() is None:
+            self.snake.won = True
             return False
 
         return True
