@@ -5,7 +5,9 @@ from pygame_gui import UIManager
 
 from States.main_menu import MainMenu
 from States.menu_genetic import MenuGenetic
+from States.run_trained_network import RunTrainedGeneticNetwork
 from States.state_manager import StateManager
+from constants import ViewConsts
 
 if __name__ == '__main__':
     # net = NeuralNetwork()
@@ -26,14 +28,15 @@ if __name__ == '__main__':
     pygame.key.set_repeat()
     x_screen_size = 1024
     y_screen_size = 600
-    pygame.display.set_caption('Turret Warfare')
-    screen = pygame.display.set_mode((x_screen_size, y_screen_size))
+    pygame.display.set_caption('Snake AI')
+    screen = pygame.display.set_mode((ViewConsts.WIDTH, ViewConsts.HEIGHT))
 
     ui_manager = UIManager(screen.get_size())
 
     state_manager = StateManager()
     state_manager.add_state(MainMenu(state_manager, ui_manager))
     state_manager.add_state(MenuGenetic(state_manager, ui_manager))
+    state_manager.add_state(RunTrainedGeneticNetwork(state_manager, ui_manager))
     state_manager.set_initial_state("main_menu")
 
     clock = pygame.time.Clock()

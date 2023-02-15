@@ -12,6 +12,9 @@ class NNSettings:
     OUTPUT_NEURON_COUNT = 4 if INPUT_DIRECTION_COUNT == 4 or INPUT_DIRECTION_COUNT == 8 else 3
     TRAIN_DATA_FILE_LOCATION = "Backpropagation_Training/" + str(INPUT_DIRECTION_COUNT) + "_in_directions_" + str(OUTPUT_NEURON_COUNT) + "_out_directions.json"
 
+    AVAILABLE_INPUT_DIRECTIONS = [4, 8]
+    AVAILABLE_VISION_LINES_RETURN_TYPE = ["boolean", "distance"]
+
 
 class GeneticSettings:
     MUTATION_CHANCE = 0.05

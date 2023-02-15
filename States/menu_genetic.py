@@ -45,7 +45,7 @@ class MenuGenetic(BaseState):
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_run_best_snake:
-                    self.set_target_state_name("run_best_snake")
+                    self.set_target_state_name("run_trained_genetic_network")
                     self.trigger_transition()
                 if event.ui_element == self.button_options_genetic:
                     self.set_target_state_name("options_genetic")
