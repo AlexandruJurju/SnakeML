@@ -65,7 +65,8 @@ class BackpropagationTrainNewNetwork(BaseState):
         if not is_alive:
             self.training = True
 
-    def wait_for_key(self) -> str:
+    @staticmethod
+    def wait_for_key() -> str:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
@@ -88,6 +89,7 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.training_examples.pop(0)
 
         draw_board(surface, current_example.board, 500, 300)
+        # TODO draw next direction doesnt work for other offsets
         draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), 500, 300)
         pygame.display.flip()
 
