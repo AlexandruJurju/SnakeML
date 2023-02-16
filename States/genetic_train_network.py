@@ -14,6 +14,7 @@ from model import Snake, Model
 from neural_network import NeuralNetwork, Dense, Activation, tanh, tanh_prime, sigmoid, sigmoid_prime
 from settings import BoardSettings, SnakeSettings, GeneticSettings, NNSettings
 from train_network import save_neural_network_to_json
+from view import draw_board
 from vision import get_vision_lines
 
 
@@ -29,10 +30,14 @@ class GeneticTrainNetwork(BaseState):
 
         self.title_label = None
         self.button_back = None
+        self.generation_label = None
+        self.individual_label = None
 
     def start(self):
         self.title_label = UILabel(pygame.Rect((87, 40), (800, 25)), "Training Genetic Network", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
+        self.generation_label = UILabel(pygame.Rect((45, 50), (150, 25)), "Population :", self.ui_manager)
+        self.individual_label = UILabel(pygame.Rect((50, 100), (200, 25)), "Individual :", self.ui_manager)
 
         self.generation = 0
         self.parent_list: List[Snake] = []
@@ -51,10 +56,10 @@ class GeneticTrainNetwork(BaseState):
     def end(self):
         self.title_label.kill()
         self.button_back.kill()
+        self.generation_label.kill()
+        self.individual_label.kill()
 
     def run_genetic(self, surface):
-        # self.window.fill(ViewConsts.COLOR_BACKGROUND)
-
         vision_lines = get_vision_lines(self.model.board)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
@@ -114,6 +119,8 @@ class GeneticTrainNetwork(BaseState):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
         self.run_genetic(surface)
+        self.generation_label.set_text("Generation : " + str(self.generation))
+        self.individual_label.set_text("Individual : " + str(len(self.parent_list)) + " / " + str(GeneticSettings.POPULATION_COUNT))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -132,6 +139,6 @@ class GeneticTrainNetwork(BaseState):
                     self.set_target_state_name(State.GENETIC_TRAIN_NETWORK_OPTIONS)
                     self.trigger_transition()
 
-        # self.ui_manager.update(time_delta)
+        self.ui_manager.update(time_delta)
 
-        # self.ui_manager.draw_ui(surface)
+        self.ui_manager.draw_ui(surface)
