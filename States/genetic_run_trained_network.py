@@ -7,9 +7,9 @@ from pygame_gui.windows import UIFileDialog
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import BoardConsts, State
+from constants import State
 from model import Model
-from settings import SnakeSettings
+from settings import SnakeSettings, BoardSettings
 from train_network import read_neural_network_from_json
 from view import draw_board
 from vision import get_vision_lines
@@ -60,7 +60,7 @@ class GeneticRunTrainedNetwork(BaseState):
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
-            self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)
+            self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)
 
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
@@ -96,7 +96,7 @@ class GeneticRunTrainedNetwork(BaseState):
                 try:
                     file_path = create_resource_path(event.text)
                     network = read_neural_network_from_json(file_path)
-                    self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, network)
+                    self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, network)
                     self.button_load.enable()
                     self.button_run.enable()
                 except pygame.error:
