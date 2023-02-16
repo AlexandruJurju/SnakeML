@@ -9,15 +9,13 @@ from States.base_state import BaseState
 from States.state_manager import StateManager
 from constants import State
 from model import Model
-from settings import SnakeSettings, BoardSettings
+from settings import BoardSettings, SnakeSettings
 from train_network import read_neural_network_from_json
-from view import draw_board
-from vision import get_vision_lines
 
 
-class GeneticRunTrainedNetwork(BaseState):
+class BackpropagationTrainedNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
-        super().__init__(State.GENETIC_RUN_TRAINED_NETWORK, state_manager)
+        super().__init__(State.BACKPROPAGATION_TRAINED_NETWORK, state_manager)
 
         self.ui_manager = ui_manager
 
@@ -25,11 +23,12 @@ class GeneticRunTrainedNetwork(BaseState):
         self.execute_network = False
 
         self.title_label = None
-        self.score_counter = None
         self.button_back = None
-        self.button_run = None
+
         self.button_load = None
         self.file_dialog = None
+        self.button_run = None
+        self.score_counter = None
 
     def start(self):
         self.title_label = UILabel(pygame.Rect((87, 40), (800, 25)), "Trained Genetic Network", self.ui_manager, object_id="#window_label")
@@ -39,8 +38,6 @@ class GeneticRunTrainedNetwork(BaseState):
         self.button_run = UIButton(pygame.Rect((25, 150), (125, 35)), "Run Network", self.ui_manager)
         self.button_run.disable()
 
-        # self.model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, read_neural_network_from_json())
-
     def end(self):
         self.title_label.kill()
         self.button_back.kill()
@@ -49,18 +46,7 @@ class GeneticRunTrainedNetwork(BaseState):
         self.button_run.kill()
 
     def run_network(self, surface):
-        vision_lines = get_vision_lines(self.model.board)
-        neural_net_prediction = self.model.get_nn_output(vision_lines)
-
-        draw_board(surface, self.model.board, 500, 200)
-
-        next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
-        is_alive = self.model.move_in_direction(next_direction)
-
-        self.score_counter.set_text("Score: " + str(self.model.snake.score))
-
-        if not is_alive:
-            self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)
+        pass
 
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
@@ -82,25 +68,24 @@ class GeneticRunTrainedNetwork(BaseState):
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_back:
-                    self.set_target_state_name(State.GENETIC_MENU)
+                    self.set_target_state_name(State.BACKPROPAGATION_MENU)
                     self.trigger_transition()
                 if event.ui_element == self.button_run:
                     self.execute_network = True
                 if event.ui_element == self.button_load:
                     self.execute_network = False
                     self.button_run.disable()
-                    self.file_dialog = UIFileDialog(pygame.Rect((150, 50), (450, 450)), self.ui_manager, window_title="Load Network", initial_file_path="Neural_Networks/", allow_picking_directories=False,
+                    self.file_dialog = UIFileDialog(pygame.Rect((150, 50), (450, 450)), self.ui_manager, window_title="Load Network", initial_file_path="Backpropagation_Training/", allow_picking_directories=False,
                                                     allow_existing_files_only=True)
-                    self.button_load.disable()
-            if event.type == pygame_gui.UI_FILE_DIALOG_PATH_PICKED:
-                try:
-                    file_path = create_resource_path(event.text)
-                    network = read_neural_network_from_json(file_path)
-                    self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, network)
-                    self.button_load.enable()
-                    self.button_run.enable()
-                except pygame.error:
-                    pass
+                if event.type == pygame_gui.UI_FILE_DIALOG_PATH_PICKED:
+                    try:
+                        file_path = create_resource_path(event.text)
+                        network = read_neural_network_from_json(file_path)
+                        self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, network)
+                        self.button_load.enable()
+                        self.button_run.enable()
+                    except pygame.error:
+                        pass
 
         self.ui_manager.update(time_delta)
 

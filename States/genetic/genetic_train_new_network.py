@@ -8,19 +8,18 @@ from pygame_gui.elements import UILabel, UIButton
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import State
+from constants import State, ViewConsts
 from genetic_operators import elitist_selection, roulette_selection, full_mutation, full_crossover
 from model import Snake, Model
 from neural_network import NeuralNetwork, Dense, Activation, tanh, tanh_prime, sigmoid, sigmoid_prime
 from settings import BoardSettings, SnakeSettings, GeneticSettings, NNSettings
 from train_network import save_neural_network_to_json
-from view import draw_board
 from vision import get_vision_lines
 
 
-class GeneticTrainNetwork(BaseState):
+class GeneticTrainNewNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
-        super().__init__(State.GENETIC_TRAIN_NETWORK, state_manager)
+        super().__init__(State.GENETIC_TRAIN_NEW_NETWORK, state_manager)
 
         self.ui_manager = ui_manager
         self.model = None
@@ -34,7 +33,7 @@ class GeneticTrainNetwork(BaseState):
         self.individual_label = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect((87, 40), (800, 25)), "Training Genetic Network", self.ui_manager, object_id="#window_label")
+        self.title_label = UILabel(pygame.Rect((ViewConsts.WIDTH // 2, 40), (150, 25)), "Training Genetic Network", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
         self.generation_label = UILabel(pygame.Rect((45, 50), (150, 25)), "Population :", self.ui_manager)
         self.individual_label = UILabel(pygame.Rect((50, 100), (200, 25)), "Individual :", self.ui_manager)
@@ -116,7 +115,8 @@ class GeneticTrainNetwork(BaseState):
         self.parent_list.clear()
 
     def run(self, surface, time_delta):
-        surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+        # FILL TAKES ALOT OF TIME
+        # surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
         self.run_genetic(surface)
         self.generation_label.set_text("Generation : " + str(self.generation))
@@ -139,6 +139,6 @@ class GeneticTrainNetwork(BaseState):
                     self.set_target_state_name(State.GENETIC_TRAIN_NETWORK_OPTIONS)
                     self.trigger_transition()
 
-        self.ui_manager.update(time_delta)
+        # self.ui_manager.update(time_delta)
 
-        self.ui_manager.draw_ui(surface)
+        # self.ui_manager.draw_ui(surface)

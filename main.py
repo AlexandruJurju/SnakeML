@@ -3,10 +3,14 @@ import os
 import pygame
 from pygame_gui import UIManager
 
-from States.genetic_menu import MenuGenetic
-from States.genetic_run_trained_network import GeneticRunTrainedNetwork
-from States.genetic_train_network import GeneticTrainNetwork
-from States.genetic_train_network_options import GeneticTrainNetworkOptions
+from States.backpropagation.backpropagation_menu import BackpropagationMenu
+from States.backpropagation.backpropagation_run_trained_network import BackpropagationTrainedNetwork
+from States.backpropagation.backpropagation_train_new_network import BackpropagationTrainNewNetwork
+from States.backpropagation.backpropagation_train_new_network_options import BackpropagationTrainNewNetworkOptions
+from States.genetic.genetic_menu import MenuGenetic
+from States.genetic.genetic_run_trained_network import GeneticRunTrainedNetwork
+from States.genetic.genetic_train_new_network import GeneticTrainNewNetwork
+from States.genetic.genetic_train_new_network_options import GeneticTrainNetworkOptions
 from States.main_menu import MainMenu
 from States.state_manager import StateManager
 from constants import ViewConsts, State
@@ -38,9 +42,13 @@ if __name__ == '__main__':
     state_manager.add_state(MenuGenetic(state_manager, ui_manager))
     state_manager.add_state(GeneticRunTrainedNetwork(state_manager, ui_manager))
     state_manager.add_state(GeneticTrainNetworkOptions(state_manager, ui_manager))
-    state_manager.add_state(GeneticTrainNetwork(state_manager, ui_manager))
+    state_manager.add_state(GeneticTrainNewNetwork(state_manager, ui_manager))
+    state_manager.add_state(BackpropagationMenu(state_manager, ui_manager))
+    state_manager.add_state(BackpropagationTrainedNetwork(state_manager, ui_manager))
+    state_manager.add_state(BackpropagationTrainNewNetworkOptions(state_manager, ui_manager))
+    state_manager.add_state(BackpropagationTrainNewNetwork(state_manager, ui_manager))
 
-    state_manager.set_initial_state(State.GENETIC_TRAIN_NETWORK)
+    state_manager.set_initial_state(State.BACKPROPAGATION_TRAIN_NEW_NETWORK)
 
     clock = pygame.time.Clock()
     running = True

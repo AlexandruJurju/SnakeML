@@ -1,36 +1,29 @@
 import pygame
 import pygame_gui
 from pygame_gui import UIManager
-from pygame_gui.elements import UILabel, UIButton, UIDropDownMenu, UITextEntryLine
+from pygame_gui.elements import UILabel, UIButton, UITextEntryLine, UIDropDownMenu
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
 from constants import State
-from settings import NNSettings, GeneticSettings, SnakeSettings, BoardSettings
+from settings import SnakeSettings, BoardSettings, NNSettings
 
 
-class GeneticTrainNetworkOptions(BaseState):
+# TODO Dynamic Direction
+class BackpropagationTrainNewNetworkOptions(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
-        super().__init__(State.GENETIC_TRAIN_NETWORK_OPTIONS, state_manager)
+        super().__init__(State.BACKPROPAGATION_TRAIN_NEW_NETWORK_OPTIONS, state_manager)
 
         self.ui_manager = ui_manager
 
         self.title_label = None
         self.button_back = None
+
         self.dropdown_input_direction_count = None
         self.dropdown_input_direction_count_label = None
 
         self.dropdown_vision_line_return_type = None
         self.dropdown_vision_line_return_type_label = None
-
-        self.sbx_text_entry = None
-        self.sbx_text_entry_label = None
-
-        self.population_count_entry = None
-        self.population_count_entry_label = None
-
-        self.mutation_rate_entry = None
-        self.mutation_rate_entry_label = None
 
         self.board_size_entry = None
         self.board_size_entry_label = None
@@ -49,18 +42,6 @@ class GeneticTrainNetworkOptions(BaseState):
 
         self.dropdown_vision_line_return_type = UIDropDownMenu(NNSettings.AVAILABLE_VISION_LINES_RETURN_TYPE, NNSettings.AVAILABLE_VISION_LINES_RETURN_TYPE[0], pygame.Rect((650, 350), (100, 30)), self.ui_manager)
         self.dropdown_vision_line_return_type_label = UILabel(pygame.Rect((565, 300), (250, 35)), "Vision Line Return Type", self.ui_manager)
-
-        self.sbx_text_entry = UITextEntryLine(pygame.Rect((200, 550), (75, 30)), self.ui_manager)
-        self.sbx_text_entry_label = UILabel(pygame.Rect((200, 500), (75, 35)), "SBX Eta", self.ui_manager)
-        self.sbx_text_entry.set_text(str(GeneticSettings.SBX_ETA))
-
-        self.population_count_entry = UITextEntryLine(pygame.Rect((450, 550), (75, 30)), self.ui_manager)
-        self.population_count_entry_label = UILabel(pygame.Rect((390, 500), (200, 35)), "Individuals in Population", self.ui_manager)
-        self.population_count_entry.set_text(str(GeneticSettings.POPULATION_COUNT))
-
-        self.mutation_rate_entry = UITextEntryLine(pygame.Rect((675, 550), (75, 30)), self.ui_manager)
-        self.mutation_rate_entry_label = UILabel(pygame.Rect((610, 500), (200, 35)), "Mutation Rate", self.ui_manager)
-        self.mutation_rate_entry.set_text(str(GeneticSettings.MUTATION_CHANCE))
 
         self.starting_snake_size_entry = UITextEntryLine(pygame.Rect((200, 150), (75, 30)), self.ui_manager)
         self.starting_snake_size_entry_label = UILabel(pygame.Rect((115, 100), (250, 35)), "Starting Snake Size", self.ui_manager)
@@ -81,15 +62,6 @@ class GeneticTrainNetworkOptions(BaseState):
 
         self.dropdown_vision_line_return_type.kill()
         self.dropdown_vision_line_return_type_label.kill()
-
-        self.sbx_text_entry.kill()
-        self.sbx_text_entry_label.kill()
-
-        self.population_count_entry.kill()
-        self.population_count_entry_label.kill()
-
-        self.mutation_rate_entry.kill()
-        self.mutation_rate_entry_label.kill()
 
         self.starting_snake_size_entry.kill()
         self.starting_snake_size_entry_label.kill()
@@ -116,11 +88,10 @@ class GeneticTrainNetworkOptions(BaseState):
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_back:
-                    self.set_target_state_name(State.GENETIC_MENU)
+                    self.set_target_state_name(State.BACKPROPAGATION_MENU)
                     self.trigger_transition()
-
                 if event.ui_element == self.button_run:
-                    self.set_target_state_name(State.GENETIC_TRAIN_NETWORK)
+                    self.set_target_state_name(State.BACKPROPAGATION_TRAIN_NEW_NETWORK)
                     self.trigger_transition()
 
         self.ui_manager.update(time_delta)
