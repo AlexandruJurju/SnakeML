@@ -14,7 +14,6 @@ from model import Snake, Model
 from neural_network import NeuralNetwork, Dense, Activation, tanh, tanh_prime, sigmoid, sigmoid_prime
 from settings import GeneticSettings, NNSettings
 from train_network import save_neural_network_to_json
-from view import draw_board, draw_vision_lines, draw_neural_network_complete
 from vision import get_vision_lines
 
 
@@ -65,12 +64,12 @@ class GeneticTrainNewNetwork(BaseState):
         self.individual_label.kill()
 
     def run_genetic(self, surface):
-        vision_lines = get_vision_lines(self.model.board, self.data_received["input_direction_count"], self.data_received["vision_line_return_type"])
+        vision_lines = get_vision_lines(self.model.board, self.data_received["input_direction_count"], self.data_received["vision_return_type"])
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
-        draw_board(surface, self.model.board, 500, 100)
-        draw_vision_lines(surface, self.model, vision_lines, 500, 100)
-        draw_neural_network_complete(surface, self.model, vision_lines, 50, 100)
+        # draw_board(surface, self.model.board, 500, 100)
+        # draw_vision_lines(surface, self.model, vision_lines, 500, 100)
+        # draw_neural_network_complete(surface, self.model, vision_lines, 50, 100)
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move_in_direction(next_direction)
@@ -95,7 +94,12 @@ class GeneticTrainNewNetwork(BaseState):
         # total_fitness = sum(individual.fitness for individual in self.parent_list)
         best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
 
-        save_neural_network_to_json(self.generation, best_individual.fitness, best_individual.brain, NNSettings.GENETIC_NETWORK_FOLDER + self.data_received["file_name"])
+        save_neural_network_to_json(self.generation,
+                                    best_individual.fitness,
+                                    self.data_received["input_direction_count"],
+                                    self.data_received["vision_return_type"],
+                                    best_individual.brain,
+                                    NNSettings.GENETIC_NETWORK_FOLDER + self.data_received["file_name"])
 
         print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 
@@ -120,7 +124,7 @@ class GeneticTrainNewNetwork(BaseState):
 
     def run(self, surface, time_delta):
         # FILL TAKES ALOT OF TIME
-        surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+        # surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
         self.run_genetic(surface)
         self.generation_label.set_text("Generation : " + str(self.generation))
@@ -143,6 +147,6 @@ class GeneticTrainNewNetwork(BaseState):
                     self.set_target_state_name(State.GENETIC_TRAIN_NETWORK_OPTIONS)
                     self.trigger_transition()
 
-        self.ui_manager.update(time_delta)
+        # self.ui_manager.update(time_delta)
 
-        self.ui_manager.draw_ui(surface)
+        # self.ui_manager.draw_ui(surface)

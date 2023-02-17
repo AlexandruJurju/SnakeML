@@ -156,7 +156,11 @@ class BackpropTrainNewNetwork(BaseState):
             self.execute(surface)
         else:
             self.train_backpropagation(surface)
-            save_neural_network_to_json(-1, -1, self.model.snake.brain, NNSettings.BACKPROPAGATION_NETWORK_FOLDER + self.data_received["file_name"])
+            save_neural_network_to_json(-1, -1,
+                                        self.data_received["input_direction_count"],
+                                        self.data_received["vision_return_type"],
+                                        self.model.snake.brain,
+                                        NNSettings.BACKPROPAGATION_NETWORK_FOLDER + self.data_received["file_name"])
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

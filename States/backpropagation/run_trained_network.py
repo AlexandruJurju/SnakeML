@@ -10,7 +10,6 @@ from States.state_manager import StateManager
 from constants import State
 from model import Model
 from settings import BoardSettings, SnakeSettings, NNSettings
-from train_network import read_neural_network_from_json
 from view import draw_board
 from vision import get_vision_lines
 

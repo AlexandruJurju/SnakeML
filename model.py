@@ -166,10 +166,17 @@ class Model:
             return False
 
         # TODO replace with win condition
-        if self.get_random_empty_block() is None:
+        if self.check_win_condition():
             self.snake.won = True
             return False
 
+        return True
+
+    def check_win_condition(self):
+        for i in range(1, self.size):
+            for j in range(1, self.size):
+                if self.board[i][j] == BoardConsts.EMPTY:
+                    return False
         return True
 
     def get_nn_output(self, vision_lines) -> np.ndarray:

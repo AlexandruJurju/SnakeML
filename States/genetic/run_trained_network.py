@@ -10,8 +10,8 @@ from States.state_manager import StateManager
 from constants import State
 from model import Model
 from settings import SnakeSettings, BoardSettings
-from train_network import read_neural_network_from_json
-from view import draw_board
+from train_network import read_all_from_json
+from view import draw_board, draw_vision_lines, draw_neural_network_complete
 from vision import get_vision_lines
 
 
@@ -23,6 +23,8 @@ class GeneticRunTrainedNetwork(BaseState):
 
         self.model = None
         self.execute_network = False
+        self.input_direction_count = None
+        self.vision_return_type = None
 
         self.title_label = None
         self.score_counter = None
@@ -49,10 +51,12 @@ class GeneticRunTrainedNetwork(BaseState):
         self.button_run.kill()
 
     def run_network(self, surface):
-        vision_lines = get_vision_lines(self.model.board)
+        vision_lines = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
-        draw_board(surface, self.model.board, 500, 200)
+        draw_board(surface, self.model.board, 500, 100)
+        draw_vision_lines(surface, self.model, vision_lines, 500, 100)
+        draw_neural_network_complete(surface, self.model, vision_lines, 50, 100)
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move_in_direction(next_direction)
@@ -95,7 +99,10 @@ class GeneticRunTrainedNetwork(BaseState):
             if event.type == pygame_gui.UI_FILE_DIALOG_PATH_PICKED:
                 try:
                     file_path = create_resource_path(event.text)
-                    network = read_neural_network_from_json(file_path)
+                    config = read_all_from_json(file_path)
+                    network = config["network"]
+                    self.input_direction_count = config["input_direction_count"]
+                    self.vision_return_type = config["vision_return_type"]
                     self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, network)
                     self.button_load.enable()
                     self.button_run.enable()

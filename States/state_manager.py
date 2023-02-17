@@ -1,6 +1,8 @@
 import copy
 from typing import Dict
 
+import pygame
+
 from States.base_state import BaseState
 from constants import State
 
@@ -28,6 +30,10 @@ class StateManager:
                 self.active_state = self.states[new_state_id]
                 self.active_state.data_received = data_to_send_copy
                 self.active_state.start()
+
+            if self.active_state is not self.states[State.GENETIC_TRAIN_NEW_NETWORK]:
+                pygame.display.flip()
+
         return True
 
     def set_initial_state(self, state_id: State):

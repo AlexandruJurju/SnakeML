@@ -135,7 +135,7 @@ class GeneticTrainNetworkOptions(BaseState):
                     self.set_target_state_name(State.GENETIC_TRAIN_NEW_NETWORK)
                     self.data_to_send = {
                         "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
-                        "vision_line_return_type": self.dropdown_vision_line_return_type.selected_option,
+                        "vision_return_type": self.dropdown_vision_line_return_type.selected_option,
                         "file_name": self.file_name_entry.text,
                         "sbx_eta": float(self.sbx_text_entry.text),
                         "population_count": int(self.population_count_entry.text),

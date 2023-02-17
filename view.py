@@ -282,6 +282,7 @@ def write_nn_labels(window, model: Model, vision_lines: List[VisionLine], offset
                     window.blit(line_label, (neuron_x + 25, neuron_y - 10))
 
             neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
+            # TODO remove NN_DISPLAY_OFFSET_Y
             neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
 
 
