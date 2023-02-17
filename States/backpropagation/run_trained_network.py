@@ -84,7 +84,7 @@ class BackpropagationTrainedNetwork(BaseState):
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_back:
-                    self.set_target_state_name(State.GENETIC_MENU)
+                    self.set_target_state_name(State.BACKPROPAGATION_MENU)
                     self.trigger_transition()
                 if event.ui_element == self.button_run:
                     self.execute_network = True
