@@ -5,7 +5,7 @@ from pygame_gui.elements import UILabel, UIButton
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import State
+from constants import State, ViewConsts
 
 
 class MenuGenetic(BaseState):
@@ -20,12 +20,10 @@ class MenuGenetic(BaseState):
         self.button_back = None
 
     def start(self):
-        # TODO better middle
-        self.title_label = UILabel(pygame.Rect((87, 40), (800, 180)), "Genetic Menu", self.ui_manager, object_id="#window_label")
+        self.title_label = UILabel(pygame.Rect(((ViewConsts.WIDTH - 250) // 2, 40), (250, 180)), "Genetic Menu", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
         self.button_options_genetic = UIButton(pygame.Rect((600, 200), (150, 35)), "Train Network", self.ui_manager)
         self.button_run_trained_network = UIButton(pygame.Rect((300, 200), (200, 35)), "Run Pretrained Networks", self.ui_manager)
-
 
     def end(self):
         self.title_label.kill()

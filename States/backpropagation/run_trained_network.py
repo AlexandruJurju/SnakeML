@@ -15,7 +15,7 @@ from view import draw_board
 from vision import get_vision_lines
 
 
-class BackpropagationTrainedNetwork(BaseState):
+class BackpropTrainedNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.BACKPROPAGATION_TRAINED_NETWORK, state_manager)
 
@@ -91,7 +91,8 @@ class BackpropagationTrainedNetwork(BaseState):
                 if event.ui_element == self.button_load:
                     self.execute_network = False
                     self.button_run.disable()
-                    self.file_dialog = UIFileDialog(pygame.Rect((150, 50), (450, 450)), self.ui_manager, window_title="Load Network", initial_file_path=NNSettings.BACKPROPAGATION_NETWORK_FOLDER, allow_picking_directories=False,
+                    self.file_dialog = UIFileDialog(pygame.Rect((150, 50), (450, 450)), self.ui_manager, window_title="Load Network", initial_file_path=NNSettings.BACKPROPAGATION_NETWORK_FOLDER,
+                                                    allow_picking_directories=False,
                                                     allow_existing_files_only=True)
                     self.button_load.disable()
             if event.type == pygame_gui.UI_FILE_DIALOG_PATH_PICKED:

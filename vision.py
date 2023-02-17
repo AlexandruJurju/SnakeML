@@ -3,7 +3,6 @@ from typing import List
 import numpy as np
 
 from constants import *
-from settings import NNSettings
 
 
 def distance(a, b):
@@ -96,18 +95,17 @@ def get_vision_lines(board: List[List[str]], input_direction_count: int, vision_
     return vision_lines
 
 
-# todo add vision return type parameter
-def get_dynamic_vision_lines(board: List[List[str]], current_direction: Direction) -> List[VisionLine]:
+def get_dynamic_vision_lines(board: List[List[str]], current_direction: Direction, vision_return_type: str) -> List[VisionLine]:
     vision_lines = []
     match current_direction:
         case Direction.UP:
-            vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.UP)]
+            vision_lines = [look_in_direction(board, Direction.RIGHT, vision_return_type), look_in_direction(board, Direction.LEFT, vision_return_type), look_in_direction(board, Direction.UP, vision_return_type)]
         case Direction.DOWN:
-            vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.DOWN)]
+            vision_lines = [look_in_direction(board, Direction.RIGHT, vision_return_type), look_in_direction(board, Direction.LEFT, vision_return_type), look_in_direction(board, Direction.DOWN, vision_return_type)]
         case Direction.RIGHT:
-            vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.DOWN), look_in_direction(board, Direction.UP)]
+            vision_lines = [look_in_direction(board, Direction.RIGHT, vision_return_type), look_in_direction(board, Direction.DOWN, vision_return_type), look_in_direction(board, Direction.UP, vision_return_type)]
         case Direction.LEFT:
-            vision_lines = [look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.DOWN), look_in_direction(board, Direction.UP)]
+            vision_lines = [look_in_direction(board, Direction.LEFT, vision_return_type), look_in_direction(board, Direction.DOWN, vision_return_type), look_in_direction(board, Direction.UP, vision_return_type)]
     return vision_lines
 
 

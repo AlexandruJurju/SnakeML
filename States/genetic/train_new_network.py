@@ -14,7 +14,7 @@ from model import Snake, Model
 from neural_network import NeuralNetwork, Dense, Activation, tanh, tanh_prime, sigmoid, sigmoid_prime
 from settings import GeneticSettings, NNSettings
 from train_network import save_neural_network_to_json
-from view import draw_board, draw_vision_lines, draw_neural_network
+from view import draw_board, draw_vision_lines, draw_neural_network_complete
 from vision import get_vision_lines
 
 
@@ -70,7 +70,7 @@ class GeneticTrainNewNetwork(BaseState):
 
         draw_board(surface, self.model.board, 500, 100)
         draw_vision_lines(surface, self.model, vision_lines, 500, 100)
-        draw_neural_network(surface, self.model, vision_lines, 50, 100)
+        draw_neural_network_complete(surface, self.model, vision_lines, 50, 100)
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move_in_direction(next_direction)
@@ -95,7 +95,6 @@ class GeneticTrainNewNetwork(BaseState):
         # total_fitness = sum(individual.fitness for individual in self.parent_list)
         best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
 
-        # todo add input for file name
         save_neural_network_to_json(self.generation, best_individual.fitness, best_individual.brain, NNSettings.GENETIC_NETWORK_FOLDER + self.data_received["file_name"])
 
         print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")

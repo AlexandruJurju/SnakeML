@@ -7,16 +7,16 @@ from pygame_gui.elements import UILabel, UIButton
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import State
+from constants import State, ViewConsts
 from model import Model
 from neural_network import *
 from settings import NNSettings
 from train_network import TrainingExample, write_examples_to_json_4d, train_network, save_neural_network_to_json
-from view import draw_board, draw_next_snake_direction
+from view import draw_board, draw_next_snake_direction, draw_vision_lines, draw_neural_network
 from vision import get_vision_lines
 
 
-class BackpropagationTrainNewNetwork(BaseState):
+class BackpropTrainNewNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.BACKPROPAGATION_TRAIN_NEW_NETWORK, state_manager)
 
@@ -32,7 +32,7 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.button_back = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect((87, 40), (800, 25)), "Training Genetic Network", self.ui_manager, object_id="#window_label")
+        self.title_label = UILabel(pygame.Rect(((ViewConsts.WIDTH - 250) // 2, 40), (250, 25)), "Training Genetic Network", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
 
         # todo add option for neurons
@@ -62,11 +62,9 @@ class BackpropagationTrainNewNetwork(BaseState):
         example = TrainingExample(copy.deepcopy(self.model.board), self.model.snake.direction, vision_lines, example_output.ravel().tolist())
         self.training_examples.append(example)
 
-        draw_board(surface, self.model.board, 350, 100)
-        # self.draw_vision_lines(self.model, vision_lines)
-        # self.draw_neural_network(self.model, vision_lines)
-        # self.write_ttl(self.model.snake.ttl)
-        # self.write_score(self.model.snake.score)
+        draw_board(surface, self.model.board, 500, 100)
+        draw_vision_lines(surface, self.model, vision_lines, 500, 100)
+        draw_neural_network(surface, self.model, vision_lines, 50, 100)
 
         next_direction = self.model.get_nn_output_4directions(nn_output)
         is_alive = self.model.move_in_direction(next_direction)
@@ -97,7 +95,6 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.training_examples.pop(0)
 
         draw_board(surface, current_example.board, 350, 100)
-        # TODO draw next direction doesnt work for other offsets
         draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), 350, 100)
         pygame.display.flip()
 

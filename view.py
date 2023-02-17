@@ -5,7 +5,6 @@ import pygame
 from constants import ViewConsts, BoardConsts, MAIN_DIRECTIONS, Direction
 from model import Model
 from neural_network import Dense
-from settings import NNSettings
 from vision import VisionLine, find_snake_head_poz
 
 
@@ -33,14 +32,13 @@ def draw_board(window, board: List, offset_x, offset_y) -> None:
 def draw_vision_lines(window, model: Model, vision_lines: List[VisionLine], offset_x, offset_y) -> None:
     # loop over all lines in given vision lines
 
-    font = pygame.font.SysFont("arial", 18)
+    font = pygame.font.SysFont("arial", 20)
 
     for line in vision_lines:
-        # TODO line labels
         line_label = font.render(line.direction.name[0], True, ViewConsts.COLOR_BLACK)
 
         # render vision line text at wall position
-        window.blit(line_label, [line.wall_coord[1] * ViewConsts.SQUARE_SIZE + offset_x, line.wall_coord[0] * ViewConsts.SQUARE_SIZE + offset_y])
+        window.blit(line_label, [line.wall_coord[1] * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 4 + offset_x, line.wall_coord[0] * ViewConsts.SQUARE_SIZE + offset_y])
 
         # draw line from head to wall, draw before body and apple lines
         # drawing uses SQUARE_SIZE//2 so that lines go through the middle of the squares
@@ -65,13 +63,96 @@ def draw_vision_line(window, color, width, line_coord_1, line_coord_0, line_end_
                      (line_end_x, line_end_y), width=width)
 
 
-# TODO color when using distance
 def draw_neural_network(window, model: Model, vision_lines: List[VisionLine], offset_x, offset_y):
     draw_neurons(window, model, offset_x, offset_y)
     write_nn_labels(window, model, vision_lines, offset_x, offset_y)
 
 
-# TODO just calculate positions, then draw later -> more efficient if writing labels
+def draw_neural_network_complete(window, model: Model, vision_lines: List[VisionLine], offset_x, offset_y):
+    nn_layers = model.snake.brain.layers
+    dense_layers = model.snake.brain.get_dense_layers()
+    neuron_offset_x = 100 + offset_x
+    neuron_offset_y = offset_y
+
+    line_start_positions: List[Tuple[int, int]] = []
+    line_end_positions: List[Tuple[int, int]] = []
+
+    param_type = ["WALL", "APPLE", "SEGMENT"]
+    font = pygame.font.SysFont("arial", 12)
+
+    max_y = -1
+    for layer in dense_layers:
+        max_y_input = layer.input_size * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
+        max_y_output = layer.output_size * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
+        max_layer = max_y_input if max_y_input > max_y_output else max_y_output
+        if max_layer > max_y:
+            max_y = max_layer
+
+    for layer_count, layer in enumerate(nn_layers):
+        if type(layer) is Dense:
+            input_neuron_count = layer.input_size
+            output_neuron_count = layer.output_size
+
+            # if it's the first layer only draw input
+            if layer_count == 0:
+                current_max_y = input_neuron_count * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
+                offset = (max_y - current_max_y) // 2
+                neuron_offset_y += offset
+
+                for i in range(input_neuron_count):
+                    neuron_x = neuron_offset_x
+                    neuron_y = neuron_offset_y
+                    neuron_offset_y += ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2
+                    line_start_positions.append((neuron_x, neuron_y))
+
+                    if i < input_neuron_count - 4:
+                        line_label = font.render(vision_lines[int(i / model.snake.brain.get_dense_layers()[0].input_size)].direction.name + " " + param_type[i % (len(param_type))], True, ViewConsts.COLOR_WHITE)
+                        window.blit(line_label, (neuron_x - 125, neuron_y - 10))
+                    else:
+                        line_label = font.render(MAIN_DIRECTIONS[i % 4].name, True, ViewConsts.COLOR_WHITE)
+                        window.blit(line_label, (neuron_x - 125, neuron_y - 10))
+
+                    inner_color = ViewConsts.COLOR_GREEN * layer.input[i]
+                    pygame.draw.circle(window, inner_color, (neuron_x, neuron_y), ViewConsts.NN_DISPLAY_NEURON_RADIUS)
+
+                    pygame.draw.circle(window, ViewConsts.COLOR_WHITE, (neuron_x, neuron_y), ViewConsts.NN_DISPLAY_NEURON_RADIUS, width=1)
+
+                neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
+                neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
+
+            # always draw output neurons
+            current_max_y = output_neuron_count * (ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2)
+            offset = (max_y - current_max_y) // 2
+            neuron_offset_y += offset
+
+            for j in range(output_neuron_count):
+                neuron_x = neuron_offset_x
+                neuron_y = neuron_offset_y
+                neuron_offset_y += ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2
+                line_end_positions.append((neuron_x, neuron_y))
+
+                if layer_count == len(nn_layers) - 2:
+                    line_label = font.render(MAIN_DIRECTIONS[j].name, True, ViewConsts.COLOR_WHITE)
+                    window.blit(line_label, (neuron_x + 25, neuron_y - 10))
+
+                neuron_output = nn_layers[layer_count + 1].output[j]
+                if neuron_output <= 0:
+                    inner_color = ViewConsts.COLOR_BLACK
+                else:
+                    inner_color = ViewConsts.COLOR_GREEN * neuron_output
+                pygame.draw.circle(window, inner_color, (neuron_x, neuron_y), ViewConsts.NN_DISPLAY_NEURON_RADIUS)
+
+                pygame.draw.circle(window, ViewConsts.COLOR_WHITE, (neuron_x, neuron_y), ViewConsts.NN_DISPLAY_NEURON_RADIUS, width=1)
+
+            neuron_offset_x += ViewConsts.NN_DISPLAY_NEURON_WIDTH_BETWEEN
+            neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
+
+            # self.draw_lines_between_neurons(line_start_positions, line_end_positions)
+            line_start_positions = line_end_positions
+            line_end_positions = []
+
+
+# TODO color when using distance
 def draw_neurons(window, model: Model, offset_x, offset_y) -> None:
     nn_layers = model.snake.brain.layers
     dense_layers = model.snake.brain.get_dense_layers()
@@ -177,7 +258,7 @@ def write_nn_labels(window, model: Model, vision_lines: List[VisionLine], offset
                     neuron_offset_y += ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2
 
                     if i < input_neuron_count - 4:
-                        line_label = font.render(vision_lines[int(i / NNSettings.INPUT_DIRECTION_COUNT)].direction.name + " " + param_type[i % (len(param_type))], True, ViewConsts.COLOR_WHITE)
+                        line_label = font.render(vision_lines[int(i / model.snake.brain.get_dense_layers()[0].input_size)].direction.name + " " + param_type[i % (len(param_type))], True, ViewConsts.COLOR_WHITE)
                         window.blit(line_label, (neuron_x - 125, neuron_y - 10))
                     else:
                         line_label = font.render(MAIN_DIRECTIONS[i % 4].name, True, ViewConsts.COLOR_WHITE)
@@ -223,9 +304,9 @@ def draw_colored_lines_between_neurons(window, layer: Dense, line_end: List, lin
 
 def draw_next_snake_direction(window, board: List[List[str]], prediction: Direction, offset_x, offset_y) -> None:
     head = find_snake_head_poz(board)
-    current_x = head[1] * ViewConsts.SQUARE_SIZE + offset_x
-    current_y = head[0] * ViewConsts.SQUARE_SIZE + offset_y
-    font = pygame.font.SysFont("arial", 12)
+    current_x = head[1] * ViewConsts.SQUARE_SIZE + offset_x + ViewConsts.SQUARE_SIZE // 4
+    current_y = head[0] * ViewConsts.SQUARE_SIZE + offset_y + ViewConsts.SQUARE_SIZE // 4
+    font = pygame.font.SysFont("arial", 15)
 
     # draw next position of snake
     next_position = [head[0] + prediction.value[0], head[1] + prediction.value[1]]
@@ -234,7 +315,6 @@ def draw_next_snake_direction(window, board: List[List[str]], prediction: Direct
     pygame.draw.rect(window, ViewConsts.COLOR_BLACK, pygame.Rect(next_x, next_y, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
 
     # write letters for directions
-    # TODO new labels for direction letters
     right_text = font.render("D", True, ViewConsts.COLOR_GREEN)
     window.blit(right_text, (current_x + ViewConsts.SQUARE_SIZE, current_y))
 

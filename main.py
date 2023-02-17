@@ -3,10 +3,10 @@ import os
 import pygame
 from pygame_gui import UIManager
 
-from States.backpropagation.menu import BackpropagationMenu
-from States.backpropagation.run_trained_network import BackpropagationTrainedNetwork
-from States.backpropagation.train_new_network import BackpropagationTrainNewNetwork
-from States.backpropagation.train_new_network_options import BackpropagationTrainNewNetworkOptions
+from States.backpropagation.menu import BackpropMenu
+from States.backpropagation.run_trained_network import BackpropTrainedNetwork
+from States.backpropagation.train_new_network import BackpropTrainNewNetwork
+from States.backpropagation.train_new_network_options import BackpropTrainNewNetworkOptions
 from States.genetic.menu import MenuGenetic
 from States.genetic.run_trained_network import GeneticRunTrainedNetwork
 from States.genetic.train_new_network import GeneticTrainNewNetwork
@@ -15,20 +15,8 @@ from States.main_menu import MainMenu
 from States.state_manager import StateManager
 from constants import ViewConsts, State
 
-if __name__ == '__main__':
-    # net = NeuralNetwork()
-    # net.add_layer(Dense(NNSettings.INPUT_NEURON_COUNT, NNSettings.HIDDEN_NEURON_COUNT))
-    # net.add_layer(Activation(tanh, tanh_prime))
-    # net.add_layer(Dense(NNSettings.HIDDEN_NEURON_COUNT, NNSettings.OUTPUT_NEURON_COUNT))
-    # net.add_layer(Activation(sigmoid, sigmoid_prime))
-    #
-    # model = Model(BoardConsts.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, net)
-    #
-    # # train_network(model.snake.brain)
-    #
-    # game = Game(model, State.MAIN_MENU)
-    # game.state_machine()
 
+def main():
     pygame.init()
     os.environ['SDL_VIDEO_CENTERED'] = '1'
     pygame.key.set_repeat()
@@ -43,10 +31,10 @@ if __name__ == '__main__':
     state_manager.add_state(GeneticRunTrainedNetwork(state_manager, ui_manager))
     state_manager.add_state(GeneticTrainNetworkOptions(state_manager, ui_manager))
     state_manager.add_state(GeneticTrainNewNetwork(state_manager, ui_manager))
-    state_manager.add_state(BackpropagationMenu(state_manager, ui_manager))
-    state_manager.add_state(BackpropagationTrainedNetwork(state_manager, ui_manager))
-    state_manager.add_state(BackpropagationTrainNewNetworkOptions(state_manager, ui_manager))
-    state_manager.add_state(BackpropagationTrainNewNetwork(state_manager, ui_manager))
+    state_manager.add_state(BackpropMenu(state_manager, ui_manager))
+    state_manager.add_state(BackpropTrainedNetwork(state_manager, ui_manager))
+    state_manager.add_state(BackpropTrainNewNetworkOptions(state_manager, ui_manager))
+    state_manager.add_state(BackpropTrainNewNetwork(state_manager, ui_manager))
 
     state_manager.set_initial_state(State.BACKPROPAGATION_TRAIN_NEW_NETWORK_OPTIONS)
 
@@ -58,3 +46,7 @@ if __name__ == '__main__':
         running = state_manager.run(screen, time_delta)
         pygame.display.flip()
     pygame.quit()
+
+
+if __name__ == '__main__':
+    main()

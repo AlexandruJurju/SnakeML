@@ -8,7 +8,7 @@ from States.state_manager import StateManager
 from constants import State
 
 
-class BackpropagationMenu(BaseState):
+class BackpropMenu(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.BACKPROPAGATION_MENU, state_manager)
 

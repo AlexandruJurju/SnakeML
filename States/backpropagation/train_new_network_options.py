@@ -10,7 +10,7 @@ from settings import SnakeSettings, BoardSettings, NNSettings
 
 
 # TODO Dynamic Direction
-class BackpropagationTrainNewNetworkOptions(BaseState):
+class BackpropTrainNewNetworkOptions(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.BACKPROPAGATION_TRAIN_NEW_NETWORK_OPTIONS, state_manager)
 
