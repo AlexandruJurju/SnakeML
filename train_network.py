@@ -99,7 +99,7 @@ def read_training_data_json() -> Tuple[List, List]:
     return x, y
 
 
-def save_neural_network_to_json(generation: int, fitness, network: NeuralNetwork, path: str) -> None:
+def save_neural_network_to_json(generation: int, fitness: int, network: NeuralNetwork, path: str) -> None:
     network_dict = []
     for i, layer in enumerate(network.layers):
         if type(layer) is Activation:

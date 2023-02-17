@@ -48,7 +48,7 @@ if __name__ == '__main__':
     state_manager.add_state(BackpropagationTrainNewNetworkOptions(state_manager, ui_manager))
     state_manager.add_state(BackpropagationTrainNewNetwork(state_manager, ui_manager))
 
-    state_manager.set_initial_state(State.BACKPROPAGATION_MENU)
+    state_manager.set_initial_state(State.BACKPROPAGATION_TRAINED_NETWORK)
 
     clock = pygame.time.Clock()
     running = True

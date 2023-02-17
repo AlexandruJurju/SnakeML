@@ -11,7 +11,7 @@ from constants import State
 from model import Model
 from neural_network import *
 from settings import NNSettings, BoardSettings, SnakeSettings
-from train_network import TrainingExample, write_examples_to_json_4d, train_network
+from train_network import TrainingExample, write_examples_to_json_4d, train_network, save_neural_network_to_json
 from view import draw_board, draw_next_snake_direction
 from vision import get_vision_lines
 
@@ -133,9 +133,7 @@ class BackpropagationTrainNewNetwork(BaseState):
 
             self.evaluated.clear()
 
-            # TODO BAD REINIT
             self.model.snake.brain.reinit_weights_and_biases()
-            # TODO add reinit function in model
             self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)
 
             train_network(self.model.snake.brain)
@@ -149,6 +147,7 @@ class BackpropagationTrainNewNetwork(BaseState):
             self.execute(surface)
         else:
             self.train_backpropagation(surface)
+            save_neural_network_to_json(-1, -1, self.model.snake.brain, NNSettings.BACKPROPAGATION_FOLDER_PATH + "test")
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

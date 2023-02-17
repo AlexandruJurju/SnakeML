@@ -14,6 +14,7 @@ class NNSettings:
     AVAILABLE_INPUT_DIRECTIONS = ["4", "8"]
     AVAILABLE_VISION_LINES_RETURN_TYPE = ["boolean", "distance"]
 
+    TRAIN_DATA_FILE_LOCATION = "Backpropagation_Training/" + str(INPUT_DIRECTION_COUNT) + "_in_directions_" + str(OUTPUT_NEURON_COUNT) + "_out_directions.json"
     GENETIC_FOLDER_PATH = "Genetic_Networks/"
     BACKPROPAGATION_FOLDER_PATH = "Backpropagation_Networks/"
 

@@ -9,8 +9,10 @@ from States.base_state import BaseState
 from States.state_manager import StateManager
 from constants import State
 from model import Model
-from settings import BoardSettings, SnakeSettings
+from settings import BoardSettings, SnakeSettings, NNSettings
 from train_network import read_neural_network_from_json
+from view import draw_board
+from vision import get_vision_lines
 
 
 class BackpropagationTrainedNetwork(BaseState):
@@ -24,11 +26,10 @@ class BackpropagationTrainedNetwork(BaseState):
 
         self.title_label = None
         self.button_back = None
-
+        self.score_counter = None
+        self.button_run = None
         self.button_load = None
         self.file_dialog = None
-        self.button_run = None
-        self.score_counter = None
 
     def start(self):
         self.title_label = UILabel(pygame.Rect((87, 40), (800, 25)), "Trained Genetic Network", self.ui_manager, object_id="#window_label")
@@ -46,7 +47,21 @@ class BackpropagationTrainedNetwork(BaseState):
         self.button_run.kill()
 
     def run_network(self, surface):
-        pass
+
+        vision_lines = get_vision_lines(self.model.board)
+        nn_output = self.model.get_nn_output(vision_lines)
+
+        draw_board(surface, self.model.board, 500, 300)
+        # self.draw_vision_lines(self.model, vision_lines)
+        # self.draw_neural_network(self.model, vision_lines)
+        # self.write_ttl(self.model.snake.ttl)
+        # self.write_score(self.model.snake.score)
+
+        next_direction = self.model.get_nn_output_4directions(nn_output)
+        is_alive = self.model.move_in_direction(next_direction)
+
+        if not is_alive:
+            self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)
 
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
@@ -68,24 +83,25 @@ class BackpropagationTrainedNetwork(BaseState):
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_back:
-                    self.set_target_state_name(State.BACKPROPAGATION_MENU)
+                    self.set_target_state_name(State.GENETIC_MENU)
                     self.trigger_transition()
                 if event.ui_element == self.button_run:
                     self.execute_network = True
                 if event.ui_element == self.button_load:
                     self.execute_network = False
                     self.button_run.disable()
-                    self.file_dialog = UIFileDialog(pygame.Rect((150, 50), (450, 450)), self.ui_manager, window_title="Load Network", initial_file_path="Backpropagation_Training/", allow_picking_directories=False,
+                    self.file_dialog = UIFileDialog(pygame.Rect((150, 50), (450, 450)), self.ui_manager, window_title="Load Network", initial_file_path=NNSettings.BACKPROPAGATION_FOLDER_PATH, allow_picking_directories=False,
                                                     allow_existing_files_only=True)
-                if event.type == pygame_gui.UI_FILE_DIALOG_PATH_PICKED:
-                    try:
-                        file_path = create_resource_path(event.text)
-                        network = read_neural_network_from_json(file_path)
-                        self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, network)
-                        self.button_load.enable()
-                        self.button_run.enable()
-                    except pygame.error:
-                        pass
+                    self.button_load.disable()
+            if event.type == pygame_gui.UI_FILE_DIALOG_PATH_PICKED:
+                try:
+                    file_path = create_resource_path(event.text)
+                    network = read_neural_network_from_json(file_path)
+                    self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, network)
+                    self.button_load.enable()
+                    self.button_run.enable()
+                except pygame.error:
+                    pass
 
         self.ui_manager.update(time_delta)
 
