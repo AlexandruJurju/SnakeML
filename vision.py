@@ -62,14 +62,14 @@ def look_in_direction(board: List[List[str]], direction: Direction, vision_retur
     wall_distance = distance(head_position, current_block)
     wall_coord = current_block
 
-    if NNSettings.VISION_LINES_RETURN_TYPE == "boolean":
+    if vision_return_type == "boolean":
         wall_distance_output = 1 / wall_distance
         apple_boolean = 1.0 if apple_found else 0.0
         segment_boolean = 1.0 if segment_found else 0.0
 
         return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
 
-    elif NNSettings.VISION_LINES_RETURN_TYPE == "distance":
+    elif vision_return_type == "distance":
         wall_distance_output = wall_distance
         apple_distance_output = 1 / apple_distance
         segment_distance_output = segment_distance

@@ -10,7 +10,7 @@ from States.state_manager import StateManager
 from constants import State
 from model import Model
 from neural_network import *
-from settings import NNSettings, BoardSettings, SnakeSettings
+from settings import NNSettings
 from train_network import TrainingExample, write_examples_to_json_4d, train_network, save_neural_network_to_json
 from view import draw_board, draw_next_snake_direction
 from vision import get_vision_lines
@@ -34,20 +34,28 @@ class BackpropagationTrainNewNetwork(BaseState):
     def start(self):
         self.title_label = UILabel(pygame.Rect((87, 40), (800, 25)), "Training Genetic Network", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
+
+        # todo add option for neurons
+        # todo add option for functions
+        input_direction_count = self.data_received["input_direction_count"]
+        input_neuron_count = input_direction_count * 3 + 4
+        hidden_neuron_count = 24
+        output_neuron_count = 4 if input_direction_count == 4 or input_direction_count == 8 else 3
+
         net = NeuralNetwork()
-        net.add_layer(Dense(NNSettings.INPUT_NEURON_COUNT, NNSettings.HIDDEN_NEURON_COUNT))
+        net.add_layer(Dense(input_neuron_count, hidden_neuron_count))
         net.add_layer(Activation(tanh, tanh_prime))
-        net.add_layer(Dense(NNSettings.HIDDEN_NEURON_COUNT, NNSettings.OUTPUT_NEURON_COUNT))
+        net.add_layer(Dense(hidden_neuron_count, output_neuron_count))
         net.add_layer(Activation(sigmoid, sigmoid_prime))
 
-        self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, net)
+        self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], net)
 
     def end(self):
         self.title_label.kill()
         self.button_back.kill()
 
     def execute(self, surface):
-        vision_lines = get_vision_lines(self.model.board)
+        vision_lines = get_vision_lines(self.model.board, self.data_received["input_direction_count"], self.data_received["vision_line_return_type"])
         nn_output = self.model.get_nn_output(vision_lines)
 
         example_output = np.where(nn_output == np.max(nn_output), 1, 0)
@@ -129,14 +137,18 @@ class BackpropagationTrainNewNetwork(BaseState):
 
         if len(self.training_examples) == 0 or skip:
             self.training_examples.clear()
-            write_examples_to_json_4d(self.evaluated)
+
+            output_neuron_count = 4 if self.data_received["input_direction_count"] == 4 or self.data_received["input_direction_count"] == 8 else 3
+            file_path = "Backpropagation_Training/" + str(self.data_received["input_direction_count"]) + "_in_directions_" + str(output_neuron_count) + "_out_directions.json"
+
+            write_examples_to_json_4d(self.evaluated, file_path)
 
             self.evaluated.clear()
 
             self.model.snake.brain.reinit_weights_and_biases()
-            self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)
+            self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], self.model.snake.brain)
 
-            train_network(self.model.snake.brain)
+            train_network(self.model.snake.brain, file_path)
 
             self.training = False
 
@@ -147,7 +159,7 @@ class BackpropagationTrainNewNetwork(BaseState):
             self.execute(surface)
         else:
             self.train_backpropagation(surface)
-            save_neural_network_to_json(-1, -1, self.model.snake.brain, NNSettings.BACKPROPAGATION_FOLDER_PATH + "test")
+            save_neural_network_to_json(-1, -1, self.model.snake.brain, NNSettings.BACKPROPAGATION_NETWORK_FOLDER + self.data_received["file_name"])
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

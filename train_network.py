@@ -3,7 +3,6 @@ from typing import Tuple, Dict
 
 from constants import Direction
 from neural_network import *
-from settings import NNSettings
 from vision import get_parameters_in_nn_input_form, VisionLine
 
 
@@ -15,16 +14,20 @@ class TrainingExample:
         self.predictions = predictions
 
 
-def train_network(network: NeuralNetwork) -> None:
-    x, y = read_training_data_json()
+def train_network(network: NeuralNetwork, file_path: str) -> None:
+    x, y = read_training_data_json(file_path)
 
     # example for points
     # x is (10000,2) 10000 lines, 2 columns ; 10000 examples each with x coord and y coord
     # when using a single example x_test from x, x_test is (2,)
     # resizing can be done for the whole training data resize(10000,2,1)
     # or for just one example resize(2,1)
-    x = np.reshape(x, (len(x), NNSettings.INPUT_NEURON_COUNT, 1))
-    y = np.reshape(y, (len(y), NNSettings.OUTPUT_NEURON_COUNT, 1))
+
+    input_neuron_count = network.get_dense_layers()[0].input_size
+    output_neuron_count = network.get_dense_layers()[-1].output_size
+
+    x = np.reshape(x, (len(x), input_neuron_count, 1))
+    y = np.reshape(y, (len(y), output_neuron_count, 1))
 
     network.train(mse, mse_prime, x, y, 0.5)
 
@@ -36,7 +39,7 @@ def train_network(network: NeuralNetwork) -> None:
     #     print("============================================")
 
 
-def write_examples_to_json_4d(examples: List[TrainingExample]) -> None:
+def write_examples_to_json_4d(examples: List[TrainingExample], output_file_location: str) -> None:
     dictionary_list: List[Dict] = []
 
     for example in examples:
@@ -69,13 +72,13 @@ def write_examples_to_json_4d(examples: List[TrainingExample]) -> None:
         }
         dictionary_list.append(example_dictionary)
 
-    output_file = open(NNSettings.TRAIN_DATA_FILE_LOCATION, "w")
+    output_file = open(output_file_location, "w")
     json.dump(dictionary_list, output_file)
     output_file.close()
 
 
-def read_training_data_json() -> Tuple[List, List]:
-    json_file = open(NNSettings.TRAIN_DATA_FILE_LOCATION, "r")
+def read_training_data_json(file_location) -> Tuple[List, List]:
+    json_file = open(file_location, "r")
     json_object = json.load(json_file)
 
     x = []

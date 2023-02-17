@@ -106,6 +106,9 @@ class GeneticTrainNetworkOptions(BaseState):
         self.board_size_entry.kill()
         self.board_size_entry_label.kill()
 
+        self.file_name_entry.kill()
+        self.file_name_label.kill()
+
         self.button_run.kill()
 
     def run(self, surface, time_delta):

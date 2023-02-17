@@ -55,9 +55,7 @@ class GeneticTrainNewNetwork(BaseState):
         net.add_layer(Dense(hidden_neuron_count, output_neuron_count))
         net.add_layer(Activation(sigmoid, sigmoid_prime))
 
-        model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], net)
-
-        self.model = model
+        self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], net)
 
     def end(self):
         self.title_label.kill()
@@ -99,7 +97,7 @@ class GeneticTrainNewNetwork(BaseState):
         best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
 
         # todo add input for file name
-        save_neural_network_to_json(self.generation, best_individual.fitness, best_individual.brain, NNSettings.GENETIC_FOLDER_PATH + self.data_received["file_name"])
+        save_neural_network_to_json(self.generation, best_individual.fitness, best_individual.brain, NNSettings.GENETIC_NETWORK_FOLDER + self.data_received["file_name"])
 
         print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 
