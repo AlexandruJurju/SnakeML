@@ -32,7 +32,7 @@ class BackpropagationTrainedNetwork(BaseState):
         self.file_dialog = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect((87, 40), (800, 25)), "Trained Genetic Network", self.ui_manager, object_id="#window_label")
+        self.title_label = UILabel(pygame.Rect((87, 40), (800, 25)), "Trained Backpropagation Network", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
         self.score_counter = UILabel(pygame.Rect((150, 100), (150, 35)), "Score: ", self.ui_manager)
         self.button_load = UIButton(pygame.Rect((25, 100), (125, 35)), "Load Network", self.ui_manager)
@@ -59,6 +59,7 @@ class BackpropagationTrainedNetwork(BaseState):
 
         next_direction = self.model.get_nn_output_4directions(nn_output)
         is_alive = self.model.move_in_direction(next_direction)
+        self.score_counter.set_text("Score : " + str(self.model.snake.score))
 
         if not is_alive:
             self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)
