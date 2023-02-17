@@ -30,50 +30,53 @@ def draw_board(window, board: List, offset_x, offset_y) -> None:
             pygame.draw.rect(window, ViewConsts.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE), width=1)
 
 
-def draw_vision_lines(window, model: Model, vision_lines: List[VisionLine]) -> None:
+def draw_vision_lines(window, model: Model, vision_lines: List[VisionLine], offset_x, offset_y) -> None:
     # loop over all lines in given vision lines
+
+    font = pygame.font.SysFont("arial", 18)
+
     for line in vision_lines:
         # TODO line labels
-        # line_label = font.render(line.direction.name[0], True, ViewConsts.COLOR_BLACK)
+        line_label = font.render(line.direction.name[0], True, ViewConsts.COLOR_BLACK)
 
         # render vision line text at wall position
-        # self.window.blit(line_label, [line.wall_coord[1] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_X, line.wall_coord[0] * ViewConsts.SQUARE_SIZE + ViewConsts.OFFSET_BOARD_Y])
+        window.blit(line_label, [line.wall_coord[1] * ViewConsts.SQUARE_SIZE + offset_x, line.wall_coord[0] * ViewConsts.SQUARE_SIZE + offset_y])
 
         # draw line from head to wall, draw before body and apple lines
         # drawing uses SQUARE_SIZE//2 so that lines go through the middle of the squares
-        line_end_x = model.snake.body[0][1] * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + ViewConsts.OFFSET_BOARD_X
-        line_end_y = model.snake.body[0][0] * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + ViewConsts.OFFSET_BOARD_Y
+        line_end_x = model.snake.body[0][1] * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + offset_x
+        line_end_y = model.snake.body[0][0] * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + offset_y
 
         # draw line form snake head until wall block
-        draw_vision_line(window, ViewConsts.COLOR_APPLE, 1, line.wall_coord[1], line.wall_coord[0], line_end_x, line_end_y)
+        draw_vision_line(window, ViewConsts.COLOR_APPLE, 1, line.wall_coord[1], line.wall_coord[0], line_end_x, line_end_y, offset_x, offset_y)
 
         # draw another line from snake head to first segment found
         if line.segment_coord is not None:
-            draw_vision_line(window, ViewConsts.COLOR_RED, 5, line.segment_coord[1], line.segment_coord[0], line_end_x, line_end_y)
+            draw_vision_line(window, ViewConsts.COLOR_RED, 5, line.segment_coord[1], line.segment_coord[0], line_end_x, line_end_y, offset_x, offset_y)
 
         # draw another line from snake to apple if apple is found
         if line.apple_coord is not None:
-            draw_vision_line(window, ViewConsts.COLOR_GREEN, 5, line.apple_coord[1], line.apple_coord[0], line_end_x, line_end_y)
+            draw_vision_line(window, ViewConsts.COLOR_GREEN, 5, line.apple_coord[1], line.apple_coord[0], line_end_x, line_end_y, offset_x, offset_y)
 
 
-def draw_vision_line(window, color, width, line_coord_1, line_coord_0, line_end_x, line_end_y) -> None:
+def draw_vision_line(window, color, width, line_coord_1, line_coord_0, line_end_x, line_end_y, offset_x, offset_y) -> None:
     pygame.draw.line(window, color,
-                     (line_coord_1 * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + ViewConsts.OFFSET_BOARD_X, line_coord_0 * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + ViewConsts.OFFSET_BOARD_Y),
+                     (line_coord_1 * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + offset_x, line_coord_0 * ViewConsts.SQUARE_SIZE + ViewConsts.SQUARE_SIZE // 2 + offset_y),
                      (line_end_x, line_end_y), width=width)
 
 
 # TODO color when using distance
-def draw_neural_network(window, model: Model, vision_lines: List[VisionLine]):
-    draw_neurons(window, model)
-    write_nn_labels(window, model, vision_lines)
+def draw_neural_network(window, model: Model, vision_lines: List[VisionLine], offset_x, offset_y):
+    draw_neurons(window, model, offset_x, offset_y)
+    write_nn_labels(window, model, vision_lines, offset_x, offset_y)
 
 
 # TODO just calculate positions, then draw later -> more efficient if writing labels
-def draw_neurons(window, model: Model) -> None:
+def draw_neurons(window, model: Model, offset_x, offset_y) -> None:
     nn_layers = model.snake.brain.layers
     dense_layers = model.snake.brain.get_dense_layers()
-    neuron_offset_x = 100 + ViewConsts.NN_DISPLAY_OFFSET_X
-    neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
+    neuron_offset_x = 100 + offset_x
+    neuron_offset_y = offset_y
 
     line_start_positions: List[Tuple[int, int]] = []
     line_end_positions: List[Tuple[int, int]] = []
@@ -139,12 +142,12 @@ def draw_neurons(window, model: Model) -> None:
             line_end_positions = []
 
 
-def write_nn_labels(window, model: Model, vision_lines: List[VisionLine]):
+def write_nn_labels(window, model: Model, vision_lines: List[VisionLine], offset_x, offset_y):
     font = pygame.font.SysFont("arial", 12)
     nn_layers = model.snake.brain.layers
     dense_layers = model.snake.brain.get_dense_layers()
-    neuron_offset_x = 100 + ViewConsts.NN_DISPLAY_OFFSET_X
-    neuron_offset_y = ViewConsts.NN_DISPLAY_OFFSET_Y
+    neuron_offset_x = 100 + offset_x
+    neuron_offset_y = offset_y
 
     param_type = ["WALL", "APPLE", "SEGMENT"]
 
@@ -222,6 +225,7 @@ def draw_next_snake_direction(window, board: List[List[str]], prediction: Direct
     head = find_snake_head_poz(board)
     current_x = head[1] * ViewConsts.SQUARE_SIZE + offset_x
     current_y = head[0] * ViewConsts.SQUARE_SIZE + offset_y
+    font = pygame.font.SysFont("arial", 12)
 
     # draw next position of snake
     next_position = [head[0] + prediction.value[0], head[1] + prediction.value[1]]
@@ -231,14 +235,14 @@ def draw_next_snake_direction(window, board: List[List[str]], prediction: Direct
 
     # write letters for directions
     # TODO new labels for direction letters
-    # right_text = universal_font.render("D", True, ViewConsts.COLOR_GREEN)
-    # self.window.blit(right_text, (current_x + ViewConsts.SQUARE_SIZE, current_y))
-    #
-    # left_text = self.universal_font.render("A", True, ViewConsts.COLOR_GREEN)
-    # self.window.blit(left_text, (current_x - ViewConsts.SQUARE_SIZE, current_y))
-    #
-    # down_text = self.universal_font.render("S", True, ViewConsts.COLOR_GREEN)
-    # self.window.blit(down_text, (current_x, current_y + ViewConsts.SQUARE_SIZE))
-    #
-    # up_text = self.universal_font.render("W", True, ViewConsts.COLOR_GREEN)
-    # self.window.blit(up_text, (current_x, current_y - ViewConsts.SQUARE_SIZE))
+    right_text = font.render("D", True, ViewConsts.COLOR_GREEN)
+    window.blit(right_text, (current_x + ViewConsts.SQUARE_SIZE, current_y))
+
+    left_text = font.render("A", True, ViewConsts.COLOR_GREEN)
+    window.blit(left_text, (current_x - ViewConsts.SQUARE_SIZE, current_y))
+
+    down_text = font.render("S", True, ViewConsts.COLOR_GREEN)
+    window.blit(down_text, (current_x, current_y + ViewConsts.SQUARE_SIZE))
+
+    up_text = font.render("W", True, ViewConsts.COLOR_GREEN)
+    window.blit(up_text, (current_x, current_y - ViewConsts.SQUARE_SIZE))

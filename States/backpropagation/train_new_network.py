@@ -62,7 +62,7 @@ class BackpropagationTrainNewNetwork(BaseState):
         example = TrainingExample(copy.deepcopy(self.model.board), self.model.snake.direction, vision_lines, example_output.ravel().tolist())
         self.training_examples.append(example)
 
-        draw_board(surface, self.model.board, 500, 300)
+        draw_board(surface, self.model.board, 350, 100)
         # self.draw_vision_lines(self.model, vision_lines)
         # self.draw_neural_network(self.model, vision_lines)
         # self.write_ttl(self.model.snake.ttl)
@@ -96,9 +96,9 @@ class BackpropagationTrainNewNetwork(BaseState):
         current_example = self.training_examples[0]
         self.training_examples.pop(0)
 
-        draw_board(surface, current_example.board, 500, 300)
+        draw_board(surface, current_example.board, 350, 100)
         # TODO draw next direction doesnt work for other offsets
-        draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), 500, 300)
+        draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), 350, 100)
         pygame.display.flip()
 
         print(f"Model \n {np.matrix(current_example.board)} \n")

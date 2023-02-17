@@ -14,6 +14,7 @@ from model import Snake, Model
 from neural_network import NeuralNetwork, Dense, Activation, tanh, tanh_prime, sigmoid, sigmoid_prime
 from settings import GeneticSettings, NNSettings
 from train_network import save_neural_network_to_json
+from view import draw_board, draw_vision_lines, draw_neural_network
 from vision import get_vision_lines
 
 
@@ -33,7 +34,7 @@ class GeneticTrainNewNetwork(BaseState):
         self.individual_label = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect((ViewConsts.WIDTH // 2, 40), (150, 25)), "Training Genetic Network", self.ui_manager, object_id="#window_label")
+        self.title_label = UILabel(pygame.Rect(((ViewConsts.WIDTH - 250) // 2, 40), (250, 25)), "Training Genetic Network", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
         self.generation_label = UILabel(pygame.Rect((45, 50), (150, 25)), "Population :", self.ui_manager)
         self.individual_label = UILabel(pygame.Rect((50, 100), (200, 25)), "Individual :", self.ui_manager)
@@ -67,11 +68,9 @@ class GeneticTrainNewNetwork(BaseState):
         vision_lines = get_vision_lines(self.model.board, self.data_received["input_direction_count"], self.data_received["vision_line_return_type"])
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
-        # draw_board(surface, self.model.board, 350, 100)
-        # self.draw_vision_lines(self.model, vision_lines)
-        # self.draw_neural_network(self.model, vision_lines, nn_input, neural_net_prediction)
-        # self.write_ttl(self.model.snake.ttl)
-        # self.write_score(self.model.snake.score)
+        draw_board(surface, self.model.board, 500, 100)
+        draw_vision_lines(surface, self.model, vision_lines, 500, 100)
+        draw_neural_network(surface, self.model, vision_lines, 50, 100)
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move_in_direction(next_direction)
@@ -122,7 +121,7 @@ class GeneticTrainNewNetwork(BaseState):
 
     def run(self, surface, time_delta):
         # FILL TAKES ALOT OF TIME
-        # surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+        surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
         self.run_genetic(surface)
         self.generation_label.set_text("Generation : " + str(self.generation))
@@ -145,6 +144,6 @@ class GeneticTrainNewNetwork(BaseState):
                     self.set_target_state_name(State.GENETIC_TRAIN_NETWORK_OPTIONS)
                     self.trigger_transition()
 
-        # self.ui_manager.update(time_delta)
+        self.ui_manager.update(time_delta)
 
-        # self.ui_manager.draw_ui(surface)
+        self.ui_manager.draw_ui(surface)
