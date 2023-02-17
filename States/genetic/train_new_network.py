@@ -91,7 +91,8 @@ class GeneticTrainNewNetwork(BaseState):
         # total_fitness = sum(individual.fitness for individual in self.parent_list)
         best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
 
-        save_neural_network_to_json(self.generation, best_individual.fitness, best_individual.brain)
+        # todo add input for file name
+        save_neural_network_to_json(self.generation, best_individual.fitness, best_individual.brain, NNSettings.GENETIC_FOLDER_PATH + "alex")
 
         print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 

@@ -99,7 +99,7 @@ def read_training_data_json() -> Tuple[List, List]:
     return x, y
 
 
-def save_neural_network_to_json(generation: int, fitness, network: NeuralNetwork) -> None:
+def save_neural_network_to_json(generation: int, fitness, network: NeuralNetwork, path: str) -> None:
     network_dict = []
     for i, layer in enumerate(network.layers):
         if type(layer) is Activation:
@@ -120,7 +120,7 @@ def save_neural_network_to_json(generation: int, fitness, network: NeuralNetwork
 
     generation_network = {"generation": generation, "fitness": fitness, "network": network_dict}
 
-    network_file = open("Genetic_Networks/current_network.json", "w")
+    network_file = open(path + ".json", "w")
     json.dump(generation_network, network_file)
     network_file.close()
 
