@@ -32,7 +32,7 @@ class VisionLine:
         self.direction = direction
 
 
-def look_in_direction(board: List[List[str]], direction: Direction) -> VisionLine:
+def look_in_direction(board: List[List[str]], direction: Direction, vision_return_type: str) -> VisionLine:
     apple_distance = np.inf
     segment_distance = np.inf
     apple_coord = None
@@ -77,16 +77,26 @@ def look_in_direction(board: List[List[str]], direction: Direction) -> VisionLin
         return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_distance_output, segment_coord, segment_distance_output, direction)
 
 
-def get_vision_lines(board: List[List[str]]) -> List[VisionLine]:
-    if NNSettings.INPUT_DIRECTION_COUNT == 8:
-        vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.DOWN), look_in_direction(board, Direction.UP),
-                        look_in_direction(board, Direction.Q1), look_in_direction(board, Direction.Q2), look_in_direction(board, Direction.Q3), look_in_direction(board, Direction.Q4)]
+def get_vision_lines(board: List[List[str]], input_direction_count: int, vision_return_type: str) -> List[VisionLine]:
+    if input_direction_count == 8:
+        vision_lines = [look_in_direction(board, Direction.RIGHT, vision_return_type),
+                        look_in_direction(board, Direction.LEFT, vision_return_type),
+                        look_in_direction(board, Direction.DOWN, vision_return_type),
+                        look_in_direction(board, Direction.UP, vision_return_type),
+                        look_in_direction(board, Direction.Q1, vision_return_type),
+                        look_in_direction(board, Direction.Q2, vision_return_type),
+                        look_in_direction(board, Direction.Q3, vision_return_type),
+                        look_in_direction(board, Direction.Q4, vision_return_type)]
     else:
-        vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.DOWN), look_in_direction(board, Direction.UP)]
+        vision_lines = [look_in_direction(board, Direction.RIGHT, vision_return_type),
+                        look_in_direction(board, Direction.LEFT, vision_return_type),
+                        look_in_direction(board, Direction.DOWN, vision_return_type),
+                        look_in_direction(board, Direction.UP, vision_return_type)]
 
     return vision_lines
 
 
+# todo add vision return type parameter
 def get_dynamic_vision_lines(board: List[List[str]], current_direction: Direction) -> List[VisionLine]:
     vision_lines = []
     match current_direction:

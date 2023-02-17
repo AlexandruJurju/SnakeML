@@ -17,7 +17,7 @@ class State(Enum):
 class ViewConsts:
     DRAW = True
 
-    MAX_FPS = 40
+    MAX_FPS = 1000000
     OFFSET_BOARD_X = 500
     OFFSET_BOARD_Y = 100
     WIDTH, HEIGHT = 1000, 800

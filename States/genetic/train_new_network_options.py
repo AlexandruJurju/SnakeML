@@ -9,6 +9,7 @@ from constants import State
 from settings import NNSettings, GeneticSettings, SnakeSettings, BoardSettings
 
 
+# noinspection PyTypeChecker
 class GeneticTrainNetworkOptions(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.GENETIC_TRAIN_NETWORK_OPTIONS, state_manager)
@@ -18,29 +19,29 @@ class GeneticTrainNetworkOptions(BaseState):
         self.title_label = None
         self.button_back = None
 
-        self.dropdown_input_direction_count = None
-        self.dropdown_input_direction_count_label = None
+        self.dropdown_input_direction_count: UIDropDownMenu = None
+        self.dropdown_input_direction_count_label: UILabel = None
 
-        self.dropdown_vision_line_return_type = None
-        self.dropdown_vision_line_return_type_label = None
+        self.dropdown_vision_line_return_type: UIDropDownMenu = None
+        self.dropdown_vision_line_return_type_label: UILabel = None
 
-        self.sbx_text_entry = None
-        self.sbx_text_entry_label = None
+        self.sbx_text_entry: UITextEntryLine = None
+        self.sbx_text_entry_label: UILabel = None
 
-        self.population_count_entry = None
-        self.population_count_entry_label = None
+        self.population_count_entry: UITextEntryLine = None
+        self.population_count_entry_label: UILabel = None
 
-        self.mutation_rate_entry = None
-        self.mutation_rate_entry_label = None
+        self.mutation_rate_entry: UITextEntryLine = None
+        self.mutation_rate_entry_label: UILabel = None
 
-        self.board_size_entry = None
-        self.board_size_entry_label = None
+        self.board_size_entry: UITextEntryLine = None
+        self.board_size_entry_label: UILabel = None
 
-        self.starting_snake_size_entry = None
-        self.starting_snake_size_entry_label = None
+        self.starting_snake_size_entry: UITextEntryLine = None
+        self.starting_snake_size_entry_label: UILabel = None
 
-        self.file_name_entry = None
-        self.file_name_label = None
+        self.file_name_entry: UITextEntryLine = None
+        self.file_name_label: UILabel = None
 
         self.button_run = None
 
@@ -129,6 +130,16 @@ class GeneticTrainNetworkOptions(BaseState):
 
                 if event.ui_element == self.button_run:
                     self.set_target_state_name(State.GENETIC_TRAIN_NEW_NETWORK)
+                    self.data_to_send = {
+                        "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
+                        "vision_line_return_type": self.dropdown_vision_line_return_type.selected_option,
+                        "file_name": self.file_name_entry.text,
+                        "sbx_eta": float(self.sbx_text_entry.text),
+                        "population_count": int(self.population_count_entry.text),
+                        "mutation_rate": float(self.mutation_rate_entry.text),
+                        "starting_snake_size": int(self.starting_snake_size_entry.text),
+                        "board_size": int(self.board_size_entry.text)
+                    }
                     self.trigger_transition()
 
         self.ui_manager.update(time_delta)
