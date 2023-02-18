@@ -29,8 +29,8 @@ class Snake(Individual):
             self.direction = random.choice(MAIN_DIRECTIONS)
 
     def calculate_fitness(self) -> None:
-        win_bonus = 10000 if self.won else 0
-        self.fitness = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
+        win_bonus = 10 ^ 15 if self.won else 1
+        self.fitness = (self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
 
 
 class Model:
