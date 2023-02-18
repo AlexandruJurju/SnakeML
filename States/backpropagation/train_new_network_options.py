@@ -104,7 +104,7 @@ class BackpropTrainNewNetworkOptions(BaseState):
                     self.set_target_state_name(State.BACKPROPAGATION_TRAIN_NEW_NETWORK)
                     self.data_to_send = {
                         "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
-                        "vision_line_return_type": self.dropdown_vision_line_return_type.selected_option,
+                        "vision_return_type": self.dropdown_vision_line_return_type.selected_option,
                         "file_name": self.file_name_entry.text,
                         "starting_snake_size": int(self.starting_snake_size_entry.text),
                         "board_size": int(self.board_size_entry.text)

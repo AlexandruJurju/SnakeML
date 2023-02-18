@@ -55,7 +55,7 @@ class BackpropTrainNewNetwork(BaseState):
         self.button_back.kill()
 
     def execute(self, surface):
-        vision_lines = get_vision_lines(self.model.board, self.data_received["input_direction_count"], self.data_received["vision_line_return_type"])
+        vision_lines = get_vision_lines(self.model.board, self.data_received["input_direction_count"], self.data_received["vision_return_type"])
         nn_output = self.model.get_nn_output(vision_lines)
 
         example_output = np.where(nn_output == np.max(nn_output), 1, 0)

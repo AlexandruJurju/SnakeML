@@ -10,6 +10,7 @@ from States.state_manager import StateManager
 from constants import State
 from model import Model
 from settings import BoardSettings, SnakeSettings, NNSettings
+from train_network import read_all_from_json
 from view import draw_board
 from vision import get_vision_lines
 
@@ -18,6 +19,8 @@ class BackpropTrainedNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.BACKPROPAGATION_TRAINED_NETWORK, state_manager)
 
+        self.vision_return_type = None
+        self.input_direction_count = None
         self.ui_manager = ui_manager
 
         self.model = None
@@ -47,21 +50,20 @@ class BackpropTrainedNetwork(BaseState):
 
     def run_network(self, surface):
 
-        vision_lines = get_vision_lines(self.model.board)
+        vision_lines = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
         nn_output = self.model.get_nn_output(vision_lines)
 
         draw_board(surface, self.model.board, 500, 300)
         # self.draw_vision_lines(self.model, vision_lines)
         # self.draw_neural_network(self.model, vision_lines)
-        # self.write_ttl(self.model.snake.ttl)
-        # self.write_score(self.model.snake.score)
 
         next_direction = self.model.get_nn_output_4directions(nn_output)
         is_alive = self.model.move_in_direction(next_direction)
         self.score_counter.set_text("Score : " + str(self.model.snake.score))
 
+        # TODO add board size options for trained network
         if not is_alive:
-            self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, self.model.snake.brain)
+            self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], self.model.snake.brain)
 
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
@@ -97,7 +99,10 @@ class BackpropTrainedNetwork(BaseState):
             if event.type == pygame_gui.UI_FILE_DIALOG_PATH_PICKED:
                 try:
                     file_path = create_resource_path(event.text)
-                    network = read_neural_network_from_json(file_path)
+                    config = read_all_from_json(file_path)
+                    network = config["network"]
+                    self.input_direction_count = config["input_direction_count"]
+                    self.vision_return_type = config["vision_return_type"]
                     self.model = Model(BoardSettings.BOARD_SIZE, SnakeSettings.START_SNAKE_SIZE, network)
                     self.button_load.enable()
                     self.button_run.enable()
