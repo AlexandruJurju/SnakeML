@@ -34,19 +34,20 @@ class Snake(Individual):
 
 
 class Model:
-    def __init__(self, model_size: int, snake_size: int, net: NeuralNetwork):
+    def __init__(self, model_size: int, snake_size: int, start_random: bool, net: NeuralNetwork):
         self.size = model_size + 2
         self.board = [[BoardConsts.EMPTY for _ in range(self.size)] for _ in range(self.size)]
 
         self.snake_size = snake_size
         self.snake = Snake(net, None)
 
-        # TODO if genetic place random
         self.make_board()
-        # self.place_new_apple()
-        # self.create_random_snake()
-        self.place_apple_at_coords([5, 5])
-        self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
+        if start_random:
+            self.place_new_apple()
+            self.create_random_snake()
+        else:
+            self.place_apple_at_coords([5, 5])
+            self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
         self.update_board_from_snake()
 
     def make_board(self) -> None:

@@ -79,7 +79,7 @@ class GeneticPretrainedNetwork(BaseState):
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
-            self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), self.model.snake.brain)
+            self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
 
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
@@ -104,7 +104,7 @@ class GeneticPretrainedNetwork(BaseState):
                     self.set_target_state_name(State.GENETIC_MENU)
                     self.trigger_transition()
                 if event.ui_element == self.button_run:
-                    self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), self.network)
+                    self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.network)
                     self.execute_network = True
                 if event.ui_element == self.button_load:
                     self.execute_network = False

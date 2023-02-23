@@ -48,7 +48,7 @@ class BackpropTrainNewNetwork(BaseState):
         net.add_layer(Dense(hidden_neuron_count, output_neuron_count))
         net.add_layer(Activation(sigmoid, sigmoid_prime))
 
-        self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], net)
+        self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], False, net)
 
     def end(self):
         self.title_label.kill()
@@ -143,7 +143,7 @@ class BackpropTrainNewNetwork(BaseState):
             self.evaluated.clear()
 
             self.model.snake.brain.reinit_weights_and_biases()
-            self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], self.model.snake.brain)
+            self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], False, self.model.snake.brain)
 
             train_network(self.model.snake.brain, file_path)
 

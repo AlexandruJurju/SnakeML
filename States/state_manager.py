@@ -4,13 +4,13 @@ from typing import Dict
 import pygame
 
 from States.base_state import BaseState
-from constants import State
+from constants import State, ViewConsts
 
 
 class StateManager:
     def __init__(self):
         self.states: Dict[State, BaseState] = {}
-        self.active_state: BaseState = None
+        self.active_state = None
 
     def add_state(self, state: BaseState) -> None:
         if state.state_id not in self.states:
@@ -31,7 +31,7 @@ class StateManager:
                 self.active_state.data_received = data_to_send_copy
                 self.active_state.start()
 
-            if self.active_state is not self.states[State.GENETIC_TRAIN_NEW_NETWORK]:
+            if self.active_state is not self.states[State.GENETIC_TRAIN_NEW_NETWORK] or ViewConsts.DRAW:
                 pygame.display.flip()
 
         return True

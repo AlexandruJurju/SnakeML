@@ -66,7 +66,6 @@ class BackpropPretrainedNetwork(BaseState):
         self.snake_size_label.kill()
 
     def run_network(self, surface):
-
         vision_lines = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
         nn_output = self.model.get_nn_output(vision_lines)
 
@@ -79,7 +78,7 @@ class BackpropPretrainedNetwork(BaseState):
         self.score_counter.set_text("Score : " + str(self.model.snake.score))
 
         if not is_alive:
-            self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), self.model.snake.brain)
+            self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), False, self.model.snake.brain)
 
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
@@ -104,7 +103,7 @@ class BackpropPretrainedNetwork(BaseState):
                     self.set_target_state_name(State.BACKPROPAGATION_MENU)
                     self.trigger_transition()
                 if event.ui_element == self.button_run:
-                    self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), self.network)
+                    self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), False, self.network)
                     self.execute_network = True
                 if event.ui_element == self.button_load:
                     self.execute_network = False

@@ -14,6 +14,7 @@ from model import Snake, Model
 from neural_network import NeuralNetwork, Dense, Activation, tanh, tanh_prime, sigmoid, sigmoid_prime
 from settings import GeneticSettings, NNSettings
 from train_network import save_neural_network_to_json
+from view import draw_board
 from vision import get_vision_lines
 
 
@@ -55,7 +56,7 @@ class GeneticTrainNewNetwork(BaseState):
         net.add_layer(Dense(hidden_neuron_count, output_neuron_count))
         net.add_layer(Activation(sigmoid, sigmoid_prime))
 
-        self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], net)
+        self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], True, net)
 
     def end(self):
         self.title_label.kill()
@@ -67,9 +68,10 @@ class GeneticTrainNewNetwork(BaseState):
         vision_lines = get_vision_lines(self.model.board, self.data_received["input_direction_count"], self.data_received["vision_return_type"])
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
-        # draw_board(surface, self.model.board, 500, 100)
-        # draw_vision_lines(surface, self.model, vision_lines, 500, 100)
-        # draw_neural_network_complete(surface, self.model, vision_lines, 50, 100)
+        if ViewConsts.DRAW:
+            draw_board(surface, self.model.board, 500, 100)
+            # draw_vision_lines(surface, self.model, vision_lines, 500, 100)
+            # draw_neural_network_complete(surface, self.model, vision_lines, 50, 100)
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move_in_direction(next_direction)
@@ -80,9 +82,9 @@ class GeneticTrainNewNetwork(BaseState):
 
             if self.generation == 0:
                 self.model.snake.brain.reinit_weights_and_biases()
-                self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], self.model.snake.brain)
+                self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], True, self.model.snake.brain)
             else:
-                self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], self.offspring_list[len(self.parent_list) - 1])
+                self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], True, self.offspring_list[len(self.parent_list) - 1])
 
             if len(self.parent_list) == GeneticSettings.POPULATION_COUNT:
                 self.offspring_list.clear()
@@ -119,14 +121,15 @@ class GeneticTrainNewNetwork(BaseState):
             self.offspring_list.append(child2)
 
         self.model.snake.brain.reinit_weights_and_biases()
-        self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], self.offspring_list[0])
+        self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], True, self.offspring_list[0])
 
         self.generation += 1
         self.parent_list.clear()
 
     def run(self, surface, time_delta):
         # FILL TAKES ALOT OF TIME
-        # surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+        if ViewConsts.DRAW:
+            surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
         self.run_genetic(surface)
         self.generation_label.set_text("Generation : " + str(self.generation))
@@ -149,6 +152,6 @@ class GeneticTrainNewNetwork(BaseState):
                     self.set_target_state_name(State.GENETIC_TRAIN_NETWORK_OPTIONS)
                     self.trigger_transition()
 
-        # self.ui_manager.update(time_delta)
-
-        # self.ui_manager.draw_ui(surface)
+        if ViewConsts.DRAW:
+            self.ui_manager.update(time_delta)
+            self.ui_manager.draw_ui(surface)
