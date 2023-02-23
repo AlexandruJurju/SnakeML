@@ -1,5 +1,6 @@
 from typing import List
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pygame
 import pygame_gui
@@ -27,6 +28,9 @@ class GeneticTrainNewNetwork(BaseState):
         self.generation = None
         self.parent_list: List[Snake] = []
         self.offspring_list: List[NeuralNetwork] = []
+
+        self.x_points = []
+        self.y_points = []
 
         self.title_label = None
         self.button_back = None
@@ -105,6 +109,9 @@ class GeneticTrainNewNetwork(BaseState):
 
         print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 
+        self.x_points.append(self.generation)
+        self.y_points.append(best_individual.fitness)
+
         parents_for_mating = elitist_selection(self.parent_list, 500)
         np.random.shuffle(parents_for_mating)
 
@@ -123,6 +130,11 @@ class GeneticTrainNewNetwork(BaseState):
 
         self.generation += 1
         self.parent_list.clear()
+
+        plt.plot(self.x_points, self.y_points)
+        plt.xlabel("Generation")
+        plt.ylabel("Fitness")
+        plt.show()
 
     def run(self, surface, time_delta):
         # FILL TAKES ALOT OF TIME
