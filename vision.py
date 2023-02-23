@@ -30,6 +30,9 @@ class VisionLine:
         self.segment_distance = segment_distance
         self.direction = direction
 
+    def __eq__(self, other):
+        return self.wall_coord == other.wall_coord and self.wall_distance == other.wall_distance and self.apple_coord == other.apple_coord and self.apple_distance == other.apple_distance and self.segment_coord == other.segment_coord and self.segment_distance == other.segment_distance
+
 
 def look_in_direction(board: List[List[str]], direction: Direction, vision_return_type: str) -> VisionLine:
     apple_distance = np.inf

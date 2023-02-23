@@ -12,8 +12,8 @@ from model import Model
 from neural_network import *
 from settings import NNSettings
 from train_network import TrainingExample, write_examples_to_json_4d, train_network, save_neural_network_to_json
-from view import draw_board, draw_next_snake_direction, draw_vision_lines, draw_neural_network
-from vision import get_vision_lines
+from view import draw_board, draw_next_snake_direction
+from vision import get_vision_lines, VisionLine
 
 
 class BackpropTrainNewNetwork(BaseState):
@@ -52,17 +52,40 @@ class BackpropTrainNewNetwork(BaseState):
         self.title_label.kill()
         self.button_back.kill()
 
+    def print_vision_line(self, vision_line: VisionLine):
+        print(f"{vision_line.wall_coord} {vision_line.wall_distance} || {vision_line.apple_coord} {vision_line.apple_distance} || {vision_line.segment_coord} {vision_line.segment_distance} ")
+
+    def print_all_vision_lines(self, vision_lines: List[VisionLine]):
+        for line in vision_lines:
+            self.print_vision_line(line)
+
+    def is_example_in_evaluated(self, example: TrainingExample):
+        for eval_example in self.evaluated:
+            self.print_all_vision_lines(eval_example.vision_lines)
+            print()
+            self.print_all_vision_lines(example.vision_lines)
+
+            if eval_example.vision_lines == example.vision_lines:
+                return True
+        return False
+
     def execute(self, surface):
         vision_lines = get_vision_lines(self.model.board, self.data_received["input_direction_count"], self.data_received["vision_return_type"])
         nn_output = self.model.get_nn_output(vision_lines)
 
         example_output = np.where(nn_output == np.max(nn_output), 1, 0)
         example = TrainingExample(copy.deepcopy(self.model.board), self.model.snake.direction, vision_lines, example_output.ravel().tolist())
-        self.training_examples.append(example)
+
+        # print(len(self.evaluated))
+        if len(self.evaluated) == 0:
+            self.training_examples.append(example)
+        else:
+            if not self.is_example_in_evaluated(example):
+                self.training_examples.append(example)
 
         draw_board(surface, self.model.board, 500, 100)
-        draw_vision_lines(surface, self.model, vision_lines, 500, 100)
-        draw_neural_network(surface, self.model, vision_lines, 50, 100)
+        # draw_vision_lines(surface, self.model, vision_lines, 500, 100)
+        # draw_neural_network(surface, self.model, vision_lines, 50, 100)
 
         next_direction = self.model.get_nn_output_4directions(nn_output)
         is_alive = self.model.move_in_direction(next_direction)
@@ -90,21 +113,21 @@ class BackpropTrainNewNetwork(BaseState):
     def train_backpropagation(self, surface):
         current_example = self.training_examples[0]
         self.training_examples.pop(0)
-    
+
         draw_board(surface, current_example.board, 350, 100)
         draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), 350, 100)
         pygame.display.flip()
 
-        print(f"Model \n {np.matrix(current_example.board)} \n")
-        print(f"Current Direction : {current_example.current_direction} \n")
-        print(f"Prediction UP : {current_example.predictions[0]}")
-        print(f"Prediction DOWN : {current_example.predictions[1]}")
-        print(f"Prediction LEFT : {current_example.predictions[2]}")
-        print(f"Prediction RIGHT : {current_example.predictions[3]}")
-        print()
+        # print(f"Model \n {np.matrix(current_example.board)} \n")
+        # print(f"Current Direction : {current_example.current_direction} \n")
+        # print(f"Prediction UP : {current_example.predictions[0]}")
+        # print(f"Prediction DOWN : {current_example.predictions[1]}")
+        # print(f"Prediction LEFT : {current_example.predictions[2]}")
+        # print(f"Prediction RIGHT : {current_example.predictions[3]}")
+        # print()
 
-        print("Enter target outputs for neural network in form")
-        print("UP=W DOWN=S LEFT=A RIGHT=D")
+        # print("Enter target outputs for neural network in form")
+        # print("UP=W DOWN=S LEFT=A RIGHT=D")
 
         input_string = self.wait_for_key()
         skip = False
@@ -125,8 +148,8 @@ class BackpropTrainNewNetwork(BaseState):
                 if input_string == "D":
                     target_output[3] = 1.0
 
-            print(target_output)
-            print()
+            # print(target_output)
+            # print()
             self.evaluated.append(TrainingExample(current_example.board, current_example.current_direction, current_example.vision_lines, target_output))
 
         if len(self.training_examples) == 0 or skip:
@@ -137,7 +160,7 @@ class BackpropTrainNewNetwork(BaseState):
 
             write_examples_to_json_4d(self.evaluated, file_path)
 
-            self.evaluated.clear()
+            # self.evaluated.clear()
 
             self.model.snake.brain.reinit_weights_and_biases()
             self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], False, self.model.snake.brain)
