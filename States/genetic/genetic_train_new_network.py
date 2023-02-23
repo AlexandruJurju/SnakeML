@@ -43,8 +43,6 @@ class GeneticTrainNewNetwork(BaseState):
         self.parent_list: List[Snake] = []
         self.offspring_list: List[NeuralNetwork] = []
 
-        # todo add option for neurons
-        # todo add option for functions
         input_direction_count = self.data_received["input_direction_count"]
         input_neuron_count = input_direction_count * 3 + 4
         hidden_neuron_count = 24

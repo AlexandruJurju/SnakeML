@@ -23,8 +23,8 @@ class BackpropTrainNewNetwork(BaseState):
         self.ui_manager = ui_manager
         self.model = None
 
-        self.training_examples = []
-        self.evaluated = []
+        self.training_examples: List[TrainingExample] = []
+        self.evaluated: List[TrainingExample] = []
 
         self.training = False
 
@@ -35,8 +35,6 @@ class BackpropTrainNewNetwork(BaseState):
         self.title_label = UILabel(pygame.Rect(((ViewConsts.WIDTH - 250) // 2, 40), (250, 25)), "Training Genetic Network", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
 
-        # todo add option for neurons
-        # todo add option for functions
         input_direction_count = self.data_received["input_direction_count"]
         input_neuron_count = input_direction_count * 3 + 4
         hidden_neuron_count = 24
@@ -71,8 +69,7 @@ class BackpropTrainNewNetwork(BaseState):
         if not is_alive:
             self.training = True
 
-    @staticmethod
-    def wait_for_key() -> str:
+    def wait_for_key(self) -> str:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
@@ -93,7 +90,7 @@ class BackpropTrainNewNetwork(BaseState):
     def train_backpropagation(self, surface):
         current_example = self.training_examples[0]
         self.training_examples.pop(0)
-
+    
         draw_board(surface, current_example.board, 350, 100)
         draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), 350, 100)
         pygame.display.flip()
@@ -130,7 +127,7 @@ class BackpropTrainNewNetwork(BaseState):
 
             print(target_output)
             print()
-            self.evaluated.append(TrainingExample(copy.deepcopy(current_example.board), current_example.current_direction, current_example.vision_lines, target_output))
+            self.evaluated.append(TrainingExample(current_example.board, current_example.current_direction, current_example.vision_lines, target_output))
 
         if len(self.training_examples) == 0 or skip:
             self.training_examples.clear()
