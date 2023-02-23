@@ -157,6 +157,8 @@ class BackpropTrainNewNetwork(BaseState):
         else:
             self.train_backpropagation(surface)
             save_neural_network_to_json(-1, -1,
+                                        self.data_received["board_size"],
+                                        self.data_received["snake_size"],
                                         self.data_received["input_direction_count"],
                                         self.data_received["vision_return_type"],
                                         self.model.snake.brain,

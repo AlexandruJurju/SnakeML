@@ -102,7 +102,7 @@ def read_training_data_json(file_location) -> Tuple[List, List]:
     return x, y
 
 
-def save_neural_network_to_json(generation: int, fitness: int, input_direction_count, vision_return_type, network: NeuralNetwork, path: str) -> None:
+def save_neural_network_to_json(generation: int, fitness: int, board_size: int, snake_size: int, input_direction_count: int, vision_return_type, network: NeuralNetwork, path: str) -> None:
     network_dict = []
     for i, layer in enumerate(network.layers):
         if type(layer) is Activation:
@@ -123,6 +123,8 @@ def save_neural_network_to_json(generation: int, fitness: int, input_direction_c
 
     generation_network = {"generation": generation,
                           "fitness": fitness,
+                          "board_size": board_size,
+                          "snake_size": snake_size,
                           "input_direction_count": input_direction_count,
                           "vision_return_type": vision_return_type,
                           "network": network_dict}
@@ -168,39 +170,3 @@ def read_all_from_json(path: str) -> Dict:
     output = json_object
     output["network"] = output_network
     return output
-
-
-# def read_neural_network_from_json(path: str) -> NeuralNetwork:
-#     json_file = open(path, "r")
-#     json_object = json.load(json_file)
-#
-#     output_network = NeuralNetwork()
-#     if json_object:
-#         for layer in json_object["network"]:
-#             if layer["layer"] == "dense":
-#                 input_size = layer["input_size"]
-#                 output_size = layer["output_size"]
-#                 weights = np.reshape(layer["weights"], (layer["output_size"], layer["input_size"]))
-#                 bias = np.reshape(layer["bias"], (layer["output_size"], 1))
-#                 dense_layer = Dense(input_size, output_size)
-#                 dense_layer.weights = weights
-#                 dense_layer.bias = bias
-#                 output_network.add_layer(dense_layer)
-#             else:
-#                 activation_str = layer["activation"]
-#                 activation_prime_str = layer["activation_prime"]
-#
-#                 if activation_str == "tanh":
-#                     activation = tanh
-#                 else:
-#                     activation = sigmoid
-#
-#                 if activation_prime_str == "tanh_prime":
-#                     activation_prime = tanh_prime
-#                 else:
-#                     activation_prime = sigmoid_prime
-#
-#                 activation_layer = Activation(activation, activation_prime)
-#                 output_network.add_layer(activation_layer)
-#
-#     return output_network

@@ -4,7 +4,7 @@ class SnakeSettings:
 
 
 class NNSettings:
-    INPUT_DIRECTION_COUNT = 4
+    # INPUT_DIRECTION_COUNT = 4
     # VISION_LINES_RETURN_TYPE = "boolean"
 
     # INPUT_NEURON_COUNT = INPUT_DIRECTION_COUNT * 3 + 4

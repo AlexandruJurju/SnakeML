@@ -96,6 +96,8 @@ class GeneticTrainNewNetwork(BaseState):
 
         save_neural_network_to_json(self.generation,
                                     best_individual.fitness,
+                                    self.data_received["board_size"],
+                                    self.data_received["starting_snake_size"],
                                     self.data_received["input_direction_count"],
                                     self.data_received["vision_return_type"],
                                     best_individual.brain,

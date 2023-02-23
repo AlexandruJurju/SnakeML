@@ -3,14 +3,14 @@ import os
 import pygame
 from pygame_gui import UIManager
 
-from States.backpropagation.menu import BackpropMenu
-from States.backpropagation.run_trained_network import BackpropTrainedNetwork
-from States.backpropagation.train_new_network import BackpropTrainNewNetwork
-from States.backpropagation.train_new_network_options import BackpropTrainNewNetworkOptions
-from States.genetic.menu import MenuGenetic
-from States.genetic.run_trained_network import GeneticRunTrainedNetwork
-from States.genetic.train_new_network import GeneticTrainNewNetwork
-from States.genetic.train_new_network_options import GeneticTrainNetworkOptions
+from States.backpropagation.backprop_menu import BackpropMenu
+from States.backpropagation.backprop_run_trained_network import BackpropTrainedNetwork
+from States.backpropagation.backprop_train_new_network import BackpropTrainNewNetwork
+from States.backpropagation.backprop_train_new_network_options import BackpropTrainNewNetworkOptions
+from States.genetic.genetic_menu import MenuGenetic
+from States.genetic.genetic_run_trained_network import GeneticRunTrainedNetwork
+from States.genetic.genetic_train_new_network import GeneticTrainNewNetwork
+from States.genetic.genetic_train_new_network_options import GeneticTrainNetworkOptions
 from States.main_menu import MainMenu
 from States.state_manager import StateManager
 from constants import ViewConsts, State
