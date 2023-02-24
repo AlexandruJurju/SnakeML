@@ -11,7 +11,7 @@ from constants import State
 from model import Model
 from settings import NNSettings
 from train_network import read_all_from_json
-from view import draw_board
+from view import draw_board, draw_vision_lines
 from vision import get_vision_lines
 
 
@@ -70,7 +70,7 @@ class BackpropPretrainedNetwork(BaseState):
         nn_output = self.model.get_nn_output(vision_lines)
 
         draw_board(surface, self.model.board, 500, 150)
-        # self.draw_vision_lines(self.model, vision_lines)
+        draw_vision_lines(surface, self.model, vision_lines, 500, 150)
         # self.draw_neural_network(self.model, vision_lines)
 
         next_direction = self.model.get_nn_output_4directions(nn_output)

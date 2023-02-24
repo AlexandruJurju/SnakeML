@@ -1,6 +1,5 @@
 from typing import List
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pygame
 import pygame_gui
@@ -95,7 +94,7 @@ class GeneticTrainNewNetwork(BaseState):
     def next_generation(self):
         self.offspring_list.clear()
 
-        # total_fitness = sum(individual.fitness for individual in self.parent_list)
+        total_fitness = sum(individual.fitness for individual in self.parent_list)
         best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
 
         save_neural_network_to_json(self.generation,
@@ -107,7 +106,9 @@ class GeneticTrainNewNetwork(BaseState):
                                     best_individual.brain,
                                     NNSettings.GENETIC_NETWORK_FOLDER + self.data_received["file_name"])
 
-        print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
+        # print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
+
+        print(f"GEN {self.generation + 1}   MEAN : {total_fitness / 1000}")
 
         self.x_points.append(self.generation)
         self.y_points.append(best_individual.fitness)
@@ -131,10 +132,10 @@ class GeneticTrainNewNetwork(BaseState):
         self.generation += 1
         self.parent_list.clear()
 
-        plt.plot(self.x_points, self.y_points)
-        plt.xlabel("Generation")
-        plt.ylabel("Fitness")
-        plt.show()
+        # plt.plot(self.x_points, self.y_points)
+        # plt.xlabel("Generation")
+        # plt.ylabel("Fitness")
+        # plt.show()
 
     def run(self, surface, time_delta):
         # FILL TAKES ALOT OF TIME

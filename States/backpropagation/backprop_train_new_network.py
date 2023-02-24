@@ -1,18 +1,16 @@
 import copy
 
-import pygame
 import pygame_gui
 from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import State, ViewConsts
-from model import Model
+from constants import State
 from neural_network import *
 from settings import NNSettings
 from train_network import TrainingExample, write_examples_to_json_4d, train_network, save_neural_network_to_json
-from view import draw_board, draw_next_snake_direction
+from view import *
 from vision import get_vision_lines, VisionLine
 
 
@@ -80,7 +78,7 @@ class BackpropTrainNewNetwork(BaseState):
                 self.training_examples.append(example)
 
         draw_board(surface, self.model.board, 500, 100)
-        # draw_vision_lines(surface, self.model, vision_lines, 500, 100)
+        draw_vision_lines(surface, self.model, vision_lines, 500, 100)
         # draw_neural_network(surface, self.model, vision_lines, 50, 100)
 
         next_direction = self.model.get_nn_output_4directions(nn_output)
