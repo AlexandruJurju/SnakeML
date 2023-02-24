@@ -61,10 +61,6 @@ class BackpropTrainNewNetwork(BaseState):
 
     def is_example_in_evaluated(self, example: TrainingExample):
         for eval_example in self.evaluated:
-            self.print_all_vision_lines(eval_example.vision_lines)
-            print()
-            self.print_all_vision_lines(example.vision_lines)
-
             if eval_example.vision_lines == example.vision_lines:
                 return True
         return False
@@ -94,28 +90,42 @@ class BackpropTrainNewNetwork(BaseState):
 
     def wait_for_key(self) -> str:
         while True:
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    match event.key:
-                        case pygame.K_w:
-                            return "W"
-                        case pygame.K_s:
-                            return "S"
-                        case pygame.K_a:
-                            return "A"
-                        case pygame.K_d:
-                            return "D"
-                        case pygame.K_RETURN:
-                            return ""
-                        case pygame.K_x:
-                            return "X"
+            event = pygame.event.wait()
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.button_back:
+                    self.set_target_state_name(State.BACKPROPAGATION_TRAIN_NEW_NETWORK_OPTIONS)
+                    self.trigger_transition()
+                    break
 
-    def train_backpropagation(self, surface):
+            if event.type == pygame.KEYDOWN:
+                match event.key:
+                    case pygame.K_w:
+                        return "W"
+                    case pygame.K_s:
+                        return "S"
+                    case pygame.K_a:
+                        return "A"
+                    case pygame.K_d:
+                        return "D"
+                    case pygame.K_RETURN:
+                        return ""
+                    case pygame.K_x:
+                        return "X"
+                    case pygame.K_ESCAPE:
+                        self.set_target_state_name(State.QUIT)
+                        self.trigger_transition()
+                        break
+
+    def train_backpropagation(self, surface, time_delta):
         current_example = self.training_examples[0]
         self.training_examples.pop(0)
 
         draw_board(surface, current_example.board, 350, 100)
         draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), 350, 100)
+        self.ui_manager.update(time_delta)
+
+        self.ui_manager.draw_ui(surface)
+
         pygame.display.flip()
 
         # print(f"Model \n {np.matrix(current_example.board)} \n")
@@ -175,7 +185,7 @@ class BackpropTrainNewNetwork(BaseState):
         if not self.training:
             self.execute(surface)
         else:
-            self.train_backpropagation(surface)
+            self.train_backpropagation(surface, time_delta)
             save_neural_network_to_json(-1, -1,
                                         self.data_received["board_size"],
                                         self.data_received["initial_snake_size"],
