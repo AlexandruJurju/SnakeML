@@ -23,7 +23,7 @@ class MenuGenetic(BaseState):
         self.title_label = UILabel(pygame.Rect(((ViewConsts.WIDTH - 250) // 2, 40), (250, 180)), "Genetic Menu", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
 
-        self.button_options_genetic = UIButton(pygame.Rect((150, 250), (250, 35)), "Train Network", self.ui_manager)
+        self.button_options_genetic = UIButton(pygame.Rect((150, 250), (250, 35)), "Train New Network", self.ui_manager)
         self.button_run_trained_network = UIButton(pygame.Rect((600, 250), (250, 35)), "Run Pretrained Networks", self.ui_manager)
 
     def end(self):

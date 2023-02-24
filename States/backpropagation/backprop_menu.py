@@ -24,8 +24,8 @@ class BackpropMenu(BaseState):
         self.title_label = UILabel(pygame.Rect((87, 25), (800, 45)), "Backpropagation Menu", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
 
-        self.button_run_trained_network = UIButton(pygame.Rect((150, 250), (250, 35)), "Run Trained Network", self.ui_manager)
-        self.button_train_network = UIButton(pygame.Rect((600, 250), (250, 35)), "Train New Network", self.ui_manager)
+        self.button_train_network = UIButton(pygame.Rect((150, 250), (250, 35)), "Train New Network", self.ui_manager)
+        self.button_run_trained_network = UIButton(pygame.Rect((600, 250), (250, 35)), "Run Pretrained Network", self.ui_manager)
 
     def end(self):
         self.title_label.kill()
