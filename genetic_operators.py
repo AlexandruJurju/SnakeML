@@ -4,7 +4,6 @@ from typing import Tuple
 
 from model import Individual
 from neural_network import *
-from settings import GeneticSettings
 
 
 # operators from pymoo
@@ -214,12 +213,12 @@ def point_mutation():
     pass
 
 
-def full_mutation(individual: NeuralNetwork) -> None:
+def full_mutation(individual: NeuralNetwork, mutation_rate: float) -> None:
     individual_dense_layers = individual.get_dense_layers()
 
     for layer in individual_dense_layers:
-        layer.weights = gaussian_mutation(layer.weights, GeneticSettings.MUTATION_CHANCE)
-        layer.bias = gaussian_mutation(layer.bias, GeneticSettings.MUTATION_CHANCE)
+        layer.weights = gaussian_mutation(layer.weights, mutation_rate)
+        layer.bias = gaussian_mutation(layer.bias, mutation_rate)
 
 
 def full_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple[NeuralNetwork, NeuralNetwork]:

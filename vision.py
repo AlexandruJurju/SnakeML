@@ -3,7 +3,6 @@ from typing import List
 import numpy as np
 
 from constants import *
-from settings import NNSettings
 
 
 def distance(a, b):
@@ -31,8 +30,11 @@ class VisionLine:
         self.segment_distance = segment_distance
         self.direction = direction
 
+    def __eq__(self, other):
+        return self.wall_coord == other.wall_coord and self.wall_distance == other.wall_distance and self.apple_coord == other.apple_coord and self.apple_distance == other.apple_distance and self.segment_coord == other.segment_coord and self.segment_distance == other.segment_distance
 
-def look_in_direction(board: List[List[str]], direction: Direction) -> VisionLine:
+
+def look_in_direction(board: List[List[str]], direction: Direction, vision_return_type: str) -> VisionLine:
     apple_distance = np.inf
     segment_distance = np.inf
     apple_coord = None
@@ -62,14 +64,14 @@ def look_in_direction(board: List[List[str]], direction: Direction) -> VisionLin
     wall_distance = distance(head_position, current_block)
     wall_coord = current_block
 
-    if NNSettings.VISION_LINES_RETURN_TYPE == "boolean":
+    if vision_return_type == "boolean":
         wall_distance_output = 1 / wall_distance
         apple_boolean = 1.0 if apple_found else 0.0
         segment_boolean = 1.0 if segment_found else 0.0
 
         return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
 
-    elif NNSettings.VISION_LINES_RETURN_TYPE == "distance":
+    elif vision_return_type == "distance":
         wall_distance_output = wall_distance
         apple_distance_output = 1 / apple_distance
         segment_distance_output = segment_distance
@@ -77,27 +79,36 @@ def look_in_direction(board: List[List[str]], direction: Direction) -> VisionLin
         return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_distance_output, segment_coord, segment_distance_output, direction)
 
 
-def get_vision_lines(board: List[List[str]]) -> List[VisionLine]:
-    if NNSettings.INPUT_DIRECTION_COUNT == 8:
-        vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.DOWN), look_in_direction(board, Direction.UP),
-                        look_in_direction(board, Direction.Q1), look_in_direction(board, Direction.Q2), look_in_direction(board, Direction.Q3), look_in_direction(board, Direction.Q4)]
+def get_vision_lines(board: List[List[str]], input_direction_count: int, vision_return_type: str) -> List[VisionLine]:
+    if input_direction_count == 8:
+        vision_lines = [look_in_direction(board, Direction.RIGHT, vision_return_type),
+                        look_in_direction(board, Direction.LEFT, vision_return_type),
+                        look_in_direction(board, Direction.DOWN, vision_return_type),
+                        look_in_direction(board, Direction.UP, vision_return_type),
+                        look_in_direction(board, Direction.Q1, vision_return_type),
+                        look_in_direction(board, Direction.Q2, vision_return_type),
+                        look_in_direction(board, Direction.Q3, vision_return_type),
+                        look_in_direction(board, Direction.Q4, vision_return_type)]
     else:
-        vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.DOWN), look_in_direction(board, Direction.UP)]
+        vision_lines = [look_in_direction(board, Direction.RIGHT, vision_return_type),
+                        look_in_direction(board, Direction.LEFT, vision_return_type),
+                        look_in_direction(board, Direction.DOWN, vision_return_type),
+                        look_in_direction(board, Direction.UP, vision_return_type)]
 
     return vision_lines
 
 
-def get_dynamic_vision_lines(board: List[List[str]], current_direction: Direction) -> List[VisionLine]:
+def get_dynamic_vision_lines(board: List[List[str]], current_direction: Direction, vision_return_type: str) -> List[VisionLine]:
     vision_lines = []
     match current_direction:
         case Direction.UP:
-            vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.UP)]
+            vision_lines = [look_in_direction(board, Direction.RIGHT, vision_return_type), look_in_direction(board, Direction.LEFT, vision_return_type), look_in_direction(board, Direction.UP, vision_return_type)]
         case Direction.DOWN:
-            vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.DOWN)]
+            vision_lines = [look_in_direction(board, Direction.RIGHT, vision_return_type), look_in_direction(board, Direction.LEFT, vision_return_type), look_in_direction(board, Direction.DOWN, vision_return_type)]
         case Direction.RIGHT:
-            vision_lines = [look_in_direction(board, Direction.RIGHT), look_in_direction(board, Direction.DOWN), look_in_direction(board, Direction.UP)]
+            vision_lines = [look_in_direction(board, Direction.RIGHT, vision_return_type), look_in_direction(board, Direction.DOWN, vision_return_type), look_in_direction(board, Direction.UP, vision_return_type)]
         case Direction.LEFT:
-            vision_lines = [look_in_direction(board, Direction.LEFT), look_in_direction(board, Direction.DOWN), look_in_direction(board, Direction.UP)]
+            vision_lines = [look_in_direction(board, Direction.LEFT, vision_return_type), look_in_direction(board, Direction.DOWN, vision_return_type), look_in_direction(board, Direction.UP, vision_return_type)]
     return vision_lines
 
 

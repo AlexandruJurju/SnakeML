@@ -29,24 +29,25 @@ class Snake(Individual):
             self.direction = random.choice(MAIN_DIRECTIONS)
 
     def calculate_fitness(self) -> None:
-        win_bonus = 10000 if self.won else 0
-        self.fitness = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
+        win_bonus = 10 ^ 15 if self.won else 1
+        self.fitness = (self.steps_taken + ((2 ** self.score) + (self.score ** 2) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
 
 
 class Model:
-    def __init__(self, model_size: int, snake_size: int, net: NeuralNetwork):
+    def __init__(self, model_size: int, snake_size: int, start_random: bool, net: NeuralNetwork):
         self.size = model_size + 2
         self.board = [[BoardConsts.EMPTY for _ in range(self.size)] for _ in range(self.size)]
 
         self.snake_size = snake_size
         self.snake = Snake(net, None)
 
-        # TODO if genetic place random
         self.make_board()
-        self.place_new_apple()
-        self.create_random_snake()
-        # self.place_apple_at_coords([5, 5])
-        # self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
+        if start_random:
+            self.place_new_apple()
+            self.create_random_snake()
+        else:
+            self.place_apple_at_coords([5, 5])
+            self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
         self.update_board_from_snake()
 
     def make_board(self) -> None:
@@ -166,10 +167,17 @@ class Model:
             return False
 
         # TODO replace with win condition
-        if self.get_random_empty_block() is None:
+        if self.check_win_condition():
             self.snake.won = True
             return False
 
+        return True
+
+    def check_win_condition(self):
+        for i in range(1, self.size):
+            for j in range(1, self.size):
+                if self.board[i][j] == BoardConsts.EMPTY:
+                    return False
         return True
 
     def get_nn_output(self, vision_lines) -> np.ndarray:
