@@ -1,20 +1,17 @@
-from typing import List
-
 import numpy as np
-import pygame
 import pygame_gui
 from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import State, ViewConsts
+from constants import State
 from genetic_operators import elitist_selection, roulette_selection, full_mutation, full_crossover
-from model import Snake, Model
-from neural_network import NeuralNetwork, Dense, Activation, tanh, tanh_prime, sigmoid, sigmoid_prime
+from model import Snake
+from neural_network import NeuralNetwork, Activation, tanh, tanh_prime, sigmoid, sigmoid_prime
 from settings import GeneticSettings, NNSettings
 from train_network import save_neural_network_to_json
-from view import draw_board
+from view import *
 from vision import get_vision_lines
 
 
@@ -71,9 +68,9 @@ class GeneticTrainNewNetwork(BaseState):
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
         if ViewConsts.DRAW:
-            draw_board(surface, self.model.board, 500, 100)
-            # draw_vision_lines(surface, self.model, vision_lines, 500, 100)
-            # draw_neural_network_complete(surface, self.model, vision_lines, 50, 100)
+            draw_board(surface, self.model.board, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+            draw_vision_lines(surface, self.model, vision_lines, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+            draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move_in_direction(next_direction)

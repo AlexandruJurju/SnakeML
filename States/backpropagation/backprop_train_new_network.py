@@ -77,9 +77,9 @@ class BackpropTrainNewNetwork(BaseState):
             if not self.is_example_in_evaluated(example):
                 self.training_examples.append(example)
 
-        draw_board(surface, self.model.board, 500, 100)
-        draw_vision_lines(surface, self.model, vision_lines, 500, 100)
-        # draw_neural_network(surface, self.model, vision_lines, 50, 100)
+        draw_board(surface, self.model.board, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+        # draw_vision_lines(surface, self.model, vision_lines, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+        # draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
 
         next_direction = self.model.get_nn_output_4directions(nn_output)
         is_alive = self.model.move_in_direction(next_direction)
