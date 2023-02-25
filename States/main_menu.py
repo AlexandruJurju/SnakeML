@@ -20,7 +20,7 @@ class MainMenu(BaseState):
         self.button_quit = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect(((ViewConsts.WIDTH - 250) // 2, 40), (250, 180)), "Main Menu", self.ui_manager, object_id="#window_label")
+        self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "Main Menu", self.ui_manager, object_id="#window_label")
         self.button_backpropagation_menu = UIButton(pygame.Rect(((ViewConsts.WIDTH - 250) // 2, 250), (250, 35)), "Option Backpropagation", self.ui_manager)
         self.button_genetic_menu = UIButton(pygame.Rect(((ViewConsts.WIDTH - 250) // 2, 350), (250, 35)), "Option Genetic", self.ui_manager)
         self.button_quit = UIButton(pygame.Rect(((ViewConsts.WIDTH - 150) // 2, 500), (150, 35)), "QUIT", self.ui_manager)

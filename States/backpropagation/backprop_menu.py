@@ -5,7 +5,7 @@ from pygame_gui.elements import UILabel, UIButton
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import State
+from constants import State, ViewConsts
 
 
 class BackpropMenu(BaseState):
@@ -17,22 +17,22 @@ class BackpropMenu(BaseState):
         self.title_label = None
         self.button_back = None
 
-        self.button_run_trained_network = None
-        self.button_train_network = None
+        self.button_run_pretrained_network = None
+        self.button_train_network_options = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect((87, 25), (800, 45)), "Backpropagation Menu", self.ui_manager, object_id="#window_label")
-        self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
+        self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "Backpropagation Menu", self.ui_manager, object_id="#window_label")
+        self.button_back = UIButton(pygame.Rect(ViewConsts.BUTTON_BACK_POSITION, ViewConsts.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
-        self.button_train_network = UIButton(pygame.Rect((150, 250), (250, 35)), "Train New Network", self.ui_manager)
-        self.button_run_trained_network = UIButton(pygame.Rect((600, 250), (250, 35)), "Run Pretrained Network", self.ui_manager)
+        self.button_train_network_options = UIButton(pygame.Rect(ViewConsts.OPTIONS_BUTTON_POSITION, ViewConsts.OPTIONS_BUTTON_DIMENSIONS), "Train New Network", self.ui_manager)
+        self.button_run_pretrained_network = UIButton(pygame.Rect(ViewConsts.PRETRAINED_BUTTON_POSITION, ViewConsts.PRETRAINED_BUTTON_DIMENSIONS), "Run Pretrained Network", self.ui_manager)
 
     def end(self):
         self.title_label.kill()
         self.button_back.kill()
 
-        self.button_run_trained_network.kill()
-        self.button_train_network.kill()
+        self.button_run_pretrained_network.kill()
+        self.button_train_network_options.kill()
 
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
@@ -53,10 +53,10 @@ class BackpropMenu(BaseState):
                 if event.ui_element == self.button_back:
                     self.set_target_state_name(State.MAIN_MENU)
                     self.trigger_transition()
-                if event.ui_element == self.button_run_trained_network:
+                if event.ui_element == self.button_run_pretrained_network:
                     self.set_target_state_name(State.BACKPROPAGATION_TRAINED_NETWORK)
                     self.trigger_transition()
-                if event.ui_element == self.button_train_network:
+                if event.ui_element == self.button_train_network_options:
                     self.set_target_state_name(State.BACKPROPAGATION_TRAIN_NEW_NETWORK_OPTIONS)
                     self.trigger_transition()
 

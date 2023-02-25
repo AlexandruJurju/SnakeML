@@ -16,20 +16,20 @@ class MenuGenetic(BaseState):
 
         self.title_label = None
         self.button_options_genetic = None
-        self.button_run_trained_network = None
+        self.button_run_pretrained_network = None
         self.button_back = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect(((ViewConsts.WIDTH - 250) // 2, 40), (250, 180)), "Genetic Menu", self.ui_manager, object_id="#window_label")
-        self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
+        self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "Genetic Menu", self.ui_manager, object_id="#window_label")
+        self.button_back = UIButton(pygame.Rect(ViewConsts.BUTTON_BACK_POSITION, ViewConsts.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
-        self.button_options_genetic = UIButton(pygame.Rect((150, 250), (250, 35)), "Train New Network", self.ui_manager)
-        self.button_run_trained_network = UIButton(pygame.Rect((600, 250), (250, 35)), "Run Pretrained Networks", self.ui_manager)
+        self.button_options_genetic = UIButton(pygame.Rect(ViewConsts.OPTIONS_BUTTON_POSITION, ViewConsts.OPTIONS_BUTTON_DIMENSIONS), "Train New Network", self.ui_manager)
+        self.button_run_pretrained_network = UIButton(pygame.Rect(ViewConsts.PRETRAINED_BUTTON_POSITION, ViewConsts.PRETRAINED_BUTTON_DIMENSIONS), "Run Pretrained Networks", self.ui_manager)
 
     def end(self):
         self.title_label.kill()
         self.button_options_genetic.kill()
-        self.button_run_trained_network.kill()
+        self.button_run_pretrained_network.kill()
         self.button_back.kill()
 
     def run(self, surface, time_delta):
@@ -46,7 +46,7 @@ class MenuGenetic(BaseState):
             self.ui_manager.process_events(event)
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
-                if event.ui_element == self.button_run_trained_network:
+                if event.ui_element == self.button_run_pretrained_network:
                     self.set_target_state_name(State.GENETIC_RUN_TRAINED_NETWORK)
                     self.trigger_transition()
                 if event.ui_element == self.button_options_genetic:

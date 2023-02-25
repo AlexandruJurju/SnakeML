@@ -30,8 +30,8 @@ class BackpropTrainNewNetwork(BaseState):
         self.button_back = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect(((ViewConsts.WIDTH - 250) // 2, 40), (250, 25)), "Training Genetic Network", self.ui_manager, object_id="#window_label")
-        self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
+        self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "Backpropagation Train New Network", self.ui_manager, object_id="#window_label")
+        self.button_back = UIButton(pygame.Rect(ViewConsts.BUTTON_BACK_POSITION, ViewConsts.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
         input_direction_count = self.data_received["input_direction_count"]
         input_neuron_count = input_direction_count * 3 + 4

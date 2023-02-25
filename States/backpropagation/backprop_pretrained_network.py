@@ -7,11 +7,11 @@ from pygame_gui.windows import UIFileDialog
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import State
+from constants import State, ViewConsts
 from model import Model
 from settings import NNSettings
 from train_network import read_all_from_json
-from view import draw_board, draw_vision_lines
+from view import draw_board, draw_vision_lines, draw_neural_network_complete
 from vision import get_vision_lines
 
 
@@ -41,8 +41,8 @@ class BackpropPretrainedNetwork(BaseState):
         self.snake_size_label = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect((87, 40), (800, 25)), "Pretrained Backpropagation Network", self.ui_manager, object_id="#window_label")
-        self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
+        self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "Backpropagation Pretrained Network", self.ui_manager, object_id="#window_label")
+        self.button_back = UIButton(pygame.Rect(ViewConsts.BUTTON_BACK_POSITION, ViewConsts.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
         self.score_counter = UILabel(pygame.Rect((150, 100), (150, 35)), "Score: ", self.ui_manager)
         self.button_load = UIButton(pygame.Rect((25, 100), (125, 35)), "Load Network", self.ui_manager)
         self.button_run = UIButton(pygame.Rect((25, 150), (125, 35)), "Run Network", self.ui_manager)
@@ -69,9 +69,9 @@ class BackpropPretrainedNetwork(BaseState):
         vision_lines = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
         nn_output = self.model.get_nn_output(vision_lines)
 
-        draw_board(surface, self.model.board, 500, 150)
-        draw_vision_lines(surface, self.model, vision_lines, 500, 150)
-        # self.draw_neural_network(self.model, vision_lines)
+        draw_board(surface, self.model.board, 700, 150)
+        draw_vision_lines(surface, self.model, vision_lines, 700, 150)
+        draw_neural_network_complete(surface, self.model, vision_lines, 300, 100)
 
         next_direction = self.model.get_nn_output_4directions(nn_output)
         is_alive = self.model.move_in_direction(next_direction)

@@ -7,7 +7,7 @@ from pygame_gui.windows import UIFileDialog
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import State
+from constants import State, ViewConsts
 from model import Model
 from train_network import read_all_from_json
 from view import draw_board, draw_vision_lines, draw_neural_network_complete
@@ -40,8 +40,9 @@ class GeneticPretrainedNetwork(BaseState):
         self.snake_size_label = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect((87, 40), (800, 25)), "Pretrained Genetic Network", self.ui_manager, object_id="#window_label")
-        self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
+        self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "Genetic Pretrained Network", self.ui_manager, object_id="#window_label")
+        self.button_back = UIButton(pygame.Rect(ViewConsts.BUTTON_BACK_POSITION, ViewConsts.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
+
         self.score_counter = UILabel(pygame.Rect((150, 100), (150, 35)), "Score: ", self.ui_manager)
 
         self.button_load = UIButton(pygame.Rect((25, 100), (125, 35)), "Load Network", self.ui_manager)

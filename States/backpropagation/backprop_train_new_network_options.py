@@ -5,7 +5,7 @@ from pygame_gui.elements import UILabel, UIButton, UITextEntryLine, UIDropDownMe
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import State
+from constants import State, ViewConsts
 from settings import SnakeSettings, BoardSettings, NNSettings
 
 
@@ -37,8 +37,8 @@ class BackpropTrainNewNetworkOptions(BaseState):
         self.button_run = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect((87, 40), (800, 25)), "Training Genetic Network", self.ui_manager, object_id="#window_label")
-        self.button_back = UIButton(pygame.Rect((25, 725), (125, 35)), "BACK", self.ui_manager)
+        self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "Backpropagation Network Options", self.ui_manager, object_id="#window_label")
+        self.button_back = UIButton(pygame.Rect(ViewConsts.BUTTON_BACK_POSITION, ViewConsts.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
         self.dropdown_input_direction_count = UIDropDownMenu(NNSettings.AVAILABLE_INPUT_DIRECTIONS, NNSettings.AVAILABLE_INPUT_DIRECTIONS[0], pygame.Rect((200, 350), (75, 30)), self.ui_manager)
         self.dropdown_input_direction_count_label = UILabel(pygame.Rect((115, 300), (250, 35)), "Input Direction Count", self.ui_manager)
