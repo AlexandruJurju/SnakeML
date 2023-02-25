@@ -69,9 +69,9 @@ class BackpropPretrainedNetwork(BaseState):
         vision_lines = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
         nn_output = self.model.get_nn_output(vision_lines)
 
-        draw_board(surface, self.model.board, 700, 150)
-        draw_vision_lines(surface, self.model, vision_lines, 700, 150)
-        draw_neural_network_complete(surface, self.model, vision_lines, 300, 100)
+        draw_board(surface, self.model.board, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+        draw_vision_lines(surface, self.model, vision_lines, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+        draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
 
         next_direction = self.model.get_nn_output_4directions(nn_output)
         is_alive = self.model.move_in_direction(next_direction)
