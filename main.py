@@ -23,7 +23,7 @@ def main():
     pygame.display.set_caption('Snake AI')
     screen = pygame.display.set_mode((ViewConsts.WIDTH, ViewConsts.HEIGHT))
 
-    ui_manager = UIManager(screen.get_size(), "data/themes/complex_theme.json")
+    ui_manager = UIManager(screen.get_size(), "data/themes/ui_theme.json")
 
     state_manager = StateManager()
     state_manager.add_state(MainMenu(state_manager, ui_manager))

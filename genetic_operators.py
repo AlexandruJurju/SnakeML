@@ -67,6 +67,13 @@ def elitist_selection(population: List[Individual], selection_count: int) -> Lis
 
 
 def one_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    """
+    In one point crossover a single index is used to separate genetic material from the parents.
+
+    :param parent1_chromosome: parent1 weight or bias numpy array
+    :param parent2_chromosome: parent 2 weight or bias numpy array
+    :return Tuple with the generator offspring numpy array from the given parents arrays:
+    """
     matrix_row, matrix_col = np.shape(parent1_chromosome)
 
     child1_chromosome = parent1_chromosome.copy()
@@ -137,6 +144,7 @@ def one_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.n
 #     return child1, child2
 #
 
+# TODO make function use np.ndarray
 def two_point_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple[NeuralNetwork, NeuralNetwork]:
     child1 = copy.deepcopy(parent1)
     child2 = copy.deepcopy(parent2)
@@ -167,8 +175,17 @@ def two_point_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple
     return child1, child2
 
 
-def uniform_crossover(parent1: np.ndarray, parent2: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-    pass
+def uniform_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    matrix_row, matrix_col = np.shape(parent1_chromosome)
+
+    child1_chromosome = parent1_chromosome.copy()
+    child2_chromosome = parent2_chromosome.copy()
+
+    probability_mask = np.random.uniform(0, 1, parent1_chromosome.shape)
+    child1_chromosome[probability_mask > 0.5] = parent2_chromosome[probability_mask > 0.5]
+    child2_chromosome[probability_mask > 0.5] = parent1_chromosome[probability_mask > 0.5]
+
+    return child1_chromosome, child2_chromosome
 
 
 def calculate_bq(u: float, eta: float):
