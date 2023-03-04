@@ -61,6 +61,7 @@ class ViewConsts:
     COLOR_SQUARE_DELIMITER = (64, 64, 64)
     COLOR_GREEN = (0, 255, 0)
     COLOR_RED = (255, 0, 0)
+    COLOR_NEXT_MOVE = (22, 255, 0)
 
 
 class BoardConsts:

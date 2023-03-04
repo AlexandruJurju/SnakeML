@@ -118,8 +118,8 @@ class BackpropTrainNewNetwork(BaseState):
         current_example = self.training_examples[0]
         self.training_examples.pop(0)
 
-        draw_board(surface, current_example.board, 350, 100)
-        draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), 350, 100)
+        draw_board(surface, current_example.board, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+        draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
         self.ui_manager.update(time_delta)
 
         self.ui_manager.draw_ui(surface)

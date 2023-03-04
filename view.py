@@ -305,15 +305,16 @@ def draw_colored_lines_between_neurons(window, layer: Dense, line_end: List, lin
 
 def draw_next_snake_direction(window, board: List[List[str]], prediction: Direction, offset_x, offset_y) -> None:
     head = find_snake_head_poz(board)
-    current_x = head[1] * ViewConsts.SQUARE_SIZE + offset_x + ViewConsts.SQUARE_SIZE // 4
-    current_y = head[0] * ViewConsts.SQUARE_SIZE + offset_y + ViewConsts.SQUARE_SIZE // 4
-    font = pygame.font.SysFont("arial", 15)
+    font_size = 15
+    current_x = head[1] * ViewConsts.SQUARE_SIZE + offset_x + ViewConsts.SQUARE_SIZE // 2 - font_size // 2
+    current_y = head[0] * ViewConsts.SQUARE_SIZE + offset_y + ViewConsts.SQUARE_SIZE // 2 - font_size // 2
+    font = pygame.font.SysFont("arial", font_size)
 
     # draw next position of snake
     next_position = [head[0] + prediction.value[0], head[1] + prediction.value[1]]
     next_x = next_position[1] * ViewConsts.SQUARE_SIZE + offset_x
     next_y = next_position[0] * ViewConsts.SQUARE_SIZE + offset_y
-    pygame.draw.rect(window, ViewConsts.COLOR_RED, pygame.Rect(next_x, next_y, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+    pygame.draw.rect(window, ViewConsts.COLOR_BLACK, pygame.Rect(next_x, next_y, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
 
     # write letters for directions
     right_text = font.render("D", True, ViewConsts.COLOR_GREEN)
