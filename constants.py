@@ -15,7 +15,7 @@ class State(Enum):
 
 
 class ViewConsts:
-    DRAW = False
+    DRAW = True
     # TODO option for draw in train new genetic
     MAX_FPS = 40
     # OFFSET_BOARD_X = 500
