@@ -144,35 +144,21 @@ def one_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.n
 #     return child1, child2
 #
 
-# TODO make function use np.ndarray
-def two_point_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple[NeuralNetwork, NeuralNetwork]:
-    child1 = copy.deepcopy(parent1)
-    child2 = copy.deepcopy(parent2)
+def two_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    matrix_row, matrix_col = np.shape(parent1_chromosome)
 
-    child1_dense_layers = child1.get_dense_layers()
-    child2_dense_layers = child2.get_dense_layers()
+    child1_chromosome = parent1_chromosome.copy()
+    child2_chromosome = parent2_chromosome.copy()
 
-    parent1_dense_layers = parent1.get_dense_layers()
-    parent2_dense_layers = parent2.get_dense_layers()
+    crossover_row = np.random.randint(0, matrix_row)
+    crossover_col = np.random.randint(0, matrix_col)
 
-    for i in range(len(parent1_dense_layers)):
-        matrix_rows, matrix_cols = np.shape(parent1_dense_layers[i].weights)
-        crossover_row = np.random.randint(0, matrix_rows)
-        crossover_col = np.random.randint(0, matrix_cols)
-        child1_dense_layers[i].weights[:crossover_row, :crossover_col] = parent1_dense_layers[i].weights[:crossover_row, :crossover_col]
-        child1_dense_layers[i].weights[crossover_row:, crossover_col:] = parent2_dense_layers[i].weights[crossover_row:, crossover_col:]
-        child2_dense_layers[i].weights[:crossover_row, :crossover_col] = parent2_dense_layers[i].weights[:crossover_row, :crossover_col]
-        child2_dense_layers[i].weights[crossover_row:, crossover_col:] = parent1_dense_layers[i].weights[crossover_row:, crossover_col:]
+    child1_chromosome[:crossover_row, :crossover_col] = parent1_chromosome[:crossover_row, :crossover_col]
+    child1_chromosome[crossover_row:, crossover_col:] = parent2_chromosome[crossover_row:, crossover_col:]
+    child2_chromosome[:crossover_row, :crossover_col] = parent2_chromosome[:crossover_row, :crossover_col]
+    child2_chromosome[crossover_row:, crossover_col:] = parent1_chromosome[crossover_row:, crossover_col:]
 
-        matrix_rows, matrix_cols = np.shape(parent1_dense_layers[i].bias)
-        crossover_row = np.random.randint(0, matrix_rows)
-        crossover_col = np.random.randint(0, matrix_cols)
-        child1_dense_layers[i].bias[:crossover_row, :crossover_col] = parent1_dense_layers[i].bias[:crossover_row, :crossover_col]
-        child1_dense_layers[i].bias[crossover_row:, crossover_col:] = parent2_dense_layers[i].bias[crossover_row:, crossover_col:]
-        child2_dense_layers[i].bias[:crossover_row, :crossover_col] = parent2_dense_layers[i].bias[:crossover_row, :crossover_col]
-        child2_dense_layers[i].bias[crossover_row:, crossover_col:] = parent1_dense_layers[i].bias[crossover_row:, crossover_col:]
-
-    return child1, child2
+    return child1_chromosome, child2_chromosome
 
 
 def uniform_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:

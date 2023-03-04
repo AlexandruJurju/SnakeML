@@ -166,7 +166,6 @@ class Model:
         if self.snake.ttl == 0:
             return False
 
-        # TODO replace with win condition
         if self.check_win_condition():
             self.snake.won = True
             return False
