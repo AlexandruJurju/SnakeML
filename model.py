@@ -17,7 +17,7 @@ class Individual:
 
 
 class Snake(Individual):
-    def __init__(self, neural_network: NeuralNetwork, starting_direction: None):
+    def __init__(self, neural_network: NeuralNetwork):
         super().__init__(neural_network)
         self.body = []
         self.ttl = SnakeSettings.SNAKE_MAX_TTL
@@ -25,8 +25,7 @@ class Snake(Individual):
         self.won = False
 
         # TODO BAD direction , can cause collisions
-        if starting_direction is None:
-            self.direction = random.choice(MAIN_DIRECTIONS)
+        self.direction = None
 
     def calculate_fitness(self) -> None:
         win_bonus = 10 ^ 15 if self.won else 1
@@ -39,7 +38,7 @@ class Model:
         self.board = [[BoardConsts.EMPTY for _ in range(self.size)] for _ in range(self.size)]
 
         self.snake_size = snake_size
-        self.snake = Snake(net, None)
+        self.snake = Snake(net)
 
         self.make_board()
         if start_random:
