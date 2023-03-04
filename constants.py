@@ -15,7 +15,7 @@ class State(Enum):
 
 
 class ViewConsts:
-    DRAW = True
+    DRAW = False
     # TODO option for draw in train new genetic
     MAX_FPS = 40
     # OFFSET_BOARD_X = 500
@@ -62,6 +62,8 @@ class ViewConsts:
     COLOR_GREEN = (0, 255, 0)
     COLOR_RED = (255, 0, 0)
     COLOR_NEXT_MOVE = (22, 255, 0)
+    COLOR_ODD = (42, 52, 68)
+    COLOR_EVEN = (34, 41, 54)
 
 
 class BoardConsts:

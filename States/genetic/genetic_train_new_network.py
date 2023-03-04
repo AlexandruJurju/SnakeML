@@ -89,6 +89,7 @@ class GeneticTrainNewNetwork(BaseState):
                 self.offspring_list.clear()
                 self.next_generation()
 
+    # TODO use elitist to put the best 100 snakes in next generation
     def next_generation(self):
         self.offspring_list.clear()
 

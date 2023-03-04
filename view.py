@@ -17,6 +17,11 @@ def draw_board(window, board: List, offset_x, offset_y) -> None:
             y_position = y * ViewConsts.SQUARE_SIZE + offset_y
 
             match board[y][x]:
+                case BoardConsts.EMPTY:
+                    if (x + y) % 2 == 0:
+                        pygame.draw.rect(window, ViewConsts.COLOR_ODD, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
+                    else:
+                        pygame.draw.rect(window, ViewConsts.COLOR_EVEN, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
                 case BoardConsts.SNAKE_BODY:
                     pygame.draw.rect(window, ViewConsts.COLOR_SNAKE_SEGMENT, pygame.Rect(x_position, y_position, ViewConsts.SQUARE_SIZE, ViewConsts.SQUARE_SIZE))
                 case BoardConsts.WALL:
