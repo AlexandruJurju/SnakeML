@@ -74,7 +74,8 @@ def look_in_direction(board: List[List[str]], direction: Direction, vision_retur
     elif vision_return_type == "distance":
         wall_distance_output = wall_distance
         apple_distance_output = 1 / apple_distance
-        segment_distance_output = segment_distance
+        # 1/segment distance otherwise segment_distance output is infinite
+        segment_distance_output = 1 / segment_distance
 
         return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_distance_output, segment_coord, segment_distance_output, direction)
 
