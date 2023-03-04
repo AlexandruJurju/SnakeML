@@ -1,4 +1,5 @@
 import random
+import sys
 from typing import Tuple
 
 from neural_network import NeuralNetwork
@@ -8,8 +9,8 @@ from vision import *
 
 class Individual:
     def __init__(self, neural_network: NeuralNetwork):
-        self.score = 0
-        self.fitness = 0
+        self.score: int = 0
+        self.fitness: float = 0
         self.brain = neural_network
 
     def calculate_fitness(self):

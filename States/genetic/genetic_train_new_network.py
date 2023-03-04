@@ -89,6 +89,12 @@ class GeneticTrainNewNetwork(BaseState):
                 self.offspring_list.clear()
                 self.next_generation()
 
+    def check_finished(self) -> bool:
+        for individual in self.parent_list:
+            if individual.won is False:
+                return False
+        return True
+
     # TODO use elitist to put the best 100 snakes in next generation
     def next_generation(self):
         self.offspring_list.clear()
@@ -108,6 +114,8 @@ class GeneticTrainNewNetwork(BaseState):
         # print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 
         print(f"GEN {self.generation + 1}   MEAN : {total_fitness / 1000}")
+        if self.check_finished():
+            raise
 
         self.x_points.append(self.generation)
         self.y_points.append(best_individual.fitness)
