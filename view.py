@@ -100,8 +100,10 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[Vision
                     neuron_offset_y += ViewConsts.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewConsts.NN_DISPLAY_NEURON_RADIUS * 2
                     line_start_positions.append((neuron_x, neuron_y))
 
+                    # first ones are vision lines input, the last 4 are current snake direction
                     if i < input_neuron_count - 4:
-                        line_label = font.render(vision_lines[int(i / model.snake.brain.get_dense_layers()[0].input_size)].direction.name + " " + param_type[i % (len(param_type))], True, ViewConsts.COLOR_WHITE)
+                        # divide by number of attributes in vision line, 0 0 0, 1 1 1, 2 2 2
+                        line_label = font.render(vision_lines[int(i / 3)].direction.name + " " + param_type[i % (len(param_type))], True, ViewConsts.COLOR_WHITE)
                         window.blit(line_label, (neuron_x - 125, neuron_y - 10))
                     else:
                         line_label = font.render(MAIN_DIRECTIONS[i % 4].name, True, ViewConsts.COLOR_WHITE)

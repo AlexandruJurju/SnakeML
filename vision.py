@@ -83,19 +83,19 @@ def look_in_direction(board: List[List[str]], direction: Direction, vision_retur
 # TODO change directions to UP,DOWN,LEFT,RIGHT
 def get_vision_lines(board: List[List[str]], input_direction_count: int, vision_return_type: str) -> List[VisionLine]:
     if input_direction_count == 8:
-        vision_lines = [look_in_direction(board, Direction.RIGHT, vision_return_type),
-                        look_in_direction(board, Direction.LEFT, vision_return_type),
+        vision_lines = [look_in_direction(board, Direction.UP, vision_return_type),
                         look_in_direction(board, Direction.DOWN, vision_return_type),
-                        look_in_direction(board, Direction.UP, vision_return_type),
+                        look_in_direction(board, Direction.LEFT, vision_return_type),
+                        look_in_direction(board, Direction.RIGHT, vision_return_type),
                         look_in_direction(board, Direction.Q1, vision_return_type),
                         look_in_direction(board, Direction.Q2, vision_return_type),
                         look_in_direction(board, Direction.Q3, vision_return_type),
                         look_in_direction(board, Direction.Q4, vision_return_type)]
     else:
-        vision_lines = [look_in_direction(board, Direction.RIGHT, vision_return_type),
-                        look_in_direction(board, Direction.LEFT, vision_return_type),
+        vision_lines = [look_in_direction(board, Direction.UP, vision_return_type),
                         look_in_direction(board, Direction.DOWN, vision_return_type),
-                        look_in_direction(board, Direction.UP, vision_return_type)]
+                        look_in_direction(board, Direction.LEFT, vision_return_type),
+                        look_in_direction(board, Direction.RIGHT, vision_return_type)]
 
     return vision_lines
 
