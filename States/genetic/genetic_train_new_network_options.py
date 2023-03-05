@@ -10,6 +10,7 @@ from settings import NNSettings, GeneticSettings, SnakeSettings, BoardSettings
 
 
 # noinspection PyTypeChecker
+# TODO options for activation functions
 class GeneticTrainNetworkOptions(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.GENETIC_TRAIN_NETWORK_OPTIONS, state_manager)

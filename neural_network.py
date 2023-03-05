@@ -7,6 +7,10 @@ def relu(x):
     return np.maximum(0.0, x)
 
 
+def relu_prime(x):
+    return
+
+
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
@@ -25,6 +29,16 @@ def tanh(x):
 
 def tanh_prime(x):
     return 1 - np.tanh(x) ** 2
+
+
+def leaky_relu(x):
+    leaky = np.where(x < 0, x, x * 0.01)
+    return leaky
+
+
+def leaky_relu_prime(x):
+    leaky = np.where(x < 0, x, 0.01)
+    return np.where(leaky >= 0, leaky, 1)
 
 
 # use np because y_real and y_predicted are vectors of values

@@ -14,6 +14,7 @@ from view import draw_board, draw_vision_lines, draw_neural_network_complete
 from vision import get_vision_lines
 
 
+# TODO reset state on back
 class GeneticPretrainedNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.GENETIC_RUN_TRAINED_NETWORK, state_manager)

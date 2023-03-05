@@ -154,15 +154,27 @@ def read_all_from_json(path: str) -> Dict:
                 activation_str = layer["activation"]
                 activation_prime_str = layer["activation_prime"]
 
-                if activation_str == "tanh":
-                    activation = tanh
-                else:
-                    activation = sigmoid
+                activation = None
+                activation_prime = None
+                match activation_str:
+                    case "tanh":
+                        activation = tanh
+                    case "sigmoid":
+                        activation = sigmoid
+                    case "lru":
+                        activation = relu
+                    case "leaky_relu":
+                        activation = leaky_relu
 
-                if activation_prime_str == "tanh_prime":
-                    activation_prime = tanh_prime
-                else:
-                    activation_prime = sigmoid_prime
+                match activation_prime_str:
+                    case "tanh_prime":
+                        activation_prime = tanh_prime
+                    case "sigmoid_prime":
+                        activation_prime = sigmoid_prime
+                    case "relu_prime":
+                        activation_prime = relu_prime
+                    case "leaky_relu_prime":
+                        activation_prime = leaky_relu_prime
 
                 activation_layer = Activation(activation, activation_prime)
                 output_network.add_layer(activation_layer)

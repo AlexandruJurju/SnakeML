@@ -8,7 +8,7 @@ from States.state_manager import StateManager
 from constants import State
 from genetic_operators import elitist_selection, roulette_selection, full_mutation, full_crossover
 from model import Snake
-from neural_network import NeuralNetwork, Activation, tanh, tanh_prime, sigmoid, sigmoid_prime
+from neural_network import NeuralNetwork, Activation, leaky_relu, leaky_relu_prime, sigmoid, sigmoid_prime
 from settings import GeneticSettings, NNSettings
 from train_network import save_neural_network_to_json
 from view import *
@@ -49,9 +49,10 @@ class GeneticTrainNewNetwork(BaseState):
         hidden_neuron_count = 24
         output_neuron_count = 4 if input_direction_count == 4 or input_direction_count == 8 else 3
 
+        # TODO hardcoded activation functions
         net = NeuralNetwork()
         net.add_layer(Dense(input_neuron_count, hidden_neuron_count))
-        net.add_layer(Activation(tanh, tanh_prime))
+        net.add_layer(Activation(leaky_relu, leaky_relu_prime))
         net.add_layer(Dense(hidden_neuron_count, output_neuron_count))
         net.add_layer(Activation(sigmoid, sigmoid_prime))
 
