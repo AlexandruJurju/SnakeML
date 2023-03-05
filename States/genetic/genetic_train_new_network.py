@@ -109,22 +109,23 @@ class GeneticTrainNewNetwork(BaseState):
                                     self.data_received["input_direction_count"],
                                     self.data_received["vision_return_type"],
                                     best_individual.brain,
-                                    NNSettings.GENETIC_NETWORK_FOLDER + self.data_received["file_name"])
+                                    NNSettings.GENETIC_NETWORK_FOLDER + self.data_received["file_name"] + str(self.generation))
 
         # print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 
         print(f"GEN {self.generation + 1}   MEAN : {total_fitness / 1000}")
-        if self.check_finished():
-            raise
 
-        self.x_points.append(self.generation)
-        self.y_points.append(best_individual.fitness)
+        # self.x_points.append(self.generation)
+        # self.y_points.append(best_individual.fitness)
 
-        parents_for_mating = elitist_selection(self.parent_list, 500)
+        parents_for_mating = elitist_selection(self.parent_list, 100)
+        for parent in parents_for_mating[:100]:
+            self.offspring_list.append(parent.brain)
+
         np.random.shuffle(parents_for_mating)
 
         while len(self.offspring_list) < self.data_received["population_count"]:
-            parent1, parent2 = roulette_selection(parents_for_mating, 2)
+            parent1, parent2 = roulette_selection(self.parent_list, 2)
             child1, child2 = full_crossover(parent1.brain, parent1.brain)
 
             full_mutation(child1, self.data_received["mutation_rate"])
