@@ -4,7 +4,7 @@ from typing import Dict
 import pygame
 
 from States.base_state import BaseState
-from settings import State, ViewConsts
+from game_config import State, ViewConsts
 
 
 class StateManager:

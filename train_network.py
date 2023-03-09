@@ -1,7 +1,7 @@
 import json
 from typing import Tuple, Dict
 
-from settings import Direction
+from game_config import Direction
 from neural_network import *
 from vision import get_parameters_in_nn_input_form, VisionLine
 

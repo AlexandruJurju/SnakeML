@@ -2,7 +2,7 @@ from typing import List
 
 import numpy as np
 
-from settings import *
+from game_config import *
 
 
 def distance(a, b):

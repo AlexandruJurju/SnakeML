@@ -3,7 +3,7 @@ import sys
 from typing import Tuple
 
 from neural_network import NeuralNetwork
-from settings import SnakeSettings
+from game_config import SnakeSettings
 from vision import *
 
 

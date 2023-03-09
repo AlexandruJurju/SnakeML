@@ -1,4 +1,4 @@
-from settings import State
+from game_config import State
 
 
 class BaseState:

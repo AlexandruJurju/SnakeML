@@ -5,8 +5,8 @@ from pygame_gui.elements import UILabel, UIButton, UITextEntryLine, UIDropDownMe
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from settings import State, ViewConsts
-from settings import SnakeSettings, BoardSettings, NNSettings
+from game_config import State, ViewConsts
+from game_config import SnakeSettings, BoardSettings, NNSettings
 
 
 # TODO Dynamic Direction
@@ -52,11 +52,11 @@ class BackpropTrainNewNetworkOptions(BaseState):
 
         self.starting_snake_size_entry = UITextEntryLine(pygame.Rect((200, 150), (75, 30)), self.ui_manager)
         self.starting_snake_size_label = UILabel(pygame.Rect((115, 100), (250, 35)), "Starting Snake Size", self.ui_manager)
-        self.starting_snake_size_entry.set_text(str(SnakeSettings.START_SNAKE_SIZE))
+        self.starting_snake_size_entry.set_text(str(SnakeSettings.INITIAL_SNAKE_SIZE))
 
         self.board_size_entry = UITextEntryLine(pygame.Rect((650, 150), (75, 30)), self.ui_manager)
         self.board_size_entry_label = UILabel(pygame.Rect((565, 100), (250, 35)), "Board Size", self.ui_manager)
-        self.board_size_entry.set_text(str(BoardSettings.BOARD_SIZE))
+        self.board_size_entry.set_text(str(BoardSettings.INITIAL_BOARD_SIZE))
 
         self.button_run = UIButton(pygame.Rect((450, 700), (75, 35)), "RUN", self.ui_manager)
 
