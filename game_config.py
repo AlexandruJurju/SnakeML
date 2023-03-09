@@ -18,7 +18,7 @@ class ViewConsts:
     DRAW = False
     # TODO option for draw in train new genetic
     MAX_FPS = 40
-    WIDTH, HEIGHT = 1366, 768
+    WIDTH, HEIGHT = 1440 , 900
     SQUARE_SIZE = 25
     # WINDOW_START_X, WINDOW_START_Y = 50, 50
 

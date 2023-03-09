@@ -33,7 +33,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "X:/School/Licenta Snake/pygame_gui_examples-master",
+    "last_opened_file_path": "X:/School Repos/SnakeML/data/fonts",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -211,7 +211,7 @@
       <workItem from="1678011587800" duration="2600000" />
       <workItem from="1678015124050" duration="19000" />
       <workItem from="1678015153468" duration="52000" />
-      <workItem from="1678356413344" duration="2688000" />
+      <workItem from="1678356413344" duration="6630000" />
     </task>
     <servers />
   </component>
@@ -230,7 +230,7 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/SnakeML$Main.coverage" NAME="Main Coverage Results" MODIFIED="1678359111913" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SnakeML$Main.coverage" NAME="Main Coverage Results" MODIFIED="1678363101134" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SnakeML$main.coverage" NAME="main Coverage Results" MODIFIED="1666945857744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

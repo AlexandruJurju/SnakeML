@@ -6,6 +6,28 @@
       "link_text": "#FF0000",
       "link_hover": "#FFFF00",
       "link_selected": "#FFFFFF"
+    },
+    "font": {
+      "name": "jetbrainsmono",
+      "size": "13",
+      "bold": "0",
+      "italic": "0",
+      "regular_resource": {
+        "package": "data.fonts",
+        "resource": "JetBrainsMono-Regular.ttf"
+      },
+      "bold_resource": {
+        "package": "data.fonts",
+        "resource": "JetBrainsMono-Bold.ttf"
+      },
+      "italic_resource": {
+        "package": "data.fonts",
+        "resource": "JetBrainsMono-Italic.ttf"
+      },
+      "bold_italic_resource": {
+        "package": "data.fonts",
+        "resource": "JetBrainsMono-BoldItalic.ttf"
+      }
     }
   }
 }
