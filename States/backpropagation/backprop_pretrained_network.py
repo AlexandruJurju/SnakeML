@@ -64,6 +64,7 @@ class BackpropPretrainedNetwork(BaseState):
         self.board_size_label.kill()
         self.snake_size_entry.kill()
         self.snake_size_label.kill()
+        self.execute_network = False
 
     def run_network(self, surface):
         vision_lines = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
