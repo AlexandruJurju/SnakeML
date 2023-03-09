@@ -64,38 +64,31 @@ class GeneticTrainNetworkOptions(BaseState):
         self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "Genetic Network Options", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect(ViewConsts.BUTTON_BACK_POSITION, ViewConsts.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
-        # 0-0
         self.starting_snake_size_entry = UITextEntryLine(pygame.Rect((ViewConsts.X_SECOND - 75 // 2 - 250, 150), (75, 30)), self.ui_manager)
         self.starting_snake_size_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 250 // 2 - 250, 100), (250, 35)), "Starting Snake Size", self.ui_manager)
         self.starting_snake_size_entry.set_text(str(SnakeSettings.INITIAL_SNAKE_SIZE))
 
-        # 0-1
         self.board_size_entry = UITextEntryLine(pygame.Rect((ViewConsts.X_SECOND - 75 // 2, 150), (75, 30)), self.ui_manager)
         self.board_size_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 250 // 2, 100), (250, 35)), "Board Size", self.ui_manager)
         self.board_size_entry.set_text(str(BoardSettings.INITIAL_BOARD_SIZE))
 
-        # 1-0
         self.dropdown_input_direction_count = UIDropDownMenu(NNSettings.AVAILABLE_INPUT_DIRECTIONS, NNSettings.AVAILABLE_INPUT_DIRECTIONS[0], pygame.Rect((ViewConsts.X_SECOND - 75 // 2 - 250, 350), (75, 30)), self.ui_manager)
         self.dropdown_input_direction_count_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 250 // 2 - 250, 300), (250, 35)), "Input Direction Count", self.ui_manager)
 
-        # 1-1
         self.file_name_entry = UITextEntryLine(pygame.Rect((ViewConsts.X_SECOND - 125 // 2, 350), (125, 30)), self.ui_manager)
         self.file_name_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 125 // 2, 300), (125, 35)), "Network name", self.ui_manager)
         self.file_name_entry.set_text("Default")
 
-        # 1-2
         self.dropdown_vision_line_return_type = UIDropDownMenu(NNSettings.AVAILABLE_VISION_LINES_RETURN_TYPE, NNSettings.AVAILABLE_VISION_LINES_RETURN_TYPE[0],
-                                                               pygame.Rect((ViewConsts.X_SECOND - 125 // 2 + 250, 350), (125, 30)), self.ui_manager)
-        self.dropdown_vision_line_return_type_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 250 // 2 + 250, 300), (250, 35)), "Vision Line Return Type", self.ui_manager)
+                                                               pygame.Rect((ViewConsts.X_SECOND - 125 // 2, 350), (125, 30)), self.ui_manager)
+        self.dropdown_vision_line_return_type_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 250 // 2, 300), (250, 35)), "Vision Line Return Type", self.ui_manager)
 
-        # 2-0
-        self.population_count_entry = UITextEntryLine(pygame.Rect((ViewConsts.X_SECOND - 75 // 2 - 250, 550), (75, 30)), self.ui_manager)
-        self.population_count_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 200 // 2 - 250, 500), (200, 35)), "Individuals in Population", self.ui_manager)
+        self.population_count_entry = UITextEntryLine(pygame.Rect((ViewConsts.X_SECOND - 75 // 2 - 250, 150), (75, 30)), self.ui_manager)
+        self.population_count_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 200 // 2 - 250, 100), (200, 35)), "Individuals in Population", self.ui_manager)
         self.population_count_entry.set_text(str(GeneticSettings.POPULATION_COUNT))
 
-        # 2-1
-        self.mutation_rate_entry = UITextEntryLine(pygame.Rect((ViewConsts.X_SECOND - 75 // 2, 550), (75, 30)), self.ui_manager)
-        self.mutation_rate_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 200 // 2, 500), (200, 35)), "Mutation Rate", self.ui_manager)
+        self.mutation_rate_entry = UITextEntryLine(pygame.Rect((ViewConsts.X_SECOND - 75 // 2, 150), (75, 30)), self.ui_manager)
+        self.mutation_rate_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 200 // 2, 100), (200, 35)), "Mutation Rate", self.ui_manager)
         self.mutation_rate_entry.set_text(str(GeneticSettings.MUTATION_CHANCE))
 
         self.genetic_options_list = [self.mutation_rate_entry, self.mutation_rate_entry_label, self.population_count_entry, self.population_count_entry_label]
