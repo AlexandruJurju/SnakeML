@@ -2,7 +2,7 @@ from typing import List
 
 import numpy as np
 
-from constants import *
+from settings import *
 
 
 def distance(a, b):

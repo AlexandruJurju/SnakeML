@@ -5,7 +5,7 @@ from pygame_gui.elements import UILabel, UIButton, UIDropDownMenu, UITextEntryLi
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import State, ViewConsts
+from settings import State, ViewConsts
 from settings import NNSettings, GeneticSettings, SnakeSettings, BoardSettings
 
 

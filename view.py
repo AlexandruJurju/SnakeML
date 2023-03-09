@@ -2,7 +2,7 @@ from typing import List, Tuple
 
 import pygame
 
-from constants import ViewConsts, BoardConsts, MAIN_DIRECTIONS, Direction
+from settings import ViewConsts, BoardConsts, MAIN_DIRECTIONS, Direction
 from model import Model
 from neural_network import Dense
 from vision import VisionLine, find_snake_head_poz

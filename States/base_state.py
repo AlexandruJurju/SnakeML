@@ -1,4 +1,4 @@
-from constants import State
+from settings import State
 
 
 class BaseState:

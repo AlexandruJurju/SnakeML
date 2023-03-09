@@ -7,7 +7,7 @@ from pygame_gui.windows import UIFileDialog
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import State, ViewConsts
+from settings import State, ViewConsts
 from model import Model
 from settings import NNSettings
 from train_network import read_all_from_json

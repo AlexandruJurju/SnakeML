@@ -6,7 +6,7 @@ from pygame_gui.elements import UILabel, UIButton
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import State
+from settings import State
 from neural_network import *
 from settings import NNSettings
 from train_network import TrainingExample, write_examples_to_json_4d, train_network, save_neural_network_to_json

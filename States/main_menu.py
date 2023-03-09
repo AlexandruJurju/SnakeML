@@ -5,7 +5,7 @@ from pygame_gui.elements import UILabel, UIButton
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from constants import State, ViewConsts
+from settings import State, ViewConsts
 
 
 class MainMenu(BaseState):

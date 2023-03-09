@@ -13,7 +13,7 @@ from States.genetic.genetic_train_new_network import GeneticTrainNewNetwork
 from States.genetic.genetic_train_new_network_options import GeneticTrainNetworkOptions
 from States.main_menu import MainMenu
 from States.state_manager import StateManager
-from constants import ViewConsts, State
+from settings import ViewConsts, State
 
 
 def main():
