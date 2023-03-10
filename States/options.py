@@ -9,11 +9,13 @@ from game_config import *
 
 
 # noinspection PyTypeChecker
-class GeneticTrainNetworkOptions(BaseState):
+# TODO just one options state
+class Options(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
-        super().__init__(State.GENETIC_TRAIN_NETWORK_OPTIONS, state_manager)
+        super().__init__(State.OPTIONS, state_manager)
 
         self.ui_manager = ui_manager
+        self.options_target = None
 
         self.snake_options_list: [] = []
         self.genetic_options_list: [] = []
@@ -59,12 +61,19 @@ class GeneticTrainNetworkOptions(BaseState):
         self.button_run = None
 
     def start(self):
+        self.options_target = self.data_received["state"]
+
         self.button_snake_options = UIButton(pygame.Rect((ViewConsts.X_SECOND - 625, 150), (225, 40)), "Snake Options", self.ui_manager)
         self.button_neuronal_network_options = UIButton(pygame.Rect((ViewConsts.X_SECOND - 625, 300), (225, 40)), "Neural Network Options", self.ui_manager)
         self.button_genetic_options = UIButton(pygame.Rect((ViewConsts.X_SECOND - 625, 450), (225, 40)), "Genetic Algorithm Options", self.ui_manager)
 
-        self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "Genetic Network Options", self.ui_manager, object_id="#window_label")
+        self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect(ViewConsts.BUTTON_BACK_POSITION, ViewConsts.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
+
+        if self.options_target == "genetic":
+            self.title_label.set_text("Genetic Options")
+        else:
+            self.title_label.set_text("Backpropagation Options")
 
         self.starting_snake_size_entry = UITextEntryLine(pygame.Rect((ViewConsts.X_SECOND - 75 // 2 - 250, 150), (75, 30)), self.ui_manager)
         self.starting_snake_size_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 250 // 2 - 250, 100), (250, 35)), "Starting Snake Size", self.ui_manager)
@@ -101,9 +110,9 @@ class GeneticTrainNetworkOptions(BaseState):
         self.dropdown_activation_function_hidden = UIDropDownMenu(NNSettings.AVAILABLE_ACTIVATION_FUNCTIONS, NNSettings.AVAILABLE_ACTIVATION_FUNCTIONS[0],
                                                                   pygame.Rect((ViewConsts.X_SECOND - 125 // 2 - 250, 150), (125, 30)), self.ui_manager)
 
-        self.hidden_layer_count_entry = UITextEntryLine(pygame.Rect((ViewConsts.X_SECOND - 75 // 2 + 250, 150), (75, 30)), self.ui_manager)
-        self.hidden_layer_count_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 200 // 2 + 250, 100), (200, 35)), "Hidden Layer Count", self.ui_manager)
-        self.hidden_layer_count_entry.set_text("1")
+        # self.hidden_layer_count_entry = UITextEntryLine(pygame.Rect((ViewConsts.X_SECOND - 75 // 2 + 250, 150), (75, 30)), self.ui_manager)
+        # self.hidden_layer_count_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 200 // 2 + 250, 100), (200, 35)), "Hidden Layer Count", self.ui_manager)
+        # self.hidden_layer_count_entry.set_text("1")
 
         self.genetic_options_list = [self.mutation_rate_entry, self.mutation_rate_entry_label, self.population_count_entry, self.population_count_entry_label]
 
@@ -119,6 +128,9 @@ class GeneticTrainNetworkOptions(BaseState):
             option.hide()
         for option in self.neural_network_options_list:
             option.hide()
+
+        if self.options_target == "backpropagation":
+            self.button_genetic_options.hide()
 
         self.button_run = UIButton(pygame.Rect((ViewConsts.X_SECOND - 75 // 2, 675), (75, 40)), "RUN", self.ui_manager)
 
@@ -176,7 +188,10 @@ class GeneticTrainNetworkOptions(BaseState):
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_back:
-                    self.set_target_state_name(State.GENETIC_MENU)
+                    if self.options_target == "genetic":
+                        self.set_target_state_name(State.GENETIC_MENU)
+                    else:
+                        self.set_target_state_name(State.BACKPROPAGATION_MENU)
                     self.trigger_transition()
 
                 if event.ui_element == self.button_snake_options:
@@ -207,7 +222,11 @@ class GeneticTrainNetworkOptions(BaseState):
                         option.show()
 
                 if event.ui_element == self.button_run:
-                    self.set_target_state_name(State.GENETIC_TRAIN_NEW_NETWORK)
+                    if self.options_target == "genetic":
+                        self.set_target_state_name(State.GENETIC_TRAIN_NEW_NETWORK)
+                    else:
+                        self.set_target_state_name(State.BACKPROPAGATION_TRAIN_NEW_NETWORK)
+
                     self.data_to_send = {
                         "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
                         "vision_return_type": self.dropdown_vision_line_return_type.selected_option,
@@ -216,7 +235,7 @@ class GeneticTrainNetworkOptions(BaseState):
                         "output_activation": self.dropdown_activation_function_output.selected_option,
                         "population_count": int(self.population_count_entry.text),
                         "mutation_rate": float(self.mutation_rate_entry.text),
-                        "starting_snake_size": int(self.starting_snake_size_entry.text),
+                        "initial_snake_size": int(self.starting_snake_size_entry.text),
                         "board_size": int(self.board_size_entry.text)
                     }
                     self.trigger_transition()

@@ -54,10 +54,13 @@ class BackpropMenu(BaseState):
                     self.set_target_state_name(State.MAIN_MENU)
                     self.trigger_transition()
                 if event.ui_element == self.button_run_pretrained_network:
-                    self.set_target_state_name(State.BACKPROPAGATION_TRAINED_NETWORK)
+                    self.set_target_state_name(State.BACKPROPAGATION_PRETRAINED_NETWORK)
                     self.trigger_transition()
                 if event.ui_element == self.button_train_network_options:
-                    self.set_target_state_name(State.BACKPROPAGATION_TRAIN_NEW_NETWORK_OPTIONS)
+                    self.set_target_state_name(State.OPTIONS)
+                    self.data_to_send = {
+                        "state": "backpropagation"
+                    }
                     self.trigger_transition()
 
         self.ui_manager.update(time_delta)

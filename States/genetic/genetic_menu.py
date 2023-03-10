@@ -50,7 +50,10 @@ class MenuGenetic(BaseState):
                     self.set_target_state_name(State.GENETIC_RUN_TRAINED_NETWORK)
                     self.trigger_transition()
                 if event.ui_element == self.button_options_genetic:
-                    self.set_target_state_name(State.GENETIC_TRAIN_NETWORK_OPTIONS)
+                    self.set_target_state_name(State.OPTIONS)
+                    self.data_to_send = {
+                        "state": "genetic"
+                    }
                     self.trigger_transition()
                 if event.ui_element == self.button_back:
                     self.set_target_state_name(State.MAIN_MENU)

@@ -17,7 +17,7 @@ from vision import get_vision_lines
 
 class BackpropPretrainedNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
-        super().__init__(State.BACKPROPAGATION_TRAINED_NETWORK, state_manager)
+        super().__init__(State.BACKPROPAGATION_PRETRAINED_NETWORK, state_manager)
 
         self.network = None
         self.vision_return_type = None

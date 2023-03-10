@@ -6,12 +6,11 @@ from pygame_gui import UIManager
 from States.backpropagation.backprop_menu import BackpropMenu
 from States.backpropagation.backprop_pretrained_network import BackpropPretrainedNetwork
 from States.backpropagation.backprop_train_new_network import BackpropTrainNewNetwork
-from States.backpropagation.backprop_train_new_network_options import BackpropTrainNewNetworkOptions
 from States.genetic.genetic_menu import MenuGenetic
 from States.genetic.genetic_pretrained_network import GeneticPretrainedNetwork
 from States.genetic.genetic_train_new_network import GeneticTrainNewNetwork
-from States.genetic.genetic_train_new_network_options import GeneticTrainNetworkOptions
 from States.main_menu import MainMenu
+from States.options import Options
 from States.state_manager import StateManager
 from game_config import ViewConsts, State
 
@@ -49,14 +48,13 @@ def main():
     state_manager.add_state(MainMenu(state_manager, ui_manager))
     state_manager.add_state(MenuGenetic(state_manager, ui_manager))
     state_manager.add_state(GeneticPretrainedNetwork(state_manager, ui_manager))
-    state_manager.add_state(GeneticTrainNetworkOptions(state_manager, ui_manager))
+    state_manager.add_state(Options(state_manager, ui_manager))
     state_manager.add_state(GeneticTrainNewNetwork(state_manager, ui_manager))
     state_manager.add_state(BackpropMenu(state_manager, ui_manager))
     state_manager.add_state(BackpropPretrainedNetwork(state_manager, ui_manager))
-    state_manager.add_state(BackpropTrainNewNetworkOptions(state_manager, ui_manager))
     state_manager.add_state(BackpropTrainNewNetwork(state_manager, ui_manager))
 
-    state_manager.set_initial_state(State.GENETIC_TRAIN_NETWORK_OPTIONS)
+    state_manager.set_initial_state(State.MAIN_MENU)
 
     clock = pygame.time.Clock()
     running = True

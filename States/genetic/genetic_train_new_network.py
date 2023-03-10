@@ -59,7 +59,7 @@ class GeneticTrainNewNetwork(BaseState):
         net.add_layer(Dense(hidden_neuron_count, output_neuron_count))
         net.add_layer(Activation(output_activation, output_activation))
 
-        self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], True, net)
+        self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], True, net)
 
     def end(self):
         self.title_label.kill()
@@ -85,9 +85,9 @@ class GeneticTrainNewNetwork(BaseState):
 
             if self.generation == 0:
                 self.model.snake.brain.reinit_weights_and_biases()
-                self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], True, self.model.snake.brain)
+                self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], True, self.model.snake.brain)
             else:
-                self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], True, self.offspring_list[len(self.parent_list) - 1])
+                self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], True, self.offspring_list[len(self.parent_list) - 1])
 
             if len(self.parent_list) == GeneticSettings.POPULATION_COUNT:
                 self.offspring_list.clear()
@@ -171,7 +171,10 @@ class GeneticTrainNewNetwork(BaseState):
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_back:
-                    self.set_target_state_name(State.GENETIC_TRAIN_NETWORK_OPTIONS)
+                    self.set_target_state_name(State.OPTIONS)
+                    self.data_to_send = {
+                        "state": "genetic"
+                    }
                     self.trigger_transition()
 
         if ViewConsts.DRAW:

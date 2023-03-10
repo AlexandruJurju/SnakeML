@@ -6,9 +6,9 @@ from pygame_gui.elements import UILabel, UIButton
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
+from game_config import NNSettings
 from game_config import State
 from neural_network import *
-from game_config import NNSettings
 from train_network import TrainingExample, write_examples_to_json_4d, train_network, save_neural_network_to_json
 from view import *
 from vision import get_vision_lines, VisionLine
@@ -91,7 +91,8 @@ class BackpropTrainNewNetwork(BaseState):
             event = pygame.event.wait()
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_back:
-                    self.set_target_state_name(State.BACKPROPAGATION_TRAIN_NEW_NETWORK_OPTIONS)
+                    self.set_target_state_name(State.OPTIONS)
+                    self.data_to_send["state"] = "backpropagation"
                     self.trigger_transition()
                     break
 
@@ -206,7 +207,10 @@ class BackpropTrainNewNetwork(BaseState):
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_back:
-                    self.set_target_state_name(State.BACKPROPAGATION_TRAIN_NEW_NETWORK_OPTIONS)
+                    self.set_target_state_name(State.OPTIONS)
+                    self.data_to_send = {
+                        "state": "backpropagation"
+                    }
                     self.trigger_transition()
 
         self.ui_manager.update(time_delta)
