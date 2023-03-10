@@ -3,14 +3,13 @@ import os
 import pygame
 from pygame_gui import UIManager
 
-from States.backpropagation.backprop_menu import BackpropMenu
-from States.backpropagation.backprop_pretrained_network import BackpropPretrainedNetwork
-from States.backpropagation.backprop_train_new_network import BackpropTrainNewNetwork
-from States.genetic.genetic_menu import MenuGenetic
-from States.genetic.genetic_pretrained_network import GeneticPretrainedNetwork
+from States.backpropagation.backpropagation_menu import BackpropagationMenu
+from States.backpropagation.backpropagation_train_new_network import BackpropagationTrainNewNetwork
+from States.genetic.genetic_menu import GeneticMenu
 from States.genetic.genetic_train_new_network import GeneticTrainNewNetwork
 from States.main_menu import MainMenu
 from States.options import Options
+from States.run_pretrained import RunPretrained
 from States.state_manager import StateManager
 from game_config import ViewConsts, State
 
@@ -46,13 +45,12 @@ def main():
 
     state_manager = StateManager()
     state_manager.add_state(MainMenu(state_manager, ui_manager))
-    state_manager.add_state(MenuGenetic(state_manager, ui_manager))
-    state_manager.add_state(GeneticPretrainedNetwork(state_manager, ui_manager))
     state_manager.add_state(Options(state_manager, ui_manager))
+    state_manager.add_state(RunPretrained(state_manager, ui_manager))
+    state_manager.add_state(GeneticMenu(state_manager, ui_manager))
     state_manager.add_state(GeneticTrainNewNetwork(state_manager, ui_manager))
-    state_manager.add_state(BackpropMenu(state_manager, ui_manager))
-    state_manager.add_state(BackpropPretrainedNetwork(state_manager, ui_manager))
-    state_manager.add_state(BackpropTrainNewNetwork(state_manager, ui_manager))
+    state_manager.add_state(BackpropagationMenu(state_manager, ui_manager))
+    state_manager.add_state(BackpropagationTrainNewNetwork(state_manager, ui_manager))
 
     state_manager.set_initial_state(State.MAIN_MENU)
 

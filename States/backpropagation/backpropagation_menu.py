@@ -8,7 +8,7 @@ from States.state_manager import StateManager
 from game_config import State, ViewConsts
 
 
-class BackpropMenu(BaseState):
+class BackpropagationMenu(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.BACKPROPAGATION_MENU, state_manager)
 
@@ -54,7 +54,10 @@ class BackpropMenu(BaseState):
                     self.set_target_state_name(State.MAIN_MENU)
                     self.trigger_transition()
                 if event.ui_element == self.button_run_pretrained_network:
-                    self.set_target_state_name(State.BACKPROPAGATION_PRETRAINED_NETWORK)
+                    self.set_target_state_name(State.RUN_PRETRAINED)
+                    self.data_to_send = {
+                        "state": "backpropagation"
+                    }
                     self.trigger_transition()
                 if event.ui_element == self.button_train_network_options:
                     self.set_target_state_name(State.OPTIONS)

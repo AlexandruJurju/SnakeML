@@ -8,7 +8,7 @@ from States.state_manager import StateManager
 from game_config import State, ViewConsts
 
 
-class MenuGenetic(BaseState):
+class GeneticMenu(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.GENETIC_MENU, state_manager)
 
@@ -47,7 +47,10 @@ class MenuGenetic(BaseState):
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_run_pretrained_network:
-                    self.set_target_state_name(State.GENETIC_RUN_TRAINED_NETWORK)
+                    self.set_target_state_name(State.RUN_PRETRAINED)
+                    self.data_to_send = {
+                        "state": "genetic"
+                    }
                     self.trigger_transition()
                 if event.ui_element == self.button_options_genetic:
                     self.set_target_state_name(State.OPTIONS)

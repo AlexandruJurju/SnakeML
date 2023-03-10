@@ -14,7 +14,7 @@ from view import *
 from vision import get_vision_lines, VisionLine
 
 
-class BackpropTrainNewNetwork(BaseState):
+class BackpropagationTrainNewNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.BACKPROPAGATION_TRAIN_NEW_NETWORK, state_manager)
 
