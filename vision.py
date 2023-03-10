@@ -80,7 +80,6 @@ def look_in_direction(board: List[List[str]], direction: Direction, vision_retur
         return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_distance_output, segment_coord, segment_distance_output, direction)
 
 
-# TODO change directions to UP,DOWN,LEFT,RIGHT
 def get_vision_lines(board: List[List[str]], input_direction_count: int, vision_return_type: str) -> List[VisionLine]:
     if input_direction_count == 8:
         vision_lines = [look_in_direction(board, Direction.UP, vision_return_type),

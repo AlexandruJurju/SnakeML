@@ -25,7 +25,6 @@ class Snake(Individual):
         self.steps_taken = 0
         self.won = False
 
-        # TODO BAD direction , can cause collisions
         self.direction = None
 
     def calculate_fitness(self) -> None:

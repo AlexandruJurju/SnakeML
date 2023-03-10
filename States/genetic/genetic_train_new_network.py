@@ -50,7 +50,6 @@ class GeneticTrainNewNetwork(BaseState):
         hidden_neuron_count = 24
         output_neuron_count = 4 if input_direction_count == 4 or input_direction_count == 8 else 3
 
-        # TODO hardcoded activation functions
         hidden_activation = getattr(neural_network, self.data_received["hidden_activation"])
         output_activation = getattr(neural_network, self.data_received["output_activation"])
         # activation prime doesn't matter in feedforward, use base activation functions to avoid error
@@ -100,7 +99,6 @@ class GeneticTrainNewNetwork(BaseState):
                 return False
         return True
 
-    # TODO use elitist to put the best 100 snakes in next generation
     def next_generation(self):
         self.offspring_list.clear()
 
