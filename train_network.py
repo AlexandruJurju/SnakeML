@@ -1,6 +1,7 @@
 import json
 from typing import Tuple, Dict
 
+import neural_network
 from game_config import Direction
 from neural_network import *
 from vision import get_parameters_in_nn_input_form, VisionLine
@@ -154,27 +155,8 @@ def read_all_from_json(path: str) -> Dict:
                 activation_str = layer["activation"]
                 activation_prime_str = layer["activation_prime"]
 
-                activation = None
-                activation_prime = None
-                match activation_str:
-                    case "tanh":
-                        activation = tanh
-                    case "sigmoid":
-                        activation = sigmoid
-                    case "lru":
-                        activation = relu
-                    case "leaky_relu":
-                        activation = leaky_relu
-
-                match activation_prime_str:
-                    case "tanh_prime":
-                        activation_prime = tanh_prime
-                    case "sigmoid_prime":
-                        activation_prime = sigmoid_prime
-                    case "relu_prime":
-                        activation_prime = relu_prime
-                    case "leaky_relu_prime":
-                        activation_prime = leaky_relu_prime
+                activation = getattr(neural_network, activation_str)
+                activation_prime = getattr(neural_network, activation_prime_str)
 
                 activation_layer = Activation(activation, activation_prime)
                 output_network.add_layer(activation_layer)

@@ -7,6 +7,7 @@ def relu(x):
     return np.maximum(0.0, x)
 
 
+# TODO relu prime
 def relu_prime(x):
     return
 
