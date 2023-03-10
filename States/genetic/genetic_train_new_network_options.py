@@ -53,6 +53,9 @@ class GeneticTrainNetworkOptions(BaseState):
         self.dropdown_activation_function_output: UIDropDownMenu = None
         self.dropdown_activation_function_output_label: UILabel = None
 
+        self.hidden_layer_count_entry: UITextEntryLine = None
+        self.hidden_layer_count_entry_label: UILabel = None
+
         self.button_run = None
 
     def start(self):
@@ -74,8 +77,8 @@ class GeneticTrainNetworkOptions(BaseState):
         self.dropdown_input_direction_count = UIDropDownMenu(NNSettings.AVAILABLE_INPUT_DIRECTIONS, NNSettings.AVAILABLE_INPUT_DIRECTIONS[0], pygame.Rect((ViewConsts.X_SECOND - 75 // 2 - 250, 350), (75, 30)), self.ui_manager)
         self.dropdown_input_direction_count_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 250 // 2 - 250, 300), (250, 35)), "Input Direction Count", self.ui_manager)
 
-        self.file_name_entry = UITextEntryLine(pygame.Rect((ViewConsts.X_SECOND - 125 // 2, 350), (125, 30)), self.ui_manager)
-        self.file_name_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 125 // 2, 300), (125, 35)), "Network name", self.ui_manager)
+        self.file_name_entry = UITextEntryLine(pygame.Rect((ViewConsts.X_SECOND - 125 // 2 - 250, 550), (125, 30)), self.ui_manager)
+        self.file_name_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 125 // 2 - 250, 500), (125, 35)), "Network name", self.ui_manager)
         self.file_name_entry.set_text("Default")
 
         self.dropdown_vision_line_return_type = UIDropDownMenu(NNSettings.AVAILABLE_VISION_LINES_RETURN_TYPE, NNSettings.AVAILABLE_VISION_LINES_RETURN_TYPE[0],
@@ -98,13 +101,17 @@ class GeneticTrainNetworkOptions(BaseState):
         self.dropdown_activation_function_hidden = UIDropDownMenu(NNSettings.AVAILABLE_ACTIVATION_FUNCTIONS, NNSettings.AVAILABLE_ACTIVATION_FUNCTIONS[0],
                                                                   pygame.Rect((ViewConsts.X_SECOND - 125 // 2 - 250, 150), (125, 30)), self.ui_manager)
 
+        self.hidden_layer_count_entry = UITextEntryLine(pygame.Rect((ViewConsts.X_SECOND - 75 // 2 + 250, 150), (75, 30)), self.ui_manager)
+        self.hidden_layer_count_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 200 // 2 + 250, 100), (200, 35)), "Hidden Layer Count", self.ui_manager)
+        self.hidden_layer_count_entry.set_text("1")
+
         self.genetic_options_list = [self.mutation_rate_entry, self.mutation_rate_entry_label, self.population_count_entry, self.population_count_entry_label]
 
-        self.snake_options_list = [self.starting_snake_size_entry, self.starting_snake_size_entry_label, self.board_size_entry, self.board_size_entry_label, self.dropdown_input_direction_count,
-                                   self.dropdown_input_direction_count_label, self.dropdown_vision_line_return_type, self.dropdown_vision_line_return_type_label]
+        self.snake_options_list = [self.starting_snake_size_entry, self.starting_snake_size_entry_label, self.board_size_entry, self.board_size_entry_label]
 
         self.neural_network_options_list = [self.file_name_entry, self.file_name_entry_label, self.dropdown_activation_function_output, self.dropdown_activation_function_output_label, self.dropdown_activation_function_hidden,
-                                            self.dropdown_activation_function_hidden_label]
+                                            self.dropdown_activation_function_hidden_label, self.dropdown_input_direction_count,
+                                            self.dropdown_input_direction_count_label, self.dropdown_vision_line_return_type, self.dropdown_vision_line_return_type_label]
 
         for option in self.snake_options_list:
             option.hide()
