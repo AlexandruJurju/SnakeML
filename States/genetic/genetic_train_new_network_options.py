@@ -57,9 +57,9 @@ class GeneticTrainNetworkOptions(BaseState):
         self.button_run = None
 
     def start(self):
-        self.button_snake_options = UIButton(pygame.Rect((ViewConsts.X_SECOND - 675, 150), (225, 40)), "Snake Options", self.ui_manager)
-        self.button_neuronal_network_options = UIButton(pygame.Rect((ViewConsts.X_SECOND - 675, 300), (225, 40)), "Neural Network Options", self.ui_manager)
-        self.button_genetic_options = UIButton(pygame.Rect((ViewConsts.X_SECOND - 675, 450), (225, 40)), "Genetic Algorithm Options", self.ui_manager)
+        self.button_snake_options = UIButton(pygame.Rect((ViewConsts.X_SECOND - 625, 150), (225, 40)), "Snake Options", self.ui_manager)
+        self.button_neuronal_network_options = UIButton(pygame.Rect((ViewConsts.X_SECOND - 625, 300), (225, 40)), "Neural Network Options", self.ui_manager)
+        self.button_genetic_options = UIButton(pygame.Rect((ViewConsts.X_SECOND - 625, 450), (225, 40)), "Genetic Algorithm Options", self.ui_manager)
 
         self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "Genetic Network Options", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect(ViewConsts.BUTTON_BACK_POSITION, ViewConsts.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
@@ -91,12 +91,21 @@ class GeneticTrainNetworkOptions(BaseState):
         self.mutation_rate_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 200 // 2, 100), (200, 35)), "Mutation Rate", self.ui_manager)
         self.mutation_rate_entry.set_text(str(GeneticSettings.MUTATION_CHANCE))
 
+        self.dropdown_activation_function_output_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 250 // 2, 100), (250, 35)), "Output Activation Function", self.ui_manager)
+        self.dropdown_activation_function_output = UIDropDownMenu(NNSettings.AVAILABLE_ACTIVATION_FUNCTIONS, NNSettings.AVAILABLE_ACTIVATION_FUNCTIONS[0],
+                                                                  pygame.Rect((ViewConsts.X_SECOND - 125 // 2, 150), (125, 30)), self.ui_manager)
+
+        self.dropdown_activation_function_hidden_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 250 // 2 - 250, 100), (250, 35)), "Hidden Activation Function", self.ui_manager)
+        self.dropdown_activation_function_hidden = UIDropDownMenu(NNSettings.AVAILABLE_ACTIVATION_FUNCTIONS, NNSettings.AVAILABLE_ACTIVATION_FUNCTIONS[0],
+                                                                  pygame.Rect((ViewConsts.X_SECOND - 125 // 2 - 250, 150), (125, 30)), self.ui_manager)
+
         self.genetic_options_list = [self.mutation_rate_entry, self.mutation_rate_entry_label, self.population_count_entry, self.population_count_entry_label]
 
         self.snake_options_list = [self.starting_snake_size_entry, self.starting_snake_size_entry_label, self.board_size_entry, self.board_size_entry_label, self.dropdown_input_direction_count,
                                    self.dropdown_input_direction_count_label, self.dropdown_vision_line_return_type, self.dropdown_vision_line_return_type_label]
 
-        self.neural_network_options_list = [self.file_name_entry, self.file_name_entry_label]
+        self.neural_network_options_list = [self.file_name_entry, self.file_name_entry_label, self.dropdown_activation_function_output, self.dropdown_activation_function_output_label, self.dropdown_activation_function_hidden,
+                                            self.dropdown_activation_function_hidden_label]
 
         for option in self.snake_options_list:
             option.hide()
@@ -105,7 +114,7 @@ class GeneticTrainNetworkOptions(BaseState):
         for option in self.neural_network_options_list:
             option.hide()
 
-        self.button_run = UIButton(pygame.Rect((ViewConsts.X_SECOND - 75 // 2, 650), (75, 40)), "RUN", self.ui_manager)
+        self.button_run = UIButton(pygame.Rect((ViewConsts.X_SECOND - 75 // 2, 675), (75, 40)), "RUN", self.ui_manager)
 
     def end(self):
         self.title_label.kill()
@@ -136,11 +145,11 @@ class GeneticTrainNetworkOptions(BaseState):
         self.file_name_entry.kill()
         self.file_name_entry_label.kill()
 
-        # self.dropdown_activation_function_hidden.kill()
-        # self.dropdown_activation_function_hidden_label.kill()
-        #
-        # self.dropdown_activation_function_output.kill()
-        # self.dropdown_activation_function_output_label.kill()
+        self.dropdown_activation_function_hidden.kill()
+        self.dropdown_activation_function_hidden_label.kill()
+
+        self.dropdown_activation_function_output.kill()
+        self.dropdown_activation_function_output_label.kill()
 
         self.button_run.kill()
 
@@ -197,6 +206,8 @@ class GeneticTrainNetworkOptions(BaseState):
                         "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
                         "vision_return_type": self.dropdown_vision_line_return_type.selected_option,
                         "file_name": self.file_name_entry.text,
+                        "hidden_activation": self.dropdown_activation_function_hidden.selected_option,
+                        "output_activation": self.dropdown_activation_function_output.selected_option,
                         "population_count": int(self.population_count_entry.text),
                         "mutation_rate": float(self.mutation_rate_entry.text),
                         "starting_snake_size": int(self.starting_snake_size_entry.text),

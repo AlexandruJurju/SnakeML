@@ -3,13 +3,14 @@ import pygame_gui
 from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
 
+import neural_network
 from States.base_state import BaseState
 from States.state_manager import StateManager
+from game_config import GeneticSettings, NNSettings
 from game_config import State
 from genetic_operators import elitist_selection, roulette_selection, full_mutation, full_crossover
 from model import Snake
-from neural_network import NeuralNetwork, Activation, leaky_relu, leaky_relu_prime, sigmoid, sigmoid_prime
-from game_config import GeneticSettings, NNSettings
+from neural_network import NeuralNetwork, Activation
 from train_network import save_neural_network_to_json
 from view import *
 from vision import get_vision_lines
@@ -50,11 +51,14 @@ class GeneticTrainNewNetwork(BaseState):
         output_neuron_count = 4 if input_direction_count == 4 or input_direction_count == 8 else 3
 
         # TODO hardcoded activation functions
+        hidden_activation = getattr(neural_network, self.data_received["hidden_activation"])
+        output_activation = getattr(neural_network, self.data_received["output_activation"])
+        # activation prime doesn't matter in feedforward, use base activation functions to avoid error
         net = NeuralNetwork()
         net.add_layer(Dense(input_neuron_count, hidden_neuron_count))
-        net.add_layer(Activation(leaky_relu, leaky_relu_prime))
+        net.add_layer(Activation(hidden_activation, hidden_activation))
         net.add_layer(Dense(hidden_neuron_count, output_neuron_count))
-        net.add_layer(Activation(sigmoid, sigmoid_prime))
+        net.add_layer(Activation(output_activation, output_activation))
 
         self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], True, net)
 

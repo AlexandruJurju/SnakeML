@@ -17,8 +17,9 @@ class State(Enum):
 class ViewConsts:
     DRAW = False
     # TODO option for draw in train new genetic
-    MAX_FPS = 40
-    WIDTH, HEIGHT = 1440 , 900
+    # TODO options for genetic operators
+    MAX_FPS = 10000000000000000000000000000000000
+    WIDTH, HEIGHT = 1366, 768
     SQUARE_SIZE = 25
     # WINDOW_START_X, WINDOW_START_Y = 50, 50
 
