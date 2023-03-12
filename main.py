@@ -52,7 +52,7 @@ def main():
     state_manager.add_state(BackpropagationMenu(state_manager, ui_manager))
     state_manager.add_state(BackpropagationTrainNewNetwork(state_manager, ui_manager))
 
-    state_manager.set_initial_state(State.MAIN_MENU)
+    state_manager.set_initial_state(State.GENETIC_MENU)
 
     clock = pygame.time.Clock()
     running = True

@@ -19,8 +19,9 @@ class Snake(Individual):
     def __init__(self, neural_network: NeuralNetwork):
         super().__init__(neural_network)
         self.body = []
-        self.ttl = SnakeSettings.SNAKE_MAX_TTL
+        self.TTL = SnakeSettings.SNAKE_MAX_TTL
         self.steps_taken = 0
+        self.steps_to_apple = 0
         self.won = False
 
         self.direction = None
@@ -150,17 +151,19 @@ class Model:
         self.snake.body.insert(0, next_head)
         self.snake.steps_taken += 1
 
+        # if snake eats an apple, the last segment isn't removed from the body list when moving
         if new_head_value == BoardConsts.APPLE:
             self.update_board_from_snake()
             self.place_new_apple()
-            self.snake.ttl = SnakeSettings.SNAKE_MAX_TTL
+            self.snake.steps_to_apple = SnakeSettings.SNAKE_MAX_TTL - self.snake.TTL
+            self.snake.TTL = SnakeSettings.SNAKE_MAX_TTL
             self.snake.score = self.snake.score + 1
         else:
             self.snake.body = self.snake.body[:-1]
             self.update_board_from_snake()
-            self.snake.ttl = self.snake.ttl - 1
+            self.snake.TTL = self.snake.TTL - 1
 
-        if self.snake.ttl == 0:
+        if self.snake.TTL == 0:
             return False
 
         if self.check_win_condition():

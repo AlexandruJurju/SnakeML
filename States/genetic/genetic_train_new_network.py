@@ -99,6 +99,7 @@ class GeneticTrainNewNetwork(BaseState):
                 return False
         return True
 
+    # TODO decaying mutation rate
     def next_generation(self):
         self.offspring_list.clear()
 

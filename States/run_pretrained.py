@@ -88,6 +88,9 @@ class RunPretrained(BaseState):
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
+            if self.model.snake.won:
+                print(f"RATIO {self.model.snake.score / self.model.snake.steps_taken}")
+
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
 
     def run(self, surface, time_delta):
