@@ -150,6 +150,7 @@ class Model:
             return False
 
         self.snake.body.insert(0, next_head)
+        # TODO i think it needs to be put at the start
         self.snake.steps_taken += 1
 
         # if snake eats an apple, the last segment isn't removed from the body list when moving

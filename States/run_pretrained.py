@@ -98,14 +98,14 @@ class RunPretrained(BaseState):
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
-            # if self.model.snake.won:
-            if self.model.snake.steps_taken == 0:
-                ratio = 0
-            else:
-                ratio = self.model.snake.score / self.model.snake.steps_taken
+            if self.model.snake.won:
+                if self.model.snake.steps_taken == 0:
+                    ratio = 0
+                else:
+                    ratio = self.model.snake.score / self.model.snake.steps_taken
 
-            write_results_to_txt(os.path.dirname(self.file_path) + "\\", ratio, self.overwrite)
-            self.overwrite = False
+                write_results_to_txt(os.path.dirname(self.file_path) + "\\", ratio, self.overwrite)
+                self.overwrite = False
 
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
 
