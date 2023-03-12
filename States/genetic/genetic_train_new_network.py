@@ -6,12 +6,12 @@ from pygame_gui.elements import UILabel, UIButton
 import neural_network
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from game_config import GameSettings, GameSettings
+from file_operations import save_neural_network_to_json
+from game_config import GameSettings
 from game_config import State
 from genetic_operators import elitist_selection, roulette_selection, full_mutation, full_crossover
 from model import Snake
 from neural_network import NeuralNetwork, Activation
-from file_operations import save_neural_network_to_json
 from view import *
 from vision import get_vision_lines
 
@@ -107,6 +107,7 @@ class GeneticTrainNewNetwork(BaseState):
         total_fitness = sum(individual.fitness for individual in self.parent_list)
         best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
 
+        # TODO use % 10 to keep only the last 10 best neural network
         save_neural_network_to_json(self.generation,
                                     best_individual.fitness,
                                     self.data_received["board_size"],
@@ -114,7 +115,7 @@ class GeneticTrainNewNetwork(BaseState):
                                     self.data_received["input_direction_count"],
                                     self.data_received["vision_return_type"],
                                     best_individual.brain,
-                                    GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.data_received["file_name"] + "/" + str(self.generation))
+                                    GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.data_received["file_name"] + "/" + str(self.generation % 10))
 
         # print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 

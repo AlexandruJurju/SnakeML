@@ -12,6 +12,7 @@ from States.state_manager import StateManager
 from file_operations import read_all_from_json, write_results_to_txt
 from game_config import State, ViewSettings, GameSettings
 from model import Model
+from view import draw_board
 from vision import get_vision_lines
 
 
@@ -68,10 +69,10 @@ class RunPretrained(BaseState):
         self.snake_size_label = UILabel(pygame.Rect((175, 250), (125, 35)), "Snake Size", self.ui_manager)
         self.snake_size_entry = UITextEntryLine(pygame.Rect((175, 300), (125, 35)), self.ui_manager)
 
-        self.toggle_draw_network = UIButton(pygame.Rect((25, 100), (125, 35)), "Draw Neural Network", self.ui_manager)
+        # self.toggle_draw_network = UIButton(pygame.Rect((25, 100), (125, 35)), "Draw Neural Network", self.ui_manager)
 
     def end(self):
-        self.toggle_draw_network.kill()
+        # self.toggle_draw_network.kill()
         self.title_label.kill()
         self.button_back.kill()
         self.score_counter.kill()
@@ -87,7 +88,7 @@ class RunPretrained(BaseState):
         vision_lines = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
-        # draw_board(surface, self.model.board, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+        draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
         # draw_vision_lines(surface, self.model, vision_lines, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
         # draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
 
