@@ -19,7 +19,7 @@ class Snake(Individual):
     def __init__(self, neural_network: NeuralNetwork):
         super().__init__(neural_network)
         self.body = []
-        self.TTL = SnakeSettings.SNAKE_MAX_TTL
+        self.TTL = GameSettings.SNAKE_MAX_TTL
         self.steps_taken = 0
         self.won = False
 
@@ -27,7 +27,8 @@ class Snake(Individual):
 
     # TODO win bonus
     def calculate_fitness(self) -> None:
-        win_bonus = 10 ^ 15 if self.won else 1
+        # 10 ^ 15 is XOR
+        win_bonus = 10 ** 15 if self.won else 1
         self.fitness = win_bonus * (self.steps_taken + ((2 ** self.score) + (self.score ** 2) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
 
 
@@ -155,8 +156,8 @@ class Model:
         if new_head_value == BoardConsts.APPLE:
             self.update_board_from_snake()
             self.place_new_apple()
-            self.snake.steps_to_apple = SnakeSettings.SNAKE_MAX_TTL - self.snake.TTL
-            self.snake.TTL = SnakeSettings.SNAKE_MAX_TTL
+            self.snake.steps_to_apple = GameSettings.SNAKE_MAX_TTL - self.snake.TTL
+            self.snake.TTL = GameSettings.SNAKE_MAX_TTL
             self.snake.score = self.snake.score + 1
         else:
             self.snake.body = self.snake.body[:-1]

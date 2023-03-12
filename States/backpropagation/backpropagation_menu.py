@@ -5,7 +5,7 @@ from pygame_gui.elements import UILabel, UIButton
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from game_config import State, ViewConsts
+from game_config import State, ViewSettings
 
 
 class BackpropagationMenu(BaseState):
@@ -21,11 +21,11 @@ class BackpropagationMenu(BaseState):
         self.button_train_network_options = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "Backpropagation Menu", self.ui_manager, object_id="#window_label")
-        self.button_back = UIButton(pygame.Rect(ViewConsts.BUTTON_BACK_POSITION, ViewConsts.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
+        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Backpropagation Menu", self.ui_manager, object_id="#window_label")
+        self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
-        self.button_train_network_options = UIButton(pygame.Rect(ViewConsts.OPTIONS_BUTTON_POSITION, ViewConsts.OPTIONS_BUTTON_DIMENSIONS), "Train New Network", self.ui_manager)
-        self.button_run_pretrained_network = UIButton(pygame.Rect(ViewConsts.PRETRAINED_BUTTON_POSITION, ViewConsts.PRETRAINED_BUTTON_DIMENSIONS), "Run Pretrained Network", self.ui_manager)
+        self.button_train_network_options = UIButton(pygame.Rect(ViewSettings.OPTIONS_BUTTON_POSITION, ViewSettings.OPTIONS_BUTTON_DIMENSIONS), "Train New Network", self.ui_manager)
+        self.button_run_pretrained_network = UIButton(pygame.Rect(ViewSettings.PRETRAINED_BUTTON_POSITION, ViewSettings.PRETRAINED_BUTTON_DIMENSIONS), "Run Pretrained Network", self.ui_manager)
 
     def end(self):
         self.title_label.kill()

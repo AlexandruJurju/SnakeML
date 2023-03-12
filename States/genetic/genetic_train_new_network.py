@@ -6,7 +6,7 @@ from pygame_gui.elements import UILabel, UIButton
 import neural_network
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from game_config import GeneticSettings, NNSettings
+from game_config import GameSettings, GameSettings
 from game_config import State
 from genetic_operators import elitist_selection, roulette_selection, full_mutation, full_crossover
 from model import Snake
@@ -36,8 +36,8 @@ class GeneticTrainNewNetwork(BaseState):
         self.individual_label = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "Genetic Train New Network", self.ui_manager, object_id="#window_label")
-        self.button_back = UIButton(pygame.Rect(ViewConsts.BUTTON_BACK_POSITION, ViewConsts.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
+        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Genetic Train New Network", self.ui_manager, object_id="#window_label")
+        self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
         self.generation_label = UILabel(pygame.Rect((45, 50), (150, 25)), "Population :", self.ui_manager)
         self.individual_label = UILabel(pygame.Rect((50, 100), (200, 25)), "Individual :", self.ui_manager)
@@ -72,8 +72,8 @@ class GeneticTrainNewNetwork(BaseState):
         vision_lines = get_vision_lines(self.model.board, self.data_received["input_direction_count"], self.data_received["vision_return_type"])
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
-        if ViewConsts.DRAW:
-            draw_board(surface, self.model.board, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+        if ViewSettings.DRAW:
+            draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             # draw_vision_lines(surface, self.model, vision_lines, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
             # draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
 
@@ -90,7 +90,7 @@ class GeneticTrainNewNetwork(BaseState):
             else:
                 self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], True, self.offspring_list[len(self.parent_list) - 1])
 
-            if len(self.parent_list) == GeneticSettings.POPULATION_COUNT:
+            if len(self.parent_list) == GameSettings.POPULATION_COUNT:
                 self.offspring_list.clear()
                 self.next_generation()
 
@@ -114,7 +114,7 @@ class GeneticTrainNewNetwork(BaseState):
                                     self.data_received["input_direction_count"],
                                     self.data_received["vision_return_type"],
                                     best_individual.brain,
-                                    NNSettings.GENETIC_NETWORK_FOLDER + "/" + self.data_received["file_name"] + "/" + str(self.generation))
+                                    GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.data_received["file_name"] + "/" + str(self.generation))
 
         # print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 
@@ -152,12 +152,12 @@ class GeneticTrainNewNetwork(BaseState):
 
     def run(self, surface, time_delta):
         # FILL TAKES ALOT OF TIME
-        if ViewConsts.DRAW:
+        if ViewSettings.DRAW:
             surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
         self.run_genetic(surface)
         self.generation_label.set_text("Generation : " + str(self.generation))
-        self.individual_label.set_text("Individual : " + str(len(self.parent_list)) + " / " + str(GeneticSettings.POPULATION_COUNT))
+        self.individual_label.set_text("Individual : " + str(len(self.parent_list)) + " / " + str(GameSettings.POPULATION_COUNT))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -179,6 +179,6 @@ class GeneticTrainNewNetwork(BaseState):
                     }
                     self.trigger_transition()
 
-        if ViewConsts.DRAW:
+        if ViewSettings.DRAW:
             self.ui_manager.update(time_delta)
             self.ui_manager.draw_ui(surface)

@@ -6,7 +6,7 @@ from pygame_gui.elements import UILabel, UIButton
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from game_config import NNSettings
+from game_config import GameSettings
 from game_config import State
 from neural_network import *
 from file_operations import TrainingExample, write_examples_to_json_4d, read_training_data_and_train, save_neural_network_to_json
@@ -30,8 +30,8 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.button_back = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "Backpropagation Train New Network", self.ui_manager, object_id="#window_label")
-        self.button_back = UIButton(pygame.Rect(ViewConsts.BUTTON_BACK_POSITION, ViewConsts.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
+        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Backpropagation Train New Network", self.ui_manager, object_id="#window_label")
+        self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
         input_direction_count = self.data_received["input_direction_count"]
         input_neuron_count = input_direction_count * 3 + 4
@@ -77,7 +77,7 @@ class BackpropagationTrainNewNetwork(BaseState):
             if not self.is_example_in_evaluated(example):
                 self.training_examples.append(example)
 
-        draw_board(surface, self.model.board, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+        draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
         # draw_vision_lines(surface, self.model, vision_lines, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
         # draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
 
@@ -119,8 +119,8 @@ class BackpropagationTrainNewNetwork(BaseState):
         current_example = self.training_examples[0]
         self.training_examples.pop(0)
 
-        draw_board(surface, current_example.board, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
-        draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+        draw_board(surface, current_example.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+        draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
         self.ui_manager.update(time_delta)
 
         self.ui_manager.draw_ui(surface)
@@ -191,7 +191,7 @@ class BackpropagationTrainNewNetwork(BaseState):
                                         self.data_received["input_direction_count"],
                                         self.data_received["vision_return_type"],
                                         self.model.snake.brain,
-                                        NNSettings.BACKPROPAGATION_NETWORK_FOLDER + self.data_received["file_name"])
+                                        GameSettings.BACKPROPAGATION_NETWORK_FOLDER + self.data_received["file_name"])
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

@@ -10,7 +10,7 @@ from pygame_gui.windows import UIFileDialog
 from States.base_state import BaseState
 from States.state_manager import StateManager
 from file_operations import read_all_from_json, write_results_to_txt
-from game_config import State, ViewConsts, NNSettings
+from game_config import State, ViewSettings, GameSettings
 from model import Model
 from vision import get_vision_lines
 
@@ -44,10 +44,12 @@ class RunPretrained(BaseState):
         self.snake_size_entry = None
         self.snake_size_label = None
 
+        self.toggle_draw_network: UIButton = None
+
     def start(self):
         self.state_target = self.data_received["state"]
-        self.title_label = UILabel(pygame.Rect(ViewConsts.TITLE_LABEL_POSITION, ViewConsts.TITLE_LABEL_DIMENSION), "", self.ui_manager, object_id="#window_label")
-        self.button_back = UIButton(pygame.Rect(ViewConsts.BUTTON_BACK_POSITION, ViewConsts.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
+        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "", self.ui_manager, object_id="#window_label")
+        self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
         if self.state_target == "genetic":
             self.title_label.set_text("Genetic Pretrained")
@@ -66,7 +68,10 @@ class RunPretrained(BaseState):
         self.snake_size_label = UILabel(pygame.Rect((175, 250), (125, 35)), "Snake Size", self.ui_manager)
         self.snake_size_entry = UITextEntryLine(pygame.Rect((175, 300), (125, 35)), self.ui_manager)
 
+        self.toggle_draw_network = UIButton(pygame.Rect((25, 100), (125, 35)), "Draw Neural Network", self.ui_manager)
+
     def end(self):
+        self.toggle_draw_network.kill()
         self.title_label.kill()
         self.button_back.kill()
         self.score_counter.kill()
@@ -140,7 +145,7 @@ class RunPretrained(BaseState):
                     if self.state_target == "genetic":
                         file_path = "Genetic_Networks/"
                     else:
-                        file_path = NNSettings.BACKPROPAGATION_NETWORK_FOLDER
+                        file_path = GameSettings.BACKPROPAGATION_NETWORK_FOLDER
 
                     self.file_dialog = UIFileDialog(pygame.Rect((150, 50), (450, 450)), self.ui_manager, window_title="Load Network", initial_file_path=file_path, allow_picking_directories=False,
                                                     allow_existing_files_only=True)

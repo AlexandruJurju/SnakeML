@@ -11,7 +11,7 @@ from States.main_menu import MainMenu
 from States.options import Options
 from States.run_pretrained import RunPretrained
 from States.state_manager import StateManager
-from game_config import ViewConsts, State
+from game_config import ViewSettings, State
 
 
 def main():
@@ -19,7 +19,7 @@ def main():
     os.environ['SDL_VIDEO_CENTERED'] = '1'
     pygame.key.set_repeat()
     pygame.display.set_caption('Snake AI')
-    screen = pygame.display.set_mode((ViewConsts.WIDTH, ViewConsts.HEIGHT))
+    screen = pygame.display.set_mode((ViewSettings.WIDTH, ViewSettings.HEIGHT))
 
     ui_manager = UIManager(screen.get_size(), "data/themes/ui_theme.json")
     # ui_manager.add_font_paths("jetbrainsmono", "data/fonts/JetBrainsMono-Regular.ttf", "data/fonts/JetBrainsMono-Bold.ttf", "data/fonts/JetBrainsMono-Italic.ttf", "data/fonts/JetBrainsMono-BoldItalic.ttf")
@@ -58,7 +58,7 @@ def main():
     running = True
 
     while running:
-        time_delta = clock.tick(ViewConsts.MAX_FPS) / 1000.0
+        time_delta = clock.tick(ViewSettings.MAX_FPS) / 1000.0
         running = state_manager.run(screen, time_delta)
     pygame.quit()
 

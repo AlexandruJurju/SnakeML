@@ -12,7 +12,7 @@ class State(Enum):
     RUN_PRETRAINED = 7
 
 
-class ViewConsts:
+class ViewSettings:
     DRAW = False
     MAX_FPS = 100000000000000000000000000000000000000
     WIDTH, HEIGHT = 1366, 768
@@ -89,25 +89,23 @@ MAIN_DIRECTIONS = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT
 ALL_DIRECTIONS = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT, Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
 
 
-class SnakeSettings:
+class GameSettings:
     INITIAL_SNAKE_SIZE = 3
     SNAKE_MAX_TTL = 100
 
+    INITIAL_BOARD_SIZE = 10
 
-class NNSettings:
+    MUTATION_CHANCE = 0.05
+    POPULATION_COUNT = 1000
+
     AVAILABLE_INPUT_DIRECTIONS = ["4", "8"]
     AVAILABLE_VISION_LINES_RETURN_TYPE = ["boolean", "distance"]
 
     AVAILABLE_ACTIVATION_FUNCTIONS = ["sigmoid", "tanh", "relu"]
 
+    AVAILABLE_SELECTION_OPERATORS = ["roulette-wheel", "tournament", "elitist"]
+    AVAILABLE_CROSSOVER_OPERATORS = ["one-point", "two-point", "uniform", "sbx"]
+    AVAILABLE_MUTATION_OPERATORS = ["gaussian"]
+
     GENETIC_NETWORK_FOLDER = "Genetic_Networks/"
     BACKPROPAGATION_NETWORK_FOLDER = "Backpropagation_Networks/"
-
-
-class GeneticSettings:
-    MUTATION_CHANCE = 0.05
-    POPULATION_COUNT = 1000
-
-
-class BoardSettings:
-    INITIAL_BOARD_SIZE = 10
