@@ -1,4 +1,5 @@
 import json
+import os.path
 from typing import Tuple, Dict
 
 import neural_network
@@ -129,6 +130,15 @@ def save_neural_network_to_json(generation: int, fitness: int, board_size: int, 
                           "input_direction_count": input_direction_count,
                           "vision_return_type": vision_return_type,
                           "network": network_dict}
+
+    path_tokens = path.split("/")
+    path_tokens = path_tokens[:-1]
+    real_path: str = ""
+    for token in path_tokens:
+        real_path += token + "/"
+
+    if not os.path.exists(real_path):
+        os.makedirs(real_path)
 
     network_file = open(path + ".json", "w")
     json.dump(generation_network, network_file)

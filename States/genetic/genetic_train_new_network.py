@@ -110,11 +110,11 @@ class GeneticTrainNewNetwork(BaseState):
         save_neural_network_to_json(self.generation,
                                     best_individual.fitness,
                                     self.data_received["board_size"],
-                                    self.data_received["starting_snake_size"],
+                                    self.data_received["initial_snake_size"],
                                     self.data_received["input_direction_count"],
                                     self.data_received["vision_return_type"],
                                     best_individual.brain,
-                                    NNSettings.GENETIC_NETWORK_FOLDER + self.data_received["file_name"] + str(self.generation))
+                                    NNSettings.GENETIC_NETWORK_FOLDER + "/" + self.data_received["file_name"] + "/" + str(self.generation))
 
         # print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 
@@ -140,7 +140,7 @@ class GeneticTrainNewNetwork(BaseState):
             self.offspring_list.append(child2)
 
         self.model.snake.brain.reinit_weights_and_biases()
-        self.model = Model(self.data_received["board_size"], self.data_received["starting_snake_size"], True, self.offspring_list[0])
+        self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], True, self.offspring_list[0])
 
         self.generation += 1
         self.parent_list.clear()

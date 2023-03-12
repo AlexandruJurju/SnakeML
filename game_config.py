@@ -13,8 +13,8 @@ class State(Enum):
 
 
 class ViewConsts:
-    DRAW = True
-    MAX_FPS = 2000
+    DRAW = False
+    MAX_FPS = 100000000000000000000
     WIDTH, HEIGHT = 1366, 768
     SQUARE_SIZE = 23
     # WINDOW_START_X, WINDOW_START_Y = 50, 50
