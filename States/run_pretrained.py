@@ -1,3 +1,5 @@
+import os.path
+
 import pygame
 import pygame_gui
 from pygame_gui import UIManager
@@ -7,10 +9,9 @@ from pygame_gui.windows import UIFileDialog
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
+from file_operations import read_all_from_json, write_results_to_txt
 from game_config import State, ViewConsts, NNSettings
 from model import Model
-from train_network import read_all_from_json
-from view import draw_board, draw_vision_lines, draw_neural_network_complete
 from vision import get_vision_lines
 
 
@@ -21,6 +22,9 @@ class RunPretrained(BaseState):
         self.network = None
         self.ui_manager = ui_manager
         self.state_target = None
+
+        self.overwrite = True
+        self.file_path = None
 
         self.model = None
         self.execute_network = False
@@ -78,9 +82,9 @@ class RunPretrained(BaseState):
         vision_lines = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
-        draw_board(surface, self.model.board, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
-        draw_vision_lines(surface, self.model, vision_lines, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
-        draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
+        # draw_board(surface, self.model.board, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+        # draw_vision_lines(surface, self.model, vision_lines, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+        # draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move_in_direction(next_direction)
@@ -88,8 +92,14 @@ class RunPretrained(BaseState):
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
-            if self.model.snake.won:
-                print(f"RATIO {self.model.snake.score / self.model.snake.steps_taken}")
+            # if self.model.snake.won:
+            if self.model.snake.steps_taken == 0:
+                ratio = 0
+            else:
+                ratio = self.model.snake.score / self.model.snake.steps_taken
+
+            write_results_to_txt(os.path.dirname(self.file_path) + "\\", ratio, self.overwrite)
+            self.overwrite = False
 
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
 
@@ -137,8 +147,8 @@ class RunPretrained(BaseState):
 
             if event.type == pygame_gui.UI_FILE_DIALOG_PATH_PICKED:
                 try:
-                    file_path = create_resource_path(event.text)
-                    config = read_all_from_json(file_path)
+                    self.file_path = create_resource_path(event.text)
+                    config = read_all_from_json(self.file_path)
                     self.network = config["network"]
                     self.input_direction_count = config["input_direction_count"]
                     self.vision_return_type = config["vision_return_type"]

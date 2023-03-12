@@ -21,7 +21,6 @@ class Snake(Individual):
         self.body = []
         self.TTL = SnakeSettings.SNAKE_MAX_TTL
         self.steps_taken = 0
-        self.steps_to_apple = 0
         self.won = False
 
         self.direction = None

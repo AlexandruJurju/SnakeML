@@ -176,5 +176,12 @@ def read_all_from_json(path: str) -> Dict:
     return output
 
 
-def write_to_txt(path: str, overwrite: bool) -> None:
-    pass
+def write_results_to_txt(path: str, ratio: float, overwrite: bool) -> None:
+    if overwrite:
+        file = open(path + "result.txt", "w")
+        file.write(str(ratio) + "\n")
+        file.close()
+    else:
+        file = open(path + "result.txt", "a")
+        file.write(str(ratio) + "\n")
+        file.close()

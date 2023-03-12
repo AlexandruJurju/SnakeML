@@ -9,7 +9,7 @@ from States.state_manager import StateManager
 from game_config import NNSettings
 from game_config import State
 from neural_network import *
-from train_network import TrainingExample, write_examples_to_json_4d, read_training_data_and_train, save_neural_network_to_json
+from file_operations import TrainingExample, write_examples_to_json_4d, read_training_data_and_train, save_neural_network_to_json
 from view import *
 from vision import get_vision_lines, VisionLine
 

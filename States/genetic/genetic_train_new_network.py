@@ -11,7 +11,7 @@ from game_config import State
 from genetic_operators import elitist_selection, roulette_selection, full_mutation, full_crossover
 from model import Snake
 from neural_network import NeuralNetwork, Activation
-from train_network import save_neural_network_to_json
+from file_operations import save_neural_network_to_json
 from view import *
 from vision import get_vision_lines
 
