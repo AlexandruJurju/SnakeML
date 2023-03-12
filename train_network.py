@@ -15,7 +15,7 @@ class TrainingExample:
         self.predictions = predictions
 
 
-def train_network(network: NeuralNetwork, file_path: str) -> None:
+def read_training_data_and_train(network: NeuralNetwork, file_path: str) -> None:
     x, y = read_training_data_json(file_path)
 
     # example for points
@@ -164,3 +164,7 @@ def read_all_from_json(path: str) -> Dict:
     output = json_object
     output["network"] = output_network
     return output
+
+
+def write_to_txt(path: str, overwrite: bool) -> None:
+    pass

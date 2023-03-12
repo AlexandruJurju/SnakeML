@@ -16,6 +16,7 @@ from view import *
 from vision import get_vision_lines
 
 
+# TODO PROBLEM WHEN TRAINING MANUALLY, SNAKE DOESNT SEE THE WHOLE BOARD, JUST THE VISION LINES
 class GeneticTrainNewNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.GENETIC_TRAIN_NEW_NETWORK, state_manager)

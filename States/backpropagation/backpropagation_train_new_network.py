@@ -9,7 +9,7 @@ from States.state_manager import StateManager
 from game_config import NNSettings
 from game_config import State
 from neural_network import *
-from train_network import TrainingExample, write_examples_to_json_4d, train_network, save_neural_network_to_json
+from train_network import TrainingExample, write_examples_to_json_4d, read_training_data_and_train, save_neural_network_to_json
 from view import *
 from vision import get_vision_lines, VisionLine
 
@@ -174,7 +174,7 @@ class BackpropagationTrainNewNetwork(BaseState):
             self.model.snake.brain.reinit_weights_and_biases()
             self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], False, self.model.snake.brain)
 
-            train_network(self.model.snake.brain, file_path)
+            read_training_data_and_train(self.model.snake.brain, file_path)
 
             self.training = False
 
