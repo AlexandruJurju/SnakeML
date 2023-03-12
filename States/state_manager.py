@@ -23,9 +23,11 @@ class StateManager:
             if self.active_state.transition:
                 if self.active_state.target_state == State.QUIT:
                     return False
+
                 self.active_state.transition = False
                 new_state_id = self.active_state.target_state
                 self.active_state.end()
+
                 data_to_send_copy = copy.deepcopy(self.active_state.data_to_send)
                 self.active_state = self.states[new_state_id]
                 self.active_state.data_received = data_to_send_copy

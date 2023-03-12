@@ -8,6 +8,8 @@ from neural_network import Dense
 from vision import VisionLine, find_snake_head_poz
 
 
+# TODO when using relu neurons aren't colored
+
 def draw_board(window, board: List, offset_x, offset_y) -> None:
     # use y,x for index in board instead of x,y because of changed logic
     # x is line y is column ; drawing x is column and y is line
