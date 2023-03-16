@@ -107,7 +107,7 @@ class GeneticTrainNewNetwork(BaseState):
         total_fitness = sum(individual.fitness for individual in self.parent_list)
         best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
 
-        # TODO use % 10 to keep only the last 10 best neural network
+        # TODO use mod 10 to keep only the last 10 best neural network
         save_neural_network_to_json(self.generation,
                                     best_individual.fitness,
                                     self.data_received["board_size"],

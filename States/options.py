@@ -9,7 +9,6 @@ from game_config import *
 
 
 # noinspection PyTypeChecker
-# TODO just one options state
 class Options(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.OPTIONS, state_manager)
@@ -58,6 +57,15 @@ class Options(BaseState):
         self.hidden_layer_count_entry: UITextEntryLine = None
         self.hidden_layer_count_entry_label: UILabel = None
 
+        self.crossover_operators = None
+        self.crossover_operators_label = None
+
+        self.selection_operators = None
+        self.selection_operators_label = None
+
+        self.mutation_operators = None
+        self.mutation_operators_label = None
+
         self.button_run = None
 
     def start(self):
@@ -83,7 +91,8 @@ class Options(BaseState):
         self.board_size_entry_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 250 // 2, 100), (250, 35)), "Board Size", self.ui_manager)
         self.board_size_entry.set_text(str(GameSettings.INITIAL_BOARD_SIZE))
 
-        self.dropdown_input_direction_count = UIDropDownMenu(GameSettings.AVAILABLE_INPUT_DIRECTIONS, GameSettings.AVAILABLE_INPUT_DIRECTIONS[0], pygame.Rect((ViewSettings.X_SECOND - 75 // 2 - 250, 350), (75, 30)), self.ui_manager)
+        self.dropdown_input_direction_count = UIDropDownMenu(GameSettings.AVAILABLE_INPUT_DIRECTIONS, GameSettings.AVAILABLE_INPUT_DIRECTIONS[0], pygame.Rect((ViewSettings.X_SECOND - 75 // 2 - 250, 350), (75, 30)),
+                                                             self.ui_manager)
         self.dropdown_input_direction_count_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 250 // 2 - 250, 300), (250, 35)), "Input Direction Count", self.ui_manager)
 
         self.file_name_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 125 // 2 - 250, 550), (125, 30)), self.ui_manager)
@@ -94,12 +103,12 @@ class Options(BaseState):
                                                                pygame.Rect((ViewSettings.X_SECOND - 125 // 2, 350), (125, 30)), self.ui_manager)
         self.dropdown_vision_line_return_type_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 250 // 2, 300), (250, 35)), "Vision Line Return Type", self.ui_manager)
 
-        self.population_count_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2 - 250, 150), (75, 30)), self.ui_manager)
-        self.population_count_entry_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 200 // 2 - 250, 100), (200, 35)), "Individuals in Population", self.ui_manager)
+        self.population_count_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2, 150), (75, 30)), self.ui_manager)
+        self.population_count_entry_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 200 // 2, 100), (200, 35)), "Individuals in Population", self.ui_manager)
         self.population_count_entry.set_text(str(GameSettings.POPULATION_COUNT))
 
-        self.mutation_rate_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2, 150), (75, 30)), self.ui_manager)
-        self.mutation_rate_entry_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 200 // 2, 100), (200, 35)), "Mutation Rate", self.ui_manager)
+        self.mutation_rate_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2 + 250, 550), (75, 30)), self.ui_manager)
+        self.mutation_rate_entry_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 200 // 2 + 250, 500), (200, 35)), "Mutation Rate", self.ui_manager)
         self.mutation_rate_entry.set_text(str(GameSettings.MUTATION_CHANCE))
 
         self.dropdown_activation_function_output_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 250 // 2, 100), (250, 35)), "Output Activation Function", self.ui_manager)
@@ -114,7 +123,20 @@ class Options(BaseState):
         # self.hidden_layer_count_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 200 // 2 + 250, 100), (200, 35)), "Hidden Layer Count", self.ui_manager)
         # self.hidden_layer_count_entry.set_text("1")
 
-        self.genetic_options_list = [self.mutation_rate_entry, self.mutation_rate_entry_label, self.population_count_entry, self.population_count_entry_label]
+        self.crossover_operators = UIDropDownMenu(GameSettings.AVAILABLE_CROSSOVER_OPERATORS, GameSettings.AVAILABLE_CROSSOVER_OPERATORS[0],
+                                                  pygame.Rect((ViewSettings.X_SECOND - 125 // 2, 350), (125, 30)), self.ui_manager)
+        self.crossover_operators_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 250 // 2, 300), (250, 35)), "Crossover Operators", self.ui_manager)
+
+        self.selection_operators = UIDropDownMenu(GameSettings.AVAILABLE_SELECTION_OPERATORS, GameSettings.AVAILABLE_SELECTION_OPERATORS[0],
+                                                  pygame.Rect((ViewSettings.X_SECOND - 150 // 2 - 250, 350), (150, 30)), self.ui_manager)
+        self.selection_operators_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 250 // 2 - 250, 300), (250, 35)), "Selection Operators", self.ui_manager)
+
+        self.mutation_operators = UIDropDownMenu(GameSettings.AVAILABLE_MUTATION_OPERATORS, GameSettings.AVAILABLE_MUTATION_OPERATORS[0],
+                                                 pygame.Rect((ViewSettings.X_SECOND - 125 // 2 + 250, 350), (125, 30)), self.ui_manager)
+        self.mutation_operators_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 250 // 2 + 250, 300), (250, 35)), "Mutation Operators", self.ui_manager)
+
+        self.genetic_options_list = [self.mutation_rate_entry, self.mutation_rate_entry_label, self.population_count_entry, self.population_count_entry_label, self.crossover_operators, self.crossover_operators_label,
+                                     self.selection_operators, self.selection_operators_label, self.mutation_operators, self.mutation_operators_label]
 
         self.snake_options_list = [self.starting_snake_size_entry, self.starting_snake_size_entry_label, self.board_size_entry, self.board_size_entry_label]
 
@@ -137,6 +159,12 @@ class Options(BaseState):
     def end(self):
         self.title_label.kill()
         self.button_back.kill()
+
+        self.crossover_operators.kill()
+        self.crossover_operators_label.kill()
+
+        self.selection_operators.kill()
+        self.selection_operators_label.kill()
 
         self.button_snake_options.kill()
         self.button_genetic_options.kill()
