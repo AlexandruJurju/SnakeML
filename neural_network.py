@@ -7,9 +7,8 @@ def relu(x):
     return np.maximum(0.0, x)
 
 
-# TODO relu prime
 def relu_prime(x):
-    return
+    return np.where(x > 0, 1.0, 0.0)
 
 
 def sigmoid(x):
