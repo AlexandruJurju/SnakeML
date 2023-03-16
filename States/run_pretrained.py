@@ -69,10 +69,7 @@ class RunPretrained(BaseState):
         self.snake_size_label = UILabel(pygame.Rect((175, 250), (125, 35)), "Snake Size", self.ui_manager)
         self.snake_size_entry = UITextEntryLine(pygame.Rect((175, 300), (125, 35)), self.ui_manager)
 
-        # self.toggle_draw_network = UIButton(pygame.Rect((25, 100), (125, 35)), "Draw Neural Network", self.ui_manager)
-
     def end(self):
-        # self.toggle_draw_network.kill()
         self.title_label.kill()
         self.button_back.kill()
         self.score_counter.kill()
@@ -88,9 +85,10 @@ class RunPretrained(BaseState):
         vision_lines = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
-        draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-        # draw_vision_lines(surface, self.model, vision_lines, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
-        # draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
+        if self.execute_network is False:
+            draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            # draw_vision_lines(surface, self.model, vision_lines, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+            # draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move_in_direction(next_direction)
@@ -110,7 +108,9 @@ class RunPretrained(BaseState):
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
 
     def run(self, surface, time_delta):
-        surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+        # TODO added self.execute_network for testing 
+        if self.execute_network is False:
+            surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
         if self.execute_network:
             self.run_network(surface)
@@ -165,7 +165,7 @@ class RunPretrained(BaseState):
 
                 except pygame.error:
                     pass
+        if self.execute_network is False:
+            self.ui_manager.update(time_delta)
 
-        self.ui_manager.update(time_delta)
-
-        self.ui_manager.draw_ui(surface)
+            self.ui_manager.draw_ui(surface)
