@@ -108,7 +108,7 @@ class RunPretrained(BaseState):
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
 
     def run(self, surface, time_delta):
-        # TODO added self.execute_network for testing 
+        # TODO added self.execute_network for testing
         if self.execute_network is False:
             surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
