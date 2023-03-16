@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 import pygame
 import pygame_gui
@@ -70,7 +70,7 @@ class Options(BaseState):
 
         self.hidden_layer_count_entry: UITextEntryLine = None
         self.hidden_layer_count_entry_label: UILabel = None
-        self.neural_network_layers_inputs: List[UITextEntryLine] = []
+        self.neural_network_layers_entries: List[Tuple[UITextEntryLine, UILabel]] = []
 
     def start(self):
         self.options_target = self.data_received["state"]
@@ -131,21 +131,28 @@ class Options(BaseState):
 
         input_neuron_count = int(self.dropdown_input_direction_count.selected_option) * 3 + 4
         input_layer = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2 - 250, 550), (75, 30)), self.ui_manager)
+        input_layer_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 125 // 2 - 250, 500), (125, 30)), "Input Layer", self.ui_manager)
         input_layer.set_text(str(input_neuron_count))
         input_layer.disable()
 
         output_neuron_count = 4 if int(self.dropdown_input_direction_count.selected_option) == 4 or int(self.dropdown_input_direction_count.selected_option) == 8 else 3
         output_layer = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2 + 250, 550), (75, 30)), self.ui_manager)
+        output_layer_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 125 // 2 + 250, 500), (125, 30)), "Output Layer", self.ui_manager)
         output_layer.set_text(str(output_neuron_count))
         output_layer.disable()
 
-        hidden_layer_neuron_count = input_neuron_count + 8
-        hidden_layer = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2, 550), (75, 30)), self.ui_manager)
-        hidden_layer.set_text(str(hidden_layer_neuron_count))
+        first_hidden_layer_neuron_count = input_neuron_count + 8
+        first_hidden_layer = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2, 550), (75, 30)), self.ui_manager)
+        first_hidden_layer_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 125 // 2, 500), (125, 30)), "Hidden Layer", self.ui_manager)
+        first_hidden_layer.set_text(str(first_hidden_layer_neuron_count))
 
-        self.neural_network_layers_inputs.append(input_layer)
-        self.neural_network_layers_inputs.append(hidden_layer)
-        self.neural_network_layers_inputs.append(output_layer)
+        self.neural_network_layers_entries.append([input_layer, input_layer_label])
+        self.neural_network_layers_entries.append([first_hidden_layer, first_hidden_layer_label])
+        self.neural_network_layers_entries.append([output_layer, output_layer_label])
+
+        for layer in self.neural_network_layers_entries:
+            layer[0].hide()
+            layer[1].hide()
 
         # TODO make genetic options do something
         self.crossover_operators = UIDropDownMenu(GameSettings.AVAILABLE_CROSSOVER_OPERATORS, GameSettings.AVAILABLE_CROSSOVER_OPERATORS[0],
@@ -177,30 +184,10 @@ class Options(BaseState):
         for option in self.neural_network_options_list:
             option.hide()
 
-        self.hide_network_layer_text_entries()
-
         if self.options_target == "backpropagation":
             self.button_genetic_options.hide()
 
         self.button_run = UIButton(pygame.Rect((ViewSettings.X_SECOND - 75 // 2, 675), (75, 40)), "RUN", self.ui_manager)
-
-    def draw_network_layers_text_entries(self):
-        for i, layer in enumerate(self.neural_network_layers_inputs):
-
-            if i == 0:
-                name = "Input"
-            elif i == len(self.neural_network_layers_inputs) - 1:
-                name = "Output"
-            else:
-                name = "Hidden " + str(i)
-
-            # TODO label still remains after hide, because it is generated in draw, to fix use tuple [Label,TextEntry]
-            UILabel(pygame.Rect((layer.rect[0] - layer.rect[2] // 2, layer.rect[1] - 50), (125, 35)), name, self.ui_manager)
-            layer.show()
-
-    def hide_network_layer_text_entries(self):
-        for layer in self.neural_network_layers_inputs:
-            layer.hide()
 
     def end(self):
         self.title_label.kill()
@@ -282,7 +269,6 @@ class Options(BaseState):
                         option.hide()
                     for option in self.neural_network_options_list:
                         option.hide()
-                    self.hide_network_layer_text_entries()
 
                     for option in self.snake_options_list:
                         option.show()
@@ -292,7 +278,6 @@ class Options(BaseState):
                         option.hide()
                     for option in self.neural_network_options_list:
                         option.hide()
-                    self.hide_network_layer_text_entries()
 
                     for option in self.genetic_options_list:
                         option.show()
@@ -305,8 +290,6 @@ class Options(BaseState):
 
                     for option in self.neural_network_options_list:
                         option.show()
-
-                    self.draw_network_layers_text_entries()
 
                 if event.ui_element == self.button_run:
                     if self.options_done is True:
@@ -334,7 +317,6 @@ class Options(BaseState):
                             option.hide()
                         for option in self.neural_network_options_list:
                             option.hide()
-                        self.hide_network_layer_text_entries()
                         self.button_snake_options.hide()
                         self.button_genetic_options.hide()
                         self.button_neuronal_network_options.hide()
