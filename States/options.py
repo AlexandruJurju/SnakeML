@@ -133,13 +133,13 @@ class Options(BaseState):
         input_layer = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2 - 250, 550), (75, 30)), self.ui_manager)
         input_layer_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 125 // 2 - 250, 500), (125, 30)), "Input Layer", self.ui_manager)
         input_layer.set_text(str(input_neuron_count))
-        input_layer.disable()
+        # input_layer.disable()
 
         output_neuron_count = 4 if int(self.dropdown_input_direction_count.selected_option) == 4 or int(self.dropdown_input_direction_count.selected_option) == 8 else 3
         output_layer = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2 + 250, 550), (75, 30)), self.ui_manager)
         output_layer_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 125 // 2 + 250, 500), (125, 30)), "Output Layer", self.ui_manager)
         output_layer.set_text(str(output_neuron_count))
-        output_layer.disable()
+        # output_layer.disable()
 
         first_hidden_layer_neuron_count = input_neuron_count + 8
         first_hidden_layer = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2, 550), (75, 30)), self.ui_manager)
@@ -150,9 +150,7 @@ class Options(BaseState):
         self.neural_network_layers_entries.append([first_hidden_layer, first_hidden_layer_label])
         self.neural_network_layers_entries.append([output_layer, output_layer_label])
 
-        for layer in self.neural_network_layers_entries:
-            layer[0].hide()
-            layer[1].hide()
+        self.hide_layer_entries()
 
         # TODO make genetic options do something
         self.crossover_operators = UIDropDownMenu(GameSettings.AVAILABLE_CROSSOVER_OPERATORS, GameSettings.AVAILABLE_CROSSOVER_OPERATORS[0],
@@ -188,6 +186,21 @@ class Options(BaseState):
             self.button_genetic_options.hide()
 
         self.button_run = UIButton(pygame.Rect((ViewSettings.X_SECOND - 75 // 2, 675), (75, 40)), "RUN", self.ui_manager)
+
+    def hide_layer_entries(self):
+        for ui_element in self.neural_network_layers_entries:
+            ui_element[0].hide()
+            ui_element[1].hide()
+
+    def show_layer_entries(self):
+        for ui_element in self.neural_network_layers_entries:
+            ui_element[0].show()
+            ui_element[1].show()
+
+    def kill_layer_entries(self):
+        for ui_element in self.neural_network_layers_entries:
+            ui_element[0].kill()
+            ui_element[1].kill()
 
     def end(self):
         self.title_label.kill()
@@ -234,11 +247,15 @@ class Options(BaseState):
         self.dropdown_activation_function_output_label.kill()
 
         # TODO add kill for neural layers
+        self.kill_layer_entries()
 
         self.button_run.kill()
 
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+
+        # TODO disable is shit, breaks updating values, to fix put disable after updating
+        self.neural_network_layers_entries[0][0].set_text(str(int(self.dropdown_input_direction_count.selected_option) * 3 + 4))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -290,6 +307,7 @@ class Options(BaseState):
 
                     for option in self.neural_network_options_list:
                         option.show()
+                    self.show_layer_entries()
 
                 if event.ui_element == self.button_run:
                     if self.options_done is True:
