@@ -123,6 +123,7 @@ class Options(BaseState):
         # self.hidden_layer_count_entry_label = UILabel(pygame.Rect((ViewConsts.X_SECOND - 200 // 2 + 250, 100), (200, 35)), "Hidden Layer Count", self.ui_manager)
         # self.hidden_layer_count_entry.set_text("1")
 
+        # TODO make genetic options do something
         self.crossover_operators = UIDropDownMenu(GameSettings.AVAILABLE_CROSSOVER_OPERATORS, GameSettings.AVAILABLE_CROSSOVER_OPERATORS[0],
                                                   pygame.Rect((ViewSettings.X_SECOND - 125 // 2, 350), (125, 30)), self.ui_manager)
         self.crossover_operators_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 250 // 2, 300), (250, 35)), "Crossover Operators", self.ui_manager)

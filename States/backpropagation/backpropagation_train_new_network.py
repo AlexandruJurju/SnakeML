@@ -6,14 +6,15 @@ from pygame_gui.elements import UILabel, UIButton
 
 from States.base_state import BaseState
 from States.state_manager import StateManager
+from file_operations import TrainingExample, write_examples_to_json_4d, read_training_data_and_train, save_neural_network_to_json
 from game_config import GameSettings
 from game_config import State
 from neural_network import *
-from file_operations import TrainingExample, write_examples_to_json_4d, read_training_data_and_train, save_neural_network_to_json
 from view import *
 from vision import get_vision_lines, VisionLine
 
 
+# TODO get a good backpropagation network
 class BackpropagationTrainNewNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.BACKPROPAGATION_TRAIN_NEW_NETWORK, state_manager)
