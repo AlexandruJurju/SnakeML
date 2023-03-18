@@ -3,6 +3,8 @@ from typing import List
 import numpy as np
 
 
+# TODO add softmax for genetic forward
+
 def relu(x):
     return np.maximum(0.0, x)
 

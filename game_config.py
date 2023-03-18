@@ -14,7 +14,7 @@ class State(Enum):
 
 class ViewSettings:
     DRAW = False
-    MAX_FPS = 10000000000000000000000000000
+    MAX_FPS = 100000000000000000000000000000
     WIDTH, HEIGHT = 1366, 768
     SQUARE_SIZE = 23
     # WINDOW_START_X, WINDOW_START_Y = 50, 50
@@ -101,7 +101,7 @@ class GameSettings:
     AVAILABLE_INPUT_DIRECTIONS = ["4", "8"]
     AVAILABLE_VISION_LINES_RETURN_TYPE = ["boolean", "distance"]
 
-    AVAILABLE_ACTIVATION_FUNCTIONS = ["sigmoid", "tanh", "relu"]
+    AVAILABLE_ACTIVATION_FUNCTIONS = ["sigmoid", "tanh", "relu", "leaky_relu"]
 
     AVAILABLE_SELECTION_OPERATORS = ["roulette-wheel", "tournament", "elitist"]
     AVAILABLE_CROSSOVER_OPERATORS = ["one-point", "two-point", "uniform", "sbx"]

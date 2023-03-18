@@ -85,10 +85,10 @@ class RunPretrained(BaseState):
         vision_lines = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
-        if self.execute_network is False:
-            draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-            # draw_vision_lines(surface, self.model, vision_lines, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
-            # draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
+        # if self.execute_network is False:
+        draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+        # draw_vision_lines(surface, self.model, vision_lines, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
+        # draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move_in_direction(next_direction)
@@ -109,8 +109,8 @@ class RunPretrained(BaseState):
 
     def run(self, surface, time_delta):
         # TODO added self.execute_network for testing
-        if self.execute_network is False:
-            surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+        # if self.execute_network is False:
+        surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
         if self.execute_network:
             self.run_network(surface)
@@ -165,7 +165,7 @@ class RunPretrained(BaseState):
 
                 except pygame.error:
                     pass
-        if self.execute_network is False:
-            self.ui_manager.update(time_delta)
+        # if self.execute_network is False:
+        self.ui_manager.update(time_delta)
 
-            self.ui_manager.draw_ui(surface)
+        self.ui_manager.draw_ui(surface)

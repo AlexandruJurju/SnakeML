@@ -106,6 +106,10 @@ class GeneticTrainNewNetwork(BaseState):
 
         total_fitness = sum(individual.fitness for individual in self.parent_list)
         best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
+        won_count = 0
+        for ind in self.parent_list:
+            if ind.won:
+                won_count += 1
 
         # TODO use mod 10 to keep only the last 10 best neural network
         save_neural_network_to_json(self.generation,
@@ -115,11 +119,11 @@ class GeneticTrainNewNetwork(BaseState):
                                     self.data_received["input_direction_count"],
                                     self.data_received["vision_return_type"],
                                     best_individual.brain,
-                                    GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.data_received["file_name"] + "/" + str(self.generation % 10))
+                                    GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.data_received["file_name"] + "/" + str(self.generation % 5))
 
         # print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 
-        print(f"GEN {self.generation + 1}   MEAN : {total_fitness / 1000}")
+        print(f"GEN {self.generation + 1}   MEAN : {total_fitness / 1000} WON : {won_count}")
 
         # self.x_points.append(self.generation)
         # self.y_points.append(best_individual.fitness)
