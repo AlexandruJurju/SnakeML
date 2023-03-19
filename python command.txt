@@ -1,0 +1,1 @@
+X:\Projects\Python\PythonInterpreter\Scripts\python.exe main.py

@@ -246,7 +246,6 @@ class Options(BaseState):
         self.dropdown_activation_function_output.kill()
         self.dropdown_activation_function_output_label.kill()
 
-        # TODO add kill for neural layers
         self.kill_layer_entries()
 
         self.button_run.kill()
@@ -254,7 +253,8 @@ class Options(BaseState):
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
-        # TODO disable is shit, breaks updating values, to fix put disable after updating
+        # TODO disable is buggy, breaks updating values, to fix put disable after updating
+        # TODO to fix, use labels instead of entries for input and output
         self.neural_network_layers_entries[0][0].set_text(str(int(self.dropdown_input_direction_count.selected_option) * 3 + 4))
 
         for event in pygame.event.get():
@@ -286,6 +286,7 @@ class Options(BaseState):
                         option.hide()
                     for option in self.neural_network_options_list:
                         option.hide()
+                    self.hide_layer_entries()
 
                     for option in self.snake_options_list:
                         option.show()
@@ -295,6 +296,7 @@ class Options(BaseState):
                         option.hide()
                     for option in self.neural_network_options_list:
                         option.hide()
+                    self.hide_layer_entries()
 
                     for option in self.genetic_options_list:
                         option.show()
@@ -338,6 +340,7 @@ class Options(BaseState):
                         self.button_snake_options.hide()
                         self.button_genetic_options.hide()
                         self.button_neuronal_network_options.hide()
+                        self.hide_layer_entries()
 
                         self.file_name_entry.show()
                         self.file_name_entry_label.show()

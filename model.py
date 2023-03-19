@@ -25,10 +25,9 @@ class Snake(Individual):
 
         self.direction = None
 
-    # TODO win bonus
     def calculate_fitness(self) -> None:
         # 10 ^ 15 is XOR
-        win_bonus = 10 ** 15 if self.won else 1
+        win_bonus = 10 ** 5 if self.won else 1
         self.fitness = win_bonus * (self.steps_taken + ((2 ** self.score) + (self.score ** 2) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
 
 
