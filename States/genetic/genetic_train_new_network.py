@@ -78,7 +78,7 @@ class GeneticTrainNewNetwork(BaseState):
             # draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
-        is_alive = self.model.move_in_direction(next_direction)
+        is_alive = self.model.move(next_direction)
 
         if not is_alive:
             self.model.snake.calculate_fitness()
@@ -107,9 +107,16 @@ class GeneticTrainNewNetwork(BaseState):
         total_fitness = sum(individual.fitness for individual in self.parent_list)
         best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
         won_count = 0
+        apple_count = 0
+        too_old = 0
+        steps_taken = 0
         for ind in self.parent_list:
+            apple_count += ind.score
+            steps_taken += ind.steps_taken
             if ind.won:
                 won_count += 1
+            if ind.TTL == 0:
+                too_old += 1
 
         # TODO use mod 10 to keep only the last 10 best neural network
         save_neural_network_to_json(self.generation,
@@ -123,7 +130,8 @@ class GeneticTrainNewNetwork(BaseState):
 
         # print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 
-        print(f"GEN {self.generation + 1}   MEAN : {total_fitness / 1000} WON : {won_count}")
+        print(
+            f"GEN {self.generation + 1}   MEAN : {total_fitness / 1000}\t WON : {won_count}\t TOO_OLD : {too_old}\t MEAN_SCORE {apple_count / len(self.parent_list)}\t RATIO {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list))}")
 
         # self.x_points.append(self.generation)
         # self.y_points.append(best_individual.fitness)
@@ -132,7 +140,8 @@ class GeneticTrainNewNetwork(BaseState):
         for parent in parents_for_mating[:100]:
             self.offspring_list.append(parent.brain)
 
-        np.random.shuffle(parents_for_mating)
+        # np.random.shuffle(parents_for_mating)
+        np.random.shuffle(self.parent_list)
 
         while len(self.offspring_list) < self.data_received["population_count"]:
             parent1, parent2 = roulette_selection(self.parent_list, 2)

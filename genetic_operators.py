@@ -17,7 +17,9 @@ def roulette_selection(population: List[Individual], selection_count: int) -> Li
     :return: list on individuals selected from the population
     """
     selected = []
-    total_population_fitness = sum(individual.fitness for individual in population)
+    min_fitness = min(individual.fitness for individual in population)
+    individuals_after_shift = [individual.fitness - min_fitness for individual in population]
+    total_population_fitness = sum(individuals_after_shift)
 
     # Choose a random value between 0 and sum_pop_fitness
     # Loop over individuals in population and sum their fitness in current_fitness
@@ -25,8 +27,8 @@ def roulette_selection(population: List[Individual], selection_count: int) -> Li
         random_fitness = random.uniform(0, total_population_fitness)
         current_fitness = 0
 
-        for individual in population:
-            current_fitness += individual.fitness
+        for individual, fitness in zip(population, individuals_after_shift):
+            current_fitness += fitness
             if current_fitness >= random_fitness:
                 selected.append(individual)
                 break

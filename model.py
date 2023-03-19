@@ -22,13 +22,21 @@ class Snake(Individual):
         self.TTL = GameSettings.SNAKE_MAX_TTL
         self.steps_taken = 0
         self.won = False
+        self.hit_obstacle = False
 
         self.direction = None
 
     def calculate_fitness(self) -> None:
         # 10 ^ 15 is XOR
+        # win_bonus = 10 ** 15 if self.won else 1
+        # fitness_score = win_bonus * (self.steps_taken + ((2 ** self.score) + (self.score ** 2) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
+
         win_bonus = 10 ** 5 if self.won else 1
-        self.fitness = win_bonus * (self.steps_taken + ((2 ** self.score) + (self.score ** 2) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
+        hit_penalty = 10 ** 2 if self.hit_obstacle is True else 0
+        loop_penalty = 10 ** 5 if self.TTL == 0 else 0
+        fitness_score = win_bonus * (self.steps_taken + ((self.score ** 3) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2)) - hit_penalty - loop_penalty
+
+        self.fitness = fitness_score
 
 
 class Model:
@@ -138,7 +146,7 @@ class Model:
                 if self.board[i][j] == BoardConsts.SNAKE_BODY or self.board[i][j] == BoardConsts.SNAKE_HEAD:
                     self.board[i][j] = BoardConsts.EMPTY
 
-    def move_in_direction(self, new_direction: Direction) -> bool:
+    def move(self, new_direction: Direction) -> bool:
         self.snake.direction = new_direction
 
         head = self.snake.body[0]
@@ -146,6 +154,7 @@ class Model:
 
         new_head_value = self.board[next_head[0]][next_head[1]]
         if (new_head_value == BoardConsts.WALL) or (new_head_value == BoardConsts.SNAKE_BODY):
+            self.snake.hit_obstacle = True
             return False
 
         self.snake.body.insert(0, next_head)

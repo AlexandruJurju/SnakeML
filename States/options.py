@@ -275,6 +275,7 @@ class Options(BaseState):
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_back:
+                    self.options_done = False
                     if self.options_target == "genetic":
                         self.set_target_state_name(State.GENETIC_MENU)
                     else:

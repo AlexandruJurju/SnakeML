@@ -83,7 +83,7 @@ class BackpropagationTrainNewNetwork(BaseState):
         # draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
 
         next_direction = self.model.get_nn_output_4directions(nn_output)
-        is_alive = self.model.move_in_direction(next_direction)
+        is_alive = self.model.move(next_direction)
         if not is_alive:
             self.training = True
 
