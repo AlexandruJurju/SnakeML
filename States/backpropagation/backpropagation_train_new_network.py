@@ -15,6 +15,8 @@ from vision import get_vision_lines, VisionLine
 
 
 # TODO get a good backpropagation network
+# TODO PROBLEM WHEN TRAINING MANUALLY, SNAKE DOESNT SEE THE WHOLE BOARD, JUST THE VISION LINES
+
 class BackpropagationTrainNewNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.BACKPROPAGATION_TRAIN_NEW_NETWORK, state_manager)

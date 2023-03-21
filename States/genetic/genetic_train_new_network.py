@@ -16,7 +16,6 @@ from view import *
 from vision import get_vision_lines
 
 
-# TODO PROBLEM WHEN TRAINING MANUALLY, SNAKE DOESNT SEE THE WHOLE BOARD, JUST THE VISION LINES
 class GeneticTrainNewNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.GENETIC_TRAIN_NEW_NETWORK, state_manager)
@@ -108,17 +107,20 @@ class GeneticTrainNewNetwork(BaseState):
 
         total_fitness = sum(individual.fitness for individual in self.parent_list)
         best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
-        won_count = 0
-        apple_count = 0
-        too_old = 0
-        steps_taken = 0
-        for ind in self.parent_list:
-            apple_count += ind.score
-            steps_taken += ind.steps_taken
-            if ind.won:
-                won_count += 1
-            if ind.TTL == 0:
-                too_old += 1
+
+        counts = {'won': 0, 'apple_count': 0, 'too_old': 0, 'steps_taken': 0}
+        for individual in self.parent_list:
+            counts['apple_count'] += individual.score
+            counts['steps_taken'] += individual.steps_taken
+            if individual.won:
+                counts['won'] += 1
+            if individual.TTL == 0:
+                counts['too_old'] += 1
+
+        won_count = counts['won']
+        apple_count = counts['apple_count']
+        too_old = counts['too_old']
+        steps_taken = counts['steps_taken']
 
         # TODO use mod 10 to keep only the last 10 best neural network
         save_neural_network_to_json(self.generation,
@@ -132,8 +134,8 @@ class GeneticTrainNewNetwork(BaseState):
 
         # print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 
-        print(
-            f"GEN {self.generation + 1}   MEAN : {total_fitness / 1000}\t WON : {won_count}\t TOO_OLD : {too_old}\t MEAN_SCORE {apple_count / len(self.parent_list)}\t RATIO {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list))}")
+        print(f"GEN {self.generation + 1:<5}   MEAN FITNESS : {total_fitness / 1000:<35}\t WON : {won_count:^5}\t TOO_OLD : {too_old}\t MEAN_SCORE {apple_count / len(self.parent_list):<35}\t "
+              f"RATIO {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list))}")
 
         # self.x_points.append(self.generation)
         # self.y_points.append(best_individual.fitness)
