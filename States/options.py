@@ -130,16 +130,12 @@ class Options(BaseState):
         self.hidden_layer_count_entry.set_text("1")
 
         input_neuron_count = int(self.dropdown_input_direction_count.selected_option) * 3 + 4
-        input_layer = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2 - 250, 550), (75, 30)), self.ui_manager)
+        input_layer = UILabel(pygame.Rect((ViewSettings.X_SECOND - 75 // 2 - 250, 550), (75, 30)), str(input_neuron_count), self.ui_manager)
         input_layer_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 125 // 2 - 250, 500), (125, 30)), "Input Layer", self.ui_manager)
-        input_layer.set_text(str(input_neuron_count))
-        # input_layer.disable()
 
         output_neuron_count = 4 if int(self.dropdown_input_direction_count.selected_option) == 4 or int(self.dropdown_input_direction_count.selected_option) == 8 else 3
-        output_layer = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2 + 250, 550), (75, 30)), self.ui_manager)
+        output_layer = UILabel(pygame.Rect((ViewSettings.X_SECOND - 75 // 2 + 250, 550), (75, 30)), str(output_neuron_count), self.ui_manager)
         output_layer_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 125 // 2 + 250, 500), (125, 30)), "Output Layer", self.ui_manager)
-        output_layer.set_text(str(output_neuron_count))
-        # output_layer.disable()
 
         first_hidden_layer_neuron_count = input_neuron_count + 8
         first_hidden_layer = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2, 550), (75, 30)), self.ui_manager)
@@ -253,8 +249,6 @@ class Options(BaseState):
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
-        # TODO disable is buggy, breaks updating values, to fix put disable after updating
-        # TODO to fix, use labels instead of entries for input and output
         self.neural_network_layers_entries[0][0].set_text(str(int(self.dropdown_input_direction_count.selected_option) * 3 + 4))
 
         for event in pygame.event.get():
@@ -325,6 +319,9 @@ class Options(BaseState):
                             "file_name": self.file_name_entry.text,
                             "hidden_activation": self.dropdown_activation_function_hidden.selected_option,
                             "output_activation": self.dropdown_activation_function_output.selected_option,
+                            "input_layer_neurons": int(self.neural_network_layers_entries[0][0].text),
+                            "hidden_layer_neurons": int(self.neural_network_layers_entries[1][0].text),
+                            "output_layer_neurons": int(self.neural_network_layers_entries[2][0].text),
                             "population_count": int(self.population_count_entry.text),
                             "mutation_rate": float(self.mutation_rate_entry.text),
                             "initial_snake_size": int(self.starting_snake_size_entry.text),

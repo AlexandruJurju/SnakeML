@@ -46,12 +46,13 @@ class GeneticTrainNewNetwork(BaseState):
         self.offspring_list: List[NeuralNetwork] = []
 
         input_direction_count = self.data_received["input_direction_count"]
-        input_neuron_count = input_direction_count * 3 + 4
-        hidden_neuron_count = 24
-        output_neuron_count = 4 if input_direction_count == 4 or input_direction_count == 8 else 3
+        input_neuron_count = self.data_received["input_layer_neurons"]
+        hidden_neuron_count = self.data_received["hidden_layer_neurons"]
+        output_neuron_count = self.data_received["output_layer_neurons"]
 
         hidden_activation = getattr(neural_network, self.data_received["hidden_activation"])
         output_activation = getattr(neural_network, self.data_received["output_activation"])
+
         # activation prime doesn't matter in feedforward, use base activation functions to avoid error
         net = NeuralNetwork()
         net.add_layer(Dense(input_neuron_count, hidden_neuron_count))
