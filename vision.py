@@ -1,12 +1,14 @@
 from typing import List
 
 import numpy as np
+from scipy.spatial.distance import chebyshev
 
 from game_config import *
 
 
+# todo chebishev distance
 def distance(a, b):
-    return manhattan_distance(a, b)
+    return chebyshev(a, b)
 
 
 def manhattan_distance(a, b):
@@ -67,7 +69,6 @@ def look_in_direction(board: List[List[str]], direction: Direction, vision_retur
 
     # TODO when using distance, different values for wall, segment  and apple
     # TODO segment distance instead of bool when using boolean vision
-    # todo chebishev distance
     if vision_return_type == "boolean":
         wall_distance_output = 1 / wall_distance
         apple_boolean = 1.0 if apple_found else 0.0
