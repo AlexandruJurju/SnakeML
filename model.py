@@ -136,10 +136,8 @@ class Model:
                 self.board[piece[0]][piece[1]] = BoardConsts.SNAKE_BODY
 
     def clear_snake_on_board(self) -> None:
-        for i in range(1, self.size):
-            for j in range(1, self.size):
-                if self.board[i][j] == BoardConsts.SNAKE_BODY or self.board[i][j] == BoardConsts.SNAKE_HEAD:
-                    self.board[i][j] = BoardConsts.EMPTY
+        mask = np.logical_or(self.board == BoardConsts.SNAKE_BODY, self.board == BoardConsts.SNAKE_HEAD)
+        self.board[mask] = BoardConsts.EMPTY
 
     def move(self, new_direction: Direction) -> bool:
         self.snake.direction = new_direction
