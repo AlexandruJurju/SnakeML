@@ -41,11 +41,11 @@ class Snake(Individual):
 
 class Model:
     def __init__(self, model_size: int, snake_size: int, start_random: bool, net: NeuralNetwork):
-        self.size = model_size + 2
-        self.board = [[BoardConsts.EMPTY for _ in range(self.size)] for _ in range(self.size)]
+        self.size: int = model_size + 2
+        self.board: np.ndarray = np.full((self.size, self.size), BoardConsts.EMPTY)
 
-        self.snake_size = snake_size
-        self.snake = Snake(net)
+        self.snake_size: int = snake_size
+        self.snake: Snake = Snake(net)
 
         self.make_board()
         if start_random:
@@ -57,13 +57,8 @@ class Model:
         self.update_board_from_snake()
 
     def make_board(self) -> None:
-        for i in range(0, self.size):
-            for j in range(0, self.size):
-                # place walls on the borders and nothing inside
-                if i == 0 or i == self.size - 1 or j == 0 or j == self.size - 1:
-                    self.board[i][j] = BoardConsts.WALL
-                else:
-                    self.board[i][j] = BoardConsts.EMPTY
+        self.board[1:-1, 1:-1] = BoardConsts.EMPTY
+        self.board[0, :] = self.board[-1, :] = self.board[:, 0] = self.board[:, -1] = BoardConsts.WALL
 
     def place_apple_at_coords(self, position) -> None:
         self.board[position[0]][position[1]] = BoardConsts.APPLE
