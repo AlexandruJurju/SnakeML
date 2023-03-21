@@ -1,4 +1,3 @@
-import numpy as np
 import pygame_gui
 from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
@@ -124,7 +123,7 @@ class GeneticTrainNewNetwork(BaseState):
 
         # print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 
-        print(f"GEN {self.generation + 1:<5}   MEAN FITNESS : {total_fitness / 1000:<35}\t WON : {won_count:^5}\t TOO_OLD : {too_old}\t MEAN_SCORE {apple_count / len(self.parent_list):<35}\t "
+        print(f"GEN {self.generation + 1:<5}   MEAN FITNESS : {total_fitness / 1000:<25}\t WON : {won_count:^5}\t TOO_OLD : {too_old}\t MEAN_SCORE {apple_count / len(self.parent_list):<25}\t "
               f"RATIO {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list))}")
 
         # self.x_points.append(self.generation)
