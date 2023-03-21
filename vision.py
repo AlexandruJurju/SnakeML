@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 from scipy.spatial.distance import chebyshev
@@ -38,7 +38,20 @@ class VisionLine:
         return self.wall_coord == other.wall_coord and self.wall_distance == other.wall_distance and self.apple_coord == other.apple_coord and self.apple_distance == other.apple_distance and self.segment_coord == other.segment_coord and self.segment_distance == other.segment_distance
 
 
-def look_in_direction(board: List[List[str]], direction: Direction, vision_return_type: str) -> VisionLine:
+# Define a type alias for cache keys
+CacheKey = Tuple[Tuple[int, int], Tuple[int, int]]
+
+# Define a global cache object
+VISION_CACHE = {}
+
+
+def look_in_direction(board: np.ndarray, direction: Direction, vision_return_type: str) -> VisionLine:
+    head_position = find_snake_head_poz(board)
+    # Check if this vision line is already in the cache
+    cache_key = (tuple(head_position), tuple(direction.value))
+    if cache_key in VISION_CACHE:
+        return VISION_CACHE[cache_key]
+
     apple_distance = np.inf
     segment_distance = np.inf
     apple_coord = None
@@ -46,7 +59,6 @@ def look_in_direction(board: List[List[str]], direction: Direction, vision_retur
 
     # search starts at one block in the given direction
     # otherwise head is also check in the loop
-    head_position = find_snake_head_poz(board)
     current_block = [head_position[0] + direction.value[0], head_position[1] + direction.value[1]]
 
     # booleans are used to store the first value found
@@ -73,7 +85,9 @@ def look_in_direction(board: List[List[str]], direction: Direction, vision_retur
         apple_boolean = 1.0 if apple_found else 0.0
         segment_boolean = 1.0 if segment_found else 0.0
 
-        return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
+        vision_line = VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
+        VISION_CACHE[cache_key] = vision_line
+        return vision_line
 
     # elif vision_return_type == "distance":
     #     wall_distance_output = wall_distance
