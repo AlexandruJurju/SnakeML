@@ -3,8 +3,6 @@ from typing import List
 import numpy as np
 
 
-# TODO add softmax for genetic forward
-
 def relu(x):
     return np.maximum(0.0, x)
 
@@ -34,8 +32,7 @@ def tanh_prime(x):
 
 
 def leaky_relu(x):
-    leaky = np.where(x < 0, x, x * 0.01)
-    return leaky
+    return np.where(x < 0, x, x * 0.01)
 
 
 def leaky_relu_prime(x):
@@ -46,8 +43,7 @@ def leaky_relu_prime(x):
 # use np because y_real and y_predicted are vectors of values
 # mse returns a scalar, MSE of all errors in output
 def mse(target_y, predicted_y):
-    real_mse = np.mean(np.power(target_y - predicted_y, 2))
-    return real_mse
+    return np.mean(np.power(target_y - predicted_y, 2))
 
 
 # mse prime returns a vector of dE/dY, output gradient vector for output vector

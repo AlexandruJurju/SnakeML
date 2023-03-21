@@ -72,19 +72,8 @@ class Model:
             self.snake.body.append([position[0], position[1]])
         self.snake.direction = direction
 
-    def find_snake_head(self) -> []:
-        for i in range(0, self.size):
-            for j in range(0, self.size):
-                if self.board[i][j] == BoardConsts.SNAKE_HEAD:
-                    return [i, j]
-
     def get_random_empty_block(self) -> []:
-        empty = []
-        for i in range(1, self.size):
-            for j in range(1, self.size):
-                if self.board[i][j] == BoardConsts.EMPTY:
-                    empty.append([i, j])
-
+        empty = [[i, j] for i in range(1, self.size) for j in range(1, self.size) if self.board[i][j] == BoardConsts.EMPTY]
         return random.choice(empty)
 
     def place_new_apple(self) -> None:
