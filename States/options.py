@@ -137,6 +137,7 @@ class Options(BaseState):
         output_layer = UILabel(pygame.Rect((ViewSettings.X_SECOND - 75 // 2 + 250, 550), (75, 30)), str(output_neuron_count), self.ui_manager)
         output_layer_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 125 // 2 + 250, 500), (125, 30)), "Output Layer", self.ui_manager)
 
+        # TODO add options for more hidden layers
         first_hidden_layer_neuron_count = input_neuron_count + 8
         first_hidden_layer = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2, 550), (75, 30)), self.ui_manager)
         first_hidden_layer_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 125 // 2, 500), (125, 30)), "Hidden Layer", self.ui_manager)

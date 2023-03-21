@@ -1,8 +1,9 @@
 from typing import List, Tuple
 
+import numpy as np
 import pygame
 
-from game_config import ViewSettings, BoardConsts, MAIN_DIRECTIONS, Direction
+from game_config import ViewSettings, MAIN_DIRECTIONS, Direction, BoardConsts
 from model import Model
 from neural_network import Dense
 from vision import VisionLine, find_snake_head_poz
@@ -10,30 +11,23 @@ from vision import VisionLine, find_snake_head_poz
 
 # TODO when using relu neurons aren't colored
 
-def draw_board(window, board: List, offset_x, offset_y) -> None:
+def draw_board(window, board: np.ndarray, offset_x, offset_y) -> None:
     # use y,x for index in board instead of x,y because of changed logic
     # x is line y is column ; drawing x is column and y is line
-    for x in range(len(board)):
-        for y in range(len(board)):
+    board_size = len(board)
+    square_rect = pygame.Rect(0, 0, ViewSettings.SQUARE_SIZE, ViewSettings.SQUARE_SIZE)
+
+    for x in range(board_size):
+        for y in range(board_size):
             x_position = x * ViewSettings.SQUARE_SIZE + offset_x
             y_position = y * ViewSettings.SQUARE_SIZE + offset_y
 
-            match board[y][x]:
-                case BoardConsts.EMPTY:
-                    if (x + y) % 2 == 0:
-                        pygame.draw.rect(window, ViewSettings.COLOR_ODD, pygame.Rect(x_position, y_position, ViewSettings.SQUARE_SIZE, ViewSettings.SQUARE_SIZE))
-                    else:
-                        pygame.draw.rect(window, ViewSettings.COLOR_EVEN, pygame.Rect(x_position, y_position, ViewSettings.SQUARE_SIZE, ViewSettings.SQUARE_SIZE))
-                case BoardConsts.SNAKE_BODY:
-                    pygame.draw.rect(window, ViewSettings.COLOR_SNAKE_SEGMENT, pygame.Rect(x_position, y_position, ViewSettings.SQUARE_SIZE, ViewSettings.SQUARE_SIZE))
-                case BoardConsts.WALL:
-                    pygame.draw.rect(window, ViewSettings.COLOR_WHITE, pygame.Rect(x_position, y_position, ViewSettings.SQUARE_SIZE, ViewSettings.SQUARE_SIZE))
-                case BoardConsts.APPLE:
-                    pygame.draw.rect(window, ViewSettings.COLOR_APPLE, pygame.Rect(x_position, y_position, ViewSettings.SQUARE_SIZE, ViewSettings.SQUARE_SIZE))
-                case BoardConsts.SNAKE_HEAD:
-                    pygame.draw.rect(window, ViewSettings.COLOR_SNAKE_HEAD, pygame.Rect(x_position, y_position, ViewSettings.SQUARE_SIZE, ViewSettings.SQUARE_SIZE))
-            # draw lines between squares
-            pygame.draw.rect(window, ViewSettings.COLOR_SQUARE_DELIMITER, pygame.Rect(x_position, y_position, ViewSettings.SQUARE_SIZE, ViewSettings.SQUARE_SIZE), width=1)
+            color = ViewSettings.COLOR_MAP[board[y][x]]
+            val = board[y][x]
+            if val == BoardConsts.EMPTY:
+                color = color[(x + y) % 2]
+            pygame.draw.rect(window, color, square_rect.move(x_position, y_position))
+            pygame.draw.rect(window, ViewSettings.COLOR_SQUARE_DELIMITER, square_rect.move(x_position, y_position), width=1)
 
 
 def draw_vision_lines(window, model: Model, vision_lines: List[VisionLine], offset_x, offset_y) -> None:

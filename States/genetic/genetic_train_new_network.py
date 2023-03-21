@@ -73,11 +73,6 @@ class GeneticTrainNewNetwork(BaseState):
         vision_lines = get_vision_lines(self.model.board, self.data_received["input_direction_count"], self.data_received["vision_return_type"])
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
-        if ViewSettings.DRAW:
-            draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-            # draw_vision_lines(surface, self.model, vision_lines, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
-            # draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
-
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move(next_direction)
 
@@ -94,12 +89,6 @@ class GeneticTrainNewNetwork(BaseState):
             if len(self.parent_list) == GameSettings.POPULATION_COUNT:
                 self.offspring_list.clear()
                 self.next_generation()
-
-    def check_finished(self) -> bool:
-        for individual in self.parent_list:
-            if individual.won is False:
-                return False
-        return True
 
     # TODO decaying mutation rate
     # TODO write console output in a txt file to store generation information

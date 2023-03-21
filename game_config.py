@@ -12,6 +12,14 @@ class State(Enum):
     RUN_PRETRAINED = 7
 
 
+class BoardConsts:
+    APPLE = "A"
+    WALL = "W"
+    EMPTY = "."
+    SNAKE_BODY = "S"
+    SNAKE_HEAD = "H"
+
+
 class ViewSettings:
     DRAW = False
     MAX_FPS = 1000000000000000000000000000
@@ -64,13 +72,13 @@ class ViewSettings:
     COLOR_ODD = (42, 52, 68)
     COLOR_EVEN = (34, 41, 54)
 
-
-class BoardConsts:
-    APPLE = "A"
-    WALL = "W"
-    EMPTY = "."
-    SNAKE_BODY = "S"
-    SNAKE_HEAD = "H"
+    COLOR_MAP = {
+        BoardConsts.EMPTY: (COLOR_ODD, COLOR_EVEN),
+        BoardConsts.SNAKE_BODY: COLOR_SNAKE_SEGMENT,
+        BoardConsts.WALL: COLOR_WHITE,
+        BoardConsts.APPLE: COLOR_APPLE,
+        BoardConsts.SNAKE_HEAD: COLOR_SNAKE_HEAD
+    }
 
 
 class Direction(Enum):
