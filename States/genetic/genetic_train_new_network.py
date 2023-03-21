@@ -68,6 +68,7 @@ class GeneticTrainNewNetwork(BaseState):
         self.generation_label.kill()
         self.individual_label.kill()
 
+    # TODO use more snakes, more threads each with its own snake and board
     def run_genetic(self, surface):
         vision_lines = get_vision_lines(self.model.board, self.data_received["input_direction_count"], self.data_received["vision_return_type"])
         neural_net_prediction = self.model.get_nn_output(vision_lines)
@@ -101,6 +102,7 @@ class GeneticTrainNewNetwork(BaseState):
         return True
 
     # TODO decaying mutation rate
+    # TODO write console output in a txt file to store generation information
     def next_generation(self):
         self.offspring_list.clear()
 

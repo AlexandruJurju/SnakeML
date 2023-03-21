@@ -21,6 +21,7 @@ def find_snake_head_poz(board: List[List[str]]) -> []:
 
 
 class VisionLine:
+    # TODO maybe use just obstacle, remove segment and wall -> obstacle
     def __init__(self, wall_coord, wall_distance, apple_coord, apple_distance, segment_coord, segment_distance, direction: Direction):
         self.wall_coord = wall_coord
         self.wall_distance = wall_distance
@@ -64,6 +65,9 @@ def look_in_direction(board: List[List[str]], direction: Direction, vision_retur
     wall_distance = distance(head_position, current_block)
     wall_coord = current_block
 
+    # TODO when using distance, different values for wall, segment  and apple
+    # TODO segment distance instead of bool when using boolean vision
+    # todo chebishev distance
     if vision_return_type == "boolean":
         wall_distance_output = 1 / wall_distance
         apple_boolean = 1.0 if apple_found else 0.0
