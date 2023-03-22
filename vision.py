@@ -82,7 +82,17 @@ def look_in_direction(board: np.ndarray, direction: Direction, vision_return_typ
     # return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_distance_output, segment_coord, segment_distance_output, direction)
 
 
+CACHE = {}
+
+
 def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direction, vision_return_type: str) -> VisionLine:
+    x, y = snake_head
+    board_values = [board[x + i * direction.value[0]][y + i * direction.value[1]] for i in range(min(len(board) - x, len(board[0]) - y))]
+    board_key = tuple(board_values)
+
+    if board_key in CACHE:
+        return CACHE[board_key]
+
     apple_distance = np.inf
     segment_distance = np.inf
     apple_coord = None
@@ -116,7 +126,9 @@ def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direc
         apple_boolean = 1.0 if apple_found else 0.0
         segment_boolean = 1.0 if segment_found else 0.0
 
-        return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
+        vision_line = VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
+        CACHE[board_key] = vision_line
+        return vision_line
 
     # elif vision_return_type == "distance":
     #     wall_distance_output = wall_distance
