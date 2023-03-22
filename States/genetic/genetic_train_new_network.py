@@ -8,7 +8,7 @@ from States.state_manager import StateManager
 from file_operations import save_neural_network_to_json
 from game_config import GameSettings
 from game_config import State
-from genetic_operators import elitist_selection, roulette_selection, full_mutation, full_crossover
+from genetic_operators import elitist_selection, roulette_selection_negative, full_mutation, full_crossover
 from model import Snake
 from neural_network import NeuralNetwork, Activation
 from view import *
@@ -137,7 +137,7 @@ class GeneticTrainNewNetwork(BaseState):
         np.random.shuffle(self.parent_list)
 
         while len(self.offspring_list) < self.data_received["population_count"]:
-            parent1, parent2 = roulette_selection(self.parent_list, 2)
+            parent1, parent2 = roulette_selection_negative(self.parent_list, 2)
             child1, child2 = full_crossover(parent1.brain, parent1.brain)
 
             full_mutation(child1, self.data_received["mutation_rate"])

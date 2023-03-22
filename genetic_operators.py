@@ -9,7 +9,7 @@ from neural_network import *
 # operators from pymoo
 # https://github.com/anyoptimization/pymoo/tree/main/pymoo/operators
 
-def roulette_selection(population: List[Individual], selection_count: int) -> List[Individual]:
+def roulette_selection_negative(population: List[Individual], selection_count: int) -> List[Individual]:
     """
     In Roulette selection the chance for and individual to be selected is directly proportional with that individual's fitness
     :param population: list containing all individuals
