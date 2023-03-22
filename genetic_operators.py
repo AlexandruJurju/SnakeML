@@ -9,13 +9,37 @@ from neural_network import *
 # operators from pymoo
 # https://github.com/anyoptimization/pymoo/tree/main/pymoo/operators
 
-def roulette_selection_negative(population: List[Individual], selection_count: int) -> List[Individual]:
+def roulette_selection(population: List[Individual], selection_count: int) -> List[Individual]:
     """
     In Roulette selection the chance for and individual to be selected is directly proportional with that individual's fitness
     :param population: list containing all individuals
     :param selection_count: number of individuals to be extracted from the population
     :return: list on individuals selected from the population
     """
+    selected = []
+    total_population_fitness = sum(individual.fitness for individual in population)
+
+    # Choose a random value between 0 and sum_pop_fitness
+    # Loop over individuals in population and sum their fitness in current_fitness
+    for i in range(selection_count):
+        random_fitness = random.uniform(0, total_population_fitness)
+        current_fitness = 0
+
+        for individual in population:
+            current_fitness += individual.fitness
+            if current_fitness >= random_fitness:
+                selected.append(individual)
+                break
+    return selected
+
+
+def roulette_selection_negative(population: List[Individual], selection_count: int) -> List[Individual]:
+    """
+     In Roulette selection the chance for and individual to be selected is directly proportional with that individual's fitness
+     :param population: list containing all individuals
+     :param selection_count: number of individuals to be extracted from the population
+     :return: list on individuals selected from the population
+     """
     selected = []
     min_fitness = min(individual.fitness for individual in population)
     individuals_after_shift = [individual.fitness - min_fitness for individual in population]

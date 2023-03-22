@@ -8,11 +8,11 @@ from States.state_manager import StateManager
 from file_operations import save_neural_network_to_json
 from game_config import GameSettings
 from game_config import State
-from genetic_operators import elitist_selection, roulette_selection_negative, full_mutation, full_crossover
+from genetic_operators import elitist_selection, roulette_selection, full_mutation, full_crossover
 from model import Snake
 from neural_network import NeuralNetwork, Activation
 from view import *
-from vision import get_vision_lines_model
+from vision import get_vision_lines
 
 
 class GeneticTrainNewNetwork(BaseState):
@@ -69,7 +69,7 @@ class GeneticTrainNewNetwork(BaseState):
 
     # TODO use more snakes, more threads each with its own snake and board
     def run_genetic(self, surface):
-        vision_lines = get_vision_lines_model(self.model.board, self.model.snake.body[0], self.data_received["input_direction_count"], self.data_received["vision_return_type"])
+        vision_lines = get_vision_lines(self.model.board, self.data_received["input_direction_count"], self.data_received["vision_return_type"])
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
@@ -137,7 +137,7 @@ class GeneticTrainNewNetwork(BaseState):
         np.random.shuffle(self.parent_list)
 
         while len(self.offspring_list) < self.data_received["population_count"]:
-            parent1, parent2 = roulette_selection_negative(self.parent_list, 2)
+            parent1, parent2 = roulette_selection(self.parent_list, 2)
             child1, child2 = full_crossover(parent1.brain, parent1.brain)
 
             full_mutation(child1, self.data_received["mutation_rate"])

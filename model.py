@@ -1,4 +1,5 @@
 import random
+from typing import Tuple
 
 from neural_network import NeuralNetwork
 from vision import *
@@ -27,13 +28,13 @@ class Snake(Individual):
 
     def calculate_fitness(self) -> None:
         # 10 ^ 15 is XOR
-        # win_bonus = 10 ** 15 if self.won else 1
-        # fitness_score = win_bonus * (self.steps_taken + ((2 ** self.score) + (self.score ** 2) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
+        win_bonus = 10 ** 15 if self.won else 1
+        fitness_score = win_bonus * (self.steps_taken + ((2 ** self.score) + (self.score ** 2) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
 
-        win_bonus = 10 ** 5 if self.won else 1
-        hit_penalty = 10 ** 2 if self.hit_obstacle is True else 0
-        loop_penalty = 10 ** 5 if self.TTL == 0 else 0
-        fitness_score = win_bonus * (self.steps_taken + ((self.score ** 3) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2)) - hit_penalty - loop_penalty
+        # win_bonus = 10 ** 5 if self.won else 1
+        # hit_penalty = 10 ** 2 if self.hit_obstacle is True else 0
+        # loop_penalty = 10 ** 5 if self.TTL == 0 else 0
+        # fitness_score = win_bonus * (self.steps_taken + ((self.score ** 3) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2)) - hit_penalty - loop_penalty
 
         self.fitness = fitness_score
 
