@@ -5,7 +5,7 @@ from typing import Tuple, Dict
 import neural_network
 from game_config import Direction
 from neural_network import *
-from vision import get_parameters_in_nn_input_form, VisionLine
+from vision import VisionLine, get_parameters_in_nn_input_form
 
 
 class TrainingExample:

@@ -12,7 +12,7 @@ from genetic_operators import elitist_selection, roulette_selection, full_mutati
 from model import Snake
 from neural_network import NeuralNetwork, Activation
 from view import *
-from vision import get_vision_lines
+from vision import get_vision_lines_model
 
 
 class GeneticTrainNewNetwork(BaseState):
@@ -69,7 +69,7 @@ class GeneticTrainNewNetwork(BaseState):
 
     # TODO use more snakes, more threads each with its own snake and board
     def run_genetic(self, surface):
-        vision_lines = get_vision_lines(self.model.board, self.data_received["input_direction_count"], self.data_received["vision_return_type"])
+        vision_lines = get_vision_lines_model(self.model.board, self.model.snake.body[0], self.data_received["input_direction_count"], self.data_received["vision_return_type"])
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)

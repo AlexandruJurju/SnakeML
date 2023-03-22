@@ -1,5 +1,4 @@
 import random
-from typing import Tuple
 
 from neural_network import NeuralNetwork
 from vision import *
