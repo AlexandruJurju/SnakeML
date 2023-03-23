@@ -165,11 +165,7 @@ class Model:
         return True
 
     def check_win_condition(self):
-        for i in range(1, self.size):
-            for j in range(1, self.size):
-                if self.board[i][j] == BoardConsts.EMPTY:
-                    return False
-        return True
+        return not any(cell == BoardConsts.EMPTY for row in self.board for cell in row)
 
     def get_nn_output(self, vision_lines) -> np.ndarray:
         nn_input = get_parameters_in_nn_input_form(vision_lines, self.snake.direction)
