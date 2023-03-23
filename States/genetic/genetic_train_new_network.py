@@ -19,6 +19,12 @@ class GeneticTrainNewNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.GENETIC_TRAIN_NEW_NETWORK, state_manager)
 
+        self.mutation_rate = None
+        self.population_count = None
+        self.vision_return_type = None
+        self.input_direction_count = None
+        self.initial_snake_size = None
+        self.initial_board_size = None
         self.ui_manager = ui_manager
         self.model = None
         self.generation = None
@@ -34,6 +40,13 @@ class GeneticTrainNewNetwork(BaseState):
         self.individual_label = None
 
     def start(self):
+        self.initial_board_size = self.data_received["board_size"]
+        self.initial_snake_size = self.data_received["initial_snake_size"]
+        self.input_direction_count = self.data_received["input_direction_count"]
+        self.vision_return_type = self.data_received["vision_return_type"]
+        self.population_count = self.data_received["population_count"]
+        self.mutation_rate = self.data_received["mutation_rate"]
+
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Genetic Train New Network", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
@@ -44,7 +57,7 @@ class GeneticTrainNewNetwork(BaseState):
         self.parent_list: List[Snake] = []
         self.offspring_list: List[NeuralNetwork] = []
 
-        input_direction_count = self.data_received["input_direction_count"]
+        input_direction_count = self.input_direction_count
         input_neuron_count = self.data_received["input_layer_neurons"]
         hidden_neuron_count = self.data_received["hidden_layer_neurons"]
         output_neuron_count = self.data_received["output_layer_neurons"]
@@ -59,7 +72,7 @@ class GeneticTrainNewNetwork(BaseState):
         net.add_layer(Dense(hidden_neuron_count, output_neuron_count))
         net.add_layer(Activation(output_activation, output_activation))
 
-        self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], True, net)
+        self.model = Model(self.initial_board_size, self.initial_snake_size, True, net)
 
     def end(self):
         self.title_label.kill()
@@ -69,7 +82,7 @@ class GeneticTrainNewNetwork(BaseState):
 
     # TODO use more snakes, more threads each with its own snake and board
     def run_genetic(self, surface):
-        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.data_received["input_direction_count"], self.data_received["vision_return_type"])
+        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.vision_return_type)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
@@ -81,9 +94,9 @@ class GeneticTrainNewNetwork(BaseState):
 
             if self.generation == 0:
                 self.model.snake.brain.reinit_weights_and_biases()
-                self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], True, self.model.snake.brain)
+                self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.model.snake.brain)
             else:
-                self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], True, self.offspring_list[len(self.parent_list) - 1])
+                self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.offspring_list[len(self.parent_list) - 1])
 
             if len(self.parent_list) == GameSettings.POPULATION_COUNT:
                 self.offspring_list.clear()
@@ -114,16 +127,16 @@ class GeneticTrainNewNetwork(BaseState):
         # TODO use mod 10 to keep only the last 10 best neural network
         save_neural_network_to_json(self.generation,
                                     best_individual.fitness,
-                                    self.data_received["board_size"],
-                                    self.data_received["initial_snake_size"],
-                                    self.data_received["input_direction_count"],
-                                    self.data_received["vision_return_type"],
+                                    self.initial_board_size,
+                                    self.initial_snake_size,
+                                    self.input_direction_count,
+                                    self.vision_return_type,
                                     best_individual.brain,
                                     GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.data_received["file_name"] + "/" + str(self.generation % 5))
 
         # print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
 
-        print(f"GEN {self.generation + 1:<5}   MEAN FITNESS : {total_fitness / 1000:<25}\t WON : {won_count:^5}\t TOO_OLD : {too_old}\t MEAN_SCORE {apple_count / len(self.parent_list):<25}\t "
+        print(f"GEN {self.generation + 1:<5}   MEAN FITNESS : {total_fitness / self.population_count:<25}\t WON : {won_count:^5}\t TOO_OLD : {too_old}\t MEAN_SCORE {apple_count / len(self.parent_list):<25}\t "
               f"RATIO {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list))}")
 
         # self.x_points.append(self.generation)
@@ -136,18 +149,18 @@ class GeneticTrainNewNetwork(BaseState):
         # np.random.shuffle(parents_for_mating)
         np.random.shuffle(self.parent_list)
 
-        while len(self.offspring_list) < self.data_received["population_count"]:
+        while len(self.offspring_list) < self.population_count:
             parent1, parent2 = roulette_selection(self.parent_list, 2)
             child1, child2 = full_crossover(parent1.brain, parent1.brain)
 
-            full_mutation(child1, self.data_received["mutation_rate"])
-            full_mutation(child2, self.data_received["mutation_rate"])
+            full_mutation(child1, self.mutation_rate)
+            full_mutation(child2, self.mutation_rate)
 
             self.offspring_list.append(child1)
             self.offspring_list.append(child2)
 
         self.model.snake.brain.reinit_weights_and_biases()
-        self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], True, self.offspring_list[0])
+        self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.offspring_list[0])
 
         self.generation += 1
         self.parent_list.clear()
