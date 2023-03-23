@@ -118,11 +118,10 @@ class Model:
         self.clear_snake_on_board()
 
         # loop all snake pieces and put S on board using their coordinates
-        for piece in self.snake.body:
-            if piece == self.snake.body[0]:
-                self.board[piece[0]][piece[1]] = BoardConsts.SNAKE_HEAD
-            else:
-                self.board[piece[0]][piece[1]] = BoardConsts.SNAKE_BODY
+        head_i, head_j = self.snake.body[0]
+        self.board[head_i][head_j] = BoardConsts.SNAKE_HEAD
+        body_coords = self.snake.body[1:]
+        self.board[[i for i, _ in body_coords], [j for _, j in body_coords]] = BoardConsts.SNAKE_BODY
 
     def clear_snake_on_board(self) -> None:
         body_mask = self.board == BoardConsts.SNAKE_BODY
@@ -190,33 +189,3 @@ class Model:
                 return Direction.LEFT
             case 3:
                 return Direction.RIGHT
-
-    def get_nn_output_3directions_dynamic(self, nn_output) -> Direction:
-        direction_index = list(nn_output).index(max(list(nn_output)))
-
-        # STRAIGHT
-        if direction_index == 0:
-            return self.snake.direction
-
-        # LEFT
-        if direction_index == 1:
-            match self.snake.direction:
-                case Direction.UP:
-                    return Direction.LEFT
-                case Direction.LEFT:
-                    return Direction.DOWN
-                case Direction.DOWN:
-                    return Direction.RIGHT
-                case Direction.RIGHT:
-                    return Direction.UP
-        # RIGHT
-        if direction_index == 2:
-            match self.snake.direction:
-                case Direction.UP:
-                    return Direction.RIGHT
-                case Direction.LEFT:
-                    return Direction.UP
-                case Direction.DOWN:
-                    return Direction.LEFT
-                case Direction.RIGHT:
-                    return Direction.DOWN
