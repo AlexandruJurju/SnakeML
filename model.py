@@ -125,8 +125,9 @@ class Model:
                 self.board[piece[0]][piece[1]] = BoardConsts.SNAKE_BODY
 
     def clear_snake_on_board(self) -> None:
-        mask = np.logical_or(self.board == BoardConsts.SNAKE_BODY, self.board == BoardConsts.SNAKE_HEAD)
-        self.board[mask] = BoardConsts.EMPTY
+        body_mask = self.board == BoardConsts.SNAKE_BODY
+        head_mask = self.board == BoardConsts.SNAKE_HEAD
+        self.board[body_mask | head_mask] = BoardConsts.EMPTY
 
     def move(self, new_direction: Direction) -> bool:
         self.snake.direction = new_direction
