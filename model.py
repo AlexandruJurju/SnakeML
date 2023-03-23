@@ -27,14 +27,20 @@ class Snake(Individual):
         self.direction = None
 
     def calculate_fitness(self) -> None:
-        # 10 ^ 15 is XOR
-        win_bonus = 10 ** 15 if self.won else 1
-        fitness_score = win_bonus * (self.steps_taken + ((2 ** self.score) + (self.score ** 2) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
+        fitness_score = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
 
+        # 10 ^ 15 is XOR
+        # win_bonus = 10 ** 15 if self.won else 1
+        # fitness_score = win_bonus * (self.steps_taken + ((2 ** self.score) + (self.score ** 2) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
+
+        # ==========================================
         # win_bonus = 10 ** 5 if self.won else 1
-        # hit_penalty = 10 ** 2 if self.hit_obstacle is True else 0
-        # loop_penalty = 10 ** 5 if self.TTL == 0 else 0
-        # fitness_score = win_bonus * (self.steps_taken + ((self.score ** 3) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2)) - hit_penalty - loop_penalty
+        # score_bonus = (2 ** self.score) * 500
+        # step_penalty = (.5 * self.steps_taken) ** 1.3
+        # score_weight = 0.7
+        # step_weight = 0.3
+        #
+        # fitness_score = win_bonus * (score_weight * score_bonus + step_weight * self.steps_taken) - step_penalty * (self.score ** 1.2)
 
         self.fitness = fitness_score
 
