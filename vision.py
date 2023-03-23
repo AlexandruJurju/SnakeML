@@ -56,16 +56,16 @@ def look_in_direction(board: np.ndarray, direction: Direction, vision_return_typ
     while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
         if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_found is False:
             apple_distance = distance(head_position, current_block)
-            apple_coord = current_block
+            apple_coord = [int(current_block[0]), int(current_block[1])]
             apple_found = True
         elif board[current_block[0]][current_block[1]] == BoardConsts.SNAKE_BODY and segment_found is False:
             segment_distance = distance(head_position, current_block)
-            segment_coord = current_block
+            segment_coord = [int(current_block[0]), int(current_block[1])]
             segment_found = True
         current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
 
     wall_distance = distance(head_position, current_block)
-    wall_coord = current_block
+    wall_coord = [int(current_block[0]), int(current_block[1])]
 
     if vision_return_type == "boolean":
         wall_distance_output = 1 / wall_distance
