@@ -85,6 +85,8 @@ def look_in_direction(board: np.ndarray, direction: Direction, vision_return_typ
 CACHE = {}
 
 
+# TODO distance for segment
+# TODO normalize distance using dist/max_distance
 def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direction, vision_return_type: str) -> VisionLine:
     x, y = snake_head
     board_values = [board[x + i * direction.value[0]][y + i * direction.value[1]] for i in range(min(len(board) - x, len(board[0]) - y))]
