@@ -80,7 +80,6 @@ class GeneticTrainNewNetwork(BaseState):
         self.generation_label.kill()
         self.individual_label.kill()
 
-    # TODO use more snakes, more threads each with its own snake and board
     def run_genetic(self, surface):
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.vision_return_type)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
@@ -98,7 +97,7 @@ class GeneticTrainNewNetwork(BaseState):
             else:
                 self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.offspring_list[len(self.parent_list) - 1])
 
-            if len(self.parent_list) == GameSettings.POPULATION_COUNT:
+            if len(self.parent_list) == self.population_count:
                 self.offspring_list.clear()
                 self.next_generation()
 
@@ -177,7 +176,7 @@ class GeneticTrainNewNetwork(BaseState):
 
         self.run_genetic(surface)
         self.generation_label.set_text("Generation : " + str(self.generation))
-        self.individual_label.set_text("Individual : " + str(len(self.parent_list)) + " / " + str(GameSettings.POPULATION_COUNT))
+        self.individual_label.set_text("Individual : " + str(len(self.parent_list)) + " / " + str(self.population_count))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
