@@ -174,14 +174,3 @@ def read_all_from_json(path: str) -> Dict:
     output = json_object
     output["network"] = output_network
     return output
-
-
-def write_results_to_txt(path: str, ratio: float, overwrite: bool) -> None:
-    if overwrite:
-        file = open(path + "result.txt", "w")
-        file.write(str(ratio) + "\n")
-        file.close()
-    else:
-        file = open(path + "result.txt", "a")
-        file.write(str(ratio) + "\n")
-        file.close()
