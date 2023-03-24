@@ -53,6 +53,8 @@ class Model:
         self.snake_size: int = snake_size
         self.snake: Snake = Snake(net)
 
+        self.empty_block_count = model_size ** 2 - self.snake_size
+
         self.make_board()
         if start_random:
             self.place_new_apple()
@@ -146,27 +148,28 @@ class Model:
             return False
 
         self.snake.body.insert(0, next_head)
-        # TODO i think it needs to be put at the start
         self.snake.steps_taken += 1
 
         # if snake eats an apple, the last segment isn't removed from the body list when moving
         if new_head_value == BoardConsts.APPLE:
             self.update_board_from_snake()
-            self.place_new_apple()
-            self.snake.steps_to_apple = GameSettings.SNAKE_MAX_TTL - self.snake.TTL
-            self.snake.TTL = GameSettings.SNAKE_MAX_TTL
             self.snake.score = self.snake.score + 1
+
+            self.empty_block_count -= 1
+            if self.empty_block_count == 0:
+                self.snake.won = True
+                return False
+
+            self.place_new_apple()
+            self.snake.TTL = GameSettings.SNAKE_MAX_TTL
+
         else:
             self.snake.body = self.snake.body[:-1]
             self.update_board_from_snake()
             self.snake.TTL = self.snake.TTL - 1
 
-        if self.snake.TTL == 0:
-            return False
-
-        if self.check_win_condition():
-            self.snake.won = True
-            return False
+            if self.snake.TTL == 0:
+                return False
 
         return True
 
