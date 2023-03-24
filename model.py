@@ -9,7 +9,7 @@ class Individual:
     def __init__(self, neural_network: NeuralNetwork):
         self.score: int = 0
         self.fitness: float = 0
-        self.brain = neural_network
+        self.brain: NeuralNetwork = neural_network
 
     def calculate_fitness(self):
         pass
@@ -18,13 +18,11 @@ class Individual:
 class Snake(Individual):
     def __init__(self, neural_network: NeuralNetwork):
         super().__init__(neural_network)
-        self.body = []
-        self.TTL = GameSettings.SNAKE_MAX_TTL
-        self.steps_taken = 0
-        self.won = False
-        self.hit_obstacle = False
-
-        self.direction = None
+        self.body: List = []
+        self.TTL: int = GameSettings.SNAKE_MAX_TTL
+        self.steps_taken: int = 0
+        self.won: bool = False
+        self.direction: Direction = None
 
     def calculate_fitness(self) -> None:
         fitness_score = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
@@ -53,15 +51,15 @@ class Model:
         self.snake_size: int = snake_size
         self.snake: Snake = Snake(net)
 
-        self.empty_block_count = model_size ** 2 - self.snake_size
-
+        self.empty_block_count: int = model_size ** 2 - self.snake_size
         self.make_board()
+
         if start_random:
             self.place_new_apple()
             self.create_random_snake()
         else:
             self.place_apple_at_coords([5, 5])
-            self.place_snake_in_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
+            self.place_snake_at_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
         self.update_board_from_snake()
 
     def make_board(self) -> None:
@@ -71,13 +69,15 @@ class Model:
     def place_apple_at_coords(self, position) -> None:
         self.board[position[0]][position[1]] = BoardConsts.APPLE
 
-    def place_snake_in_given_position(self, positions: [], direction: Direction) -> None:
-        for i, position in enumerate(positions):
-            if i == 0:
-                self.board[position[0]][position[1]] = BoardConsts.SNAKE_HEAD
-            else:
-                self.board[position[0]][position[1]] = BoardConsts.SNAKE_BODY
-            self.snake.body.append([position[0], position[1]])
+    def place_snake_at_given_position(self, positions: [], direction: Direction) -> None:
+        snake_head_row, snake_head_col = positions[0]
+        self.board[snake_head_row][snake_head_col] = BoardConsts.SNAKE_HEAD
+
+        snake_body_positions = [(row, col) for row, col in positions[1:]]
+        for row, col in snake_body_positions:
+            self.board[row][col] = BoardConsts.SNAKE_BODY
+
+        self.snake.body = snake_body_positions
         self.snake.direction = direction
 
     def get_random_empty_block(self) -> []:
