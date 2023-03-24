@@ -54,12 +54,11 @@ def main():
 
     state_manager.set_initial_state(State.MAIN_MENU)
 
-    clock = pygame.time.Clock()
+
     running = True
 
     while running:
-        time_delta = clock.tick(ViewSettings.MAX_FPS) / 1000.0
-        running = state_manager.run(screen, time_delta)
+        running = state_manager.run(screen)
     pygame.quit()
 
 

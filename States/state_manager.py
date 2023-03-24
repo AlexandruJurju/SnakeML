@@ -11,12 +11,18 @@ class StateManager:
     def __init__(self):
         self.states: Dict[State, BaseState] = {}
         self.active_state = None
+        self.clock = pygame.time.Clock()
 
     def add_state(self, state: BaseState) -> None:
         if state.state_id not in self.states:
             self.states[state.state_id] = state
 
-    def run(self, surface, time_delta):
+    def run(self, surface):
+        if self.active_state is not self.states[State.GENETIC_TRAIN_NEW_NETWORK] or ViewSettings.DRAW:
+            time_delta = self.clock.tick(ViewSettings.MAX_FPS) / 1000.0
+        else:
+            time_delta = 0
+
         if self.active_state is not None:
             self.active_state.run(surface, time_delta)
 

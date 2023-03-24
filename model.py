@@ -27,18 +27,10 @@ class Snake(Individual):
     def calculate_fitness(self) -> None:
         fitness_score = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
 
-        # 10 ^ 15 is XOR
-        # win_bonus = 10 ** 15 if self.won else 1
-        # fitness_score = win_bonus * (self.steps_taken + ((2 ** self.score) + (self.score ** 2) * 500)) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
-
-        # ==========================================
-        # win_bonus = 10 ** 5 if self.won else 1
-        # score_bonus = (2 ** self.score) * 500
-        # step_penalty = (.5 * self.steps_taken) ** 1.3
-        # score_weight = 0.7
-        # step_weight = 0.3
-        #
-        # fitness_score = win_bonus * (score_weight * score_bonus + step_weight * self.steps_taken) - step_penalty * (self.score ** 1.2)
+        # over = self.steps_taken - (self.steps_taken / (self.score + 1))
+        # under = self.steps_taken + (self.steps_taken / (self.score + 1))
+        # fitness_score = self.score + 0.5 + (0.5 * (over / under))
+        # fitness_score = fitness_score * 10000
 
         self.fitness = fitness_score
 
@@ -138,17 +130,17 @@ class Model:
 
     def move(self, new_direction: Direction) -> bool:
         self.snake.direction = new_direction
+        self.snake.steps_taken += 1
 
         head = self.snake.body[0]
         next_head = [head[0] + new_direction.value[0], head[1] + new_direction.value[1]]
-
         new_head_value = self.board[next_head[0]][next_head[1]]
+
         if (new_head_value == BoardConsts.WALL) or (new_head_value == BoardConsts.SNAKE_BODY):
             self.snake.hit_obstacle = True
             return False
 
         self.snake.body.insert(0, next_head)
-        self.snake.steps_taken += 1
 
         # if snake eats an apple, the last segment isn't removed from the body list when moving
         if new_head_value == BoardConsts.APPLE:
