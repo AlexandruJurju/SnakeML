@@ -43,7 +43,7 @@ class Model:
         self.snake_size: int = snake_size
         self.snake: Snake = Snake(net)
 
-        self.empty_block_count: int = model_size ** 2 - self.snake_size
+        self.max_score = model_size ** 2 - snake_size
         self.make_board()
 
         if start_random:
@@ -62,14 +62,12 @@ class Model:
         self.board[position[0]][position[1]] = BoardConsts.APPLE
 
     def place_snake_at_given_position(self, positions: [], direction: Direction) -> None:
-        snake_head_row, snake_head_col = positions[0]
-        self.board[snake_head_row][snake_head_col] = BoardConsts.SNAKE_HEAD
-
-        snake_body_positions = [(row, col) for row, col in positions[1:]]
-        for row, col in snake_body_positions:
-            self.board[row][col] = BoardConsts.SNAKE_BODY
-
-        self.snake.body = snake_body_positions
+        for i, position in enumerate(positions):
+            if i == 0:
+                self.board[position[0]][position[1]] = BoardConsts.SNAKE_HEAD
+            else:
+                self.board[position[0]][position[1]] = BoardConsts.SNAKE_BODY
+            self.snake.body.append([position[0], position[1]])
         self.snake.direction = direction
 
     def get_random_empty_block(self) -> []:
@@ -147,8 +145,7 @@ class Model:
             self.update_board_from_snake()
             self.snake.score = self.snake.score + 1
 
-            self.empty_block_count -= 1
-            if self.empty_block_count == 0:
+            if self.max_score == self.snake.score:
                 self.snake.won = True
                 return False
 

@@ -11,7 +11,7 @@ from file_operations import read_all_from_json
 from game_config import State, ViewSettings, GameSettings
 from model import Model
 from view import draw_board
-from vision import get_vision_lines
+from vision import get_vision_lines_snake_head
 
 
 class RunPretrained(BaseState):
@@ -80,7 +80,7 @@ class RunPretrained(BaseState):
         self.execute_network = False
 
     def run_network(self, surface):
-        vision_lines = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
+        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.vision_return_type)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
         # if self.execute_network is False:
@@ -94,6 +94,11 @@ class RunPretrained(BaseState):
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
+            if self.model.snake.won:
+                print("WON")
+            else:
+                print("NOT WON")
+
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
 
     def run(self, surface, time_delta):

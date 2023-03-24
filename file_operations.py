@@ -64,7 +64,6 @@ def write_examples_to_json_4d(examples: List[TrainingExample], output_file_locat
             vision_lines.append(line_dict)
 
         example_dictionary: Dict = {
-            "board": example.board,
             "current_direction": example.current_direction.name,
             "vision_lines": vision_lines,
             "up": up,
