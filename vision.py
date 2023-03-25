@@ -37,6 +37,15 @@ class VisionLine:
         return self.wall_coord == other.wall_coord and self.wall_distance == other.wall_distance and self.apple_coord == other.apple_coord and self.apple_distance == other.apple_distance and self.segment_coord == other.segment_coord and self.segment_distance == other.segment_distance
 
 
+def get_vision_lines(board: np.ndarray, input_direction_count: int, vision_return_type: str) -> List[VisionLine]:
+    directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
+    if input_direction_count == 8:
+        directions += [Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
+
+    vision_lines = [look_in_direction(board, d, vision_return_type) for d in directions]
+    return vision_lines
+
+
 def look_in_direction(board: np.ndarray, direction: Direction, vision_return_type: str) -> VisionLine:
     apple_distance = np.inf
     segment_distance = np.inf
@@ -74,17 +83,9 @@ def look_in_direction(board: np.ndarray, direction: Direction, vision_return_typ
 
         return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
 
-    # elif vision_return_type == "distance":
-    #     wall_distance_output = wall_distance
-    #     apple_distance_output = 1 / apple_distance
-    #     segment_distance_output = 1 / segment_distance
-
-    # return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_distance_output, segment_coord, segment_distance_output, direction)
-
 
 # TODO distance for segment
 # TODO normalize distance using dist/max_distance
-
 def get_cache_key(board: np.ndarray, snake_head: Tuple[int, int], direction: Direction) -> str:
     # Get the range of blocks that the snake can see in the given direction
     blocks = []
@@ -143,22 +144,6 @@ def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direc
         vision_line = VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
         # cache[key] = vision_line
         return vision_line
-
-    # elif vision_return_type == "distance":
-    #     wall_distance_output = wall_distance
-    #     apple_distance_output = 1 / apple_distance
-    #     segment_distance_output = 1 / segment_distance
-
-    # return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_distance_output, segment_coord, segment_distance_output, direction)
-
-
-def get_vision_lines(board: np.ndarray, input_direction_count: int, vision_return_type: str) -> List[VisionLine]:
-    directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
-    if input_direction_count == 8:
-        directions += [Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
-
-    vision_lines = [look_in_direction(board, d, vision_return_type) for d in directions]
-    return vision_lines
 
 
 def get_vision_lines_snake_head(board: np.ndarray, snake_head, input_direction_count: int, vision_return_type: str) -> List[VisionLine]:

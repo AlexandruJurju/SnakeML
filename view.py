@@ -33,7 +33,7 @@ def draw_board(window, board: np.ndarray, offset_x, offset_y) -> None:
 def draw_vision_lines(window, model: Model, vision_lines: List[VisionLine], offset_x, offset_y) -> None:
     # loop over all lines in given vision lines
 
-    font = pygame.font.SysFont("arial", 20)
+    font = pygame.font.SysFont("arial", 20, bold=True)
 
     for line in vision_lines:
         line_label = font.render(line.direction.name[0], True, ViewSettings.COLOR_BLACK)

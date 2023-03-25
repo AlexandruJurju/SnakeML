@@ -11,7 +11,7 @@ from game_config import GameSettings
 from game_config import State
 from neural_network import *
 from view import *
-from vision import get_vision_lines, VisionLine
+from vision import VisionLine, get_vision_lines_snake_head
 
 
 # TODO get a good backpropagation network
@@ -67,7 +67,7 @@ class BackpropagationTrainNewNetwork(BaseState):
         return False
 
     def execute(self, surface):
-        vision_lines = get_vision_lines(self.model.board, self.data_received["input_direction_count"], self.data_received["vision_return_type"])
+        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.data_received["input_direction_count"], self.data_received["vision_return_type"])
         nn_output = self.model.get_nn_output(vision_lines)
 
         example_output = np.where(nn_output == np.max(nn_output), 1, 0)

@@ -26,8 +26,6 @@ class Snake(Individual):
     def calculate_fitness(self) -> None:
         fitness_score = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
 
-        # fitness_score = (2 ** (self.score - 1)) * ((self.score - 1) ** 0.001)
-
         self.fitness = fitness_score
 
 
@@ -124,7 +122,6 @@ class Model:
 
     def move(self, new_direction: Direction) -> bool:
         self.snake.direction = new_direction
-        self.snake.steps_taken += 1
 
         head = self.snake.body[0]
         next_head = [head[0] + new_direction.value[0], head[1] + new_direction.value[1]]
@@ -135,6 +132,7 @@ class Model:
             return False
 
         self.snake.body.insert(0, next_head)
+        self.snake.steps_taken += 1
 
         # if snake eats an apple, the last segment isn't removed from the body list when moving
         if new_head_value == BoardConsts.APPLE:
