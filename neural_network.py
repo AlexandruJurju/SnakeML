@@ -16,7 +16,8 @@ def sigmoid(x):
 
 
 def sigmoid_prime(x):
-    return sigmoid(x) * (1 - sigmoid(x))
+    aux = sigmoid(x)
+    return aux * (1 - aux)
 
 
 def softmax(x):
