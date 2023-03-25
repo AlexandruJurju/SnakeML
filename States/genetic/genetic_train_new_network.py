@@ -57,7 +57,6 @@ class GeneticTrainNewNetwork(BaseState):
         self.parent_list: List[Snake] = []
         self.offspring_list: List[NeuralNetwork] = []
 
-        input_direction_count = self.input_direction_count
         input_neuron_count = self.data_received["input_layer_neurons"]
         hidden_neuron_count = self.data_received["hidden_layer_neurons"]
         output_neuron_count = self.data_received["output_layer_neurons"]

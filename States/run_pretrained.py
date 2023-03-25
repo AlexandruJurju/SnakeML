@@ -10,7 +10,7 @@ from States.state_manager import StateManager
 from file_operations import read_all_from_json
 from game_config import State, ViewSettings, GameSettings
 from model import Model
-from view import draw_board
+from view import draw_board, draw_neural_network_complete, draw_vision_lines
 from vision import get_vision_lines_snake_head
 
 
@@ -85,8 +85,8 @@ class RunPretrained(BaseState):
 
         # if self.execute_network is False:
         draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-        # draw_vision_lines(surface, self.model, vision_lines, ViewConsts.BOARD_POSITION[0], ViewConsts.BOARD_POSITION[1])
-        # draw_neural_network_complete(surface, self.model, vision_lines, ViewConsts.NN_POSITION[0], ViewConsts.NN_POSITION[1])
+        draw_vision_lines(surface, self.model, vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+        draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move(next_direction)
@@ -94,10 +94,10 @@ class RunPretrained(BaseState):
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
-            if self.model.snake.won:
-                print("WON")
-            else:
-                print("NOT WON")
+            # if self.model.snake.won:
+            #     print("WON")
+            # else:
+            #     print("NOT WON")
 
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
 
