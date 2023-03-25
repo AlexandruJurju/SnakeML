@@ -1,5 +1,4 @@
 import random
-from typing import Tuple
 
 from neural_network import NeuralNetwork
 from vision import *
@@ -27,10 +26,7 @@ class Snake(Individual):
     def calculate_fitness(self) -> None:
         fitness_score = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
 
-        # over = self.steps_taken - (self.steps_taken / (self.score + 1))
-        # under = self.steps_taken + (self.steps_taken / (self.score + 1))
-        # fitness_score = self.score + 0.5 + (0.5 * (over / under))
-        # fitness_score = fitness_score * 10000
+        # fitness_score = (2 ** (self.score - 1)) * ((self.score - 1) ** 0.001)
 
         self.fitness = fitness_score
 

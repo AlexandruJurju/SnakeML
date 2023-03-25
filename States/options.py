@@ -122,7 +122,7 @@ class Options(BaseState):
                                                                   pygame.Rect((ViewSettings.X_SECOND - 125 // 2, 150), (125, 30)), self.ui_manager)
 
         self.dropdown_activation_function_hidden_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 250 // 2 - 250, 100), (250, 35)), "Hidden Activation Function", self.ui_manager)
-        self.dropdown_activation_function_hidden = UIDropDownMenu(GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS, GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[0],
+        self.dropdown_activation_function_hidden = UIDropDownMenu(GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS, GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[2],
                                                                   pygame.Rect((ViewSettings.X_SECOND - 125 // 2 - 250, 150), (125, 30)), self.ui_manager)
 
         self.hidden_layer_count_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2, 350), (75, 30)), self.ui_manager)

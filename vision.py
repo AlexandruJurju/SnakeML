@@ -103,9 +103,9 @@ cache = {}
 
 
 def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direction, vision_return_type: str) -> VisionLine:
-    key = get_cache_key(board, snake_head, direction)
-    if key in cache:
-        return cache[key]
+    # key = get_cache_key(board, snake_head, direction)
+    # if key in cache:
+    #     return cache[key]
 
     apple_distance = np.inf
     segment_distance = np.inf
@@ -141,7 +141,7 @@ def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direc
         segment_boolean = 1.0 if segment_found else 0.0
 
         vision_line = VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
-        cache[key] = vision_line
+        # cache[key] = vision_line
         return vision_line
 
     # elif vision_return_type == "distance":
