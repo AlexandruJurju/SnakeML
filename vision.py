@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 from scipy.spatial.distance import chebyshev
@@ -84,7 +84,29 @@ def look_in_direction(board: np.ndarray, direction: Direction, vision_return_typ
 
 # TODO distance for segment
 # TODO normalize distance using dist/max_distance
+
+def get_cache_key(board: np.ndarray, snake_head: Tuple[int, int], direction: Direction) -> str:
+    # Get the range of blocks that the snake can see in the given direction
+    blocks = []
+    current_block = [snake_head[0] + direction.value[0], snake_head[1] + direction.value[1]]
+    while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
+        blocks.append(str(board[current_block[0]][current_block[1]]))
+        current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
+
+    # Combine the blocks into a string, along with the snake head position and direction
+    cache_key = f"{snake_head[0]},{snake_head[1]},{direction.name},{''.join(blocks)}"
+
+    return cache_key
+
+
+cache = {}
+
+
 def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direction, vision_return_type: str) -> VisionLine:
+    key = get_cache_key(board, snake_head, direction)
+    if key in cache:
+        return cache[key]
+
     apple_distance = np.inf
     segment_distance = np.inf
     apple_coord = None
@@ -119,6 +141,7 @@ def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direc
         segment_boolean = 1.0 if segment_found else 0.0
 
         vision_line = VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
+        cache[key] = vision_line
         return vision_line
 
     # elif vision_return_type == "distance":

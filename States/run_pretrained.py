@@ -11,7 +11,7 @@ from file_operations import read_all_from_json
 from game_config import State, ViewSettings, GameSettings
 from model import Model
 from view import draw_board
-from vision import get_vision_lines_snake_head
+from vision import get_vision_lines_snake_head, get_vision_lines
 
 
 class RunPretrained(BaseState):
@@ -82,6 +82,11 @@ class RunPretrained(BaseState):
     def run_network(self, surface):
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.vision_return_type)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
+
+        vision_lines2 = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
+
+        if vision_lines != vision_lines2:
+            print("FK")
 
         # if self.execute_network is False:
         draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
