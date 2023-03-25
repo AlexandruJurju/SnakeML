@@ -1,3 +1,5 @@
+from typing import List
+
 import pygame
 import pygame_gui
 from pygame_gui import UIManager
@@ -11,7 +13,7 @@ from file_operations import read_all_from_json
 from game_config import State, ViewSettings, GameSettings
 from model import Model
 from view import draw_board, draw_neural_network_complete, draw_vision_lines
-from vision import get_vision_lines_snake_head, get_vision_lines
+from vision import get_vision_lines_snake_head, get_vision_lines, VisionLine
 
 
 class RunPretrained(BaseState):
@@ -79,6 +81,13 @@ class RunPretrained(BaseState):
         self.snake_size_label.kill()
         self.execute_network = False
 
+    def print_vision_line(self, vision_line: VisionLine):
+        print(f" w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_a {vision_line.segment_distance} ")
+
+    def print_all_vision_lines(self, vision_lines: List[VisionLine]):
+        for line in vision_lines:
+            self.print_vision_line(line)
+
     def run_network(self, surface):
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.vision_return_type)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
@@ -86,7 +95,10 @@ class RunPretrained(BaseState):
         vision_lines2 = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
 
         if vision_lines != vision_lines2:
-            print("DIFFERENT")
+            print("================================")
+            self.print_all_vision_lines(vision_lines)
+            print()
+            self.print_all_vision_lines(vision_lines2)
 
         # if self.execute_network is False:
         draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
