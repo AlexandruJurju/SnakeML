@@ -86,21 +86,6 @@ def look_in_direction(board: np.ndarray, direction: Direction, vision_return_typ
 
 # TODO distance for segment
 # TODO normalize distance using dist/max_distance
-def get_cache_key(board: np.ndarray, snake_head: Tuple[int, int], direction: Direction) -> str:
-    # get the range of blocks that the snake can see in the given direction
-    blocks = []
-    current_block = [snake_head[0] + direction.value[0], snake_head[1] + direction.value[1]]
-    while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
-        blocks.append(str(board[current_block[0]][current_block[1]]))
-        current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
-
-    # combine the blocks into a string, along with the snake head position and direction
-    cache_key = f"{snake_head[0]},{snake_head[1]},{direction.name},{''.join(blocks)}"
-
-    return cache_key
-
-
-cache = {}
 
 
 def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direction, vision_return_type: str) -> VisionLine:
@@ -113,11 +98,9 @@ def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direc
 
     # search starts at one block in the given direction otherwise head is also check in the loop
     current_block = [snake_head[0] + direction.value[0], snake_head[1] + direction.value[1]]
-    blocks = []
 
     # loop the blocks in the given direction and store position and coordinates
     while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
-        blocks.append(str(board[current_block[0]][current_block[1]]))
         if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_found is False:
             apple_coord = current_block
             apple_found = True
@@ -125,10 +108,6 @@ def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direc
             segment_coord = current_block
             segment_found = True
         current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
-
-    key = f"{snake_head[0]},{snake_head[1]},{direction.name},{''.join(blocks)}"
-    if key in cache:
-        return cache[key]
 
     wall_distance = distance(snake_head, current_block)
     segment_distance = distance(snake_head, current_block)
@@ -141,7 +120,6 @@ def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direc
         segment_boolean = 1.0 if segment_found else 0.0
 
         vision_line = VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
-        cache[key] = vision_line
         return vision_line
 
 
