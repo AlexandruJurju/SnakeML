@@ -11,7 +11,7 @@ from file_operations import read_all_from_json
 from game_config import State, ViewSettings, GameSettings
 from model import Model
 from view import draw_board, draw_neural_network_complete, draw_vision_lines
-from vision import get_vision_lines_snake_head
+from vision import get_vision_lines_snake_head, get_vision_lines
 
 
 class RunPretrained(BaseState):
@@ -83,6 +83,11 @@ class RunPretrained(BaseState):
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.vision_return_type)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
+        vision_lines2 = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
+
+        if vision_lines != vision_lines2:
+            print("DIFFERENT")
+
         # if self.execute_network is False:
         draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
         draw_vision_lines(surface, self.model, vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
@@ -142,7 +147,8 @@ class RunPretrained(BaseState):
                     else:
                         file_path = GameSettings.BACKPROPAGATION_NETWORK_FOLDER
 
-                    self.file_dialog = UIFileDialog(pygame.Rect((150, 50), (450, 450)), self.ui_manager, window_title="Load Network", initial_file_path=file_path, allow_picking_directories=False,
+                    self.file_dialog = UIFileDialog(pygame.Rect((150, 50), (450, 450)), self.ui_manager, window_title="Load Network", initial_file_path=file_path,
+                                                    allow_picking_directories=False,
                                                     allow_existing_files_only=True)
 
             if event.type == pygame_gui.UI_FILE_DIALOG_PATH_PICKED:

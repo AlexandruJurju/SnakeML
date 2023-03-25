@@ -87,14 +87,14 @@ def look_in_direction(board: np.ndarray, direction: Direction, vision_return_typ
 # TODO distance for segment
 # TODO normalize distance using dist/max_distance
 def get_cache_key(board: np.ndarray, snake_head: Tuple[int, int], direction: Direction) -> str:
-    # Get the range of blocks that the snake can see in the given direction
+    # get the range of blocks that the snake can see in the given direction
     blocks = []
     current_block = [snake_head[0] + direction.value[0], snake_head[1] + direction.value[1]]
     while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
         blocks.append(str(board[current_block[0]][current_block[1]]))
         current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
 
-    # Combine the blocks into a string, along with the snake head position and direction
+    # combine the blocks into a string, along with the snake head position and direction
     cache_key = f"{snake_head[0]},{snake_head[1]},{direction.name},{''.join(blocks)}"
 
     return cache_key
@@ -104,36 +104,35 @@ cache = {}
 
 
 def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direction, vision_return_type: str) -> VisionLine:
-    # key = get_cache_key(board, snake_head, direction)
-    # if key in cache:
-    #     return cache[key]
-
     apple_distance = np.inf
     segment_distance = np.inf
     apple_coord = None
     segment_coord = None
-
-    # search starts at one block in the given direction
-    # otherwise head is also check in the loop
-    current_block = [snake_head[0] + direction.value[0], snake_head[1] + direction.value[1]]
-
-    # booleans are used to store the first value found
     apple_found = False
     segment_found = False
 
-    # loop are blocks in the given direction and store position and coordinates of apple and snake segments
+    # search starts at one block in the given direction otherwise head is also check in the loop
+    current_block = [snake_head[0] + direction.value[0], snake_head[1] + direction.value[1]]
+    blocks = []
+
+    # loop the blocks in the given direction and store position and coordinates
     while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
+        blocks.append(str(board[current_block[0]][current_block[1]]))
         if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_found is False:
-            apple_distance = distance(snake_head, current_block)
             apple_coord = current_block
             apple_found = True
         elif board[current_block[0]][current_block[1]] == BoardConsts.SNAKE_BODY and segment_found is False:
-            segment_distance = distance(snake_head, current_block)
             segment_coord = current_block
             segment_found = True
         current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
 
+    key = f"{snake_head[0]},{snake_head[1]},{direction.name},{''.join(blocks)}"
+    if key in cache:
+        return cache[key]
+
     wall_distance = distance(snake_head, current_block)
+    segment_distance = distance(snake_head, current_block)
+    apple_distance = distance(snake_head, current_block)
     wall_coord = current_block
 
     if vision_return_type == "boolean":
@@ -142,13 +141,13 @@ def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direc
         segment_boolean = 1.0 if segment_found else 0.0
 
         vision_line = VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
-        # cache[key] = vision_line
+        cache[key] = vision_line
         return vision_line
 
 
-def get_vision_lines_snake_head(board: np.ndarray, snake_head, input_direction_count: int, vision_return_type: str) -> List[VisionLine]:
+def get_vision_lines_snake_head(board: np.ndarray, snake_head, vision_direction_count: int, vision_return_type: str) -> List[VisionLine]:
     directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
-    if input_direction_count == 8:
+    if vision_direction_count == 8:
         directions += [Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
 
     vision_lines = [look_in_direction_snake_head(board, snake_head, d, vision_return_type) for d in directions]
