@@ -173,11 +173,11 @@ def draw_colored_lines_between_neurons(window, layer: Dense, line_end: List, lin
             pygame.draw.line(window, color, line_start[j], line_end[i], width=1)
 
 
-def draw_next_snake_direction(window, board: List[List[str]], prediction: Direction, offset_x, offset_y) -> None:
+def draw_next_snake_direction(window, board: np.ndarray, prediction: Direction, offset_x, offset_y) -> None:
     head = find_snake_head_poz(board)
     font_size = 15
-    current_x = head[1] * ViewSettings.SQUARE_SIZE + offset_x + ViewSettings.SQUARE_SIZE // 2 - font_size // 2
-    current_y = head[0] * ViewSettings.SQUARE_SIZE + offset_y + ViewSettings.SQUARE_SIZE // 2 - font_size // 2
+    current_x = head[1] * ViewSettings.SQUARE_SIZE + offset_x + ViewSettings.SQUARE_SIZE // 2
+    current_y = head[0] * ViewSettings.SQUARE_SIZE + offset_y + ViewSettings.SQUARE_SIZE // 2
     font = pygame.font.SysFont("arial", font_size)
 
     # draw next position of snake
@@ -187,14 +187,26 @@ def draw_next_snake_direction(window, board: List[List[str]], prediction: Direct
     pygame.draw.rect(window, ViewSettings.COLOR_BLACK, pygame.Rect(next_x, next_y, ViewSettings.SQUARE_SIZE, ViewSettings.SQUARE_SIZE))
 
     # write letters for directions
-    right_text = font.render("D", True, ViewSettings.COLOR_GREEN)
-    window.blit(right_text, (current_x + ViewSettings.SQUARE_SIZE, current_y))
+    right_text = font.render("D", True, ViewSettings.COLOR_FONT)
+    right_text_width, right_text_height = right_text.get_size()
+    right_x = current_x - right_text_width // 2
+    right_y = current_y - right_text_height // 2
+    window.blit(right_text, (right_x + ViewSettings.SQUARE_SIZE, right_y))
 
-    left_text = font.render("A", True, ViewSettings.COLOR_GREEN)
-    window.blit(left_text, (current_x - ViewSettings.SQUARE_SIZE, current_y))
+    left_text = font.render("A", True, ViewSettings.COLOR_FONT)
+    left_text_width, left_text_height = left_text.get_size()
+    left_x = current_x - left_text_width // 2
+    left_y = current_y - left_text_height // 2
+    window.blit(left_text, (left_x - ViewSettings.SQUARE_SIZE, left_y))
 
-    down_text = font.render("S", True, ViewSettings.COLOR_GREEN)
-    window.blit(down_text, (current_x, current_y + ViewSettings.SQUARE_SIZE))
+    down_text = font.render("S", True, ViewSettings.COLOR_FONT)
+    down_text_width, down_text_height = down_text.get_size()
+    down_x = current_x - down_text_width // 2
+    down_y = current_y - down_text_height // 2
+    window.blit(down_text, (down_x, down_y + ViewSettings.SQUARE_SIZE))
 
-    up_text = font.render("W", True, ViewSettings.COLOR_GREEN)
-    window.blit(up_text, (current_x, current_y - ViewSettings.SQUARE_SIZE))
+    up_text = font.render("W", True, ViewSettings.COLOR_FONT)
+    up_text_width, up_text_height = up_text.get_size()
+    up_x = current_x - up_text_width // 2
+    up_y = current_y - up_text_height // 2
+    window.blit(up_text, (up_x, up_y - ViewSettings.SQUARE_SIZE))

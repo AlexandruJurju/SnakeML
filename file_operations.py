@@ -2,6 +2,8 @@ import json
 import os.path
 from typing import Tuple, Dict
 
+import numpy as np
+
 import neural_network
 from game_config import Direction
 from neural_network import *
@@ -9,7 +11,7 @@ from vision import VisionLine, get_parameters_in_nn_input_form
 
 
 class TrainingExample:
-    def __init__(self, board: List[List[str]], current_direction: Direction, vision_lines: List[VisionLine], predictions: List[float]):
+    def __init__(self, board: np.ndarray, current_direction: Direction, vision_lines: List[VisionLine], predictions: List[float]):
         self.board = board
         self.current_direction = current_direction
         self.vision_lines = vision_lines

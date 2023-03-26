@@ -71,11 +71,12 @@ class ViewSettings:
     COLOR_NEXT_MOVE = (22, 255, 0)
     COLOR_ODD = (42, 52, 68)
     COLOR_EVEN = (34, 41, 54)
+    COLOR_FONT = (220, 220, 220)
 
     COLOR_MAP = {
         BoardConsts.EMPTY: (COLOR_ODD, COLOR_EVEN),
         BoardConsts.SNAKE_BODY: COLOR_SNAKE_SEGMENT,
-        BoardConsts.WALL: COLOR_WHITE,
+        BoardConsts.WALL: COLOR_FONT,
         BoardConsts.APPLE: COLOR_APPLE,
         BoardConsts.SNAKE_HEAD: COLOR_SNAKE_HEAD
     }
