@@ -159,30 +159,28 @@ def one_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.n
 #
 
 def two_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-    chromosome_length = len(parent1_chromosome)
+    chromosome_length = parent1_chromosome.shape[0]
 
     # Select two random crossover points in the chromosome.
-    crossover_point = np.random.choice(range(1, chromosome_length), size=2, replace=False)
-    crossover_point.sort()
+    crossover_points = np.random.choice(range(1, chromosome_length), size=2, replace=False)
+    crossover_points.sort()
 
-    child1_chromosome = parent1_chromosome.copy()
-    child2_chromosome = parent2_chromosome.copy()
-
-    # Create the two child chromosomes by copying segments from the parent chromosomes.
-    child1_chromosome[crossover_point[0]:crossover_point[1]] = parent2_chromosome[crossover_point[0]:crossover_point[1]]
-    child2_chromosome[crossover_point[0]:crossover_point[1]] = parent1_chromosome[crossover_point[0]:crossover_point[1]]
+    child1_chromosome = np.concatenate((parent1_chromosome[:crossover_points[0]], parent2_chromosome[crossover_points[0]:crossover_points[1]], parent1_chromosome[crossover_points[1]:]))
+    child2_chromosome = np.concatenate((parent2_chromosome[:crossover_points[0]], parent1_chromosome[crossover_points[0]:crossover_points[1]], parent2_chromosome[crossover_points[1]:]))
 
     return child1_chromosome, child2_chromosome
 
 
 def uniform_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-    matrix_row, matrix_col = np.shape(parent1_chromosome)
-
-    child1_chromosome = parent1_chromosome.copy()
-    child2_chromosome = parent2_chromosome.copy()
+    child1_chromosome = np.empty_like(parent1_chromosome)
+    child2_chromosome = np.empty_like(parent2_chromosome)
 
     probability_mask = np.random.uniform(0, 1, parent1_chromosome.shape)
+
+    child1_chromosome[probability_mask <= 0.5] = parent1_chromosome[probability_mask <= 0.5]
     child1_chromosome[probability_mask > 0.5] = parent2_chromosome[probability_mask > 0.5]
+
+    child2_chromosome[probability_mask <= 0.5] = parent2_chromosome[probability_mask <= 0.5]
     child2_chromosome[probability_mask > 0.5] = parent1_chromosome[probability_mask > 0.5]
 
     return child1_chromosome, child2_chromosome

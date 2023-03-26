@@ -25,13 +25,15 @@ class Snake(Individual):
 
     def calculate_fitness(self, max_score) -> None:
         # METHOD 1
-        fitness_score = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
+        # fitness_score = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
 
         # METHOD 2
-        # over = self.steps_taken - (self.steps_taken / (self.score + 1))
-        # under = self.steps_taken + (self.steps_taken / (self.score + 1))
-        # fitness_score = self.score + 0.5 + (0.5 * (over / under))
-        # fitness_score = fitness_score * 10000
+        if self.steps_taken == 0:
+            self.steps_taken = 1
+        over = self.steps_taken - (self.steps_taken / (self.score + 1))
+        under = self.steps_taken + (self.steps_taken / (self.score + 1))
+        fitness_score = self.score + 0.5 + (0.5 * (over / under))
+        fitness_score = fitness_score * 10000
 
         # METHOD 3
         # distance_traveled = self.steps_taken
