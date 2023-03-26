@@ -12,6 +12,8 @@ from States.options import Options
 from States.run_pretrained import RunPretrained
 from States.state_manager import StateManager
 from game_config import ViewSettings, State
+from genetic_operators import one_point_crossover, two_point_crossover
+from neural_network import NeuralNetwork, Dense, sigmoid
 
 
 def main():
@@ -54,7 +56,6 @@ def main():
 
     state_manager.set_initial_state(State.MAIN_MENU)
 
-
     running = True
 
     while running:
@@ -63,4 +64,23 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    net = NeuralNetwork()
+    net.add_layer(Dense(5, 10))
+    parent1 = net.get_dense_layers()[0].weights
+
+    net.reinit_weights_and_biases()
+    parent2 = net.get_dense_layers()[0].weights
+
+    print(parent1)
+    print("===================")
+    print(parent2)
+    print("====================")
+    print()
+
+    children = two_point_crossover(parent1, parent2)
+    print(children[0])
+    print("====================")
+    print(children[1])
+    print("====================")
+print()

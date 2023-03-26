@@ -16,21 +16,10 @@ def roulette_selection(population: List[Individual], selection_count: int) -> Li
     :param selection_count: number of individuals to be extracted from the population
     :return: list on individuals selected from the population
     """
-    selected = []
+
     total_population_fitness = sum(individual.fitness for individual in population)
-
-    # Choose a random value between 0 and sum_pop_fitness
-    # Loop over individuals in population and sum their fitness in current_fitness
-    for i in range(selection_count):
-        random_fitness = random.uniform(0, total_population_fitness)
-        current_fitness = 0
-
-        for individual in population:
-            current_fitness += individual.fitness
-            if current_fitness >= random_fitness:
-                selected.append(individual)
-                break
-    return selected
+    selection_probabilities = [individual.fitness / total_population_fitness for individual in population]
+    return list(np.random.choice(population, size=selection_count, p=selection_probabilities))
 
 
 def roulette_selection_negative(population: List[Individual], selection_count: int) -> List[Individual]:
@@ -171,18 +160,25 @@ def one_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.n
 #
 
 def two_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-    matrix_row, matrix_col = np.shape(parent1_chromosome)
+    """
+    Perform a two-point crossover operation on two parent chromosomes, generating two child chromosomes.
 
-    child1_chromosome = parent1_chromosome.copy()
-    child2_chromosome = parent2_chromosome.copy()
+    :param parent1_chromosome: First parent chromosome as a NumPy array.
+    :param parent2_chromosome: Second parent chromosome as a NumPy array.
+    :return: A tuple of two child chromosomes as NumPy arrays.
+    """
+    chromosome_length = len(parent1_chromosome)
 
-    crossover_row = np.random.randint(0, matrix_row)
-    crossover_col = np.random.randint(0, matrix_col)
+    # Select two random crossover points in the chromosome.
+    crossover_points = np.sort(np.random.choice(np.arange(1, chromosome_length), size=2, replace=False))
 
-    child1_chromosome[:crossover_row, :crossover_col] = parent1_chromosome[:crossover_row, :crossover_col]
-    child1_chromosome[crossover_row:, crossover_col:] = parent2_chromosome[crossover_row:, crossover_col:]
-    child2_chromosome[:crossover_row, :crossover_col] = parent2_chromosome[:crossover_row, :crossover_col]
-    child2_chromosome[crossover_row:, crossover_col:] = parent1_chromosome[crossover_row:, crossover_col:]
+    # Create the two child chromosomes by copying segments from the parent chromosomes.
+    child1_chromosome = np.concatenate((parent1_chromosome[:crossover_points[0]],
+                                        parent2_chromosome[crossover_points[0]:crossover_points[1]],
+                                        parent1_chromosome[crossover_points[1]:]))
+    child2_chromosome = np.concatenate((parent2_chromosome[:crossover_points[0]],
+                                        parent1_chromosome[crossover_points[0]:crossover_points[1]],
+                                        parent2_chromosome[crossover_points[1]:]))
 
     return child1_chromosome, child2_chromosome
 
@@ -200,26 +196,35 @@ def uniform_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.nda
     return child1_chromosome, child2_chromosome
 
 
-def calculate_bq(u: float, eta: float):
+def calculate_bq(u: float, eta: float) -> float:
+    """
+    Calculate the simulated binary crossover (SBX) scaling factor 'bq' given a random factor 'u' and a distribution index 'eta'.
+
+    :param u: A random scaling factor between 0 and 1.
+    :param eta: The distribution index, which controls the offspring spread. A high eta value generates offspring
+    closer to the parents, whereas a low eta value generates more diverse offspring.
+    :return: The SBX scaling factor 'bq'.
+    """
     if u <= 0.5:
-        return np.power(2 * u, (1 / (eta + 1)))
+        bq = (2 * u) ** (1 / (eta + 1))
     else:
-        return np.power(1 / (2 * (1 - u)), (1 / (eta + 1)))
+        bq = (1 / (2 * (1 - u))) ** (1 / (eta + 1))
+    return bq
 
 
 def sbx(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray, eta: float) -> Tuple[np.ndarray, np.ndarray]:
     """
-    For large values of eta there is a higher probability that offspring will be created near the parents.
-    For small values of eta, offspring will be more distant from parents
-    https://stackoverflow.com/questions/56263132/what-does-crossover-index-of-0-25-means-in-genetic-algorithm-for-real-encoding
+    Simulated binary crossover operator for genetic algorithms.
 
-    :param parent1_chromosome:
-    :param parent2_chromosome:
-    :param eta:
-    :return:
+    :param parent1_chromosome: First parent chromosome as a NumPy array.
+    :param parent2_chromosome: Second parent chromosome as a NumPy array.
+    :param eta: The distribution index, which controls the offspring spread. A high eta value generates offspring
+    closer to the parents, whereas a low eta value generates more diverse offspring.
+    :return: A tuple of two child chromosomes as NumPy arrays.
     """
-    # TODO maybe use a matrix vor values
     u = np.random.uniform(0, 1)
+
+    # Calculate the scaling factor 'bq' using the 'calculate_bq' function.
     bq = calculate_bq(u, eta)
 
     child1 = 0.5 * ((1 + bq) * parent1_chromosome + (1 - bq) * parent2_chromosome)

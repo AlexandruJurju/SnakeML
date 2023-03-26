@@ -150,7 +150,7 @@ class NeuralNetwork:
 
                 error += loss(y, output)
 
-                # gradient is used as the output error / dE/dY of the whole network
+                # gradient is used as the output error dE/dY of the whole network
                 # input gradient of last layer is considered output gradient of penultimate layer
                 gradient = loss_prime(y, output)
                 for layer in reversed(self.layers):

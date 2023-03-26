@@ -83,6 +83,11 @@ class GeneticTrainNewNetwork(BaseState):
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.vision_return_type)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
+        if ViewSettings.DRAW:
+            draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            draw_vision_lines(surface, self.model, vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
+
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move(next_direction)
 
