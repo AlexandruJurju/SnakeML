@@ -34,16 +34,16 @@ class Snake(Individual):
         # fitness_score = fitness_score * 10000
 
         # METHOD 3
-        distance_traveled = self.steps_taken
-        board_coverage = distance_traveled / max_score
-        fitness_score = (self.score ** 2.2) * (board_coverage ** 2.2) * (distance_traveled ** 0.8) * (self.steps_taken ** 0.2)
-        fitness_score = fitness_score * 100
+        # distance_traveled = self.steps_taken
+        # board_coverage = distance_traveled / max_score
+        # fitness_score = (self.score ** 2.2) * (board_coverage ** 2.2) * (distance_traveled ** 0.8) * (self.steps_taken ** 0.2)
+        # fitness_score = fitness_score * 100
 
         # METHOD 4
-        # length_bonus = (self.snake.length - self.initial_snake_size) * 10
-        # food_bonus = self.score * 100
-        # survival_bonus = (self.steps_taken / 10) ** 2
-        # fitness_score = length_bonus + food_bonus + survival_bonus
+        length_bonus = (len(self.body) - 3) * 10
+        food_bonus = self.score * 100
+        survival_bonus = (self.steps_taken / 10) ** 2
+        fitness_score = length_bonus + food_bonus + survival_bonus
 
         self.fitness = fitness_score
 
