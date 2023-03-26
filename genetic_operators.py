@@ -94,14 +94,13 @@ def one_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.n
     child1_chromosome = parent1_chromosome.copy()
     child2_chromosome = parent2_chromosome.copy()
 
-    crossover_row = np.random.randint(0, matrix_row)
-    crossover_col = np.random.randint(0, matrix_col)
+    crossover_point = (np.random.randint(0, matrix_row), np.random.randint(0, matrix_col))
 
-    child1_chromosome[:crossover_row, :] = parent2_chromosome[:crossover_row, :]
-    child1_chromosome[crossover_row, :crossover_col] = parent2_chromosome[crossover_row, :crossover_col]
+    child1_chromosome[:crossover_point[0], :] = parent2_chromosome[:crossover_point[0], :]
+    child1_chromosome[crossover_point[0], :crossover_point[1]] = parent2_chromosome[crossover_point[0], :crossover_point[1]]
 
-    child2_chromosome[:crossover_row, :] = parent1_chromosome[:crossover_row, :]
-    child2_chromosome[crossover_row, :crossover_col] = parent1_chromosome[crossover_row, :crossover_col]
+    child2_chromosome[:crossover_point[0], :] = parent1_chromosome[:crossover_point[0], :]
+    child2_chromosome[crossover_point[0], :crossover_point[1]] = parent1_chromosome[crossover_point[0], :crossover_point[1]]
 
     return child1_chromosome, child2_chromosome
 
@@ -160,25 +159,18 @@ def one_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.n
 #
 
 def two_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Perform a two-point crossover operation on two parent chromosomes, generating two child chromosomes.
-
-    :param parent1_chromosome: First parent chromosome as a NumPy array.
-    :param parent2_chromosome: Second parent chromosome as a NumPy array.
-    :return: A tuple of two child chromosomes as NumPy arrays.
-    """
     chromosome_length = len(parent1_chromosome)
 
     # Select two random crossover points in the chromosome.
-    crossover_points = np.sort(np.random.choice(np.arange(1, chromosome_length), size=2, replace=False))
+    crossover_point = np.random.choice(range(1, chromosome_length), size=2, replace=False)
+    crossover_point.sort()
+
+    child1_chromosome = parent1_chromosome.copy()
+    child2_chromosome = parent2_chromosome.copy()
 
     # Create the two child chromosomes by copying segments from the parent chromosomes.
-    child1_chromosome = np.concatenate((parent1_chromosome[:crossover_points[0]],
-                                        parent2_chromosome[crossover_points[0]:crossover_points[1]],
-                                        parent1_chromosome[crossover_points[1]:]))
-    child2_chromosome = np.concatenate((parent2_chromosome[:crossover_points[0]],
-                                        parent1_chromosome[crossover_points[0]:crossover_points[1]],
-                                        parent2_chromosome[crossover_points[1]:]))
+    child1_chromosome[crossover_point[0]:crossover_point[1]] = parent2_chromosome[crossover_point[0]:crossover_point[1]]
+    child2_chromosome[crossover_point[0]:crossover_point[1]] = parent1_chromosome[crossover_point[0]:crossover_point[1]]
 
     return child1_chromosome, child2_chromosome
 
