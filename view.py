@@ -184,7 +184,7 @@ def draw_next_snake_direction(window, board: np.ndarray, prediction: Direction, 
     next_position = [head[0] + prediction.value[0], head[1] + prediction.value[1]]
     next_x = next_position[1] * ViewSettings.SQUARE_SIZE + offset_x
     next_y = next_position[0] * ViewSettings.SQUARE_SIZE + offset_y
-    pygame.draw.rect(window, ViewSettings.COLOR_BLACK, pygame.Rect(next_x, next_y, ViewSettings.SQUARE_SIZE, ViewSettings.SQUARE_SIZE))
+    pygame.draw.rect(window, ViewSettings.COLOR_NEXT_MOVE, pygame.Rect(next_x, next_y, ViewSettings.SQUARE_SIZE, ViewSettings.SQUARE_SIZE))
 
     # write letters for directions
     right_text = font.render("D", True, ViewSettings.COLOR_FONT)
@@ -210,3 +210,14 @@ def draw_next_snake_direction(window, board: np.ndarray, prediction: Direction, 
     up_x = current_x - up_text_width // 2
     up_y = current_y - up_text_height // 2
     window.blit(up_text, (up_x, up_y - ViewSettings.SQUARE_SIZE))
+
+
+def write_controls(window, pos_x, pos_y) -> None:
+    font = pygame.font.SysFont("Arial", 20)
+    text_lines = ["CONTROLS", "WASD to move the snake", "ENTER to keep the same move", "X to end training and skip the rest of the example"]
+
+    for i, line in enumerate(text_lines):
+        text_surface = font.render(line, True, (255, 255, 255))
+        text_rect = text_surface.get_rect()
+        text_rect.center = (pos_x, pos_y + i * (font.get_linesize() + 8))
+        window.blit(text_surface, text_rect)

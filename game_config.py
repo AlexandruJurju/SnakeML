@@ -68,7 +68,7 @@ class ViewSettings:
     COLOR_SQUARE_DELIMITER = (64, 64, 64)
     COLOR_GREEN = (0, 255, 0)
     COLOR_RED = (255, 0, 0)
-    COLOR_NEXT_MOVE = (22, 255, 0)
+    COLOR_NEXT_MOVE = (0, 0, 0)
     COLOR_ODD = (42, 52, 68)
     COLOR_EVEN = (34, 41, 54)
     COLOR_FONT = (220, 220, 220)

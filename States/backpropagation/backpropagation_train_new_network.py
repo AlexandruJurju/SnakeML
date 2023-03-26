@@ -138,8 +138,7 @@ class BackpropagationTrainNewNetwork(BaseState):
 
         draw_board(surface, current_example.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
         draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-
-        # TODO put text with controls
+        write_controls(surface, 300, 300)
 
         self.ui_manager.update(time_delta)
         self.ui_manager.draw_ui(surface)
