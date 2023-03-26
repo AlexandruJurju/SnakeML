@@ -10,7 +10,7 @@ class Individual:
         self.fitness: float = 0
         self.brain: NeuralNetwork = neural_network
 
-    def calculate_fitness(self):
+    def calculate_fitness(self, max_score):
         pass
 
 
@@ -23,8 +23,27 @@ class Snake(Individual):
         self.won: bool = False
         self.direction: Direction = None
 
-    def calculate_fitness(self) -> None:
-        fitness_score = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
+    def calculate_fitness(self, max_score) -> None:
+        # METHOD 1
+        # fitness_score = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
+
+        # METHOD 2
+        # over = self.steps_taken - (self.steps_taken / (self.score + 1))
+        # under = self.steps_taken + (self.steps_taken / (self.score + 1))
+        # fitness_score = self.score + 0.5 + (0.5 * (over / under))
+        # fitness_score = fitness_score * 10000
+
+        # METHOD 3
+        distance_traveled = self.steps_taken
+        board_coverage = distance_traveled / max_score
+        fitness_score = (self.score ** 2.2) * (board_coverage ** 2.2) * (distance_traveled ** 0.8) * (self.steps_taken ** 0.2)
+        fitness_score = fitness_score * 100
+
+        # METHOD 4
+        # length_bonus = (self.snake.length - self.initial_snake_size) * 10
+        # food_bonus = self.score * 100
+        # survival_bonus = (self.steps_taken / 10) ** 2
+        # fitness_score = length_bonus + food_bonus + survival_bonus
 
         self.fitness = fitness_score
 

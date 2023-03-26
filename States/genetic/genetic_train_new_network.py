@@ -87,7 +87,7 @@ class GeneticTrainNewNetwork(BaseState):
         is_alive = self.model.move(next_direction)
 
         if not is_alive:
-            self.model.snake.calculate_fitness()
+            self.model.snake.calculate_fitness(self.model.max_score)
             self.parent_list.append(self.model.snake)
 
             if self.generation == 0:
@@ -122,7 +122,6 @@ class GeneticTrainNewNetwork(BaseState):
         too_old = counts['too_old']
         steps_taken = counts['steps_taken']
 
-        # TODO use mod 10 to keep only the last 10 best neural network
         save_neural_network_to_json(self.generation,
                                     best_individual.fitness,
                                     self.initial_board_size,

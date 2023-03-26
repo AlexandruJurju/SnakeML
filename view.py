@@ -144,6 +144,7 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[Vision
                     inner_color = ViewSettings.COLOR_BLACK
                 else:
                     inner_color = ViewSettings.COLOR_GREEN * neuron_output
+                    inner_color = tuple(int(min(x, 255)) for x in inner_color)
                 pygame.draw.circle(window, inner_color, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS)
 
                 pygame.draw.circle(window, ViewSettings.COLOR_WHITE, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS, width=1)
