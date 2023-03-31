@@ -64,25 +64,25 @@ def main():
 
 
 if __name__ == '__main__':
-    # main()
+    main()
 
-    net = NeuralNetwork()
-    net.add_layer(Dense(5, 10))
-    net.add_layer(Activation(sigmoid, sigmoid))
-
-    weights_1 = net.get_dense_layers()[0].weights
-
-    net.reinit_weights_and_biases()
-
-    weights_2 = net.get_dense_layers()[0].weights
-
-    print(weights_1)
-    print("\n")
-    print(weights_2)
-    print("========")
-
-    child1, child2 = two_point_crossover(weights_1, weights_2)
-    print(child1)
-    print("\n")
-    print(child2)
-    print("===========")
+    # net = NeuralNetwork()
+    # net.add_layer(Dense(5, 10))
+    # net.add_layer(Activation(sigmoid, sigmoid))
+    #
+    # weights_1 = net.get_dense_layers()[0].weights
+    #
+    # net.reinit_weights_and_biases()
+    #
+    # weights_2 = net.get_dense_layers()[0].weights
+    #
+    # print(weights_1)
+    # print("\n")
+    # print(weights_2)
+    # print("========")
+    #
+    # child1, child2 = two_point_crossover(weights_1, weights_2)
+    # print(child1)
+    # print("\n")
+    # print(child2)
+    # print("===========")

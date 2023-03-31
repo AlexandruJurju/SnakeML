@@ -82,7 +82,7 @@ class RunPretrained(BaseState):
         self.execute_network = False
 
     def print_vision_line(self, vision_line: VisionLine):
-        print(f" w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_a {vision_line.segment_distance} ")
+        print(f" w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_d {vision_line.segment_distance} ")
 
     def print_all_vision_lines(self, vision_lines: List[VisionLine]):
         for line in vision_lines:
@@ -96,8 +96,9 @@ class RunPretrained(BaseState):
 
         if vision_lines != vision_lines2:
             print("================================")
+            print("HEAD")
             self.print_all_vision_lines(vision_lines)
-            print()
+            print("NORMAL")
             self.print_all_vision_lines(vision_lines2)
 
         # if self.execute_network is False:
