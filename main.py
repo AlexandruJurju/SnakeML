@@ -12,7 +12,7 @@ from States.options import Options
 from States.run_pretrained import RunPretrained
 from States.state_manager import StateManager
 from game_config import ViewSettings, State
-from genetic_operators import two_point_crossover
+from genetic_operators import two_point_crossover, gaussian_mutation
 from neural_network import NeuralNetwork, Dense, Activation, sigmoid
 
 
@@ -81,8 +81,6 @@ if __name__ == '__main__':
     # print(weights_2)
     # print("========")
     #
-    # child1, child2 = two_point_crossover(weights_1, weights_2)
+    # child1 = gaussian_mutation(weights_1, 0.05)
     # print(child1)
     # print("\n")
-    # print(child2)
-    # print("===========")

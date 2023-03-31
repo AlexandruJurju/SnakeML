@@ -158,11 +158,11 @@ def one_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.n
 #     return child1, child2
 #
 
-def two_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-    matrix_row, matrix_col = np.shape(parent1_chromosome)
+def two_point_crossover(parent1_matrix: np.ndarray, parent2_matrix: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    matrix_row, matrix_col = np.shape(parent1_matrix)
 
-    child1_chromosome = np.empty((matrix_row, matrix_col))
-    child2_chromosome = np.empty((matrix_row, matrix_col))
+    child1_matrix = np.empty((matrix_row, matrix_col))
+    child2_matrix = np.empty((matrix_row, matrix_col))
 
     point1 = (np.random.randint(0, matrix_row), np.random.randint(0, matrix_col))
     point2 = (np.random.randint(0, matrix_row), np.random.randint(0, matrix_col))
@@ -170,13 +170,13 @@ def two_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.n
     for i in range(matrix_row):
         for j in range(matrix_col):
             if point1 < (i, j) < point2:
-                child1_chromosome[i, j] = parent2_chromosome[i, j]
-                child2_chromosome[i, j] = parent1_chromosome[i, j]
+                child1_matrix[i, j] = parent2_matrix[i, j]
+                child2_matrix[i, j] = parent1_matrix[i, j]
             else:
-                child1_chromosome[i, j] = parent1_chromosome[i, j]
-                child2_chromosome[i, j] = parent2_chromosome[i, j]
+                child1_matrix[i, j] = parent1_matrix[i, j]
+                child2_matrix[i, j] = parent2_matrix[i, j]
 
-    return child1_chromosome, child2_chromosome
+    return child1_matrix, child2_matrix
 
 
 def uniform_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
@@ -231,10 +231,11 @@ def sbx(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray, eta: flo
     return child1, child2
 
 
-def gaussian_mutation(chromosome: np.ndarray, mutation_rate: float) -> np.ndarray:
-    after_mutation = chromosome
-
+def gaussian_mutation(matrix: np.ndarray, mutation_rate: float) -> np.ndarray:
+    after_mutation = matrix
     mutation_array = np.random.random(after_mutation.shape) < mutation_rate
+
+    # default mean is 0, standard deviation is 1
     gauss_values = np.random.normal(size=after_mutation.shape)
     after_mutation[mutation_array] += gauss_values[mutation_array]
 
