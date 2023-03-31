@@ -159,14 +159,22 @@ def one_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.n
 #
 
 def two_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-    chromosome_length = parent1_chromosome.shape[0]
+    matrix_row, matrix_col = np.shape(parent1_chromosome)
 
-    # Select two random crossover points in the chromosome.
-    crossover_points = np.random.choice(range(1, chromosome_length), size=2, replace=False)
-    crossover_points.sort()
+    child1_chromosome = np.empty((matrix_row, matrix_col))
+    child2_chromosome = np.empty((matrix_row, matrix_col))
 
-    child1_chromosome = np.concatenate((parent1_chromosome[:crossover_points[0]], parent2_chromosome[crossover_points[0]:crossover_points[1]], parent1_chromosome[crossover_points[1]:]))
-    child2_chromosome = np.concatenate((parent2_chromosome[:crossover_points[0]], parent1_chromosome[crossover_points[0]:crossover_points[1]], parent2_chromosome[crossover_points[1]:]))
+    point1 = (np.random.randint(0, matrix_row), np.random.randint(0, matrix_col))
+    point2 = (np.random.randint(0, matrix_row), np.random.randint(0, matrix_col))
+
+    for i in range(matrix_row):
+        for j in range(matrix_col):
+            if point1 < (i, j) < point2:
+                child1_chromosome[i, j] = parent2_chromosome[i, j]
+                child2_chromosome[i, j] = parent1_chromosome[i, j]
+            else:
+                child1_chromosome[i, j] = parent1_chromosome[i, j]
+                child2_chromosome[i, j] = parent2_chromosome[i, j]
 
     return child1_chromosome, child2_chromosome
 
