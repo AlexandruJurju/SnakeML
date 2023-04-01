@@ -105,7 +105,6 @@ class GeneticTrainNewNetwork(BaseState):
                 self.offspring_list.clear()
                 self.next_generation()
 
-    # TODO decaying mutation rate
     # TODO write console output in a txt file to store generation information
     def next_generation(self):
         self.offspring_list.clear()
@@ -127,19 +126,26 @@ class GeneticTrainNewNetwork(BaseState):
         too_old = counts['too_old']
         steps_taken = counts['steps_taken']
 
-        save_neural_network_to_json(self.generation,
-                                    best_individual.fitness,
-                                    self.initial_board_size,
-                                    self.initial_snake_size,
-                                    self.input_direction_count,
-                                    self.vision_return_type,
-                                    best_individual.brain,
-                                    GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.data_received["file_name"] + "/" + str(self.generation % 5))
+        save_neural_network_to_json(
+            self.generation,
+            best_individual.fitness,
+            self.initial_board_size,
+            self.initial_snake_size,
+            self.input_direction_count,
+            self.vision_return_type,
+            best_individual.brain,
+            GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.data_received["file_name"] + "/" + str(self.generation % 5)
+        )
 
-        # print(f"GEN {self.generation + 1}   BEST FITNESS : {best_individual.fitness}")
-
-        print(f"GEN {self.generation + 1:<5}   MEAN FITNESS : {total_fitness / self.population_count:<25}\t WON : {won_count:^5}\t TOO_OLD : {too_old}\t MEAN_SCORE {apple_count / len(self.parent_list):<25}\t "
-              f"RATIO {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list))}")
+        print(f"GEN: {self.generation + 1:<5} "
+              f"AVG FITNESS: {total_fitness / self.population_count:<25}\t"
+              f"AVG SCORE: {apple_count / len(self.parent_list):<10}\t"
+              f"AVG RATIO: {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list)):<25}\t"
+              f"BEST SCORE: {best_individual.score:<5}\t"
+              f"BEST RATIO: {best_individual.score / best_individual.steps_taken:<25}"
+              f"TOO_OLD: {too_old:<8}\t"
+              f"WON: {won_count:<5}\t"
+              )
 
         # self.x_points.append(self.generation)
         # self.y_points.append(best_individual.fitness)
