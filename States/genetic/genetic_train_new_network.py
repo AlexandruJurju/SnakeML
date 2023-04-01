@@ -33,8 +33,10 @@ class GeneticTrainNewNetwork(BaseState):
         self.parent_list: List[Snake] = []
         self.offspring_list: List[NeuralNetwork] = []
 
-        self.x_points = []
-        self.y_points = []
+        self.x_generation_points = []
+        self.y_best_individual_fitness = []
+        self.y_best_individual_score = []
+        self.y_average_score = []
         self.nn_names_list = []
         self.neural_networks_to_save = []
 
@@ -129,8 +131,10 @@ class GeneticTrainNewNetwork(BaseState):
         apple_count = counts['apple_count']
         too_old = counts['too_old']
         steps_taken = counts['steps_taken']
+        average_score = apple_count / len(self.parent_list)
+        average_fitness = total_fitness / self.population_count
 
-        name = "Generation" + str(self.generation)
+        name = "Generation" + str(self.generation % 5)
         save_neural_network_to_json(
             self.generation,
             best_individual.fitness,
@@ -143,8 +147,8 @@ class GeneticTrainNewNetwork(BaseState):
         )
 
         training_data = (f"GEN: {self.generation + 1:<5} "
-                         f"AVG FITNESS: {total_fitness / self.population_count:<25}\t"
-                         f"AVG SCORE: {apple_count / len(self.parent_list):<10}\t"
+                         f"AVG FITNESS: {average_fitness:<25}\t"
+                         f"AVG SCORE: {average_score:<10}\t"
                          f"AVG RATIO: {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list)):<25}\t"
                          f"BEST SCORE: {best_individual.score:<5}\t"
                          f"BEST RATIO: {best_individual.score / best_individual.steps_taken:<25}"
@@ -154,8 +158,10 @@ class GeneticTrainNewNetwork(BaseState):
         print(training_data)
         write_genetic_training(training_data, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name, True if self.generation == 0 else False)
 
-        # self.x_points.append(self.generation)
-        # self.y_points.append(best_individual.fitness)
+        self.x_generation_points.append(self.generation)
+        self.y_best_individual_fitness.append(best_individual.fitness)
+        self.y_best_individual_score.append(best_individual.score)
+        self.y_average_score.append(average_score)
 
         parents_for_mating = elitist_selection(self.parent_list, 100)
         for parent in parents_for_mating[:100]:
@@ -180,11 +186,6 @@ class GeneticTrainNewNetwork(BaseState):
         self.generation += 1
         self.parent_list.clear()
 
-        # plt.plot(self.x_points, self.y_points)
-        # plt.xlabel("Generation")
-        # plt.ylabel("Fitness")
-        # plt.show()
-
     def run(self, surface, time_delta):
         # FILL TAKES ALOT OF TIME
         # if ViewSettings.DRAW:
@@ -194,15 +195,24 @@ class GeneticTrainNewNetwork(BaseState):
         # self.generation_label.set_text("Generation : " + str(self.generation))
         # self.individual_label.set_text("Individual : " + str(len(self.parent_list)) + " / " + str(self.population_count))
 
-        # for event in pygame.event.get():
-        #     if event.type == pygame.QUIT:
-        #         self.set_target_state_name(State.QUIT)
-        #         self.trigger_transition()
-        #
-        #     if event.type == pygame.KEYDOWN:
-        #         if event.key == pygame.K_ESCAPE:
-        #             self.set_target_state_name(State.QUIT)
-        #             self.trigger_transition()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.set_target_state_name(State.QUIT)
+                self.trigger_transition()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    fig = plt.figure(figsize=(10, 10))
+                    plt.plot(self.x_generation_points, self.y_best_individual_score, "b", label="Best Individual Score")
+                    plt.plot(self.x_generation_points, self.y_average_score, "r", label="Generation Mean Score")
+                    plt.legend(loc="upper left")
+                    plt.xlabel("Generation")
+                    plt.ylabel("Fitness")
+                    plt.title("Score over multiple generations")
+                    plt.show()
+
+                    self.set_target_state_name(State.QUIT)
+                    self.trigger_transition()
         #
         #     self.ui_manager.process_events(event)
         #
