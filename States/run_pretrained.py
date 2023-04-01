@@ -17,8 +17,8 @@ from vision import get_vision_lines_snake_head, get_vision_lines, VisionLine
 
 
 class RunPretrained(BaseState):
-    def __init__(self, state_manager: StateManager, ui_manager: UIManager):
-        super().__init__(State.RUN_PRETRAINED, state_manager)
+    def __init__(self, ui_manager: UIManager):
+        super().__init__(State.RUN_PRETRAINED)
 
         self.network = None
         self.ui_manager = ui_manager

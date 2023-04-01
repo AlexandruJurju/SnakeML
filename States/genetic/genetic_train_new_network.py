@@ -17,8 +17,8 @@ from vision import get_vision_lines_snake_head
 
 
 class GeneticTrainNewNetwork(BaseState):
-    def __init__(self, state_manager: StateManager, ui_manager: UIManager):
-        super().__init__(State.GENETIC_TRAIN_NEW_NETWORK, state_manager)
+    def __init__(self, ui_manager: UIManager):
+        super().__init__(State.GENETIC_TRAIN_NEW_NETWORK)
 
         self.file_name = None
         self.mutation_rate = None

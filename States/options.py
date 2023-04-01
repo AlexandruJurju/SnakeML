@@ -12,8 +12,8 @@ from game_config import *
 
 # noinspection PyTypeChecker
 class Options(BaseState):
-    def __init__(self, state_manager: StateManager, ui_manager: UIManager):
-        super().__init__(State.OPTIONS, state_manager)
+    def __init__(self, ui_manager: UIManager):
+        super().__init__(State.OPTIONS)
 
         self.ui_manager = ui_manager
         self.options_target = None

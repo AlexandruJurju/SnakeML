@@ -9,8 +9,8 @@ from game_config import State, ViewSettings
 
 
 class BackpropagationMenu(BaseState):
-    def __init__(self, state_manager: StateManager, ui_manager: UIManager):
-        super().__init__(State.BACKPROPAGATION_MENU, state_manager)
+    def __init__(self, ui_manager: UIManager):
+        super().__init__(State.BACKPROPAGATION_MENU)
 
         self.ui_manager = ui_manager
 

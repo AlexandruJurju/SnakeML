@@ -2,10 +2,9 @@ from game_config import State
 
 
 class BaseState:
-    def __init__(self, state_id: State, state_manager):
+    def __init__(self, state_id: State):
         self.state_id = state_id
         self.target_state = None
-        self.state_manager = state_manager
 
         self.transition = False
 

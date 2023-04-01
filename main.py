@@ -46,13 +46,13 @@ def main():
     #                           ])
 
     state_manager = StateManager()
-    state_manager.add_state(MainMenu(state_manager, ui_manager))
-    state_manager.add_state(Options(state_manager, ui_manager))
-    state_manager.add_state(RunPretrained(state_manager, ui_manager))
-    state_manager.add_state(GeneticMenu(state_manager, ui_manager))
-    state_manager.add_state(GeneticTrainNewNetwork(state_manager, ui_manager))
-    state_manager.add_state(BackpropagationMenu(state_manager, ui_manager))
-    state_manager.add_state(BackpropagationTrainNewNetwork(state_manager, ui_manager))
+    state_manager.add_state(MainMenu(ui_manager))
+    state_manager.add_state(Options(ui_manager))
+    state_manager.add_state(RunPretrained(ui_manager))
+    state_manager.add_state(GeneticMenu(ui_manager))
+    state_manager.add_state(GeneticTrainNewNetwork(ui_manager))
+    state_manager.add_state(BackpropagationMenu(ui_manager))
+    state_manager.add_state(BackpropagationTrainNewNetwork(ui_manager))
 
     state_manager.set_initial_state(State.MAIN_MENU)
 

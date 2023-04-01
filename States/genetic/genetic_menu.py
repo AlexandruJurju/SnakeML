@@ -9,8 +9,8 @@ from game_config import State, ViewSettings
 
 
 class GeneticMenu(BaseState):
-    def __init__(self, state_manager: StateManager, ui_manager: UIManager):
-        super().__init__(State.GENETIC_MENU, state_manager)
+    def __init__(self, ui_manager: UIManager):
+        super().__init__(State.GENETIC_MENU)
 
         self.ui_manager = ui_manager
 

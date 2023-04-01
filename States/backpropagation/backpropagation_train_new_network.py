@@ -17,8 +17,8 @@ from vision import VisionLine, get_vision_lines_snake_head
 
 # TODO get a good backpropagation network
 class BackpropagationTrainNewNetwork(BaseState):
-    def __init__(self, state_manager: StateManager, ui_manager: UIManager):
-        super().__init__(State.BACKPROPAGATION_TRAIN_NEW_NETWORK, state_manager)
+    def __init__(self, ui_manager: UIManager):
+        super().__init__(State.BACKPROPAGATION_TRAIN_NEW_NETWORK)
 
         self.output_neuron_count = None
         self.hidden_neuron_count = None
