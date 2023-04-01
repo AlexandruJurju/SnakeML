@@ -146,6 +146,16 @@ def save_neural_network_to_json(generation: int, fitness: int, board_size: int, 
     network_file.close()
 
 
+def write_genetic_training(data: str, path: str, overwrite: bool):
+    path = path + "/genetic_data.txt"
+    if overwrite:
+        with open(path, 'w') as file:
+            file.write(data + "\n")
+    else:
+        with open(path, 'a') as file:
+            file.write(data + "\n")
+
+
 def read_all_from_json(path: str) -> Dict:
     json_file = open(path, "r")
     json_object = json.load(json_file)

@@ -1,11 +1,12 @@
 import pygame_gui
+from matplotlib import pyplot as plt
 from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
 
 import neural_network
 from States.base_state import BaseState
 from States.state_manager import StateManager
-from file_operations import save_neural_network_to_json
+from file_operations import save_neural_network_to_json, write_genetic_training
 from game_config import GameSettings
 from game_config import State
 from genetic_operators import elitist_selection, roulette_selection, full_mutation, full_crossover
@@ -33,6 +34,7 @@ class GeneticTrainNewNetwork(BaseState):
 
         self.x_points = []
         self.y_points = []
+        self.nn_names_list = []
 
         self.title_label = None
         self.button_back = None
@@ -137,18 +139,20 @@ class GeneticTrainNewNetwork(BaseState):
             GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.data_received["file_name"] + "/" + str(self.generation % 5)
         )
 
-        print(f"GEN: {self.generation + 1:<5} "
-              f"AVG FITNESS: {total_fitness / self.population_count:<25}\t"
-              f"AVG SCORE: {apple_count / len(self.parent_list):<10}\t"
-              f"AVG RATIO: {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list)):<25}\t"
-              f"BEST SCORE: {best_individual.score:<5}\t"
-              f"BEST RATIO: {best_individual.score / best_individual.steps_taken:<25}"
-              f"TOO_OLD: {too_old:<8}\t"
-              f"WON: {won_count:<5}\t"
-              )
+        training_data = (f"GEN: {self.generation + 1:<5} "
+                         f"AVG FITNESS: {total_fitness / self.population_count:<25}\t"
+                         f"AVG SCORE: {apple_count / len(self.parent_list):<10}\t"
+                         f"AVG RATIO: {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list)):<25}\t"
+                         f"BEST SCORE: {best_individual.score:<5}\t"
+                         f"BEST RATIO: {best_individual.score / best_individual.steps_taken:<25}"
+                         f"TOO_OLD: {too_old:<8}\t"
+                         f"WON: {won_count:<5}\t"
+                         )
+        print(training_data)
+        write_genetic_training(training_data, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.data_received["file_name"], True if self.generation == 0 else False)
 
-        # self.x_points.append(self.generation)
-        # self.y_points.append(best_individual.fitness)
+        self.x_points.append(self.generation)
+        self.y_points.append(best_individual.fitness)
 
         parents_for_mating = elitist_selection(self.parent_list, 100)
         for parent in parents_for_mating[:100]:
