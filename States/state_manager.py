@@ -17,7 +17,7 @@ class StateManager:
         if state.state_id not in self.states:
             self.states[state.state_id] = state
 
-    def run(self, surface):
+    def execute_state(self, surface):
         if self.active_state is not self.states[State.GENETIC_TRAIN_NEW_NETWORK] or ViewSettings.DRAW:
             time_delta = self.clock.tick(ViewSettings.MAX_FPS) / 1000.0
         else:

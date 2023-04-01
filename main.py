@@ -59,7 +59,7 @@ def main():
     running = True
 
     while running:
-        running = state_manager.run(screen)
+        running = state_manager.execute_state(screen)
     pygame.quit()
 
 

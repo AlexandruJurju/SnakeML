@@ -45,7 +45,6 @@ class RunPretrained(BaseState):
         self.snake_size_entry = None
         self.snake_size_label = None
 
-        self.toggle_draw_network: UIButton = None
 
     def start(self):
         self.state_target = self.data_received["state"]
