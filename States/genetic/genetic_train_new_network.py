@@ -202,13 +202,14 @@ class GeneticTrainNewNetwork(BaseState):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    fig = plt.figure(figsize=(10, 10))
+                    fig = plt.figure(figsize=(16, 9))
                     plt.plot(self.x_generation_points, self.y_best_individual_score, "b", label="Best Individual Score")
                     plt.plot(self.x_generation_points, self.y_average_score, "r", label="Generation Mean Score")
                     plt.legend(loc="upper left")
                     plt.xlabel("Generation")
-                    plt.ylabel("Fitness")
-                    plt.title("Score over multiple generations")
+                    plt.ylabel("Score")
+                    plt.title("Score Comparison")
+                    plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "plot.pdf")
                     plt.show()
 
                     self.set_target_state_name(State.QUIT)
