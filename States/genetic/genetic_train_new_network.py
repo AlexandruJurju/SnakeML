@@ -20,6 +20,7 @@ class GeneticTrainNewNetwork(BaseState):
     def __init__(self, state_manager: StateManager, ui_manager: UIManager):
         super().__init__(State.GENETIC_TRAIN_NEW_NETWORK, state_manager)
 
+        self.file_name = None
         self.mutation_rate = None
         self.population_count = None
         self.vision_return_type = None
@@ -35,6 +36,7 @@ class GeneticTrainNewNetwork(BaseState):
         self.x_points = []
         self.y_points = []
         self.nn_names_list = []
+        self.neural_networks_to_save = []
 
         self.title_label = None
         self.button_back = None
@@ -48,6 +50,7 @@ class GeneticTrainNewNetwork(BaseState):
         self.vision_return_type = self.data_received["vision_return_type"]
         self.population_count = self.data_received["population_count"]
         self.mutation_rate = self.data_received["mutation_rate"]
+        self.file_name = self.data_received["file_name"]
 
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Genetic Train New Network", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
@@ -85,10 +88,10 @@ class GeneticTrainNewNetwork(BaseState):
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.vision_return_type)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
-        if ViewSettings.DRAW:
-            draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-            draw_vision_lines(surface, self.model, vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-            draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
+        # if ViewSettings.DRAW:
+        #     draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+        #     draw_vision_lines(surface, self.model, vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+        #     draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move(next_direction)
@@ -107,7 +110,6 @@ class GeneticTrainNewNetwork(BaseState):
                 self.offspring_list.clear()
                 self.next_generation()
 
-    # TODO write console output in a txt file to store generation information
     def next_generation(self):
         self.offspring_list.clear()
 
@@ -128,6 +130,7 @@ class GeneticTrainNewNetwork(BaseState):
         too_old = counts['too_old']
         steps_taken = counts['steps_taken']
 
+        name = "Generation" + str(self.generation)
         save_neural_network_to_json(
             self.generation,
             best_individual.fitness,
@@ -136,7 +139,7 @@ class GeneticTrainNewNetwork(BaseState):
             self.input_direction_count,
             self.vision_return_type,
             best_individual.brain,
-            GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.data_received["file_name"] + "/" + str(self.generation % 5)
+            GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + name
         )
 
         training_data = (f"GEN: {self.generation + 1:<5} "
@@ -149,10 +152,10 @@ class GeneticTrainNewNetwork(BaseState):
                          f"WON: {won_count:<5}\t"
                          )
         print(training_data)
-        write_genetic_training(training_data, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.data_received["file_name"], True if self.generation == 0 else False)
+        write_genetic_training(training_data, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name, True if self.generation == 0 else False)
 
-        self.x_points.append(self.generation)
-        self.y_points.append(best_individual.fitness)
+        # self.x_points.append(self.generation)
+        # self.y_points.append(best_individual.fitness)
 
         parents_for_mating = elitist_selection(self.parent_list, 100)
         for parent in parents_for_mating[:100]:
@@ -184,33 +187,33 @@ class GeneticTrainNewNetwork(BaseState):
 
     def run(self, surface, time_delta):
         # FILL TAKES ALOT OF TIME
-        if ViewSettings.DRAW:
-            surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+        # if ViewSettings.DRAW:
+        #     surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
         self.run_genetic(surface)
-        self.generation_label.set_text("Generation : " + str(self.generation))
-        self.individual_label.set_text("Individual : " + str(len(self.parent_list)) + " / " + str(self.population_count))
+        # self.generation_label.set_text("Generation : " + str(self.generation))
+        # self.individual_label.set_text("Individual : " + str(len(self.parent_list)) + " / " + str(self.population_count))
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.set_target_state_name(State.QUIT)
-                self.trigger_transition()
+        # for event in pygame.event.get():
+        #     if event.type == pygame.QUIT:
+        #         self.set_target_state_name(State.QUIT)
+        #         self.trigger_transition()
+        #
+        #     if event.type == pygame.KEYDOWN:
+        #         if event.key == pygame.K_ESCAPE:
+        #             self.set_target_state_name(State.QUIT)
+        #             self.trigger_transition()
+        #
+        #     self.ui_manager.process_events(event)
+        #
+        #     if event.type == pygame_gui.UI_BUTTON_PRESSED:
+        #         if event.ui_element == self.button_back:
+        #             self.set_target_state_name(State.OPTIONS)
+        #             self.data_to_send = {
+        #                 "state": "genetic"
+        #             }
+        #             self.trigger_transition()
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.set_target_state_name(State.QUIT)
-                    self.trigger_transition()
-
-            self.ui_manager.process_events(event)
-
-            if event.type == pygame_gui.UI_BUTTON_PRESSED:
-                if event.ui_element == self.button_back:
-                    self.set_target_state_name(State.OPTIONS)
-                    self.data_to_send = {
-                        "state": "genetic"
-                    }
-                    self.trigger_transition()
-
-        if ViewSettings.DRAW:
-            self.ui_manager.update(time_delta)
-            self.ui_manager.draw_ui(surface)
+        # if ViewSettings.DRAW:
+        #     self.ui_manager.update(time_delta)
+        #     self.ui_manager.draw_ui(surface)
