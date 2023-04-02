@@ -186,6 +186,7 @@ class GeneticTrainNewNetwork(BaseState):
         self.generation += 1
         self.parent_list.clear()
 
+    # TODO add a function for plotting graphs
     def run(self, surface, time_delta):
         # FILL TAKES ALOT OF TIME
         # if ViewSettings.DRAW:
