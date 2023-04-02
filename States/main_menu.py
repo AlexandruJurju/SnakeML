@@ -26,10 +26,11 @@ class MainMenu(BaseState):
         self.button_quit = UIButton(pygame.Rect(((ViewSettings.WIDTH - 150) // 2, 500), (150, 35)), "QUIT", self.ui_manager)
 
     def end(self):
-        self.title_label.kill()
-        self.button_backpropagation_menu.kill()
-        self.button_genetic_menu.kill()
-        self.button_quit.kill()
+        # self.title_label.kill()
+        # self.button_backpropagation_menu.kill()
+        # self.button_genetic_menu.kill()
+        # self.button_quit.kill()
+        self.ui_manager.clear_and_reset()
 
     def run(self, surface: pygame.Surface, time_delta):
         for event in pygame.event.get():
