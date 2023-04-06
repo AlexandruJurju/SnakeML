@@ -14,7 +14,7 @@ from genetic_operators import elitist_selection, roulette_selection, full_mutati
 from model import Snake
 from neural_network import NeuralNetwork, Activation
 from view import *
-from vision import get_vision_lines_snake_head
+from vision import get_vision_lines_snake_head, distance
 
 
 class GeneticTrainNewNetwork(BaseState):
@@ -36,6 +36,7 @@ class GeneticTrainNewNetwork(BaseState):
         self.generation = None
         self.parent_list: List[Snake] = []
         self.offspring_list: List[NeuralNetwork] = []
+        self.max_distance = None
 
         self.x_generations = []
         self.y_best_individual_fitness = []
@@ -67,6 +68,8 @@ class GeneticTrainNewNetwork(BaseState):
         self.population_count = self.data_received["population_count"]
         self.mutation_rate = self.data_received["mutation_rate"]
         self.file_name = self.data_received["file_name"]
+        self.max_distance = distance((1, 1), (1, 11))
+        print(self.max_distance)
 
         self.selection_operator = getattr(genetic_operators, self.data_received["selection_operator"])
         self.mutation_operator = getattr(genetic_operators, self.data_received["mutation_operator"])
@@ -110,7 +113,7 @@ class GeneticTrainNewNetwork(BaseState):
         self.individual_label.kill()
 
     def run_genetic(self, surface):
-        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.vision_return_type)
+        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.max_distance)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
         if ViewSettings.DRAW:
@@ -177,6 +180,7 @@ class GeneticTrainNewNetwork(BaseState):
                          f"AVG FITNESS: {average_fitness:<25}\t"
                          f"AVG SCORE: {average_score:<10}\t"
                          f"AVG RATIO: {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list)):<25}\t"
+                         f"BEST FITNESS: {best_individual.fitness:<25}\t"
                          f"BEST SCORE: {best_individual.score:<5}\t"
                          f"BEST RATIO: {best_individual.score / best_individual.steps_taken:<25}"
                          f"TOO_OLD: {too_old:<8}\t"
@@ -253,21 +257,21 @@ class GeneticTrainNewNetwork(BaseState):
                     self.set_target_state_name(State.QUIT)
                     self.trigger_transition()
 
-            self.ui_manager.process_events(event)
+            # self.ui_manager.process_events(event)
 
-            if event.type == pygame_gui.UI_BUTTON_PRESSED:
-                if event.ui_element == self.button_back:
-                    self.set_target_state_name(State.OPTIONS)
-                    self.data_to_send = {
-                        "state": "genetic"
-                    }
-                    self.trigger_transition()
-
-                if event.ui_element == self.button_draw_network:
-                    self.draw_network = not self.draw_network
-
-                if event.ui_element == self.button_draw_vision_lines:
-                    self.draw_vision_lines = not self.draw_vision_lines
+            # if event.type == pygame_gui.UI_BUTTON_PRESSED:
+            #     if event.ui_element == self.button_back:
+            #         self.set_target_state_name(State.OPTIONS)
+            #         self.data_to_send = {
+            #             "state": "genetic"
+            #         }
+            #         self.trigger_transition()
+            #
+            #     if event.ui_element == self.button_draw_network:
+            #         self.draw_network = not self.draw_network
+            #
+            #     if event.ui_element == self.button_draw_vision_lines:
+            #         self.draw_vision_lines = not self.draw_vision_lines
 
         if ViewSettings.DRAW:
             self.ui_manager.update(time_delta)

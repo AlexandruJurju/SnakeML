@@ -40,55 +40,54 @@ class VisionLine:
         return self.wall_coord == other.wall_coord and self.wall_distance == other.wall_distance and self.apple_coord == other.apple_coord and self.apple_distance == other.apple_distance and self.segment_coord == other.segment_coord and self.segment_distance == other.segment_distance
 
 
-def get_vision_lines(board: np.ndarray, input_direction_count: int, vision_return_type: str) -> List[VisionLine]:
-    directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
-    if input_direction_count == 8:
-        directions += [Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
+# def get_vision_lines(board: np.ndarray, input_direction_count: int, max_dist) -> List[VisionLine]:
+#     directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
+#     if input_direction_count == 8:
+#         directions += [Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
+#
+#     vision_lines = [look_in_direction(board, d, max_dist) for d in directions]
+#     return vision_lines
 
-    vision_lines = [look_in_direction(board, d, vision_return_type) for d in directions]
-    return vision_lines
-
-
-def look_in_direction(board: np.ndarray, direction: Direction, vision_return_type: str) -> VisionLine:
-    apple_distance = np.inf
-    segment_distance = np.inf
-    apple_coord = None
-    segment_coord = None
-
-    # search starts at one block in the given direction
-    # otherwise head is also check in the loop
-    head_position = find_snake_head_poz(board)
-    current_block = [head_position[0] + direction.value[0], head_position[1] + direction.value[1]]
-
-    # booleans are used to store the first value found
-    apple_found = False
-    segment_found = False
-
-    # loop are blocks in the given direction and store position and coordinates of apple and snake segments
-    while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
-        if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_found is False:
-            apple_distance = distance(head_position, current_block)
-            apple_coord = [int(current_block[0]), int(current_block[1])]
-            apple_found = True
-        elif board[current_block[0]][current_block[1]] == BoardConsts.SNAKE_BODY and segment_found is False:
-            segment_distance = distance(head_position, current_block)
-            segment_coord = [int(current_block[0]), int(current_block[1])]
-            segment_found = True
-        current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
-
-    wall_distance = distance(head_position, current_block)
-    wall_coord = [int(current_block[0]), int(current_block[1])]
-
-    if vision_return_type == "boolean":
-        wall_distance_output = 1 / wall_distance
-        apple_boolean = 1.0 if apple_found else 0
-        segment_boolean = 1 / segment_distance
-
-        return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
-
+#
+# def look_in_direction(board: np.ndarray, direction: Direction, max_dist) -> VisionLine:
+#     apple_distance = np.inf
+#     segment_distance = np.inf
+#     apple_coord = None
+#     segment_coord = None
+#
+#     # search starts at one block in the given direction
+#     # otherwise head is also check in the loop
+#     head_position = find_snake_head_poz(board)
+#     current_block = [head_position[0] + direction.value[0], head_position[1] + direction.value[1]]
+#
+#     # booleans are used to store the first value found
+#     apple_found = False
+#     segment_found = False
+#
+#     # loop are blocks in the given direction and store position and coordinates of apple and snake segments
+#     while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
+#         if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_found is False:
+#             apple_distance = distance(head_position, current_block)
+#             apple_coord = [int(current_block[0]), int(current_block[1])]
+#             apple_found = True
+#         elif board[current_block[0]][current_block[1]] == BoardConsts.SNAKE_BODY and segment_found is False:
+#             segment_distance = distance(head_position, current_block)
+#             segment_coord = [int(current_block[0]), int(current_block[1])]
+#             segment_found = True
+#         current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
+#
+#     wall_distance = distance(head_position, current_block)
+#     wall_coord = [int(current_block[0]), int(current_block[1])]
+#
+#     wall_distance_output = wall_distance / max_dist
+#     apple_boolean = 1.0 if apple_found else 0
+#     segment_boolean = segment_distance / max_dist if segment_found else 0.0
+#
+#     return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
+#
 
 # TODO normalize distance using dist/max_distance
-def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direction, vision_return_type: str) -> VisionLine:
+def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direction, max_dist) -> VisionLine:
     apple_distance = np.inf
     segment_distance = np.inf
     apple_coord = None
@@ -103,7 +102,7 @@ def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direc
     while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
         if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_found is False:
             apple_coord = current_block
-            apple_distance = distance(snake_head, current_block)
+            # apple_distance = distance(snake_head, current_block)
             apple_found = True
         elif board[current_block[0]][current_block[1]] == BoardConsts.SNAKE_BODY and segment_found is False:
             segment_coord = current_block
@@ -114,21 +113,34 @@ def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direc
     wall_distance = distance(snake_head, current_block)
     wall_coord = current_block
 
-    if vision_return_type == "boolean":
-        wall_distance_output = 1 / wall_distance
-        apple_boolean = 1.0 if apple_found else 0
-        segment_boolean = 1 / segment_distance
+    wall_output = 1 / wall_distance
+    apple_output = 1.0 if apple_found else 0
+    segment_output = 1 / segment_distance
 
-        vision_line = VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
-        return vision_line
+    if wall_output > 1.0:
+        print(direction)
+        print(wall_coord)
+        print(wall_distance)
+        print(board)
+        print()
+
+    if segment_output > 1.0:
+        print(direction)
+        print(segment_coord)
+        print(segment_distance)
+        print(board)
+        print()
+
+    vision_line = VisionLine(wall_coord, wall_output, apple_coord, apple_output, segment_coord, segment_output, direction)
+    return vision_line
 
 
-def get_vision_lines_snake_head(board: np.ndarray, snake_head, vision_direction_count: int, vision_return_type: str) -> List[VisionLine]:
+def get_vision_lines_snake_head(board: np.ndarray, snake_head, vision_direction_count: int, max_dist) -> List[VisionLine]:
     directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
     if vision_direction_count == 8:
         directions += [Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
 
-    vision_lines = [look_in_direction_snake_head(board, snake_head, d, vision_return_type) for d in directions]
+    vision_lines = [look_in_direction_snake_head(board, snake_head, d, max_dist) for d in directions]
     return vision_lines
 
 

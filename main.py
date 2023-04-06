@@ -13,7 +13,9 @@ from States.run_pretrained import RunPretrained
 from States.state_manager import StateManager
 from game_config import ViewSettings, State
 from genetic_operators import two_point_crossover, gaussian_mutation
-from neural_network import NeuralNetwork, Dense, Activation, sigmoid
+from model import Model
+from neural_network import NeuralNetwork, Dense, Activation, sigmoid, relu
+from vision import distance
 
 
 def main():
@@ -65,6 +67,20 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+    # net = NeuralNetwork()
+    # net.add_layer(Dense(16, 24))
+    # net.add_layer(Activation(relu, relu))
+    # net.add_layer(Dense(24, 4))
+    # net.add_layer(Activation(sigmoid, sigmoid))
+    #
+    # model = Model(10, 3, True, net)
+    #
+    # model.board[1][1] = "R"
+    # model.board[-2][-2] = "R"
+    # max = distance((0, 0), (len(model.board[0]) - 1, len(model.board[0]) - 1))
+    # print(max)
+    # print(f"{distance((10, 10), (1, 1)) / max}")
 
     # net = NeuralNetwork()
     # net.add_layer(Dense(5, 10))

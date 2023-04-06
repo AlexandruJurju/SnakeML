@@ -44,7 +44,7 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.input_direction_count = self.data_received["input_direction_count"]
         self.vision_return_type = self.data_received["vision_return_type"]
 
-        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Backpropagation Train New Network", self.ui_manager, object_id="#window_label")
+        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Backpropagation Train New Network", self.ui_manager)
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
         self.input_neuron_count = self.data_received["input_layer_neurons"]

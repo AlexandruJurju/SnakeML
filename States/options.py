@@ -79,24 +79,31 @@ class Options(BaseState):
         self.options_target = self.data_received["state"]
         self.options_state = 0
 
-        x_positions = [ViewSettings.X_CENTER - 450, ViewSettings.X_CENTER - 150, ViewSettings.X_CENTER + 150, ViewSettings.X_CENTER + 450]
-
+        x_positions = {"left-left": ViewSettings.X_CENTER - 450,
+                       "left-center": ViewSettings.X_CENTER - 250,
+                       "center": ViewSettings.X_CENTER,
+                       "right-center": ViewSettings.X_CENTER + 250,
+                       "right-right": ViewSettings.X_CENTER + 450}
+        y_positions = [ViewSettings.Y_CENTER - 250, ViewSettings.Y_CENTER - 50, ViewSettings.Y_CENTER + 150]
+        x_positions_label = {"left-left": ViewSettings.X_CENTER - 450 - 125,
+                             "left-center": ViewSettings.X_CENTER - 250 - 125,
+                             "center": ViewSettings.X_CENTER - 125,
+                             "right-center": ViewSettings.X_CENTER + 250 - 125,
+                             "right-right": ViewSettings.X_CENTER + 450 - 125}
+        y_positions_label = [ViewSettings.Y_CENTER - 250 - 50, ViewSettings.Y_CENTER - 50 - 50, ViewSettings.Y_CENTER + 150 - 50]
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "", self.ui_manager)
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
         # ================================================
-        self.starting_snake_size_entry = UITextEntryLine(pygame.Rect((x_positions[1] - 75 // 2, 350), (75, 30)), self.ui_manager)
-        self.starting_snake_size_entry_label = UILabel(pygame.Rect((x_positions[1] - 250 // 2, 300), (250, 35)), "Starting Snake Size", self.ui_manager)
+        self.starting_snake_size_entry = UITextEntryLine(pygame.Rect((x_positions["left-center"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
+        self.starting_snake_size_entry_label = UILabel(pygame.Rect((x_positions_label["left-center"], y_positions_label[1]), (250, 35)), "Starting Snake Size", self.ui_manager)
         self.starting_snake_size_entry.set_text(str(GameSettings.INITIAL_SNAKE_SIZE))
 
-        self.board_size_entry = UITextEntryLine(pygame.Rect((x_positions[2] - 75 // 2, 350), (75, 30)), self.ui_manager)
-        self.board_size_entry_label = UILabel(pygame.Rect((x_positions[2] - 250 // 2, 300), (250, 35)), "Board Size", self.ui_manager)
+        self.board_size_entry = UITextEntryLine(pygame.Rect((x_positions["center"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
+        self.board_size_entry_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[1]), (250, 35)), "Board Size", self.ui_manager)
         self.board_size_entry.set_text(str(GameSettings.INITIAL_BOARD_SIZE))
 
         # ================================================
-        self.dropdown_input_direction_count = UIDropDownMenu(GameSettings.AVAILABLE_INPUT_DIRECTIONS, GameSettings.AVAILABLE_INPUT_DIRECTIONS[0], pygame.Rect((ViewSettings.X_CENTER - 75 // 2 - 250, 350), (75, 30)), self.ui_manager)
-        self.dropdown_input_direction_count_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2 - 250, 300), (250, 35)), "Input Direction Count", self.ui_manager)
-
         self.dropdown_vision_line_return_type = UIDropDownMenu(GameSettings.AVAILABLE_VISION_LINES_RETURN_TYPE, GameSettings.AVAILABLE_VISION_LINES_RETURN_TYPE[0], pygame.Rect((ViewSettings.X_CENTER - 125 // 2 + 250, 150), (125, 30)),
                                                                self.ui_manager)
         self.dropdown_vision_line_return_type_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2 + 250, 100), (250, 35)), "Vision Line Return Type", self.ui_manager)
@@ -107,17 +114,20 @@ class Options(BaseState):
         self.dropdown_activation_function_hidden = UIDropDownMenu(GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS, GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[2], pygame.Rect((ViewSettings.X_CENTER - 125 // 2 - 250, 150), (125, 30)), self.ui_manager)
         self.dropdown_activation_function_hidden_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2 - 250, 100), (250, 35)), "Hidden Activation Function", self.ui_manager)
 
-        self.hidden_layer_count_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_CENTER - 75 // 2, 350), (75, 30)), self.ui_manager)
-        self.hidden_layer_count_entry_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2, 300), (250, 35)), "Hidden Layer Count", self.ui_manager)
+        self.dropdown_input_direction_count = UIDropDownMenu(GameSettings.AVAILABLE_INPUT_DIRECTIONS, GameSettings.AVAILABLE_INPUT_DIRECTIONS[0], pygame.Rect((x_positions["left-center"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
+        self.dropdown_input_direction_count_label = UILabel(pygame.Rect((x_positions_label["left-center"], y_positions_label[1]), (250, 35)), "Input Direction Count", self.ui_manager)
+
+        self.hidden_layer_count_entry = UITextEntryLine(pygame.Rect((x_positions["center"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
+        self.hidden_layer_count_entry_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[1]), (250, 35)), "Hidden Layer Count", self.ui_manager)
         self.hidden_layer_count_entry.set_text("1")
 
         input_neuron_count = int(self.dropdown_input_direction_count.selected_option) * 3 + 4
-        input_layer = UILabel(pygame.Rect((ViewSettings.X_CENTER - 75 // 2 - 250, 550), (75, 30)), str(input_neuron_count), self.ui_manager)
-        input_layer_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2 - 250, 500), (250, 30)), "Input Layer", self.ui_manager)
+        input_layer = UILabel(pygame.Rect((x_positions["left-left"] - 75 // 2, y_positions[2]), (75, 30)), str(input_neuron_count), self.ui_manager)
+        input_layer_label = UILabel(pygame.Rect((x_positions_label["left-left"], y_positions_label[2]), (250, 30)), "Input Layer", self.ui_manager)
 
         output_neuron_count = 4 if int(self.dropdown_input_direction_count.selected_option) == 4 or int(self.dropdown_input_direction_count.selected_option) == 8 else 3
-        output_layer = UILabel(pygame.Rect((ViewSettings.X_CENTER - 75 // 2 + 250, 550), (75, 30)), str(output_neuron_count), self.ui_manager)
-        output_layer_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2 + 250, 500), (250, 30)), "Output Layer", self.ui_manager)
+        output_layer = UILabel(pygame.Rect((x_positions["right-right"] - 75 // 2, y_positions[2]), (75, 30)), str(output_neuron_count), self.ui_manager)
+        output_layer_label = UILabel(pygame.Rect((x_positions_label["right-right"], y_positions_label[2]), (250, 30)), "Output Layer", self.ui_manager)
 
         # TODO add options for more hidden layers
         first_hidden_layer_neuron_count = input_neuron_count + 8
@@ -130,23 +140,24 @@ class Options(BaseState):
         self.neural_network_layers_entries.append([output_layer, output_layer_label])
 
         # ================================================
-        self.population_count_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_CENTER - 75 // 2, 150), (75, 30)), self.ui_manager)
-        self.population_count_entry_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2, 100), (250, 35)), "Individuals in Population", self.ui_manager)
+        self.population_count_entry = UITextEntryLine(pygame.Rect((x_positions["center"] - 75 // 2, y_positions[0]), (75, 30)), self.ui_manager)
+        self.population_count_entry_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[0]), (250, 35)), "Individuals in Population", self.ui_manager)
         self.population_count_entry.set_text(str(GameSettings.POPULATION_COUNT))
 
-        self.mutation_rate_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_CENTER - 75 // 2 + 250, 550), (75, 30)), self.ui_manager)
-        self.mutation_rate_entry_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2 + 250, 500), (250, 35)), "Mutation Rate", self.ui_manager)
+        self.crossover_operators_dropdown = UIDropDownMenu(GameSettings.AVAILABLE_CROSSOVER_OPERATORS, GameSettings.AVAILABLE_CROSSOVER_OPERATORS[0], pygame.Rect((x_positions["center"] - 225 // 2, y_positions[1]), (225, 30)), self.ui_manager)
+        self.crossover_operators_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[1]), (250, 35)), "Crossover Operators", self.ui_manager)
+
+        self.selection_operators_dropdown = UIDropDownMenu(GameSettings.AVAILABLE_SELECTION_OPERATORS, GameSettings.AVAILABLE_SELECTION_OPERATORS[0], pygame.Rect((x_positions["left-left"] - 225 // 2, y_positions[1]), (225, 30)), self.ui_manager)
+        self.selection_operators_label = UILabel(pygame.Rect((x_positions_label["left-left"], y_positions_label[1]), (250, 35)), "Selection Operators", self.ui_manager)
+
+        self.mutation_operators_dropdown = UIDropDownMenu(GameSettings.AVAILABLE_MUTATION_OPERATORS, GameSettings.AVAILABLE_MUTATION_OPERATORS[0], pygame.Rect((x_positions["right-right"] - 225 // 2, y_positions[1]), (225, 30)), self.ui_manager)
+        self.mutation_operators_label = UILabel(pygame.Rect((x_positions_label["right-right"], y_positions_label[1]), (250, 35)), "Mutation Operators", self.ui_manager)
+
+        self.mutation_rate_entry = UITextEntryLine(pygame.Rect((x_positions["right-right"] - 75 // 2, y_positions[2]), (75, 30)), self.ui_manager)
+        self.mutation_rate_entry_label = UILabel(pygame.Rect((x_positions_label["right-right"], y_positions_label[2]), (250, 35)), "Mutation Rate", self.ui_manager)
         self.mutation_rate_entry.set_text(str(GameSettings.MUTATION_CHANCE))
 
-        self.crossover_operators_dropdown = UIDropDownMenu(GameSettings.AVAILABLE_CROSSOVER_OPERATORS, GameSettings.AVAILABLE_CROSSOVER_OPERATORS[0], pygame.Rect((ViewSettings.X_CENTER - 225 // 2, 350), (225, 30)), self.ui_manager)
-        self.crossover_operators_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2, 300), (250, 35)), "Crossover Operators", self.ui_manager)
-
-        self.selection_operators_dropdown = UIDropDownMenu(GameSettings.AVAILABLE_SELECTION_OPERATORS, GameSettings.AVAILABLE_SELECTION_OPERATORS[0], pygame.Rect((ViewSettings.X_CENTER - 225 // 2 - 250, 350), (225, 30)), self.ui_manager)
-        self.selection_operators_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2 - 250, 300), (250, 35)), "Selection Operators", self.ui_manager)
-
-        self.mutation_operators_dropdown = UIDropDownMenu(GameSettings.AVAILABLE_MUTATION_OPERATORS, GameSettings.AVAILABLE_MUTATION_OPERATORS[0], pygame.Rect((ViewSettings.X_CENTER - 225 // 2 + 250, 350), (225, 30)), self.ui_manager)
-        self.mutation_operators_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2 + 250, 300), (250, 35)), "Mutation Operators", self.ui_manager)
-
+        # ================================================
         self.genetic_options_list = [self.mutation_rate_entry, self.mutation_rate_entry_label, self.population_count_entry, self.population_count_entry_label, self.crossover_operators_dropdown, self.crossover_operators_label,
                                      self.selection_operators_dropdown, self.selection_operators_label, self.mutation_operators_dropdown, self.mutation_operators_label]
 
@@ -164,7 +175,7 @@ class Options(BaseState):
         self.file_name_entry.hide()
         self.file_name_entry_label.hide()
 
-        self.button_next = UIButton(pygame.Rect((ViewSettings.X_CENTER - 75 // 2, 675), (75, 40)), "Next", self.ui_manager)
+        self.button_next = UIButton(pygame.Rect((ViewSettings.X_CENTER - 75 // 2, ViewSettings.HEIGHT - 75), (75, 40)), "Next", self.ui_manager)
 
     def hide_layer_entries(self):
         for ui_element in self.neural_network_layers_entries:

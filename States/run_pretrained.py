@@ -1,3 +1,4 @@
+from time import sleep
 from typing import List
 
 import pygame
@@ -8,12 +9,11 @@ from pygame_gui.elements import UILabel, UIButton, UITextEntryLine
 from pygame_gui.windows import UIFileDialog
 
 from States.base_state import BaseState
-from States.state_manager import StateManager
 from file_operations import read_all_from_json
 from game_config import State, ViewSettings, GameSettings
 from model import Model
 from view import draw_board, draw_neural_network_complete, draw_vision_lines
-from vision import get_vision_lines_snake_head, get_vision_lines, VisionLine
+from vision import get_vision_lines_snake_head, VisionLine, distance
 
 
 class RunPretrained(BaseState):
@@ -23,6 +23,7 @@ class RunPretrained(BaseState):
         self.network = None
         self.ui_manager = ui_manager
         self.state_target = None
+        self.max_dist = None
 
         self.overwrite = True
         self.file_path = None
@@ -44,7 +45,6 @@ class RunPretrained(BaseState):
 
         self.snake_size_entry = None
         self.snake_size_label = None
-
 
     def start(self):
         self.state_target = self.data_received["state"]
@@ -81,24 +81,16 @@ class RunPretrained(BaseState):
         self.execute_network = False
 
     def print_vision_line(self, vision_line: VisionLine):
-        print(f" w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_d {vision_line.segment_distance} ")
+        print(f" {vision_line.direction} w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_d {vision_line.segment_distance} ")
 
     def print_all_vision_lines(self, vision_lines: List[VisionLine]):
         for line in vision_lines:
             self.print_vision_line(line)
+        print()
 
     def run_network(self, surface):
-        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.vision_return_type)
+        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.vision_return_type, self.max_dist)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
-
-        vision_lines2 = get_vision_lines(self.model.board, self.input_direction_count, self.vision_return_type)
-
-        if vision_lines != vision_lines2:
-            print("================================")
-            print("HEAD")
-            self.print_all_vision_lines(vision_lines)
-            print("NORMAL")
-            self.print_all_vision_lines(vision_lines2)
 
         # if self.execute_network is False:
         draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
@@ -111,11 +103,6 @@ class RunPretrained(BaseState):
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
-            # if self.model.snake.won:
-            #     print("WON")
-            # else:
-            #     print("NOT WON")
-
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
 
     def run(self, surface, time_delta):
@@ -148,6 +135,9 @@ class RunPretrained(BaseState):
 
                 if event.ui_element == self.button_run:
                     self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.network)
+                    print(self.model.board)
+                    self.max_dist = distance((1, 1), (11, 11))
+                    print(self.max_dist)
                     self.execute_network = True
 
                 if event.ui_element == self.button_load:
