@@ -38,8 +38,7 @@ class GeneticTrainNewNetwork(BaseState):
         self.y_best_individual_fitness = []
         self.y_best_individual_score = []
         self.y_average_score = []
-        self.nn_names_list = []
-        self.neural_networks_to_save = []
+        self.y_best_ratio = []
 
         self.title_label = None
         self.button_back = None
@@ -163,6 +162,7 @@ class GeneticTrainNewNetwork(BaseState):
         self.y_best_individual_fitness.append(best_individual.fitness)
         self.y_best_individual_score.append(best_individual.score)
         self.y_average_score.append(average_score)
+        self.y_best_ratio.append(best_individual.score / best_individual.steps_taken)
 
         parents_for_mating = elitist_selection(self.parent_list, 100)
         for parent in parents_for_mating[:100]:
@@ -187,7 +187,6 @@ class GeneticTrainNewNetwork(BaseState):
         self.generation += 1
         self.parent_list.clear()
 
-    # TODO add a function for plotting graphs
     def run(self, surface, time_delta):
         # FILL TAKES ALOT OF TIME
         # if ViewSettings.DRAW:
@@ -204,7 +203,7 @@ class GeneticTrainNewNetwork(BaseState):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    fig = plt.figure(figsize=(16, 9))
+                    fig1 = plt.figure(figsize=(16, 9))
                     plt.plot(self.x_generations, self.y_best_individual_score, "b", label="Best Individual Score")
                     plt.plot(self.x_generations, self.y_average_score, "r", label="Generation Mean Score")
                     plt.legend(loc="upper left")
@@ -212,6 +211,14 @@ class GeneticTrainNewNetwork(BaseState):
                     plt.ylabel("Score")
                     plt.title("Score Comparison")
                     plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "plot.pdf")
+                    plt.show()
+
+                    fig2 = plt.figure(figsize=(16, 9))
+                    plt.plot(self.x_generations, self.y_best_ratio, "b")
+                    plt.xlabel("Generations")
+                    plt.ylabel("Best Individual Ratio")
+                    plt.title("Ratio Progression")
+                    plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "best_ratio.pdf")
                     plt.show()
 
                     self.set_target_state_name(State.QUIT)

@@ -81,16 +81,13 @@ def look_in_direction(board: np.ndarray, direction: Direction, vision_return_typ
 
     if vision_return_type == "boolean":
         wall_distance_output = 1 / wall_distance
-        apple_boolean = 1 / apple_distance
+        apple_boolean = 1.0 if apple_found else 0
         segment_boolean = 1 / segment_distance
 
         return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
 
 
-# TODO distance for segment
 # TODO normalize distance using dist/max_distance
-
-
 def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direction, vision_return_type: str) -> VisionLine:
     apple_distance = np.inf
     segment_distance = np.inf
@@ -119,7 +116,7 @@ def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direc
 
     if vision_return_type == "boolean":
         wall_distance_output = 1 / wall_distance
-        apple_boolean = 1 / apple_distance
+        apple_boolean = 1.0 if apple_found else 0
         segment_boolean = 1 / segment_distance
 
         vision_line = VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
