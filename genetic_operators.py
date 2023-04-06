@@ -81,28 +81,28 @@ def elitist_selection(population: List[Individual], selection_count: int) -> Lis
     return selected[:selection_count]
 
 
-def one_point_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+def one_point_crossover(parent1_matrix: np.ndarray, parent2_matrix: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     """
     In one point crossover a single index is used to separate genetic material from the parents.
 
-    :param parent1_chromosome: parent1 weight or bias numpy array
-    :param parent2_chromosome: parent 2 weight or bias numpy array
+    :param parent1_matrix: parent1 weight or bias numpy array
+    :param parent2_matrix: parent 2 weight or bias numpy array
     :return Tuple with the generator offspring numpy array from the given parents arrays:
     """
-    matrix_row, matrix_col = np.shape(parent1_chromosome)
+    matrix_row, matrix_col = np.shape(parent1_matrix)
 
-    child1_chromosome = parent1_chromosome.copy()
-    child2_chromosome = parent2_chromosome.copy()
+    child1_matrix = parent1_matrix.copy()
+    child2_matrix = parent2_matrix.copy()
 
     crossover_point = (np.random.randint(0, matrix_row), np.random.randint(0, matrix_col))
 
-    child1_chromosome[:crossover_point[0], :] = parent2_chromosome[:crossover_point[0], :]
-    child1_chromosome[crossover_point[0], :crossover_point[1]] = parent2_chromosome[crossover_point[0], :crossover_point[1]]
+    child1_matrix[:crossover_point[0], :] = parent2_matrix[:crossover_point[0], :]
+    child1_matrix[crossover_point[0], :crossover_point[1]] = parent2_matrix[crossover_point[0], :crossover_point[1]]
 
-    child2_chromosome[:crossover_point[0], :] = parent1_chromosome[:crossover_point[0], :]
-    child2_chromosome[crossover_point[0], :crossover_point[1]] = parent1_chromosome[crossover_point[0], :crossover_point[1]]
+    child2_matrix[:crossover_point[0], :] = parent1_matrix[:crossover_point[0], :]
+    child2_matrix[crossover_point[0], :crossover_point[1]] = parent1_matrix[crossover_point[0], :crossover_point[1]]
 
-    return child1_chromosome, child2_chromosome
+    return child1_matrix, child2_matrix
 
 
 # def one_point_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple[NeuralNetwork, NeuralNetwork]:
@@ -179,19 +179,19 @@ def two_point_crossover(parent1_matrix: np.ndarray, parent2_matrix: np.ndarray) 
     return child1_matrix, child2_matrix
 
 
-def uniform_crossover(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-    child1_chromosome = np.empty_like(parent1_chromosome)
-    child2_chromosome = np.empty_like(parent2_chromosome)
+def uniform_crossover(parent1_matrix: np.ndarray, parent2_matrix: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+    child1_matrix = np.empty_like(parent1_matrix)
+    child2_matrix = np.empty_like(parent2_matrix)
 
-    probability_mask = np.random.uniform(0, 1, parent1_chromosome.shape)
+    probability_mask = np.random.uniform(0, 1, parent1_matrix.shape)
 
-    child1_chromosome[probability_mask <= 0.5] = parent1_chromosome[probability_mask <= 0.5]
-    child1_chromosome[probability_mask > 0.5] = parent2_chromosome[probability_mask > 0.5]
+    child1_matrix[probability_mask <= 0.5] = parent1_matrix[probability_mask <= 0.5]
+    child1_matrix[probability_mask > 0.5] = parent2_matrix[probability_mask > 0.5]
 
-    child2_chromosome[probability_mask <= 0.5] = parent2_chromosome[probability_mask <= 0.5]
-    child2_chromosome[probability_mask > 0.5] = parent1_chromosome[probability_mask > 0.5]
+    child2_matrix[probability_mask <= 0.5] = parent2_matrix[probability_mask <= 0.5]
+    child2_matrix[probability_mask > 0.5] = parent1_matrix[probability_mask > 0.5]
 
-    return child1_chromosome, child2_chromosome
+    return child1_matrix, child2_matrix
 
 
 def calculate_bq(u: float, eta: float) -> float:
@@ -210,12 +210,12 @@ def calculate_bq(u: float, eta: float) -> float:
     return bq
 
 
-def sbx(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray, eta: float) -> Tuple[np.ndarray, np.ndarray]:
+def sbx(parent1_matrix: np.ndarray, parent2_matrix: np.ndarray, eta: float) -> Tuple[np.ndarray, np.ndarray]:
     """
     Simulated binary crossover operator for genetic algorithms.
 
-    :param parent1_chromosome: First parent chromosome as a NumPy array.
-    :param parent2_chromosome: Second parent chromosome as a NumPy array.
+    :param parent1_matrix: First parent chromosome as a NumPy array.
+    :param parent2_matrix: Second parent chromosome as a NumPy array.
     :param eta: The distribution index, which controls the offspring spread. A high eta value generates offspring
     closer to the parents, whereas a low eta value generates more diverse offspring.
     :return: A tuple of two child chromosomes as NumPy arrays.
@@ -225,8 +225,8 @@ def sbx(parent1_chromosome: np.ndarray, parent2_chromosome: np.ndarray, eta: flo
     # Calculate the scaling factor 'bq' using the 'calculate_bq' function.
     bq = calculate_bq(u, eta)
 
-    child1 = 0.5 * ((1 + bq) * parent1_chromosome + (1 - bq) * parent2_chromosome)
-    child2 = 0.5 * ((1 - bq) * parent1_chromosome + (1 + bq) * parent2_chromosome)
+    child1 = 0.5 * ((1 + bq) * parent1_matrix + (1 - bq) * parent2_matrix)
+    child2 = 0.5 * ((1 - bq) * parent1_matrix + (1 + bq) * parent2_matrix)
 
     return child1, child2
 
