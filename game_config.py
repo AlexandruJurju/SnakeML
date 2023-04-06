@@ -21,7 +21,7 @@ class BoardConsts:
 
 
 class ViewSettings:
-    DRAW = False
+    DRAW = True
     MAX_FPS = 40
     WIDTH, HEIGHT = 1366, 768
     SQUARE_SIZE = 25

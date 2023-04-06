@@ -86,7 +86,6 @@ class VisionLine:
 #     return VisionLine(wall_coord, wall_distance_output, apple_coord, apple_boolean, segment_coord, segment_boolean, direction)
 #
 
-# TODO normalize distance using dist/max_distance
 def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direction, max_dist) -> VisionLine:
     apple_distance = np.inf
     segment_distance = np.inf

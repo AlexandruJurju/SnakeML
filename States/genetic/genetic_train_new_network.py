@@ -57,8 +57,8 @@ class GeneticTrainNewNetwork(BaseState):
         self.draw_vision_lines = True
         self.rect_draw_vision_lines = None
 
-        self.button_draw_board = None
-        self.draw_board = True
+        self.button_stop_drawing = None
+        self.draw_switch = True
 
     def start(self):
         self.initial_board_size = self.data_received["board_size"]
@@ -69,7 +69,6 @@ class GeneticTrainNewNetwork(BaseState):
         self.mutation_rate = self.data_received["mutation_rate"]
         self.file_name = self.data_received["file_name"]
         self.max_distance = distance((1, 1), (1, 11))
-        print(self.max_distance)
 
         self.selection_operator = getattr(genetic_operators, self.data_received["selection_operator"])
         self.mutation_operator = getattr(genetic_operators, self.data_received["mutation_operator"])
@@ -82,6 +81,8 @@ class GeneticTrainNewNetwork(BaseState):
 
         self.button_draw_vision_lines = UIButton(pygame.Rect((50, 250), (175, 30)), "Draw Vision Lines", self.ui_manager)
         self.rect_draw_vision_lines = pygame.Rect((250, 250), (30, 30))
+
+        self.button_stop_drawing = UIButton(pygame.Rect((50, 450), (175, 30)), "Stop Drawing", self.ui_manager)
 
         self.generation_label = UILabel(pygame.Rect((50, 50), (150, 25)), "Population: ", self.ui_manager)
         self.individual_label = UILabel(pygame.Rect((50, 100), (200, 25)), "Individual: ", self.ui_manager)
@@ -254,24 +255,41 @@ class GeneticTrainNewNetwork(BaseState):
                     # plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "best_ratio.pdf")
                     # plt.show()
 
-                    self.set_target_state_name(State.QUIT)
+                    # self.set_target_state_name(State.QUIT)
+                    # self.trigger_transition()
+
+                    ViewSettings.DRAW = True
+
+            self.ui_manager.process_events(event)
+
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.button_back:
+                    self.set_target_state_name(State.OPTIONS)
+                    self.data_to_send = {
+                        "state": "genetic"
+                    }
                     self.trigger_transition()
 
-            # self.ui_manager.process_events(event)
+                if event.ui_element == self.button_draw_network:
+                    self.draw_network = not self.draw_network
 
-            # if event.type == pygame_gui.UI_BUTTON_PRESSED:
-            #     if event.ui_element == self.button_back:
-            #         self.set_target_state_name(State.OPTIONS)
-            #         self.data_to_send = {
-            #             "state": "genetic"
-            #         }
-            #         self.trigger_transition()
-            #
-            #     if event.ui_element == self.button_draw_network:
-            #         self.draw_network = not self.draw_network
-            #
-            #     if event.ui_element == self.button_draw_vision_lines:
-            #         self.draw_vision_lines = not self.draw_vision_lines
+                if event.ui_element == self.button_draw_vision_lines:
+                    self.draw_vision_lines = not self.draw_vision_lines
+
+                if event.ui_element == self.button_stop_drawing:
+                    surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+
+                    font = pygame.font.SysFont("Arial", 20)
+                    text_line = "PRESS ESC TO TURN ON DRAWING"
+                    text_surface = font.render(text_line, True, (255, 255, 255))
+                    text_rect = text_surface.get_rect()
+                    text_rect.center = (ViewSettings.X_CENTER, ViewSettings.Y_CENTER)
+                    surface.blit(text_surface, text_rect)
+
+                    ViewSettings.DRAW = False
+                    self.ui_manager.update(time_delta)
+                    self.ui_manager.draw_ui(surface)
+                    pygame.display.flip()
 
         if ViewSettings.DRAW:
             self.ui_manager.update(time_delta)
