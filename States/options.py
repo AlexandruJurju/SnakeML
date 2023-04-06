@@ -72,13 +72,8 @@ class Options(BaseState):
     def start(self):
         self.options_target = self.data_received["state"]
 
-        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "", self.ui_manager, object_id="#window_label")
+        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "", self.ui_manager)
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
-
-        if self.options_target == "genetic":
-            self.title_label.set_text("Genetic Options")
-        else:
-            self.title_label.set_text("Backpropagation Options")
 
         self.starting_snake_size_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_SECOND - 75 // 2 - 250, 150), (75, 30)), self.ui_manager)
         self.starting_snake_size_entry_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 250 // 2 - 250, 100), (250, 35)), "Starting Snake Size", self.ui_manager)
@@ -234,6 +229,7 @@ class Options(BaseState):
             case 0:
                 for option in self.snake_options_list:
                     option.show()
+                self.title_label.set_text("Snake Game Options")
 
             case 1:
                 for option in self.snake_options_list:
@@ -242,6 +238,7 @@ class Options(BaseState):
                 self.show_layer_entries()
                 for option in self.neural_network_options_list:
                     option.show()
+                self.title_label.set_text("Neural Network Options")
 
             case 2:
                 for option in self.neural_network_options_list:
@@ -250,13 +247,55 @@ class Options(BaseState):
 
                 for option in self.genetic_options_list:
                     option.show()
+                self.title_label.set_text("Genetic Algorithm Options")
 
             case 3:
                 for option in self.genetic_options_list:
                     option.hide()
+                self.hide_layer_entries()
+                for option in self.neural_network_options_list:
+                    option.hide()
+
                 self.file_name_entry.show()
                 self.file_name_entry_label.show()
                 self.button_next.set_text("RUN")
+
+            case 4:
+                if self.options_target == "genetic":
+                    self.set_target_state_name(State.GENETIC_TRAIN_NEW_NETWORK)
+                    self.data_to_send = {
+                        "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
+                        "vision_return_type": self.dropdown_vision_line_return_type.selected_option,
+                        "file_name": self.file_name_entry.text,
+                        "hidden_activation": self.dropdown_activation_function_hidden.selected_option,
+                        "output_activation": self.dropdown_activation_function_output.selected_option,
+                        "input_layer_neurons": int(self.neural_network_layers_entries[0][0].text),
+                        "hidden_layer_neurons": int(self.neural_network_layers_entries[1][0].text),
+                        "output_layer_neurons": int(self.neural_network_layers_entries[2][0].text),
+                        "population_count": int(self.population_count_entry.text),
+                        "selection_operator": self.selection_operators_dropdown.selected_option,
+                        "crossover_operator": self.crossover_operators_dropdown.selected_option,
+                        "mutation_operator": self.mutation_operators_dropdown.selected_option,
+                        "mutation_rate": float(self.mutation_rate_entry.text),
+                        "initial_snake_size": int(self.starting_snake_size_entry.text),
+                        "board_size": int(self.board_size_entry.text)
+                    }
+                else:
+                    self.set_target_state_name(State.BACKPROPAGATION_TRAIN_NEW_NETWORK)
+                    self.data_to_send = {
+                        "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
+                        "vision_return_type": self.dropdown_vision_line_return_type.selected_option,
+                        "file_name": self.file_name_entry.text,
+                        "hidden_activation": self.dropdown_activation_function_hidden.selected_option,
+                        "output_activation": self.dropdown_activation_function_output.selected_option,
+                        "input_layer_neurons": int(self.neural_network_layers_entries[0][0].text),
+                        "hidden_layer_neurons": int(self.neural_network_layers_entries[1][0].text),
+                        "output_layer_neurons": int(self.neural_network_layers_entries[2][0].text),
+                        "initial_snake_size": int(self.starting_snake_size_entry.text),
+                        "board_size": int(self.board_size_entry.text)
+                    }
+
+                self.trigger_transition()
 
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
@@ -278,6 +317,7 @@ class Options(BaseState):
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_back:
+                    self.options_state = 0
                     if self.options_target == "genetic":
                         self.set_target_state_name(State.GENETIC_MENU)
                     else:
@@ -285,43 +325,10 @@ class Options(BaseState):
                     self.trigger_transition()
 
                 if event.ui_element == self.button_next:
-                    if self.options_state == 4:
-                        if self.options_target == "genetic":
-                            self.set_target_state_name(State.GENETIC_TRAIN_NEW_NETWORK)
-                            self.data_to_send = {
-                                "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
-                                "vision_return_type": self.dropdown_vision_line_return_type.selected_option,
-                                "file_name": self.file_name_entry.text,
-                                "hidden_activation": self.dropdown_activation_function_hidden.selected_option,
-                                "output_activation": self.dropdown_activation_function_output.selected_option,
-                                "input_layer_neurons": int(self.neural_network_layers_entries[0][0].text),
-                                "hidden_layer_neurons": int(self.neural_network_layers_entries[1][0].text),
-                                "output_layer_neurons": int(self.neural_network_layers_entries[2][0].text),
-                                "population_count": int(self.population_count_entry.text),
-                                "selection_operator": self.selection_operators_dropdown.selected_option,
-                                "crossover_operator": self.crossover_operators_dropdown.selected_option,
-                                "mutation_operator": self.mutation_operators_dropdown.selected_option,
-                                "mutation_rate": float(self.mutation_rate_entry.text),
-                                "initial_snake_size": int(self.starting_snake_size_entry.text),
-                                "board_size": int(self.board_size_entry.text)
-                            }
-                        else:
-                            self.set_target_state_name(State.BACKPROPAGATION_TRAIN_NEW_NETWORK)
-                            self.data_to_send = {
-                                "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
-                                "vision_return_type": self.dropdown_vision_line_return_type.selected_option,
-                                "file_name": self.file_name_entry.text,
-                                "hidden_activation": self.dropdown_activation_function_hidden.selected_option,
-                                "output_activation": self.dropdown_activation_function_output.selected_option,
-                                "input_layer_neurons": int(self.neural_network_layers_entries[0][0].text),
-                                "hidden_layer_neurons": int(self.neural_network_layers_entries[1][0].text),
-                                "output_layer_neurons": int(self.neural_network_layers_entries[2][0].text),
-                                "initial_snake_size": int(self.starting_snake_size_entry.text),
-                                "board_size": int(self.board_size_entry.text)
-                            }
-
-                        self.trigger_transition()
-                    self.options_state += 1
+                    if self.options_state == 1 and self.options_target == "backpropagation":
+                        self.options_state = 3
+                    else:
+                        self.options_state += 1
 
         self.ui_manager.update(time_delta)
         self.ui_manager.draw_ui(surface)
