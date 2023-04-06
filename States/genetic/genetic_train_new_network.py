@@ -1,3 +1,4 @@
+import pygame
 import pygame_gui
 from matplotlib import pyplot as plt
 from pygame_gui import UIManager
@@ -5,7 +6,6 @@ from pygame_gui.elements import UILabel, UIButton
 
 import neural_network
 from States.base_state import BaseState
-from States.state_manager import StateManager
 from file_operations import save_neural_network_to_json, write_genetic_training
 from game_config import GameSettings
 from game_config import State
@@ -45,6 +45,17 @@ class GeneticTrainNewNetwork(BaseState):
         self.generation_label = None
         self.individual_label = None
 
+        self.button_draw_network = None
+        self.draw_network = False
+        self.rect_draw_network = None
+
+        self.button_draw_vision_lines = None
+        self.draw_vision_lines = True
+        self.rect_draw_vision_lines = None
+
+        self.button_draw_board = None
+        self.draw_board = True
+
     def start(self):
         self.initial_board_size = self.data_received["board_size"]
         self.initial_snake_size = self.data_received["initial_snake_size"]
@@ -54,11 +65,17 @@ class GeneticTrainNewNetwork(BaseState):
         self.mutation_rate = self.data_received["mutation_rate"]
         self.file_name = self.data_received["file_name"]
 
-        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Genetic Train New Network", self.ui_manager, object_id="#window_label")
+        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Genetic Train New Network", self.ui_manager)
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
-        self.generation_label = UILabel(pygame.Rect((45, 50), (150, 25)), "Population :", self.ui_manager)
-        self.individual_label = UILabel(pygame.Rect((50, 100), (200, 25)), "Individual :", self.ui_manager)
+        self.button_draw_network = UIButton(pygame.Rect((50, 175), (175, 30)), "Draw Network", self.ui_manager)
+        self.rect_draw_network = pygame.Rect((250, 175), (30, 30))
+
+        self.button_draw_vision_lines = UIButton(pygame.Rect((50, 250), (175, 30)), "Draw Vision Lines", self.ui_manager)
+        self.rect_draw_vision_lines = pygame.Rect((250, 250), (30, 30))
+
+        self.generation_label = UILabel(pygame.Rect((50, 50), (150, 25)), "Population: ", self.ui_manager)
+        self.individual_label = UILabel(pygame.Rect((50, 100), (200, 25)), "Individual: ", self.ui_manager)
 
         self.generation = 0
         self.parent_list: List[Snake] = []
@@ -90,10 +107,14 @@ class GeneticTrainNewNetwork(BaseState):
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.vision_return_type)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
-        # if ViewSettings.DRAW:
-        #     draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-        #     draw_vision_lines(surface, self.model, vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-        #     draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
+        if ViewSettings.DRAW:
+            draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+
+            if self.draw_vision_lines:
+                draw_vision_lines(surface, self.model, vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+
+            if self.draw_network:
+                draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move(next_direction)
@@ -189,12 +210,14 @@ class GeneticTrainNewNetwork(BaseState):
 
     def run(self, surface, time_delta):
         # FILL TAKES ALOT OF TIME
-        # if ViewSettings.DRAW:
-        #     surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+        if ViewSettings.DRAW:
+            surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+            pygame.draw.rect(surface, ViewSettings.COLOR_GREEN if self.draw_network else ViewSettings.COLOR_RED, self.rect_draw_network)
+            pygame.draw.rect(surface, ViewSettings.COLOR_GREEN if self.draw_vision_lines else ViewSettings.COLOR_RED, self.rect_draw_vision_lines)
+            self.generation_label.set_text("Generation : " + str(self.generation))
+            self.individual_label.set_text("Individual : " + str(len(self.parent_list)) + " / " + str(self.population_count))
 
         self.run_genetic(surface)
-        # self.generation_label.set_text("Generation : " + str(self.generation))
-        # self.individual_label.set_text("Individual : " + str(len(self.parent_list)) + " / " + str(self.population_count))
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -203,37 +226,43 @@ class GeneticTrainNewNetwork(BaseState):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    fig1 = plt.figure(figsize=(16, 9))
-                    plt.plot(self.x_generations, self.y_best_individual_score, "b", label="Best Individual Score")
-                    plt.plot(self.x_generations, self.y_average_score, "r", label="Generation Mean Score")
-                    plt.legend(loc="upper left")
-                    plt.xlabel("Generation")
-                    plt.ylabel("Score")
-                    plt.title("Score Comparison")
-                    plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "plot.pdf")
-                    plt.show()
-
-                    fig2 = plt.figure(figsize=(16, 9))
-                    plt.plot(self.x_generations, self.y_best_ratio, "b")
-                    plt.xlabel("Generations")
-                    plt.ylabel("Best Individual Ratio")
-                    plt.title("Ratio Progression")
-                    plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "best_ratio.pdf")
-                    plt.show()
+                    # fig1 = plt.figure(figsize=(16, 9))
+                    # plt.plot(self.x_generations, self.y_best_individual_score, "b", label="Best Individual Score")
+                    # plt.plot(self.x_generations, self.y_average_score, "r", label="Generation Mean Score")
+                    # plt.legend(loc="upper left")
+                    # plt.xlabel("Generation")
+                    # plt.ylabel("Score")
+                    # plt.title("Score Comparison")
+                    # plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "plot.pdf")
+                    # plt.show()
+                    #
+                    # fig2 = plt.figure(figsize=(16, 9))
+                    # plt.plot(self.x_generations, self.y_best_ratio, "b")
+                    # plt.xlabel("Generations")
+                    # plt.ylabel("Best Individual Ratio")
+                    # plt.title("Ratio Progression")
+                    # plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "best_ratio.pdf")
+                    # plt.show()
 
                     self.set_target_state_name(State.QUIT)
                     self.trigger_transition()
-        #
-        #     self.ui_manager.process_events(event)
-        #
-        #     if event.type == pygame_gui.UI_BUTTON_PRESSED:
-        #         if event.ui_element == self.button_back:
-        #             self.set_target_state_name(State.OPTIONS)
-        #             self.data_to_send = {
-        #                 "state": "genetic"
-        #             }
-        #             self.trigger_transition()
 
-        # if ViewSettings.DRAW:
-        #     self.ui_manager.update(time_delta)
-        #     self.ui_manager.draw_ui(surface)
+            self.ui_manager.process_events(event)
+
+            if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.button_back:
+                    self.set_target_state_name(State.OPTIONS)
+                    self.data_to_send = {
+                        "state": "genetic"
+                    }
+                    self.trigger_transition()
+
+                if event.ui_element == self.button_draw_network:
+                    self.draw_network = not self.draw_network
+
+                if event.ui_element == self.button_draw_vision_lines:
+                    self.draw_vision_lines = not self.draw_vision_lines
+
+        if ViewSettings.DRAW:
+            self.ui_manager.update(time_delta)
+            self.ui_manager.draw_ui(surface)
