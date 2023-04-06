@@ -21,6 +21,8 @@ class GeneticTrainNewNetwork(BaseState):
     def __init__(self, ui_manager: UIManager):
         super().__init__(State.GENETIC_TRAIN_NEW_NETWORK)
 
+        self.apple_return_type = None
+        self.segment_return_type = None
         self.selection_operator = None
         self.mutation_operator = None
         self.file_name = None
@@ -64,10 +66,12 @@ class GeneticTrainNewNetwork(BaseState):
         self.initial_board_size = self.data_received["board_size"]
         self.initial_snake_size = self.data_received["initial_snake_size"]
         self.input_direction_count = self.data_received["input_direction_count"]
-        self.vision_return_type = self.data_received["vision_return_type"]
+        self.segment_return_type = self.data_received["segment_return_type"]
+        self.apple_return_type = self.data_received["apple_return_type"]
         self.population_count = self.data_received["population_count"]
         self.mutation_rate = self.data_received["mutation_rate"]
         self.file_name = self.data_received["file_name"]
+        # TODO get all blocks that are not W, compare dist with all blocks (including walls) , get max | maybe dont include diagonal walls if only 4 directions
         self.max_distance = distance((1, 1), (1, 11))
 
         self.selection_operator = getattr(genetic_operators, self.data_received["selection_operator"])
@@ -114,6 +118,7 @@ class GeneticTrainNewNetwork(BaseState):
         self.individual_label.kill()
 
     def run_genetic(self, surface):
+        # TODO add segment and apple return
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.max_distance)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 

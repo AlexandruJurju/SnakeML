@@ -168,6 +168,9 @@ def read_all_from_json(path: str) -> Dict:
                 output_size = layer["output_size"]
                 weights = np.reshape(layer["weights"], (layer["output_size"], layer["input_size"]))
                 bias = np.reshape(layer["bias"], (layer["output_size"], 1))
+                print(layer["input_size"])
+                print(layer["output_size"])
+                print()
                 dense_layer = Dense(input_size, output_size)
                 dense_layer.weights = weights
                 dense_layer.bias = bias

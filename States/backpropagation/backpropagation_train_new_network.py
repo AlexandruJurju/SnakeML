@@ -6,7 +6,6 @@ from pygame_gui.elements import UILabel, UIButton
 
 import neural_network
 from States.base_state import BaseState
-from States.state_manager import StateManager
 from file_operations import TrainingExample, write_examples_to_json_4d, read_training_data_and_train, save_neural_network_to_json
 from game_config import GameSettings
 from game_config import State
@@ -20,6 +19,8 @@ class BackpropagationTrainNewNetwork(BaseState):
     def __init__(self, ui_manager: UIManager):
         super().__init__(State.BACKPROPAGATION_TRAIN_NEW_NETWORK)
 
+        self.apple_return_type = None
+        self.segment_return_type = None
         self.output_neuron_count = None
         self.hidden_neuron_count = None
         self.input_neuron_count = None
@@ -42,7 +43,8 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.initial_board_size = self.data_received["board_size"]
         self.initial_snake_size = self.data_received["initial_snake_size"]
         self.input_direction_count = self.data_received["input_direction_count"]
-        self.vision_return_type = self.data_received["vision_return_type"]
+        self.segment_return_type = self.data_received["segment_return_type"]
+        self.apple_return_type = self.data_received["apple_return_type"]
 
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Backpropagation Train New Network", self.ui_manager)
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)

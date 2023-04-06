@@ -46,10 +46,24 @@ class RunPretrained(BaseState):
         self.snake_size_entry = None
         self.snake_size_label = None
 
+        self.button_draw_network = None
+        self.draw_network = False
+        self.rect_draw_network = None
+
+        self.button_draw_vision_lines = None
+        self.draw_vision_lines = True
+        self.rect_draw_vision_lines = None
+
     def start(self):
         self.state_target = self.data_received["state"]
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
+
+        self.button_draw_network = UIButton(pygame.Rect((50, 400), (175, 30)), "Draw Network", self.ui_manager)
+        self.rect_draw_network = pygame.Rect((250, 400), (30, 30))
+
+        self.button_draw_vision_lines = UIButton(pygame.Rect((50, 500), (175, 30)), "Draw Vision Lines", self.ui_manager)
+        self.rect_draw_vision_lines = pygame.Rect((250, 500), (30, 30))
 
         if self.state_target == "genetic":
             self.title_label.set_text("Genetic Pretrained")
@@ -94,8 +108,10 @@ class RunPretrained(BaseState):
 
         # if self.execute_network is False:
         draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-        draw_vision_lines(surface, self.model, vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-        draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
+        if self.draw_vision_lines:
+            draw_vision_lines(surface, self.model, vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+        if self.draw_network:
+            draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move(next_direction)
@@ -109,6 +125,8 @@ class RunPretrained(BaseState):
         # TODO added self.execute_network for testing
         # if self.execute_network is False:
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+        pygame.draw.rect(surface, ViewSettings.COLOR_GREEN if self.draw_network else ViewSettings.COLOR_RED, self.rect_draw_network)
+        pygame.draw.rect(surface, ViewSettings.COLOR_GREEN if self.draw_vision_lines else ViewSettings.COLOR_RED, self.rect_draw_vision_lines)
 
         if self.execute_network:
             self.run_network(surface)
@@ -135,10 +153,14 @@ class RunPretrained(BaseState):
 
                 if event.ui_element == self.button_run:
                     self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.network)
-                    print(self.model.board)
                     self.max_dist = distance((1, 1), (11, 11))
-                    print(self.max_dist)
                     self.execute_network = True
+
+                if event.ui_element == self.button_draw_network:
+                    self.draw_network = not self.draw_network
+
+                if event.ui_element == self.button_draw_vision_lines:
+                    self.draw_vision_lines = not self.draw_vision_lines
 
                 if event.ui_element == self.button_load:
                     self.execute_network = False
