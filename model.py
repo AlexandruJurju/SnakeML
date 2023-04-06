@@ -24,30 +24,35 @@ class Snake(Individual):
         self.direction: Direction = None
 
     def calculate_fitness(self, max_score) -> None:
-        # METHOD 1
-        fitness_score = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
-
-        # METHOD 2
-        # if self.steps_taken == 0:
-        #     self.steps_taken = 1
-        # over = self.steps_taken - (self.steps_taken / (self.score + 1))
-        # under = self.steps_taken + (self.steps_taken / (self.score + 1))
-        # fitness_score = self.score + 0.5 + (0.5 * (over / under))
-        # fitness_score = fitness_score * 10000
-
-        # METHOD 3
-        # distance_traveled = self.steps_taken
-        # board_coverage = distance_traveled / max_score
-        # fitness_score = (self.score ** 2.2) * (board_coverage ** 2.2) * (distance_traveled ** 0.8) * (self.steps_taken ** 0.2)
-        # fitness_score = fitness_score * 100
-
-        # METHOD 4
-        # length_bonus = (len(self.body) - 3) * 10
-        # food_bonus = self.score * 100
-        # survival_bonus = (self.steps_taken / 10) ** 2
-        # fitness_score = length_bonus + food_bonus + survival_bonus
-
+        fitness_score = self.method1()
         self.fitness = fitness_score
+
+    def method1(self) -> float:
+        fitness_score = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
+        return fitness_score
+
+    def method2(self) -> float:
+        if self.steps_taken == 0:
+            self.steps_taken = 1
+        over = self.steps_taken - (self.steps_taken / (self.score + 1))
+        under = self.steps_taken + (self.steps_taken / (self.score + 1))
+        fitness_score = self.score + 0.5 + (0.5 * (over / under))
+        fitness_score = fitness_score * 10000
+        return fitness_score
+
+    def method3(self, max_score) -> float:
+        distance_traveled = self.steps_taken
+        board_coverage = distance_traveled / max_score
+        fitness_score = (self.score ** 2.2) * (board_coverage ** 2.2) * (distance_traveled ** 0.8) * (self.steps_taken ** 0.2)
+        fitness_score = fitness_score * 100
+        return fitness_score
+
+    def method4(self):
+        length_bonus = (len(self.body) - 3) * 10
+        food_bonus = self.score * 100
+        survival_bonus = (self.steps_taken / 10) ** 2
+        fitness_score = length_bonus + food_bonus + survival_bonus
+        return fitness_score
 
 
 class Model:

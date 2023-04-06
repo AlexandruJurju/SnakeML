@@ -28,12 +28,13 @@ class GeneticTrainNewNetwork(BaseState):
         self.initial_snake_size = None
         self.initial_board_size = None
         self.ui_manager = ui_manager
+
         self.model = None
         self.generation = None
         self.parent_list: List[Snake] = []
         self.offspring_list: List[NeuralNetwork] = []
 
-        self.x_generation_points = []
+        self.x_generations = []
         self.y_best_individual_fitness = []
         self.y_best_individual_score = []
         self.y_average_score = []
@@ -134,7 +135,7 @@ class GeneticTrainNewNetwork(BaseState):
         average_score = apple_count / len(self.parent_list)
         average_fitness = total_fitness / self.population_count
 
-        name = "Generation" + str(self.generation % 5)
+        name = "Generation" + str(self.generation)
         save_neural_network_to_json(
             self.generation,
             best_individual.fitness,
@@ -158,7 +159,7 @@ class GeneticTrainNewNetwork(BaseState):
         print(training_data)
         write_genetic_training(training_data, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name, True if self.generation == 0 else False)
 
-        self.x_generation_points.append(self.generation)
+        self.x_generations.append(self.generation)
         self.y_best_individual_fitness.append(best_individual.fitness)
         self.y_best_individual_score.append(best_individual.score)
         self.y_average_score.append(average_score)
@@ -204,8 +205,8 @@ class GeneticTrainNewNetwork(BaseState):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     fig = plt.figure(figsize=(16, 9))
-                    plt.plot(self.x_generation_points, self.y_best_individual_score, "b", label="Best Individual Score")
-                    plt.plot(self.x_generation_points, self.y_average_score, "r", label="Generation Mean Score")
+                    plt.plot(self.x_generations, self.y_best_individual_score, "b", label="Best Individual Score")
+                    plt.plot(self.x_generations, self.y_average_score, "r", label="Generation Mean Score")
                     plt.legend(loc="upper left")
                     plt.xlabel("Generation")
                     plt.ylabel("Score")
