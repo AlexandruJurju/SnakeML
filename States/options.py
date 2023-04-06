@@ -83,29 +83,27 @@ class Options(BaseState):
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
         # ================================================
-        self.starting_snake_size_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_CENTER - 75 // 2 - 250, 150), (75, 30)), self.ui_manager)
-        self.starting_snake_size_entry_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2 - 250, 100), (250, 35)), "Starting Snake Size", self.ui_manager)
+        self.starting_snake_size_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_CENTER - 75 // 2 - 150, 350), (75, 30)), self.ui_manager)
+        self.starting_snake_size_entry_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2 - 150, 300), (250, 35)), "Starting Snake Size", self.ui_manager)
         self.starting_snake_size_entry.set_text(str(GameSettings.INITIAL_SNAKE_SIZE))
 
-        self.board_size_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_CENTER - 75 // 2, 150), (75, 30)), self.ui_manager)
-        self.board_size_entry_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2, 100), (250, 35)), "Board Size", self.ui_manager)
+        self.board_size_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_CENTER - 75 // 2 + 150, 350), (75, 30)), self.ui_manager)
+        self.board_size_entry_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2 + 150, 300), (250, 35)), "Board Size", self.ui_manager)
         self.board_size_entry.set_text(str(GameSettings.INITIAL_BOARD_SIZE))
 
         # ================================================
         self.dropdown_input_direction_count = UIDropDownMenu(GameSettings.AVAILABLE_INPUT_DIRECTIONS, GameSettings.AVAILABLE_INPUT_DIRECTIONS[0], pygame.Rect((ViewSettings.X_CENTER - 75 // 2 - 250, 350), (75, 30)), self.ui_manager)
         self.dropdown_input_direction_count_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2 - 250, 300), (250, 35)), "Input Direction Count", self.ui_manager)
 
-        self.dropdown_vision_line_return_type = UIDropDownMenu(GameSettings.AVAILABLE_VISION_LINES_RETURN_TYPE, GameSettings.AVAILABLE_VISION_LINES_RETURN_TYPE[0],
-                                                               pygame.Rect((ViewSettings.X_CENTER - 125 // 2 + 250, 150), (125, 30)), self.ui_manager)
+        self.dropdown_vision_line_return_type = UIDropDownMenu(GameSettings.AVAILABLE_VISION_LINES_RETURN_TYPE, GameSettings.AVAILABLE_VISION_LINES_RETURN_TYPE[0], pygame.Rect((ViewSettings.X_CENTER - 125 // 2 + 250, 150), (125, 30)),
+                                                               self.ui_manager)
         self.dropdown_vision_line_return_type_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2 + 250, 100), (250, 35)), "Vision Line Return Type", self.ui_manager)
 
         self.dropdown_activation_function_output_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2, 100), (250, 35)), "Output Activation Function", self.ui_manager)
-        self.dropdown_activation_function_output = UIDropDownMenu(GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS, GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[0],
-                                                                  pygame.Rect((ViewSettings.X_CENTER - 125 // 2, 150), (125, 30)), self.ui_manager)
+        self.dropdown_activation_function_output = UIDropDownMenu(GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS, GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[0], pygame.Rect((ViewSettings.X_CENTER - 125 // 2, 150), (125, 30)), self.ui_manager)
 
         self.dropdown_activation_function_hidden_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2 - 250, 100), (250, 35)), "Hidden Activation Function", self.ui_manager)
-        self.dropdown_activation_function_hidden = UIDropDownMenu(GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS, GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[2],
-                                                                  pygame.Rect((ViewSettings.X_CENTER - 125 // 2 - 250, 150), (125, 30)), self.ui_manager)
+        self.dropdown_activation_function_hidden = UIDropDownMenu(GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS, GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[2], pygame.Rect((ViewSettings.X_CENTER - 125 // 2 - 250, 150), (125, 30)), self.ui_manager)
 
         self.hidden_layer_count_entry = UITextEntryLine(pygame.Rect((ViewSettings.X_CENTER - 75 // 2, 350), (75, 30)), self.ui_manager)
         self.hidden_layer_count_entry_label = UILabel(pygame.Rect((ViewSettings.X_CENTER - 250 // 2, 300), (250, 35)), "Hidden Layer Count", self.ui_manager)
@@ -206,7 +204,8 @@ class Options(BaseState):
                 self.title_label.set_text("Snake Game Options")
 
             case 1:
-                self.hide_all()
+                for option in self.snake_options_list:
+                    option.hide()
 
                 self.show_layer_entries()
                 for option in self.neural_network_options_list:
@@ -214,14 +213,17 @@ class Options(BaseState):
                 self.title_label.set_text("Neural Network Options")
 
             case 2:
-                self.hide_all()
+                self.hide_layer_entries()
+                for option in self.neural_network_options_list:
+                    option.hide()
 
                 for option in self.genetic_options_list:
                     option.show()
                 self.title_label.set_text("Genetic Algorithm Options")
 
             case 3:
-                self.hide_all()
+                for option in self.genetic_options_list:
+                    option.hide()
 
                 self.file_name_entry.show()
                 self.file_name_entry_label.show()
