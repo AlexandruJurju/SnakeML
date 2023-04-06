@@ -206,6 +206,10 @@ class Options(BaseState):
             case 1:
                 for option in self.snake_options_list:
                     option.hide()
+                for option in self.genetic_options_list:
+                    option.hide()
+                self.file_name_entry.hide()
+                self.file_name_entry_label.hide()
 
                 self.show_layer_entries()
                 for option in self.neural_network_options_list:
@@ -216,6 +220,8 @@ class Options(BaseState):
                 self.hide_layer_entries()
                 for option in self.neural_network_options_list:
                     option.hide()
+                self.file_name_entry.hide()
+                self.file_name_entry_label.hide()
 
                 for option in self.genetic_options_list:
                     option.show()
@@ -224,6 +230,9 @@ class Options(BaseState):
             case 3:
                 for option in self.genetic_options_list:
                     option.hide()
+                for option in self.neural_network_options_list:
+                    option.hide()
+                self.hide_layer_entries()
 
                 self.file_name_entry.show()
                 self.file_name_entry_label.show()
