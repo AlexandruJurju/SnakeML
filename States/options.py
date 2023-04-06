@@ -59,13 +59,13 @@ class Options(BaseState):
         self.dropdown_activation_function_output: UIDropDownMenu = None
         self.dropdown_activation_function_output_label: UILabel = None
 
-        self.crossover_operators = None
+        self.crossover_operators_dropdown: UIDropDownMenu = None
         self.crossover_operators_label = None
 
-        self.selection_operators = None
+        self.selection_operators_dropdown: UIDropDownMenu = None
         self.selection_operators_label = None
 
-        self.mutation_operators = None
+        self.mutation_operators_dropdown: UIDropDownMenu = None
         self.mutation_operators_label = None
 
         self.hidden_layer_count_entry: UITextEntryLine = None
@@ -149,21 +149,17 @@ class Options(BaseState):
 
         self.hide_layer_entries()
 
-        # TODO make genetic options do something
-        self.crossover_operators = UIDropDownMenu(GameSettings.AVAILABLE_CROSSOVER_OPERATORS, GameSettings.AVAILABLE_CROSSOVER_OPERATORS[0],
-                                                  pygame.Rect((ViewSettings.X_SECOND - 125 // 2, 350), (125, 30)), self.ui_manager)
+        self.crossover_operators_dropdown = UIDropDownMenu(GameSettings.AVAILABLE_CROSSOVER_OPERATORS, GameSettings.AVAILABLE_CROSSOVER_OPERATORS[0], pygame.Rect((ViewSettings.X_SECOND - 225 // 2, 350), (225, 30)), self.ui_manager)
         self.crossover_operators_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 250 // 2, 300), (250, 35)), "Crossover Operators", self.ui_manager)
 
-        self.selection_operators = UIDropDownMenu(GameSettings.AVAILABLE_SELECTION_OPERATORS, GameSettings.AVAILABLE_SELECTION_OPERATORS[0],
-                                                  pygame.Rect((ViewSettings.X_SECOND - 150 // 2 - 250, 350), (150, 30)), self.ui_manager)
+        self.selection_operators_dropdown = UIDropDownMenu(GameSettings.AVAILABLE_SELECTION_OPERATORS, GameSettings.AVAILABLE_SELECTION_OPERATORS[0], pygame.Rect((ViewSettings.X_SECOND - 225 // 2 - 250, 350), (225, 30)), self.ui_manager)
         self.selection_operators_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 250 // 2 - 250, 300), (250, 35)), "Selection Operators", self.ui_manager)
 
-        self.mutation_operators = UIDropDownMenu(GameSettings.AVAILABLE_MUTATION_OPERATORS, GameSettings.AVAILABLE_MUTATION_OPERATORS[0],
-                                                 pygame.Rect((ViewSettings.X_SECOND - 125 // 2 + 250, 350), (125, 30)), self.ui_manager)
+        self.mutation_operators_dropdown = UIDropDownMenu(GameSettings.AVAILABLE_MUTATION_OPERATORS, GameSettings.AVAILABLE_MUTATION_OPERATORS[0], pygame.Rect((ViewSettings.X_SECOND - 225 // 2 + 250, 350), (225, 30)), self.ui_manager)
         self.mutation_operators_label = UILabel(pygame.Rect((ViewSettings.X_SECOND - 250 // 2 + 250, 300), (250, 35)), "Mutation Operators", self.ui_manager)
 
-        self.genetic_options_list = [self.mutation_rate_entry, self.mutation_rate_entry_label, self.population_count_entry, self.population_count_entry_label, self.crossover_operators, self.crossover_operators_label,
-                                     self.selection_operators, self.selection_operators_label, self.mutation_operators, self.mutation_operators_label]
+        self.genetic_options_list = [self.mutation_rate_entry, self.mutation_rate_entry_label, self.population_count_entry, self.population_count_entry_label, self.crossover_operators_dropdown, self.crossover_operators_label,
+                                     self.selection_operators_dropdown, self.selection_operators_label, self.mutation_operators_dropdown, self.mutation_operators_label]
 
         self.snake_options_list = [self.starting_snake_size_entry, self.starting_snake_size_entry_label, self.board_size_entry, self.board_size_entry_label]
 
@@ -206,10 +202,10 @@ class Options(BaseState):
         self.hidden_layer_count_entry.kill()
         self.hidden_layer_count_entry_label.kill()
 
-        self.crossover_operators.kill()
+        self.crossover_operators_dropdown.kill()
         self.crossover_operators_label.kill()
 
-        self.selection_operators.kill()
+        self.selection_operators_dropdown.kill()
         self.selection_operators_label.kill()
 
         self.button_snake_options.kill()
@@ -311,23 +307,38 @@ class Options(BaseState):
                     if self.options_done is True:
                         if self.options_target == "genetic":
                             self.set_target_state_name(State.GENETIC_TRAIN_NEW_NETWORK)
+                            self.data_to_send = {
+                                "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
+                                "vision_return_type": self.dropdown_vision_line_return_type.selected_option,
+                                "file_name": self.file_name_entry.text,
+                                "hidden_activation": self.dropdown_activation_function_hidden.selected_option,
+                                "output_activation": self.dropdown_activation_function_output.selected_option,
+                                "input_layer_neurons": int(self.neural_network_layers_entries[0][0].text),
+                                "hidden_layer_neurons": int(self.neural_network_layers_entries[1][0].text),
+                                "output_layer_neurons": int(self.neural_network_layers_entries[2][0].text),
+                                "population_count": int(self.population_count_entry.text),
+                                "selection_operator": self.selection_operators_dropdown.selected_option,
+                                "crossover_operator": self.crossover_operators_dropdown.selected_option,
+                                "mutation_operator": self.mutation_operators_dropdown.selected_option,
+                                "mutation_rate": float(self.mutation_rate_entry.text),
+                                "initial_snake_size": int(self.starting_snake_size_entry.text),
+                                "board_size": int(self.board_size_entry.text)
+                            }
                         else:
                             self.set_target_state_name(State.BACKPROPAGATION_TRAIN_NEW_NETWORK)
+                            self.data_to_send = {
+                                "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
+                                "vision_return_type": self.dropdown_vision_line_return_type.selected_option,
+                                "file_name": self.file_name_entry.text,
+                                "hidden_activation": self.dropdown_activation_function_hidden.selected_option,
+                                "output_activation": self.dropdown_activation_function_output.selected_option,
+                                "input_layer_neurons": int(self.neural_network_layers_entries[0][0].text),
+                                "hidden_layer_neurons": int(self.neural_network_layers_entries[1][0].text),
+                                "output_layer_neurons": int(self.neural_network_layers_entries[2][0].text),
+                                "initial_snake_size": int(self.starting_snake_size_entry.text),
+                                "board_size": int(self.board_size_entry.text)
+                            }
 
-                        self.data_to_send = {
-                            "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
-                            "vision_return_type": self.dropdown_vision_line_return_type.selected_option,
-                            "file_name": self.file_name_entry.text,
-                            "hidden_activation": self.dropdown_activation_function_hidden.selected_option,
-                            "output_activation": self.dropdown_activation_function_output.selected_option,
-                            "input_layer_neurons": int(self.neural_network_layers_entries[0][0].text),
-                            "hidden_layer_neurons": int(self.neural_network_layers_entries[1][0].text),
-                            "output_layer_neurons": int(self.neural_network_layers_entries[2][0].text),
-                            "population_count": int(self.population_count_entry.text),
-                            "mutation_rate": float(self.mutation_rate_entry.text),
-                            "initial_snake_size": int(self.starting_snake_size_entry.text),
-                            "board_size": int(self.board_size_entry.text)
-                        }
                         self.trigger_transition()
                     else:
                         for option in self.snake_options_list:

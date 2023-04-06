@@ -4,6 +4,7 @@ from matplotlib import pyplot as plt
 from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
 
+import genetic_operators
 import neural_network
 from States.base_state import BaseState
 from file_operations import save_neural_network_to_json, write_genetic_training
@@ -20,6 +21,8 @@ class GeneticTrainNewNetwork(BaseState):
     def __init__(self, ui_manager: UIManager):
         super().__init__(State.GENETIC_TRAIN_NEW_NETWORK)
 
+        self.selection_operator = None
+        self.mutation_operator = None
         self.file_name = None
         self.mutation_rate = None
         self.population_count = None
@@ -64,6 +67,9 @@ class GeneticTrainNewNetwork(BaseState):
         self.population_count = self.data_received["population_count"]
         self.mutation_rate = self.data_received["mutation_rate"]
         self.file_name = self.data_received["file_name"]
+
+        self.selection_operator = getattr(genetic_operators, self.data_received["selection_operator"])
+        self.mutation_operator = getattr(genetic_operators, self.data_received["mutation_operator"])
 
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Genetic Train New Network", self.ui_manager)
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
@@ -196,8 +202,8 @@ class GeneticTrainNewNetwork(BaseState):
             parent1, parent2 = roulette_selection(self.parent_list, 2)
             child1, child2 = full_crossover(parent1.brain, parent1.brain)
 
-            full_mutation(child1, self.mutation_rate)
-            full_mutation(child2, self.mutation_rate)
+            full_mutation(child1, self.mutation_rate, self.mutation_operator)
+            full_mutation(child2, self.mutation_rate, self.mutation_operator)
 
             self.offspring_list.append(child1)
             self.offspring_list.append(child2)
