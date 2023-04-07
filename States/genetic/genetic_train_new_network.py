@@ -22,6 +22,7 @@ class GeneticTrainNewNetwork(BaseState):
     def __init__(self, ui_manager: UIManager):
         super().__init__(State.GENETIC_TRAIN_NEW_NETWORK)
 
+        self.crossover_operator = None
         self.distance_function = None
         self.apple_return_type = None
         self.segment_return_type = None
@@ -72,11 +73,11 @@ class GeneticTrainNewNetwork(BaseState):
         self.apple_return_type = self.data_received["apple_return_type"]
         self.distance_function = getattr(vision, self.data_received["distance_function"])
         self.population_count = self.data_received["population_count"]
+        self.selection_operator = getattr(genetic_operators, self.data_received["selection_operator"])
+        self.crossover_operator = getattr(genetic_operators, self.data_received["crossover_operator"])
+        self.mutation_operator = getattr(genetic_operators, self.data_received["mutation_operator"])
         self.mutation_rate = self.data_received["mutation_rate"]
         self.file_name = self.data_received["file_name"]
-
-        self.selection_operator = getattr(genetic_operators, self.data_received["selection_operator"])
-        self.mutation_operator = getattr(genetic_operators, self.data_received["mutation_operator"])
 
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Genetic Train New Network", self.ui_manager)
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
@@ -150,14 +151,15 @@ class GeneticTrainNewNetwork(BaseState):
                 self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.offspring_list[len(self.parent_list) - 1])
 
             if len(self.parent_list) == self.population_count:
-                self.offspring_list.clear()
                 self.next_generation()
 
     def next_generation(self):
-        self.offspring_list.clear()
+        self.offspring_list = []
 
         total_fitness = sum(individual.fitness for individual in self.parent_list)
         best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
+        # TODO change order
+        # best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken))
 
         counts = {'won': 0, 'apple_count': 0, 'too_old': 0, 'steps_taken': 0}
         for individual in self.parent_list:
@@ -199,7 +201,7 @@ class GeneticTrainNewNetwork(BaseState):
                          f"AVG RATIO: {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list)):<25}\t"
                          f"BEST FITNESS: {best_individual.fitness:<25}\t"
                          f"BEST SCORE: {best_individual.score:<5}\t"
-                         f"BEST RATIO: {best_individual.score / best_individual.steps_taken:<25}"
+                         f"BEST RATIO: {best_individual.score / best_individual.steps_taken if best_individual.steps_taken > 0 else 0:<25}"
                          f"TOO_OLD: {too_old:<8}\t"
                          f"WON: {won_count:<5}\t"
                          )
@@ -212,16 +214,16 @@ class GeneticTrainNewNetwork(BaseState):
         self.y_average_score.append(average_score)
         self.y_best_ratio.append(best_individual.score / best_individual.steps_taken)
 
-        parents_for_mating = elitist_selection(self.parent_list, 100)
-        for parent in parents_for_mating[:100]:
+        parents_for_mating = elitist_selection(self.parent_list, int(self.population_count / 10))
+        for parent in parents_for_mating[:int(self.population_count / 10)]:
             self.offspring_list.append(parent.brain)
 
         # np.random.shuffle(parents_for_mating)
-        np.random.shuffle(self.parent_list)
+        # np.random.shuffle(self.parent_list)
 
         while len(self.offspring_list) < self.population_count:
-            parent1, parent2 = roulette_selection(self.parent_list, 2)
-            child1, child2 = full_crossover(parent1.brain, parent1.brain)
+            parent1, parent2 = self.selection_operator(self.parent_list, 2)
+            child1, child2 = full_crossover(parent1.brain, parent1.brain, self.crossover_operator)
 
             full_mutation(child1, self.mutation_rate, self.mutation_operator)
             full_mutation(child2, self.mutation_rate, self.mutation_operator)
@@ -229,11 +231,11 @@ class GeneticTrainNewNetwork(BaseState):
             self.offspring_list.append(child1)
             self.offspring_list.append(child2)
 
-        self.model.snake.brain.reinit_weights_and_biases()
+        # self.model.snake.brain.reinit_weights_and_biases()
         self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.offspring_list[0])
 
         self.generation += 1
-        self.parent_list.clear()
+        self.parent_list = []
 
     def run(self, surface, time_delta):
         # FILL TAKES ALOT OF TIME
@@ -253,27 +255,28 @@ class GeneticTrainNewNetwork(BaseState):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    # fig1 = plt.figure(figsize=(16, 9))
-                    # plt.plot(self.x_generations, self.y_best_individual_score, "b", label="Best Individual Score")
-                    # plt.plot(self.x_generations, self.y_average_score, "r", label="Generation Mean Score")
-                    # plt.legend(loc="upper left")
-                    # plt.xlabel("Generation")
-                    # plt.ylabel("Score")
-                    # plt.title("Score Comparison")
-                    # plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "plot.pdf")
-                    # plt.show()
-                    #
-                    # fig2 = plt.figure(figsize=(16, 9))
-                    # plt.plot(self.x_generations, self.y_best_ratio, "b")
-                    # plt.xlabel("Generations")
-                    # plt.ylabel("Best Individual Ratio")
-                    # plt.title("Ratio Progression")
-                    # plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "best_ratio.pdf")
-                    # plt.show()
+                    fig1 = plt.figure(figsize=(16, 9))
+                    plt.plot(self.x_generations, self.y_best_individual_score, "b", label="Best Individual Score")
+                    plt.plot(self.x_generations, self.y_average_score, "r", label="Generation Mean Score")
+                    plt.legend(loc="upper left")
+                    plt.xlabel("Generation")
+                    plt.ylabel("Score")
+                    plt.title("Score Comparison")
+                    plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "plot.pdf")
+                    plt.show()
 
-                    # self.set_target_state_name(State.QUIT)
-                    # self.trigger_transition()
+                    fig2 = plt.figure(figsize=(16, 9))
+                    plt.plot(self.x_generations, self.y_best_ratio, "b")
+                    plt.xlabel("Generations")
+                    plt.ylabel("Best Individual Ratio")
+                    plt.title("Ratio Progression")
+                    plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "best_ratio.pdf")
+                    plt.show()
 
+                    self.set_target_state_name(State.QUIT)
+                    self.trigger_transition()
+
+                if event.key == pygame.K_RETURN:
                     ViewSettings.DRAW = True
 
             self.ui_manager.process_events(event)
@@ -296,7 +299,7 @@ class GeneticTrainNewNetwork(BaseState):
                     surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
                     font = pygame.font.SysFont("Arial", 20)
-                    text_line = "PRESS ESC TO TURN ON DRAWING"
+                    text_line = "PRESS ENTER TO TURN ON DRAWING"
                     text_surface = font.render(text_line, True, (255, 255, 255))
                     text_rect = text_surface.get_rect()
                     text_rect.center = (ViewSettings.X_CENTER, ViewSettings.Y_CENTER)

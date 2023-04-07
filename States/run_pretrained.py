@@ -162,7 +162,7 @@ class RunPretrained(BaseState):
                     # TODO dynamic max distance
                     self.max_dist = 10
                     self.execute_network = True
-                    ViewSettings.DRAW = False
+                    # ViewSettings.DRAW = False
 
                 if event.ui_element == self.button_draw_network:
                     self.draw_network = not self.draw_network

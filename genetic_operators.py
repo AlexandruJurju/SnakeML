@@ -254,7 +254,7 @@ def full_mutation(individual: NeuralNetwork, mutation_rate: float, operator) -> 
         layer.bias = operator(layer.bias, mutation_rate)
 
 
-def full_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple[NeuralNetwork, NeuralNetwork]:
+def full_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork, operator) -> Tuple[NeuralNetwork, NeuralNetwork]:
     child1 = copy.deepcopy(parent1)
     child2 = copy.deepcopy(parent2)
 
@@ -265,7 +265,7 @@ def full_crossover(parent1: NeuralNetwork, parent2: NeuralNetwork) -> Tuple[Neur
     parent2_dense_layers = parent2.get_dense_layers()
 
     for i in range(len(parent1_dense_layers)):
-        child1_dense_layers[i].weights, child2_dense_layers[i].weights = one_point_crossover(parent1_dense_layers[i].weights, parent2_dense_layers[i].weights)
-        child1_dense_layers[i].bias, child2_dense_layers[i].bias = one_point_crossover(parent1_dense_layers[i].bias, parent2_dense_layers[i].bias)
+        child1_dense_layers[i].weights, child2_dense_layers[i].weights = operator(parent1_dense_layers[i].weights, parent2_dense_layers[i].weights)
+        child1_dense_layers[i].bias, child2_dense_layers[i].bias = operator(parent1_dense_layers[i].bias, parent2_dense_layers[i].bias)
 
     return child1, child2

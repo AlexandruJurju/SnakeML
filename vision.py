@@ -92,8 +92,6 @@ class VisionLine:
 #
 
 def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direction, max_dist, apple_return_type, segment_return_type, distance_function) -> VisionLine:
-    apple_distance = np.inf
-    segment_distance = np.inf
     apple_coord = None
     segment_coord = None
     apple_found = False
@@ -106,13 +104,9 @@ def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direc
     while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
         if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_found is False:
             apple_coord = current_block
-            if apple_return_type == "distance":
-                apple_distance = distance_function(snake_head, current_block)
             apple_found = True
         elif board[current_block[0]][current_block[1]] == BoardConsts.SNAKE_BODY and segment_found is False:
             segment_coord = current_block
-            if segment_return_type == "distance":
-                segment_distance = distance_function(snake_head, current_block)
             segment_found = True
         current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
 
@@ -124,26 +118,14 @@ def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direc
     if apple_return_type == "boolean":
         apple_output = 1.0 if apple_found else 0
     else:
+        apple_distance = distance_function(snake_head, apple_coord)
         apple_output = 1 / apple_distance if apple_found else 0
 
     if segment_return_type == "boolean":
-        segment_output = 1.0 if apple_found else 0
+        segment_output = 1.0 if segment_found else 0
     else:
+        segment_distance = distance_function(snake_head, segment_coord)
         segment_output = 1 / segment_distance if segment_found else 0
-
-    if wall_output > 1.0:
-        print(direction)
-        print(wall_coord)
-        print(wall_distance)
-        print(board)
-        print()
-
-    if segment_output > 1.0:
-        print(direction)
-        print(segment_coord)
-        print(segment_distance)
-        print(board)
-        print()
 
     vision_line = VisionLine(wall_coord, wall_output, apple_coord, apple_output, segment_coord, segment_output, direction)
     return vision_line
