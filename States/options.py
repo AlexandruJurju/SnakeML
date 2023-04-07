@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 import pygame
 import pygame_gui
@@ -72,7 +72,7 @@ class Options(BaseState):
 
         self.hidden_layer_dropdown: UIDropDownMenu = None
         self.hidden_layer_dropdown_label: UILabel = None
-        self.neural_network_layers_entries: List[Tuple[UITextEntryLine, UILabel]] = []
+        self.neural_network_layers_entries: Dict[Tuple[UITextEntryLine, UILabel]] = {}
 
     def start(self):
         self.options_target = self.data_received["state"]
@@ -135,15 +135,14 @@ class Options(BaseState):
         output_layer = UILabel(pygame.Rect((x_positions["right-right"] - 75 // 2, y_positions[2]), (75, 30)), str(output_neuron_count), self.ui_manager)
         output_layer_label = UILabel(pygame.Rect((x_positions_label["right-right"], y_positions_label[2]), (250, 30)), "Output Layer", self.ui_manager)
 
-        # TODO add options for more hidden layers
         first_hidden_layer_neuron_count = input_neuron_count + 8
         first_hidden_layer = UITextEntryLine(pygame.Rect((x_positions["center"] - 75 // 2, y_positions[2]), (75, 30)), self.ui_manager)
         first_hidden_layer_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[2]), (250, 30)), "Hidden Layer", self.ui_manager)
         first_hidden_layer.set_text(str(first_hidden_layer_neuron_count))
 
-        self.neural_network_layers_entries.append([input_layer, input_layer_label])
-        self.neural_network_layers_entries.append([first_hidden_layer, first_hidden_layer_label])
-        self.neural_network_layers_entries.append([output_layer, output_layer_label])
+        self.neural_network_layers_entries["input"] = ([input_layer, input_layer_label])
+        self.neural_network_layers_entries["first"] = ([first_hidden_layer, first_hidden_layer_label])
+        self.neural_network_layers_entries["output"] = ([output_layer, output_layer_label])
 
         # ================================================
         self.population_count_entry = UITextEntryLine(pygame.Rect((x_positions["center"] - 75 // 2, y_positions[0]), (75, 30)), self.ui_manager)
@@ -191,14 +190,14 @@ class Options(BaseState):
         self.button_next = UIButton(pygame.Rect((ViewSettings.X_CENTER - 75 // 2, ViewSettings.HEIGHT - 75), (75, 40)), "Next", self.ui_manager)
 
     def hide_layer_entries(self):
-        for ui_element in self.neural_network_layers_entries:
-            ui_element[0].hide()
-            ui_element[1].hide()
+        for key in self.neural_network_layers_entries:
+            self.neural_network_layers_entries[key][0].hide()
+            self.neural_network_layers_entries[key][1].hide()
 
     def show_layer_entries(self):
-        for ui_element in self.neural_network_layers_entries:
-            ui_element[0].show()
-            ui_element[1].show()
+        for key in self.neural_network_layers_entries:
+            self.neural_network_layers_entries[key][0].show()
+            self.neural_network_layers_entries[key][1].show()
 
     def end(self):
         self.ui_manager.clear_and_reset()
@@ -316,7 +315,7 @@ class Options(BaseState):
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
-        self.neural_network_layers_entries[0][0].set_text(str(int(self.dropdown_input_direction_count.selected_option) * 3 + 4))
+        self.neural_network_layers_entries["input"][0].set_text(str(int(self.dropdown_input_direction_count.selected_option) * 3 + 4))
         self.draw_options()
 
         for event in pygame.event.get():
