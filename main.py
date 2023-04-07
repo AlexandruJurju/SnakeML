@@ -1,7 +1,9 @@
 import os
+from typing import List
 
 import pygame
 from pygame_gui import UIManager
+from scipy.spatial.distance import chebyshev
 
 from States.backpropagation.backpropagation_menu import BackpropagationMenu
 from States.backpropagation.backpropagation_train_new_network import BackpropagationTrainNewNetwork
@@ -12,10 +14,9 @@ from States.options import Options
 from States.run_pretrained import RunPretrained
 from States.state_manager import StateManager
 from game_config import ViewSettings, State
-from genetic_operators import two_point_crossover, gaussian_mutation
 from model import Model
 from neural_network import NeuralNetwork, Dense, Activation, sigmoid, relu
-from vision import distance
+from vision import get_vision_lines_snake_head, VisionLine
 
 
 def main():
@@ -65,22 +66,30 @@ def main():
     pygame.quit()
 
 
-if __name__ == '__main__':
-    main()
+def print_vision_line(vision_line: VisionLine):
+    print(f" {vision_line.direction} w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_d {vision_line.segment_distance} ")
 
-    # net = NeuralNetwork()
-    # net.add_layer(Dense(16, 24))
-    # net.add_layer(Activation(relu, relu))
-    # net.add_layer(Dense(24, 4))
-    # net.add_layer(Activation(sigmoid, sigmoid))
-    #
-    # model = Model(10, 3, True, net)
-    #
-    # model.board[1][1] = "R"
-    # model.board[-2][-2] = "R"
-    # max = distance((0, 0), (len(model.board[0]) - 1, len(model.board[0]) - 1))
-    # print(max)
-    # print(f"{distance((10, 10), (1, 1)) / max}")
+
+def print_all_vision_lines(vision_lines: List[VisionLine]):
+    for line in vision_lines:
+        print_vision_line(line)
+
+
+if __name__ == '__main__':
+    net = NeuralNetwork()
+    net.add_layer(Dense(16, 24))
+    net.add_layer(Activation(relu, relu))
+    net.add_layer(Dense(24, 4))
+    net.add_layer(Activation(sigmoid, sigmoid))
+
+    model = Model(10, 3, False, net)
+    vision_lines = get_vision_lines_snake_head(model.board, model.snake.body[0], 4,
+                                               max_dist=-1, apple_return_type="boolean", segment_return_type="boolean", distance_function=chebyshev)
+
+    print(model.board)
+    print_all_vision_lines(vision_lines)
+
+    main()
 
     # net = NeuralNetwork()
     # net.add_layer(Dense(5, 10))
