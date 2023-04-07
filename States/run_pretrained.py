@@ -110,6 +110,12 @@ class RunPretrained(BaseState):
                                                    max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
+        vision_lines2 = vision.get_vision_lines_test(self.model.board, self.model.snake.body[0], self.input_direction_count,
+                                                     max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
+
+        if vision_lines != vision_lines2:
+            print("FK")
+
         if ViewSettings.DRAW:
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             if self.draw_vision_lines:
@@ -122,11 +128,8 @@ class RunPretrained(BaseState):
 
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
-        print(f"{self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0}")
-
         if not is_alive:
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
-            print("")
 
     def run(self, surface, time_delta):
         if ViewSettings.DRAW:
