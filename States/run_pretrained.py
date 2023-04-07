@@ -20,6 +20,7 @@ class RunPretrained(BaseState):
     def __init__(self, ui_manager: UIManager):
         super().__init__(State.RUN_PRETRAINED)
 
+        self.max_distance = None
         self.network = None
         self.ui_manager = ui_manager
         self.state_target = None

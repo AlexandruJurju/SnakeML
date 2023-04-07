@@ -3,10 +3,10 @@ import copy
 import pygame_gui
 from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
+from scipy.spatial.distance import chebyshev
 
-import neural_network
-import vision
 from States.base_state import BaseState
+from States.state_manager import StateManager
 from file_operations import TrainingExample, write_examples_to_json_4d, read_training_data_and_train, save_neural_network_to_json
 from game_config import GameSettings
 from game_config import State
@@ -16,20 +16,12 @@ from vision import VisionLine, get_vision_lines_snake_head
 
 
 # TODO get a good backpropagation network
+# TODO PROBLEM WHEN TRAINING MANUALLY, SNAKE DOESNT SEE THE WHOLE BOARD, JUST THE VISION LINES
+
 class BackpropagationTrainNewNetwork(BaseState):
     def __init__(self, ui_manager: UIManager):
         super().__init__(State.BACKPROPAGATION_TRAIN_NEW_NETWORK)
 
-        self.distance_function = None
-        self.apple_return_type = None
-        self.segment_return_type = None
-        self.output_neuron_count = None
-        self.hidden_neuron_count = None
-        self.input_neuron_count = None
-        self.vision_return_type = None
-        self.input_direction_count = None
-        self.initial_snake_size = None
-        self.initial_board_size = None
         self.ui_manager = ui_manager
         self.model = None
 
@@ -42,31 +34,21 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.button_back = None
 
     def start(self):
-        self.initial_board_size = self.data_received["board_size"]
-        self.initial_snake_size = self.data_received["initial_snake_size"]
-        self.input_direction_count = self.data_received["input_direction_count"]
-        self.segment_return_type = self.data_received["segment_return_type"]
-        self.apple_return_type = self.data_received["apple_return_type"]
-        self.distance_function = getattr(vision, self.data_received["distance_function"])
-
-        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Backpropagation Train New Network", self.ui_manager)
+        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Backpropagation Train New Network", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
-        self.input_neuron_count = self.data_received["input_layer_neurons"]
-        self.hidden_neuron_count = self.data_received["hidden_layer_neurons"]
-        self.output_neuron_count = self.data_received["output_layer_neurons"]
+        input_direction_count = self.data_received["input_direction_count"]
+        input_neuron_count = input_direction_count * 3 + 4
+        hidden_neuron_count = 24
+        output_neuron_count = 4 if input_direction_count == 4 or input_direction_count == 8 else 3
 
-        hidden_activation = getattr(neural_network, self.data_received["hidden_activation"])
-        output_activation = getattr(neural_network, self.data_received["output_activation"])
-
-        # activation prime doesn't matter in feedforward, use base activation functions to avoid error
         net = NeuralNetwork()
-        net.add_layer(Dense(self.input_neuron_count, self.hidden_neuron_count))
-        net.add_layer(Activation(hidden_activation, hidden_activation))
-        net.add_layer(Dense(self.hidden_neuron_count, self.output_neuron_count))
-        net.add_layer(Activation(output_activation, output_activation))
+        net.add_layer(Dense(input_neuron_count, hidden_neuron_count))
+        net.add_layer(Activation(tanh, tanh_prime))
+        net.add_layer(Dense(hidden_neuron_count, output_neuron_count))
+        net.add_layer(Activation(sigmoid, sigmoid_prime))
 
-        self.model = Model(self.initial_board_size, self.initial_snake_size, False, net)
+        self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], False, net)
 
     def end(self):
         self.title_label.kill()
@@ -86,8 +68,8 @@ class BackpropagationTrainNewNetwork(BaseState):
         return False
 
     def execute(self, surface):
-        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
-                                                   max_dist=-1, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
+        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], 4,
+                                                   0, "boolean", "boolean", chebyshev)
         nn_output = self.model.get_nn_output(vision_lines)
 
         example_output = np.where(nn_output == np.max(nn_output), 1, 0)
@@ -144,11 +126,22 @@ class BackpropagationTrainNewNetwork(BaseState):
 
         draw_board(surface, current_example.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
         draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-        write_controls(surface, 300, 300)
-
         self.ui_manager.update(time_delta)
+
         self.ui_manager.draw_ui(surface)
+
         pygame.display.flip()
+
+        # print(f"Model \n {np.matrix(current_example.board)} \n")
+        # print(f"Current Direction : {current_example.current_direction} \n")
+        # print(f"Prediction UP : {current_example.predictions[0]}")
+        # print(f"Prediction DOWN : {current_example.predictions[1]}")
+        # print(f"Prediction LEFT : {current_example.predictions[2]}")
+        # print(f"Prediction RIGHT : {current_example.predictions[3]}")
+        # print()
+
+        # print("Enter target outputs for neural network in form")
+        # print("UP=W DOWN=S LEFT=A RIGHT=D")
 
         input_string = self.wait_for_key()
         skip = False
@@ -169,19 +162,25 @@ class BackpropagationTrainNewNetwork(BaseState):
                 if input_string == "D":
                     target_output[3] = 1.0
 
+            # print(target_output)
+            # print()
             self.evaluated.append(TrainingExample(current_example.board, current_example.current_direction, current_example.vision_lines, target_output))
 
         if len(self.training_examples) == 0 or skip:
             self.training_examples.clear()
-            file_path = "Backpropagation_Training/" + str(self.input_direction_count) + "_in_directions_" + str(self.output_neuron_count) + "_out_directions.json"
+
+            output_neuron_count = 4 if self.data_received["input_direction_count"] == 4 or self.data_received["input_direction_count"] == 8 else 3
+            file_path = "Backpropagation_Training/" + str(self.data_received["input_direction_count"]) + "_in_directions_" + str(output_neuron_count) + "_out_directions.json"
 
             write_examples_to_json_4d(self.evaluated, file_path)
 
             # self.evaluated.clear()
 
             self.model.snake.brain.reinit_weights_and_biases()
-            self.model = Model(self.initial_board_size, self.initial_snake_size, False, self.model.snake.brain)
+            self.model = Model(self.data_received["board_size"], self.data_received["initial_snake_size"], False, self.model.snake.brain)
+
             read_training_data_and_train(self.model.snake.brain, file_path)
+
             self.training = False
 
     def run(self, surface, time_delta):
@@ -194,11 +193,11 @@ class BackpropagationTrainNewNetwork(BaseState):
 
             data_to_save = {
                 "generation": -1,
-                "initial_board_size": self.initial_board_size,
-                "initial_snake_size": self.initial_snake_size,
-                "input_direction_count": self.input_direction_count,
-                "apple_return_type": self.apple_return_type,
-                "segment_return_type": self.segment_return_type,
+                "initial_board_size": self.data_received["board_size"],
+                "initial_snake_size": self.data_received["initial_snake_size"],
+                "input_direction_count": self.data_received["input_direction_count"],
+                "apple_return_type": "boolean",
+                "segment_return_type": "boolean",
                 "distance_function": self.data_received["distance_function"]
             }
 
