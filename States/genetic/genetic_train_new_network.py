@@ -113,6 +113,7 @@ class GeneticTrainNewNetwork(BaseState):
         self.model = Model(self.initial_board_size, self.initial_snake_size, True, net)
 
         # TODO get all blocks that are not W, compare dist with all blocks (including walls) , get max | maybe dont include diagonal walls if only 4 directions
+        # TODO dynamic max distance
         self.max_distance = distance((1, 1), (1, 11))
 
     def end(self):
@@ -122,8 +123,8 @@ class GeneticTrainNewNetwork(BaseState):
         self.individual_label.kill()
 
     def run_genetic(self, surface):
-        # TODO add segment and apple return
-        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.max_distance, self.apple_return_type, self.segment_return_type, self.distance_function)
+        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
+                                                   max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
         if ViewSettings.DRAW:

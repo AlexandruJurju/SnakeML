@@ -5,6 +5,7 @@ from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
 
 import neural_network
+import vision
 from States.base_state import BaseState
 from file_operations import TrainingExample, write_examples_to_json_4d, read_training_data_and_train, save_neural_network_to_json
 from game_config import GameSettings
@@ -19,6 +20,7 @@ class BackpropagationTrainNewNetwork(BaseState):
     def __init__(self, ui_manager: UIManager):
         super().__init__(State.BACKPROPAGATION_TRAIN_NEW_NETWORK)
 
+        self.distance_function = None
         self.apple_return_type = None
         self.segment_return_type = None
         self.output_neuron_count = None
@@ -45,6 +47,7 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.input_direction_count = self.data_received["input_direction_count"]
         self.segment_return_type = self.data_received["segment_return_type"]
         self.apple_return_type = self.data_received["apple_return_type"]
+        self.distance_function = getattr(vision, self.data_received["distance_function"])
 
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Backpropagation Train New Network", self.ui_manager)
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
@@ -83,7 +86,8 @@ class BackpropagationTrainNewNetwork(BaseState):
         return False
 
     def execute(self, surface):
-        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.vision_return_type)
+        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
+                                                   max_dist=-1, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
         nn_output = self.model.get_nn_output(vision_lines)
 
         example_output = np.where(nn_output == np.max(nn_output), 1, 0)
@@ -187,13 +191,22 @@ class BackpropagationTrainNewNetwork(BaseState):
             self.execute(surface)
         else:
             self.train_backpropagation(surface, time_delta)
-            save_neural_network_to_json(-1, -1,
-                                        self.initial_board_size,
-                                        self.initial_snake_size,
-                                        self.input_direction_count,
-                                        self.vision_return_type,
-                                        self.model.snake.brain,
-                                        GameSettings.BACKPROPAGATION_NETWORK_FOLDER + self.data_received["file_name"])
+
+            data_to_save = {
+                "generation": -1,
+                "initial_board_size": self.initial_board_size,
+                "initial_snake_size": self.initial_snake_size,
+                "input_direction_count": self.input_direction_count,
+                "apple_return_type": self.apple_return_type,
+                "segment_return_type": self.segment_return_type,
+                "distance_function": self.data_received["distance_function"]
+            }
+
+            save_neural_network_to_json(
+                data_to_save,
+                self.model.snake.brain,
+                GameSettings.BACKPROPAGATION_NETWORK_FOLDER + self.data_received["file_name"]
+            )
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

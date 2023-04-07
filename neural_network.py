@@ -159,5 +159,5 @@ class NeuralNetwork:
             # error /= len(x_train)
             epoch += 1
 
-        #     print(f"epoch = {epoch}, error = {error}")
-        # print(f"final error {error}  \n")
+            print(f"epoch = {epoch}, error = {error}")
+        print(f"final error {error}  \n")

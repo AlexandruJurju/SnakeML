@@ -105,7 +105,8 @@ class RunPretrained(BaseState):
         print()
 
     def run_network(self, surface):
-        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.max_dist, self.apple_return_type, self.segment_return_type, self.distance_function)
+        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
+                                                   max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
         if ViewSettings.DRAW:
@@ -157,6 +158,8 @@ class RunPretrained(BaseState):
 
                 if event.ui_element == self.button_run:
                     self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.network)
+                    # TODO dynamic max distance
+                    self.max_dist = 10
                     self.execute_network = True
                     ViewSettings.DRAW = False
 
