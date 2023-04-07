@@ -6,7 +6,6 @@ from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton, UIDropDownMenu, UITextEntryLine
 
 from States.base_state import BaseState
-from States.state_manager import StateManager
 from game_config import *
 
 
@@ -53,8 +52,8 @@ class Options(BaseState):
         self.file_name_entry: UITextEntryLine = None
         self.file_name_entry_label: UILabel = None
 
-        self.dropdown_activation_function_hidden: UIDropDownMenu = None
-        self.dropdown_activation_function_hidden_label: UILabel = None
+        self.dropdown_hidden_function: UIDropDownMenu = None
+        self.dropdown_hidden_function_label: UILabel = None
 
         self.dropdown_activation_function_output: UIDropDownMenu = None
         self.dropdown_activation_function_output_label: UILabel = None
@@ -71,8 +70,8 @@ class Options(BaseState):
         self.dropdown_distance: UIDropDownMenu = None
         self.dropdown_distance_label: UILabel = None
 
-        self.hidden_layer_count_entry: UITextEntryLine = None
-        self.hidden_layer_count_entry_label: UILabel = None
+        self.hidden_layer_dropdown: UIDropDownMenu = None
+        self.hidden_layer_dropdown_label: UILabel = None
         self.neural_network_layers_entries: List[Tuple[UITextEntryLine, UILabel]] = []
 
     def start(self):
@@ -105,12 +104,12 @@ class Options(BaseState):
 
         # ================================================
         self.dropdown_activation_function_output = UIDropDownMenu(GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS, GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[0],
-                                                                  pygame.Rect((x_positions["left-left"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
-        self.dropdown_activation_function_output_label = UILabel(pygame.Rect((x_positions_label["left-left"], y_positions_label[0]), (250, 35)), "Output Activation Function", self.ui_manager)
-
-        self.dropdown_activation_function_hidden = UIDropDownMenu(GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS, GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[2],
                                                                   pygame.Rect((x_positions["left-center"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
-        self.dropdown_activation_function_hidden_label = UILabel(pygame.Rect((x_positions_label["left-center"], y_positions_label[0]), (250, 35)), "Hidden Activation Function", self.ui_manager)
+        self.dropdown_activation_function_output_label = UILabel(pygame.Rect((x_positions_label["left-center"], y_positions_label[0]), (250, 35)), "Output Activation Function", self.ui_manager)
+
+        self.dropdown_hidden_function = UIDropDownMenu(GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS, GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[2],
+                                                       pygame.Rect((x_positions["left-left"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
+        self.dropdown_hidden_function_label = UILabel(pygame.Rect((x_positions_label["left-left"], y_positions_label[0]), (250, 35)), "Hidden Activation Function", self.ui_manager)
 
         self.dropdown_distance = UIDropDownMenu(GameSettings.AVAILABLE_DISTANCES, GameSettings.AVAILABLE_DISTANCES[0],
                                                 pygame.Rect((x_positions["right-right"] - 225 // 2, y_positions[1]), (225, 30)), self.ui_manager)
@@ -119,9 +118,8 @@ class Options(BaseState):
         self.dropdown_input_direction_count = UIDropDownMenu(GameSettings.AVAILABLE_INPUT_DIRECTIONS, GameSettings.AVAILABLE_INPUT_DIRECTIONS[0], pygame.Rect((x_positions["left-left"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
         self.dropdown_input_direction_count_label = UILabel(pygame.Rect((x_positions_label["left-left"], y_positions_label[1]), (250, 35)), "Input Direction Count", self.ui_manager)
 
-        self.hidden_layer_count_entry = UITextEntryLine(pygame.Rect((x_positions["center"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
-        self.hidden_layer_count_entry_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[1]), (250, 35)), "Hidden Layer Count", self.ui_manager)
-        self.hidden_layer_count_entry.set_text("1")
+        self.hidden_layer_dropdown = UIDropDownMenu(["1", "2", "3"], "1", pygame.Rect((x_positions["center"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
+        self.hidden_layer_dropdown_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[1]), (250, 35)), "Hidden Layer Count", self.ui_manager)
 
         self.dropdown_segment_return = UIDropDownMenu(["boolean", "distance"], "boolean", pygame.Rect((x_positions["right-center"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
         self.label_dropdown_segment_return = UILabel(pygame.Rect((x_positions_label["right-center"], y_positions_label[0]), (250, 35)), "Segment Return type", self.ui_manager)
@@ -176,16 +174,16 @@ class Options(BaseState):
                                    self.board_size_entry, self.board_size_entry_label]
 
         self.neural_network_options_list = [self.dropdown_activation_function_output, self.dropdown_activation_function_output_label,
-                                            self.dropdown_activation_function_hidden, self.dropdown_activation_function_hidden_label,
+                                            self.dropdown_hidden_function, self.dropdown_hidden_function_label,
                                             self.dropdown_input_direction_count, self.dropdown_input_direction_count_label,
                                             self.dropdown_segment_return, self.label_dropdown_segment_return,
                                             self.dropdown_apple_return, self.label_dropdown_apple_return,
-                                            self.hidden_layer_count_entry, self.hidden_layer_count_entry_label,
+                                            self.hidden_layer_dropdown, self.hidden_layer_dropdown_label,
                                             self.dropdown_distance, self.dropdown_distance_label]
 
         # ================================================
         self.file_name_entry = UITextEntryLine(pygame.Rect((x_positions["center"] - 175 // 2, y_positions[1]), (175, 30)), self.ui_manager)
-        self.file_name_entry_label = UILabel(pygame.Rect((x_positions_label["center"] - 250 // 2, y_positions_label[1]), (250, 35)), "Network name", self.ui_manager)
+        self.file_name_entry_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[1]), (250, 35)), "Network name", self.ui_manager)
         self.file_name_entry.set_text("Default")
         self.file_name_entry.hide()
         self.file_name_entry_label.hide()
@@ -275,7 +273,7 @@ class Options(BaseState):
                         "apple_return_type": self.dropdown_apple_return.selected_option,
                         "distance_function": self.dropdown_distance.selected_option,
                         "file_name": self.file_name_entry.text,
-                        "hidden_activation": self.dropdown_activation_function_hidden.selected_option,
+                        "hidden_activation": self.dropdown_hidden_function.selected_option,
                         "output_activation": self.dropdown_activation_function_output.selected_option,
                         "input_layer_neurons": int(self.neural_network_layers_entries[0][0].text),
                         "hidden_layer_neurons": int(self.neural_network_layers_entries[1][0].text),
@@ -296,7 +294,7 @@ class Options(BaseState):
                         "apple_return_type": self.dropdown_apple_return.selected_option,
                         "distance_function": self.dropdown_distance.selected_option,
                         "file_name": self.file_name_entry.text,
-                        "hidden_activation": self.dropdown_activation_function_hidden.selected_option,
+                        "hidden_activation": self.dropdown_hidden_function.selected_option,
                         "output_activation": self.dropdown_activation_function_output.selected_option,
                         "input_layer_neurons": int(self.neural_network_layers_entries[0][0].text),
                         "hidden_layer_neurons": int(self.neural_network_layers_entries[1][0].text),
@@ -306,6 +304,14 @@ class Options(BaseState):
                     }
 
                 self.trigger_transition()
+
+    def draw_hidden_layer_inputs(self):
+        if self.hidden_layer_dropdown.selected_option == "1":
+            pass
+        if self.hidden_layer_dropdown.selected_option == "2":
+            pass
+        if self.hidden_layer_dropdown.selected_option == "3":
+            pass
 
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
