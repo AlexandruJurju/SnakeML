@@ -1,4 +1,3 @@
-import pygame
 import pygame_gui
 from matplotlib import pyplot as plt
 from pygame_gui import UIManager
@@ -11,7 +10,7 @@ from States.base_state import BaseState
 from file_operations import save_neural_network_to_json, write_genetic_training
 from game_config import GameSettings
 from game_config import State
-from genetic_operators import elitist_selection, roulette_selection, full_mutation, full_crossover
+from genetic_operators import elitist_selection, full_mutation, full_crossover
 from model import Snake
 from neural_network import NeuralNetwork, Activation
 from view import *
@@ -48,6 +47,7 @@ class GeneticTrainNewNetwork(BaseState):
         self.y_best_individual_score = []
         self.y_average_score = []
         self.y_best_ratio = []
+        self.networks = []
 
         self.title_label = None
         self.button_back = None
@@ -157,7 +157,9 @@ class GeneticTrainNewNetwork(BaseState):
         self.offspring_list = []
 
         total_fitness = sum(individual.fitness for individual in self.parent_list)
-        best_individual = max(self.parent_list, key=lambda individual: individual.fitness)
+        # best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken))
+        best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken if individual.steps_taken != 0 else 0))
+
         # TODO change order
         # best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken))
 
@@ -189,11 +191,7 @@ class GeneticTrainNewNetwork(BaseState):
             "distance_function": self.data_received["distance_function"]
         }
 
-        save_neural_network_to_json(
-            data_to_save,
-            best_individual.brain,
-            GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + name
-        )
+        self.networks.append([data_to_save, best_individual.brain, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + name])
 
         training_data = (f"GEN: {self.generation + 1:<5} "
                          f"AVG FITNESS: {average_fitness:<25}\t"
@@ -206,7 +204,7 @@ class GeneticTrainNewNetwork(BaseState):
                          f"WON: {won_count:<5}\t"
                          )
         print(training_data)
-        write_genetic_training(training_data, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name, True if self.generation == 0 else False)
+        # write_genetic_training(training_data, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name, True if self.generation == 0 else False)
 
         self.x_generations.append(self.generation)
         self.y_best_individual_fitness.append(best_individual.fitness)
@@ -214,12 +212,12 @@ class GeneticTrainNewNetwork(BaseState):
         self.y_average_score.append(average_score)
         self.y_best_ratio.append(best_individual.score / best_individual.steps_taken)
 
-        parents_for_mating = elitist_selection(self.parent_list, int(self.population_count / 10))
-        for parent in parents_for_mating[:int(self.population_count / 10)]:
+        parents_for_mating = elitist_selection(self.parent_list, 100)
+        for parent in parents_for_mating[:100]:
             self.offspring_list.append(parent.brain)
 
         # np.random.shuffle(parents_for_mating)
-        # np.random.shuffle(self.parent_list)
+        np.random.shuffle(self.parent_list)
 
         while len(self.offspring_list) < self.population_count:
             parent1, parent2 = self.selection_operator(self.parent_list, 2)
@@ -255,23 +253,30 @@ class GeneticTrainNewNetwork(BaseState):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    fig1 = plt.figure(figsize=(16, 9))
-                    plt.plot(self.x_generations, self.y_best_individual_score, "b", label="Best Individual Score")
-                    plt.plot(self.x_generations, self.y_average_score, "r", label="Generation Mean Score")
-                    plt.legend(loc="upper left")
-                    plt.xlabel("Generation")
-                    plt.ylabel("Score")
-                    plt.title("Score Comparison")
-                    plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "plot.pdf")
-                    plt.show()
+                    # fig1 = plt.figure(figsize=(16, 9))
+                    # plt.plot(self.x_generations, self.y_best_individual_score, "b", label="Best Individual Score")
+                    # plt.plot(self.x_generations, self.y_average_score, "r", label="Generation Mean Score")
+                    # plt.legend(loc="upper left")
+                    # plt.xlabel("Generation")
+                    # plt.ylabel("Score")
+                    # plt.title("Score Comparison")
+                    # plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "plot.pdf")
+                    # plt.show()
+                    #
+                    # fig2 = plt.figure(figsize=(16, 9))
+                    # plt.plot(self.x_generations, self.y_best_ratio, "b")
+                    # plt.xlabel("Generations")
+                    # plt.ylabel("Best Individual Ratio")
+                    # plt.title("Ratio Progression")
+                    # plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "best_ratio.pdf")
+                    # plt.show()
 
-                    fig2 = plt.figure(figsize=(16, 9))
-                    plt.plot(self.x_generations, self.y_best_ratio, "b")
-                    plt.xlabel("Generations")
-                    plt.ylabel("Best Individual Ratio")
-                    plt.title("Ratio Progression")
-                    plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "best_ratio.pdf")
-                    plt.show()
+                    for network in self.networks:
+                        save_neural_network_to_json(
+                            network[0],
+                            network[1],
+                            network[2]
+                        )
 
                     self.set_target_state_name(State.QUIT)
                     self.trigger_transition()
