@@ -28,7 +28,7 @@ def draw_board(window, board: np.ndarray, offset_x, offset_y) -> None:
             pygame.draw.rect(window, ViewSettings.COLOR_SQUARE_DELIMITER, square_rect.move(x_position, y_position), width=1)
 
 
-def draw_vision_lines(window, model: Model, vision_lines: List[VisionLine], offset_x, offset_y) -> None:
+def draw_vision_lines(window, snake_head, vision_lines: List[VisionLine], offset_x, offset_y) -> None:
     # loop over all lines in given vision lines
 
     font = pygame.font.SysFont("arial", 17, bold=True)
@@ -44,8 +44,8 @@ def draw_vision_lines(window, model: Model, vision_lines: List[VisionLine], offs
 
         # draw line from head to wall, draw before body and apple lines
         # drawing uses SQUARE_SIZE//2 so that lines go through the middle of the squares
-        line_end_x = model.snake.body[0][1] * ViewSettings.SQUARE_SIZE + ViewSettings.SQUARE_SIZE // 2 + offset_x
-        line_end_y = model.snake.body[0][0] * ViewSettings.SQUARE_SIZE + ViewSettings.SQUARE_SIZE // 2 + offset_y
+        line_end_x = snake_head[1] * ViewSettings.SQUARE_SIZE + ViewSettings.SQUARE_SIZE // 2 + offset_x
+        line_end_y = snake_head[0] * ViewSettings.SQUARE_SIZE + ViewSettings.SQUARE_SIZE // 2 + offset_y
 
         # draw line form snake head until wall block
         draw_vision_line(window, ViewSettings.COLOR_APPLE, 1, line.wall_coord[1], line.wall_coord[0], line_end_x, line_end_y, offset_x, offset_y)

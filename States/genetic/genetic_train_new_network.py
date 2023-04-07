@@ -79,6 +79,13 @@ class GeneticTrainNewNetwork(BaseState):
         self.mutation_rate = self.data_received["mutation_rate"]
         self.file_name = self.data_received["file_name"]
 
+        input_neuron_count = self.data_received["input_layer_neurons"]
+        hidden_neuron_count = self.data_received["hidden_layer_neurons"]
+        output_neuron_count = self.data_received["output_layer_neurons"]
+
+        hidden_activation = getattr(neural_network, self.data_received["hidden_activation"])
+        output_activation = getattr(neural_network, self.data_received["output_activation"])
+
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Genetic Train New Network", self.ui_manager)
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
@@ -96,13 +103,6 @@ class GeneticTrainNewNetwork(BaseState):
         self.generation = 0
         self.parent_list: List[Snake] = []
         self.offspring_list: List[NeuralNetwork] = []
-
-        input_neuron_count = self.data_received["input_layer_neurons"]
-        hidden_neuron_count = self.data_received["hidden_layer_neurons"]
-        output_neuron_count = self.data_received["output_layer_neurons"]
-
-        hidden_activation = getattr(neural_network, self.data_received["hidden_activation"])
-        output_activation = getattr(neural_network, self.data_received["output_activation"])
 
         # activation prime doesn't matter in feedforward, use base activation functions to avoid error
         net = NeuralNetwork()
@@ -132,7 +132,7 @@ class GeneticTrainNewNetwork(BaseState):
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
             if self.draw_vision_lines:
-                draw_vision_lines(surface, self.model, vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+                draw_vision_lines(surface, self.model.snake.body[0], vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
             if self.draw_network:
                 draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])

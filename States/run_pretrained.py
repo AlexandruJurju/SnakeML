@@ -13,7 +13,7 @@ from file_operations import read_all_from_json
 from game_config import State, ViewSettings, GameSettings
 from model import Model
 from view import draw_board, draw_neural_network_complete, draw_vision_lines
-from vision import get_vision_lines_snake_head, VisionLine, distance
+from vision import get_vision_lines_snake_head, VisionLine
 
 
 class RunPretrained(BaseState):
@@ -113,7 +113,7 @@ class RunPretrained(BaseState):
         if ViewSettings.DRAW:
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             if self.draw_vision_lines:
-                draw_vision_lines(surface, self.model, vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+                draw_vision_lines(surface, self.model.snake.body[0], vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             if self.draw_network:
                 draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 
