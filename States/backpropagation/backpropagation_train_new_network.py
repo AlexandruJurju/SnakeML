@@ -12,7 +12,7 @@ from game_config import GameSettings
 from game_config import State
 from neural_network import *
 from view import *
-from vision import VisionLine, get_vision_lines_snake_head
+from vision import VisionLine, get_vision_lines_snake_head, get_vision_lines
 
 
 # TODO get a good backpropagation network
@@ -34,7 +34,7 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.button_back = None
 
     def start(self):
-        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Backpropagation Train New Network", self.ui_manager, object_id="#window_label")
+        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Backpropagation Train New Network", self.ui_manager)
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
         input_direction_count = self.data_received["input_direction_count"]
@@ -54,13 +54,6 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.title_label.kill()
         self.button_back.kill()
 
-    def print_vision_line(self, vision_line: VisionLine):
-        print(f"{vision_line.wall_coord} {vision_line.wall_distance} || {vision_line.apple_coord} {vision_line.apple_distance} || {vision_line.segment_coord} {vision_line.segment_distance} ")
-
-    def print_all_vision_lines(self, vision_lines: List[VisionLine]):
-        for line in vision_lines:
-            self.print_vision_line(line)
-
     def is_example_in_evaluated(self, example: TrainingExample):
         for eval_example in self.evaluated:
             if eval_example.vision_lines == example.vision_lines:
@@ -68,8 +61,7 @@ class BackpropagationTrainNewNetwork(BaseState):
         return False
 
     def execute(self, surface):
-        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], 4,
-                                                   0, "boolean", "boolean", chebyshev)
+        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], 4, 0, "boolean", "boolean", chebyshev)
         nn_output = self.model.get_nn_output(vision_lines)
 
         example_output = np.where(nn_output == np.max(nn_output), 1, 0)
@@ -126,22 +118,11 @@ class BackpropagationTrainNewNetwork(BaseState):
 
         draw_board(surface, current_example.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
         draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+        write_controls(surface, 500, 250)
+
         self.ui_manager.update(time_delta)
-
         self.ui_manager.draw_ui(surface)
-
         pygame.display.flip()
-
-        # print(f"Model \n {np.matrix(current_example.board)} \n")
-        # print(f"Current Direction : {current_example.current_direction} \n")
-        # print(f"Prediction UP : {current_example.predictions[0]}")
-        # print(f"Prediction DOWN : {current_example.predictions[1]}")
-        # print(f"Prediction LEFT : {current_example.predictions[2]}")
-        # print(f"Prediction RIGHT : {current_example.predictions[3]}")
-        # print()
-
-        # print("Enter target outputs for neural network in form")
-        # print("UP=W DOWN=S LEFT=A RIGHT=D")
 
         input_string = self.wait_for_key()
         skip = False
