@@ -1,4 +1,3 @@
-from time import sleep
 from typing import List
 
 import pygame
@@ -8,6 +7,7 @@ from pygame_gui.core.utility import create_resource_path
 from pygame_gui.elements import UILabel, UIButton, UITextEntryLine
 from pygame_gui.windows import UIFileDialog
 
+import vision
 from States.base_state import BaseState
 from file_operations import read_all_from_json
 from game_config import State, ViewSettings, GameSettings
@@ -31,9 +31,10 @@ class RunPretrained(BaseState):
         self.model = None
         self.execute_network = False
         self.input_direction_count = None
-        self.vision_return_type = None
+        self.segment_return_type = None
+        self.distance_function = None
+        self.apple_return_type = None
 
-        self.title_label = None
         self.score_counter = None
         self.button_back = None
         self.button_run = None
@@ -54,21 +55,20 @@ class RunPretrained(BaseState):
         self.draw_vision_lines = True
         self.rect_draw_vision_lines = None
 
+        self.label_return_type: UILabel = None
+        self.label_distance: UILabel = None
+
     def start(self):
         self.state_target = self.data_received["state"]
-        self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "", self.ui_manager, object_id="#window_label")
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
+        self.label_return_type = UILabel(pygame.Rect((50, 25), (250, 35)), "", self.ui_manager)
+        self.label_distance = UILabel(pygame.Rect((50, 50), (250, 35)), "", self.ui_manager)
 
         self.button_draw_network = UIButton(pygame.Rect((50, 400), (175, 30)), "Draw Network", self.ui_manager)
         self.rect_draw_network = pygame.Rect((250, 400), (30, 30))
 
         self.button_draw_vision_lines = UIButton(pygame.Rect((50, 500), (175, 30)), "Draw Vision Lines", self.ui_manager)
         self.rect_draw_vision_lines = pygame.Rect((250, 500), (30, 30))
-
-        if self.state_target == "genetic":
-            self.title_label.set_text("Genetic Pretrained")
-        else:
-            self.title_label.set_text("Backpropagation Pretrained")
 
         self.score_counter = UILabel(pygame.Rect((150, 100), (150, 35)), "Score: ", self.ui_manager)
 
@@ -83,7 +83,6 @@ class RunPretrained(BaseState):
         self.snake_size_entry = UITextEntryLine(pygame.Rect((175, 300), (125, 35)), self.ui_manager)
 
     def end(self):
-        self.title_label.kill()
         self.button_back.kill()
         self.score_counter.kill()
         self.button_load.kill()
@@ -92,9 +91,12 @@ class RunPretrained(BaseState):
         self.board_size_label.kill()
         self.snake_size_entry.kill()
         self.snake_size_label.kill()
+        self.label_return_type.kill()
+        self.label_distance.kill()
         self.execute_network = False
 
-    def print_vision_line(self, vision_line: VisionLine):
+    @staticmethod
+    def print_vision_line(vision_line: VisionLine):
         print(f" {vision_line.direction} w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_d {vision_line.segment_distance} ")
 
     def print_all_vision_lines(self, vision_lines: List[VisionLine]):
@@ -103,7 +105,7 @@ class RunPretrained(BaseState):
         print()
 
     def run_network(self, surface):
-        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.vision_return_type, self.max_dist)
+        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, self.max_dist, self.apple_return_type, self.segment_return_type, self.distance_function)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
         # if self.execute_network is False:
@@ -181,9 +183,13 @@ class RunPretrained(BaseState):
                     config = read_all_from_json(self.file_path)
                     self.network = config["network"]
                     self.input_direction_count = config["input_direction_count"]
-                    self.vision_return_type = config["vision_return_type"]
+                    self.apple_return_type = config["apple_return_type"]
+                    self.segment_return_type = config["segment_return_type"]
+                    self.distance_function = getattr(vision, config["distance_function"])
                     self.board_size_entry.set_text(str(config["board_size"]))
                     self.snake_size_entry.set_text(str(config["snake_size"]))
+                    self.label_return_type.set_text("Segment: " + self.segment_return_type + " Apple: " + self.apple_return_type)
+                    self.label_distance.set_text("Distance: " + config["distance_function"])
                     self.button_load.enable()
                     self.button_run.enable()
 

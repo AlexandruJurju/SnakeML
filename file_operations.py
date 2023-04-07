@@ -105,7 +105,7 @@ def read_training_data_json(file_location) -> Tuple[List, List]:
     return x, y
 
 
-def save_neural_network_to_json(generation: int, fitness: int, board_size: int, snake_size: int, input_direction_count: int, vision_return_type, network: NeuralNetwork, path: str) -> None:
+def save_neural_network_to_json(data_to_save: Dict, network: NeuralNetwork, path: str) -> None:
     network_dict = []
     for i, layer in enumerate(network.layers):
         if type(layer) is Activation:
@@ -124,12 +124,13 @@ def save_neural_network_to_json(generation: int, fitness: int, board_size: int, 
             }
         network_dict.append(layer_dict)
 
-    generation_network = {"generation": generation,
-                          "fitness": fitness,
-                          "board_size": board_size,
-                          "snake_size": snake_size,
-                          "input_direction_count": input_direction_count,
-                          "vision_return_type": vision_return_type,
+    generation_network = {"generation": data_to_save["generation"],
+                          "board_size": data_to_save["initial_board_size"],
+                          "snake_size": data_to_save["initial_snake_size"],
+                          "input_direction_count": data_to_save["input_direction_count"],
+                          "apple_return_type": data_to_save["apple_return_type"],
+                          "segment_return_type": data_to_save["segment_return_type"],
+                          "distance_function": data_to_save["distance_function"],
                           "network": network_dict}
 
     path_tokens = path.split("/")
@@ -168,9 +169,6 @@ def read_all_from_json(path: str) -> Dict:
                 output_size = layer["output_size"]
                 weights = np.reshape(layer["weights"], (layer["output_size"], layer["input_size"]))
                 bias = np.reshape(layer["bias"], (layer["output_size"], 1))
-                print(layer["input_size"])
-                print(layer["output_size"])
-                print()
                 dense_layer = Dense(input_size, output_size)
                 dense_layer.weights = weights
                 dense_layer.bias = bias

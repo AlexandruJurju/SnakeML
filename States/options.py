@@ -112,7 +112,7 @@ class Options(BaseState):
                                                                   pygame.Rect((x_positions["left-center"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
         self.dropdown_activation_function_hidden_label = UILabel(pygame.Rect((x_positions_label["left-center"], y_positions_label[0]), (250, 35)), "Hidden Activation Function", self.ui_manager)
 
-        self.dropdown_distance = UIDropDownMenu(GameSettings.AVAILABLE_DISTANCES, GameSettings.AVAILABLE_DISTANCES[2],
+        self.dropdown_distance = UIDropDownMenu(GameSettings.AVAILABLE_DISTANCES, GameSettings.AVAILABLE_DISTANCES[0],
                                                 pygame.Rect((x_positions["right-right"] - 225 // 2, y_positions[1]), (225, 30)), self.ui_manager)
         self.dropdown_distance_label = UILabel(pygame.Rect((x_positions_label["right-right"], y_positions_label[1]), (250, 35)), "Distance Function", self.ui_manager)
 
@@ -273,6 +273,7 @@ class Options(BaseState):
                         "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
                         "segment_return_type": self.dropdown_segment_return.selected_option,
                         "apple_return_type": self.dropdown_apple_return.selected_option,
+                        "distance_function": self.dropdown_distance.selected_option,
                         "file_name": self.file_name_entry.text,
                         "hidden_activation": self.dropdown_activation_function_hidden.selected_option,
                         "output_activation": self.dropdown_activation_function_output.selected_option,
@@ -293,6 +294,7 @@ class Options(BaseState):
                         "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
                         "segment_return_type": self.dropdown_segment_return.selected_option,
                         "apple_return_type": self.dropdown_apple_return.selected_option,
+                        "distance_function": self.dropdown_distance.selected_option,
                         "file_name": self.file_name_entry.text,
                         "hidden_activation": self.dropdown_activation_function_hidden.selected_option,
                         "output_activation": self.dropdown_activation_function_output.selected_option,
