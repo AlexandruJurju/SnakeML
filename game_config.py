@@ -111,6 +111,7 @@ class GameSettings:
     AVAILABLE_SELECTION_OPERATORS = ["roulette_selection", "tournament_selection", "elitist_selection"]
     AVAILABLE_CROSSOVER_OPERATORS = ["one_point_crossover", "two_point_crossover", "uniform_crossover"]
     AVAILABLE_MUTATION_OPERATORS = ["gaussian_mutation"]
+    AVAILABLE_DISTANCES = ["manhattan_distance", "chebyshev_distance", "euclidean_distance"]
 
     GENETIC_NETWORK_FOLDER = "Genetic_Networks/"
     BACKPROPAGATION_NETWORK_FOLDER = "Backpropagation_Networks/"

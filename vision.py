@@ -1,5 +1,6 @@
 from typing import List, Tuple
 
+import numpy
 import numpy as np
 from scipy.spatial.distance import chebyshev
 
@@ -16,6 +17,10 @@ def manhattan_distance(a, b):
 
 def chebyshev_distance(a, b):
     return max(abs(a[0] - b[0]), abs(a[1] - b[1]))
+
+
+def euclidean_distance(a, b):
+    return numpy.linalg.norm(a - b)
 
 
 def find_snake_head_poz(board: np.ndarray) -> np.ndarray:
@@ -114,7 +119,7 @@ def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direc
 
     wall_output = 1 / wall_distance
     apple_output = 1.0 if apple_found else 0
-    segment_output = 1 / segment_distance
+    segment_output = 1 / segment_distance if segment_found else 0
 
     if wall_output > 1.0:
         print(direction)

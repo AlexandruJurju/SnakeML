@@ -68,6 +68,9 @@ class Options(BaseState):
         self.mutation_operators_dropdown: UIDropDownMenu = None
         self.mutation_operators_label = None
 
+        self.dropdown_distance: UIDropDownMenu = None
+        self.dropdown_distance_label: UILabel = None
+
         self.hidden_layer_count_entry: UITextEntryLine = None
         self.hidden_layer_count_entry_label: UILabel = None
         self.neural_network_layers_entries: List[Tuple[UITextEntryLine, UILabel]] = []
@@ -109,8 +112,12 @@ class Options(BaseState):
                                                                   pygame.Rect((x_positions["left-center"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
         self.dropdown_activation_function_hidden_label = UILabel(pygame.Rect((x_positions_label["left-center"], y_positions_label[0]), (250, 35)), "Hidden Activation Function", self.ui_manager)
 
-        self.dropdown_input_direction_count = UIDropDownMenu(GameSettings.AVAILABLE_INPUT_DIRECTIONS, GameSettings.AVAILABLE_INPUT_DIRECTIONS[0], pygame.Rect((x_positions["left-center"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
-        self.dropdown_input_direction_count_label = UILabel(pygame.Rect((x_positions_label["left-center"], y_positions_label[1]), (250, 35)), "Input Direction Count", self.ui_manager)
+        self.dropdown_distance = UIDropDownMenu(GameSettings.AVAILABLE_DISTANCES, GameSettings.AVAILABLE_DISTANCES[2],
+                                                pygame.Rect((x_positions["right-right"] - 225 // 2, y_positions[1]), (225, 30)), self.ui_manager)
+        self.dropdown_distance_label = UILabel(pygame.Rect((x_positions_label["right-right"], y_positions_label[1]), (250, 35)), "Distance Function", self.ui_manager)
+
+        self.dropdown_input_direction_count = UIDropDownMenu(GameSettings.AVAILABLE_INPUT_DIRECTIONS, GameSettings.AVAILABLE_INPUT_DIRECTIONS[0], pygame.Rect((x_positions["left-left"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
+        self.dropdown_input_direction_count_label = UILabel(pygame.Rect((x_positions_label["left-left"], y_positions_label[1]), (250, 35)), "Input Direction Count", self.ui_manager)
 
         self.hidden_layer_count_entry = UITextEntryLine(pygame.Rect((x_positions["center"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
         self.hidden_layer_count_entry_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[1]), (250, 35)), "Hidden Layer Count", self.ui_manager)
@@ -173,7 +180,8 @@ class Options(BaseState):
                                             self.dropdown_input_direction_count, self.dropdown_input_direction_count_label,
                                             self.dropdown_segment_return, self.label_dropdown_segment_return,
                                             self.dropdown_apple_return, self.label_dropdown_apple_return,
-                                            self.hidden_layer_count_entry, self.hidden_layer_count_entry_label]
+                                            self.hidden_layer_count_entry, self.hidden_layer_count_entry_label,
+                                            self.dropdown_distance, self.dropdown_distance_label]
 
         # ================================================
         self.file_name_entry = UITextEntryLine(pygame.Rect((x_positions["center"] - 175 // 2, y_positions[1]), (175, 30)), self.ui_manager)
