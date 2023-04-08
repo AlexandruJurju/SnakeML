@@ -84,16 +84,7 @@ class RunPretrained(BaseState):
         self.snake_size_entry = UITextEntryLine(pygame.Rect((175, 300), (125, 35)), self.ui_manager)
 
     def end(self):
-        self.button_back.kill()
-        self.score_counter.kill()
-        self.button_load.kill()
-        self.button_run.kill()
-        self.board_size_entry.kill()
-        self.board_size_label.kill()
-        self.snake_size_entry.kill()
-        self.snake_size_label.kill()
-        self.label_return_type.kill()
-        self.label_distance.kill()
+        self.ui_manager.clear_and_reset()
         self.execute_network = False
 
     @staticmethod

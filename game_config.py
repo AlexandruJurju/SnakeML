@@ -63,6 +63,8 @@ class ViewSettings:
     COLOR_APPLE = (199, 55, 47)
     COLOR_SQUARE_DELIMITER = (64, 64, 64)
     COLOR_GREEN = (0, 255, 0)
+    COLOR_DODGER_BLUE = (30, 144, 255)
+    COLOR_NEURON = COLOR_GREEN
     COLOR_RED = (255, 0, 0)
     COLOR_NEXT_MOVE = (0, 0, 0)
     COLOR_ODD = (42, 52, 68)
