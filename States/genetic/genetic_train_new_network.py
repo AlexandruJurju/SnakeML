@@ -254,7 +254,7 @@ class GeneticTrainNewNetwork(BaseState):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    for network in self.networks:
+                    for network in self.networks[-50:]:
                         save_neural_network_to_json(
                             network[0],
                             network[1],
