@@ -9,7 +9,7 @@ from States.genetic.genetic_menu import GeneticMenu
 from States.genetic.genetic_train_new_network import GeneticTrainNewNetwork
 from States.main_menu import MainMenu
 from States.options import Options
-from States.run_pretrained import RunPretrained
+from States.run_network import RunPretrained
 from States.state_manager import StateManager
 from game_config import ViewSettings, State
 

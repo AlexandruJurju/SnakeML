@@ -14,7 +14,7 @@ from genetic_operators import elitist_selection, full_mutation, full_crossover
 from model import Snake
 from neural_network import NeuralNetwork, Activation
 from view import *
-from vision import get_vision_lines_snake_head, distance
+from vision import get_vision_lines_snake_head
 
 
 class GeneticTrainNewNetwork(BaseState):
@@ -48,6 +48,7 @@ class GeneticTrainNewNetwork(BaseState):
         self.y_average_score = []
         self.y_best_ratio = []
         self.networks = []
+        self.training_data = ""
 
         self.title_label = None
         self.button_back = None
@@ -115,7 +116,7 @@ class GeneticTrainNewNetwork(BaseState):
 
         # TODO get all blocks that are not W, compare dist with all blocks (including walls) , get max | maybe dont include diagonal walls if only 4 directions
         # TODO dynamic max distance
-        self.max_distance = distance((1, 1), (1, 11))
+        # self.max_distance = distance((1, 1), (1, 11))
 
     def end(self):
         self.title_label.kill()
@@ -125,7 +126,7 @@ class GeneticTrainNewNetwork(BaseState):
 
     def run_genetic(self, surface):
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
-                                                   max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
+                                                   max_dist=0, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
         if ViewSettings.DRAW:
@@ -204,7 +205,7 @@ class GeneticTrainNewNetwork(BaseState):
                          f"WON: {won_count:<5}\t"
                          )
         print(training_data)
-        # write_genetic_training(training_data, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name, True if self.generation == 0 else False)
+        self.training_data += training_data + "\n"
 
         self.x_generations.append(self.generation)
         self.y_best_individual_fitness.append(best_individual.fitness)
@@ -253,30 +254,32 @@ class GeneticTrainNewNetwork(BaseState):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    # fig1 = plt.figure(figsize=(16, 9))
-                    # plt.plot(self.x_generations, self.y_best_individual_score, "b", label="Best Individual Score")
-                    # plt.plot(self.x_generations, self.y_average_score, "r", label="Generation Mean Score")
-                    # plt.legend(loc="upper left")
-                    # plt.xlabel("Generation")
-                    # plt.ylabel("Score")
-                    # plt.title("Score Comparison")
-                    # plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "plot.pdf")
-                    # plt.show()
-                    #
-                    # fig2 = plt.figure(figsize=(16, 9))
-                    # plt.plot(self.x_generations, self.y_best_ratio, "b")
-                    # plt.xlabel("Generations")
-                    # plt.ylabel("Best Individual Ratio")
-                    # plt.title("Ratio Progression")
-                    # plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "best_ratio.pdf")
-                    # plt.show()
-
                     for network in self.networks:
                         save_neural_network_to_json(
                             network[0],
                             network[1],
                             network[2]
                         )
+
+                    write_genetic_training(self.training_data, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name, True if self.generation == 0 else False)
+
+                    fig1 = plt.figure(figsize=(16, 9))
+                    plt.plot(self.x_generations, self.y_best_individual_score, "b", label="Best Individual Score")
+                    plt.plot(self.x_generations, self.y_average_score, "r", label="Generation Mean Score")
+                    plt.legend(loc="upper left")
+                    plt.xlabel("Generation")
+                    plt.ylabel("Score")
+                    plt.title("Score Comparison")
+                    plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "plot.pdf")
+                    plt.show()
+
+                    fig2 = plt.figure(figsize=(16, 9))
+                    plt.plot(self.x_generations, self.y_best_ratio, "b")
+                    plt.xlabel("Generations")
+                    plt.ylabel("Best Individual Ratio")
+                    plt.title("Ratio Progression")
+                    plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "best_ratio.pdf")
+                    plt.show()
 
                     self.set_target_state_name(State.QUIT)
                     self.trigger_transition()

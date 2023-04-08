@@ -83,7 +83,6 @@ class BackpropagationTrainNewNetwork(BaseState):
         example_output = np.where(nn_output == np.max(nn_output), 1, 0)
         example = TrainingExample(copy.deepcopy(self.model.board), self.model.snake.direction, vision_lines, example_output.ravel().tolist())
 
-        # print(len(self.evaluated))
         if len(self.evaluated) == 0:
             self.training_examples.append(example)
         else:
@@ -126,7 +125,7 @@ class BackpropagationTrainNewNetwork(BaseState):
                         self.trigger_transition()
                         break
 
-    def train_backpropagation(self, surface, time_delta):
+    def train(self, surface, time_delta):
         current_example = self.training_examples[0]
         self.training_examples.pop(0)
 
@@ -166,8 +165,8 @@ class BackpropagationTrainNewNetwork(BaseState):
 
         if len(self.training_examples) == 0 or skip:
             self.training_examples.clear()
-            file_path = "Backpropagation_Training/" + str(self.input_direction_count) + "_in_directions_" + str(self.data_received["output_layer_neurons"]) + "_out_directions.json"
 
+            file_path = "Backpropagation_Training/" + str(self.input_direction_count) + "_in_directions_" + str(self.data_received["output_layer_neurons"]) + "_out_directions.json"
             write_examples_to_json_4d(self.evaluated, file_path)
 
             # self.evaluated.clear()
@@ -183,7 +182,7 @@ class BackpropagationTrainNewNetwork(BaseState):
         if not self.training:
             self.execute(surface)
         else:
-            self.train_backpropagation(surface, time_delta)
+            self.train(surface, time_delta)
 
             data_to_save = {
                 "generation": -1,
