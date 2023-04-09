@@ -29,8 +29,8 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.ui_manager = ui_manager
         self.model = None
 
+        self.states_to_be_evaluated: List[TrainingExample] = []
         self.training_examples: List[TrainingExample] = []
-        self.evaluated: List[TrainingExample] = []
 
         self.title_label = None
         self.button_back = None
@@ -70,7 +70,7 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.button_back.kill()
 
     def is_example_in_evaluated(self, example: TrainingExample):
-        for eval_example in self.evaluated:
+        for eval_example in self.training_examples:
             if eval_example.vision_lines == example.vision_lines:
                 return True
         return False
@@ -83,11 +83,11 @@ class BackpropagationTrainNewNetwork(BaseState):
         example_output = np.where(nn_output == np.max(nn_output), 1, 0)
         example = TrainingExample(copy.deepcopy(self.model.board), self.model.snake.direction, vision_lines, example_output.ravel().tolist())
 
-        if len(self.evaluated) == 0:
-            self.training_examples.append(example)
+        if len(self.training_examples) == 0:
+            self.states_to_be_evaluated.append(example)
         else:
             if not self.is_example_in_evaluated(example):
-                self.training_examples.append(example)
+                self.states_to_be_evaluated.append(example)
 
         draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
@@ -126,8 +126,8 @@ class BackpropagationTrainNewNetwork(BaseState):
                         break
 
     def train(self, surface, time_delta):
-        current_example = self.training_examples[0]
-        self.training_examples.pop(0)
+        current_example = self.states_to_be_evaluated[0]
+        self.states_to_be_evaluated.pop(0)
 
         draw_board(surface, current_example.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
         draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
@@ -161,13 +161,13 @@ class BackpropagationTrainNewNetwork(BaseState):
                 if input_string == "D":
                     target_output[3] = 1.0
 
-            self.evaluated.append(TrainingExample(current_example.board, current_example.current_direction, current_example.vision_lines, target_output))
+            self.training_examples.append(TrainingExample(current_example.board, current_example.current_direction, current_example.vision_lines, target_output))
 
-        if len(self.training_examples) == 0 or skip:
-            self.training_examples.clear()
+        if len(self.states_to_be_evaluated) == 0 or skip:
+            self.states_to_be_evaluated.clear()
 
             file_path = "Backpropagation_Training/" + str(self.input_direction_count) + "_in_directions_" + str(self.data_received["output_layer_neurons"]) + "_out_directions.json"
-            write_examples_to_json_4d(self.evaluated, file_path)
+            write_examples_to_json_4d(self.training_examples, file_path)
 
             # self.evaluated.clear()
 
