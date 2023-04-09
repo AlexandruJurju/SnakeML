@@ -87,6 +87,14 @@ class GeneticTrainNewNetwork(BaseState):
         hidden_activation = getattr(neural_network, self.data_received["hidden_activation"])
         output_activation = getattr(neural_network, self.data_received["output_activation"])
 
+        self.x_generations = []
+        self.y_best_individual_fitness = []
+        self.y_best_individual_score = []
+        self.y_average_score = []
+        self.y_best_ratio = []
+        self.networks = []
+        self.training_data = ""
+
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Genetic Train New Network", self.ui_manager)
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
@@ -119,10 +127,7 @@ class GeneticTrainNewNetwork(BaseState):
         # self.max_distance = distance((1, 1), (1, 11))
 
     def end(self):
-        self.title_label.kill()
-        self.button_back.kill()
-        self.generation_label.kill()
-        self.individual_label.kill()
+        self.ui_manager.clear_and_reset()
 
     def run_genetic(self, surface):
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
