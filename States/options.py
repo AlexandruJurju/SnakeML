@@ -70,13 +70,16 @@ class Options(BaseState):
         self.dropdown_distance: UIDropDownMenu = None
         self.dropdown_distance_label: UILabel = None
 
-        self.hidden_layer_dropdown: UIDropDownMenu = None
-        self.hidden_layer_dropdown_label: UILabel = None
+        self.hidden_layer_count_dropdown: UIDropDownMenu = None
+        self.hidden_layer_count_dropdown_label: UILabel = None
         self.neural_network_layers_entries: Dict[Tuple[UITextEntryLine, UILabel]] = {}
 
     def start(self):
         self.options_target = self.data_received["state"]
         self.options_state = 0
+        self.snake_options_list: [] = []
+        self.genetic_options_list: [] = []
+        self.neural_network_options_list: [] = []
 
         x_positions = {"left-left": ViewSettings.X_CENTER - 500,
                        "left-center": ViewSettings.X_CENTER - 250,
@@ -118,8 +121,8 @@ class Options(BaseState):
         self.dropdown_input_direction_count = UIDropDownMenu(GameSettings.AVAILABLE_INPUT_DIRECTIONS, GameSettings.AVAILABLE_INPUT_DIRECTIONS[0], pygame.Rect((x_positions["left-left"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
         self.dropdown_input_direction_count_label = UILabel(pygame.Rect((x_positions_label["left-left"], y_positions_label[1]), (250, 35)), "Input Direction Count", self.ui_manager)
 
-        self.hidden_layer_dropdown = UIDropDownMenu(["1", "2", "3"], "1", pygame.Rect((x_positions["center"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
-        self.hidden_layer_dropdown_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[1]), (250, 35)), "Hidden Layer Count", self.ui_manager)
+        self.hidden_layer_count_dropdown = UIDropDownMenu(["1", "2", "3"], "1", pygame.Rect((x_positions["center"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
+        self.hidden_layer_count_dropdown_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[1]), (250, 35)), "Hidden Layer Count", self.ui_manager)
 
         self.dropdown_segment_return = UIDropDownMenu(["boolean", "distance"], "boolean", pygame.Rect((x_positions["right-center"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
         self.label_dropdown_segment_return = UILabel(pygame.Rect((x_positions_label["right-center"], y_positions_label[0]), (250, 35)), "Segment Return type", self.ui_manager)
@@ -136,12 +139,20 @@ class Options(BaseState):
         output_layer_label = UILabel(pygame.Rect((x_positions_label["right-right"], y_positions_label[2]), (250, 30)), "Output Layer", self.ui_manager)
 
         first_hidden_layer_neuron_count = input_neuron_count + 8
-        first_hidden_layer = UITextEntryLine(pygame.Rect((x_positions["center"] - 75 // 2, y_positions[2]), (75, 30)), self.ui_manager)
-        first_hidden_layer_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[2]), (250, 30)), "Hidden Layer", self.ui_manager)
+        first_hidden_layer = UITextEntryLine(pygame.Rect((x_positions["left-center"] - 75 // 2, y_positions[2]), (75, 30)), self.ui_manager)
+        first_hidden_layer_label = UILabel(pygame.Rect((x_positions_label["left-center"], y_positions_label[2]), (250, 30)), "Hidden Layer 1", self.ui_manager)
         first_hidden_layer.set_text(str(first_hidden_layer_neuron_count))
+
+        second_hidden_layer = UITextEntryLine(pygame.Rect((x_positions["center"] - 75 // 2, y_positions[2]), (75, 30)), self.ui_manager)
+        second_hidden_layer_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[2]), (250, 30)), "Hidden Layer 2", self.ui_manager)
+
+        third_hidden_layer = UITextEntryLine(pygame.Rect((x_positions["right-center"] - 75 // 2, y_positions[2]), (75, 30)), self.ui_manager)
+        third_hidden_layer_label = UILabel(pygame.Rect((x_positions_label["right-center"], y_positions_label[2]), (250, 30)), "Hidden Layer 3", self.ui_manager)
 
         self.neural_network_layers_entries["input"] = ([input_layer, input_layer_label])
         self.neural_network_layers_entries["first"] = ([first_hidden_layer, first_hidden_layer_label])
+        self.neural_network_layers_entries["second"] = ([second_hidden_layer, second_hidden_layer_label])
+        self.neural_network_layers_entries["third"] = ([third_hidden_layer, third_hidden_layer_label])
         self.neural_network_layers_entries["output"] = ([output_layer, output_layer_label])
 
         # ================================================
@@ -177,7 +188,7 @@ class Options(BaseState):
                                             self.dropdown_input_direction_count, self.dropdown_input_direction_count_label,
                                             self.dropdown_segment_return, self.label_dropdown_segment_return,
                                             self.dropdown_apple_return, self.label_dropdown_apple_return,
-                                            self.hidden_layer_dropdown, self.hidden_layer_dropdown_label,
+                                            self.hidden_layer_count_dropdown, self.hidden_layer_count_dropdown_label,
                                             self.dropdown_distance, self.dropdown_distance_label]
 
         # ================================================
@@ -195,9 +206,32 @@ class Options(BaseState):
             self.neural_network_layers_entries[key][1].hide()
 
     def show_layer_entries(self):
-        for key in self.neural_network_layers_entries:
-            self.neural_network_layers_entries[key][0].show()
-            self.neural_network_layers_entries[key][1].show()
+        self.neural_network_layers_entries["input"][0].show()
+        self.neural_network_layers_entries["input"][1].show()
+
+        self.neural_network_layers_entries["output"][0].show()
+        self.neural_network_layers_entries["output"][1].show()
+
+        if self.hidden_layer_count_dropdown.selected_option == "1":
+            self.neural_network_layers_entries["first"][0].show()
+            self.neural_network_layers_entries["first"][1].show()
+
+        if self.hidden_layer_count_dropdown.selected_option == "2":
+            self.neural_network_layers_entries["first"][0].show()
+            self.neural_network_layers_entries["first"][1].show()
+
+            self.neural_network_layers_entries["second"][0].show()
+            self.neural_network_layers_entries["second"][1].show()
+
+        if self.hidden_layer_count_dropdown.selected_option == "3":
+            self.neural_network_layers_entries["first"][0].show()
+            self.neural_network_layers_entries["first"][1].show()
+
+            self.neural_network_layers_entries["second"][0].show()
+            self.neural_network_layers_entries["second"][1].show()
+
+            self.neural_network_layers_entries["third"][0].show()
+            self.neural_network_layers_entries["third"][1].show()
 
     def end(self):
         self.ui_manager.clear_and_reset()
@@ -305,11 +339,11 @@ class Options(BaseState):
                 self.trigger_transition()
 
     def draw_hidden_layer_inputs(self):
-        if self.hidden_layer_dropdown.selected_option == "1":
+        if self.hidden_layer_count_dropdown.selected_option == "1":
             pass
-        if self.hidden_layer_dropdown.selected_option == "2":
+        if self.hidden_layer_count_dropdown.selected_option == "2":
             pass
-        if self.hidden_layer_dropdown.selected_option == "3":
+        if self.hidden_layer_count_dropdown.selected_option == "3":
             pass
 
     def run(self, surface, time_delta):
