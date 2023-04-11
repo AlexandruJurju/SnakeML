@@ -36,7 +36,7 @@
     &quot;ToolWindowRun.ShowToolbar&quot;: &quot;false&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;X:/School Repos/SnakeML/Genetic_Networks&quot;,
+    &quot;last_opened_file_path&quot;: &quot;X:/School/Proiect Arhitecturi/Attack output&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -296,6 +296,13 @@
       <workItem from="1680958278370" duration="347000" />
       <workItem from="1681027043371" duration="415000" />
       <workItem from="1681027985553" duration="3879000" />
+      <workItem from="1681191718863" duration="808000" />
+      <workItem from="1681192553808" duration="29000" />
+      <workItem from="1681195943731" duration="1487000" />
+      <workItem from="1681198104707" duration="1721000" />
+      <workItem from="1681200102511" duration="626000" />
+      <workItem from="1681201491594" duration="154000" />
+      <workItem from="1681201654869" duration="241000" />
     </task>
     <servers />
   </component>
@@ -314,7 +321,7 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/SnakeML$Main.coverage" NAME="Main Coverage Results" MODIFIED="1681031875564" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SnakeML$Main.coverage" NAME="Main Coverage Results" MODIFIED="1681201797731" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/SnakeML$main.coverage" NAME="main Coverage Results" MODIFIED="1666945857744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -39,7 +39,7 @@ class StateManager:
                 self.active_state.data_received = data_to_send_copy
                 self.active_state.start()
 
-            if self.active_state is not self.states[State.GENETIC_TRAIN_NEW_NETWORK] or ViewSettings.DRAW:
+            if ViewSettings.DRAW:
                 pygame.display.flip()
 
         return True

@@ -29,7 +29,7 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.ui_manager = ui_manager
         self.model = None
 
-        self.states_to_be_evaluated: List[TrainingExample] = []
+        self.examples_to_be_corrected: List[TrainingExample] = []
         self.training_examples: List[TrainingExample] = []
 
         self.title_label = None
@@ -84,10 +84,10 @@ class BackpropagationTrainNewNetwork(BaseState):
         example = TrainingExample(copy.deepcopy(self.model.board), self.model.snake.direction, vision_lines, example_output.ravel().tolist())
 
         if len(self.training_examples) == 0:
-            self.states_to_be_evaluated.append(example)
+            self.examples_to_be_corrected.append(example)
         else:
             if not self.is_example_in_evaluated(example):
-                self.states_to_be_evaluated.append(example)
+                self.examples_to_be_corrected.append(example)
 
         draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
@@ -126,16 +126,16 @@ class BackpropagationTrainNewNetwork(BaseState):
                         break
 
     def train(self, surface, time_delta):
-        current_example = self.states_to_be_evaluated[0]
-        self.states_to_be_evaluated.pop(0)
+        current_example = self.examples_to_be_corrected[0]
+        self.examples_to_be_corrected.pop(0)
 
         draw_board(surface, current_example.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-        draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-
         snake_head = find_snake_head_poz(current_example.board)
         vision_lines = vision.get_vision_lines_snake_head(current_example.board, snake_head, self.input_direction_count, max_dist=0, apple_return_type=self.apple_return_type,
                                                           segment_return_type=self.segment_return_type, distance_function=self.distance_function)
         draw_vision_lines(surface, snake_head, vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+        draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+
         write_controls(surface, 300, 300)
 
         self.ui_manager.update(time_delta)
@@ -163,8 +163,8 @@ class BackpropagationTrainNewNetwork(BaseState):
 
             self.training_examples.append(TrainingExample(current_example.board, current_example.current_direction, current_example.vision_lines, target_output))
 
-        if len(self.states_to_be_evaluated) == 0 or skip:
-            self.states_to_be_evaluated.clear()
+        if len(self.examples_to_be_corrected) == 0 or skip:
+            self.examples_to_be_corrected.clear()
 
             file_path = "Backpropagation_Training/" + str(self.input_direction_count) + "_in_directions_" + str(self.data_received["output_layer_neurons"]) + "_out_directions.json"
             write_examples_to_json_4d(self.training_examples, file_path)

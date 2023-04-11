@@ -59,5 +59,4 @@ class MainMenu(BaseState):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
         self.ui_manager.update(time_delta)
-
         self.ui_manager.draw_ui(surface)
