@@ -24,7 +24,7 @@ class Snake(Individual):
         self.direction: Direction = None
 
     def calculate_fitness(self, max_score) -> None:
-        fitness_score = self.method1()
+        fitness_score = self.method5()
         self.fitness = fitness_score
 
     def method1(self) -> float:
@@ -52,6 +52,15 @@ class Snake(Individual):
         food_bonus = self.score * 100
         survival_bonus = (self.steps_taken / 10) ** 2
         fitness_score = length_bonus + food_bonus + survival_bonus
+        return fitness_score
+
+    def method5(self):
+        max_score = 97
+        max_steps = 97 * 200
+        s_prime = self.score / max_score
+        p_prime = 1 - (self.steps_taken / max_steps)
+        fitness_score = (s_prime * p_prime) / (s_prime + p_prime)
+        fitness_score *= 100000
         return fitness_score
 
 

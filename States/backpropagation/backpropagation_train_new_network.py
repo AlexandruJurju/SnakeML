@@ -125,7 +125,7 @@ class BackpropagationTrainNewNetwork(BaseState):
                         self.trigger_transition()
                         break
 
-    def train(self, surface, time_delta):
+    def correct_and_train(self, surface, time_delta):
         current_example = self.examples_to_be_corrected[0]
         self.examples_to_be_corrected.pop(0)
 
@@ -182,7 +182,7 @@ class BackpropagationTrainNewNetwork(BaseState):
         if not self.training:
             self.execute(surface)
         else:
-            self.train(surface, time_delta)
+            self.correct_and_train(surface, time_delta)
 
             data_to_save = {
                 "generation": -1,
