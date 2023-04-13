@@ -145,9 +145,11 @@ class Options(BaseState):
 
         second_hidden_layer = UITextEntryLine(pygame.Rect((x_positions["center"] - 75 // 2, y_positions[2]), (75, 30)), self.ui_manager)
         second_hidden_layer_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[2]), (250, 30)), "Hidden Layer 2", self.ui_manager)
+        second_hidden_layer.set_text(str(first_hidden_layer_neuron_count))
 
         third_hidden_layer = UITextEntryLine(pygame.Rect((x_positions["right-center"] - 75 // 2, y_positions[2]), (75, 30)), self.ui_manager)
         third_hidden_layer_label = UILabel(pygame.Rect((x_positions_label["right-center"], y_positions_label[2]), (250, 30)), "Hidden Layer 3", self.ui_manager)
+        third_hidden_layer.set_text(str(first_hidden_layer_neuron_count))
 
         self.neural_network_layers_entries["input"] = ([input_layer, input_layer_label])
         self.neural_network_layers_entries["first"] = ([first_hidden_layer, first_hidden_layer_label])
@@ -308,8 +310,11 @@ class Options(BaseState):
                         "file_name": self.file_name_entry.text,
                         "hidden_activation": self.dropdown_hidden_function.selected_option,
                         "output_activation": self.dropdown_activation_function_output.selected_option,
+                        "hidden_layer_count": int(self.hidden_layer_count_dropdown.selected_option),
                         "input_layer_neurons": int(self.neural_network_layers_entries["input"][0].text),
-                        "hidden_layer_neurons": int(self.neural_network_layers_entries["first"][0].text),
+                        "hidden_layer1_neuron_count": int(self.neural_network_layers_entries["first"][0].text),
+                        "hidden_layer2_neuron_count": int(self.neural_network_layers_entries["second"][0].text),
+                        "hidden_layer3_neuron_count": int(self.neural_network_layers_entries["third"][0].text),
                         "output_layer_neurons": int(self.neural_network_layers_entries["output"][0].text),
                         "population_count": int(self.population_count_entry.text),
                         "selection_operator": self.selection_operators_dropdown.selected_option,

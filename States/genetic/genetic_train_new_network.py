@@ -81,12 +81,29 @@ class GeneticTrainNewNetwork(BaseState):
         self.mutation_rate = self.data_received["mutation_rate"]
         self.file_name = self.data_received["file_name"]
 
+        hidden_layer_count = self.data_received["hidden_layer_count"]
         input_neuron_count = self.data_received["input_layer_neurons"]
-        hidden_neuron_count = self.data_received["hidden_layer_neurons"]
+        hidden_layer1_neuron_count = self.data_received["hidden_layer1_neuron_count"]
+        hidden_layer2_neuron_count = self.data_received["hidden_layer2_neuron_count"]
+        hidden_layer3_neuron_count = self.data_received["hidden_layer3_neuron_count"]
         output_neuron_count = self.data_received["output_layer_neurons"]
 
         hidden_activation = getattr(neural_network, self.data_received["hidden_activation"])
         output_activation = getattr(neural_network, self.data_received["output_activation"])
+
+        net = NeuralNetwork()
+        net.add_layer(Dense(input_neuron_count, hidden_layer1_neuron_count))
+        net.add_layer(Activation(hidden_activation, hidden_activation))
+
+        hidden_neurons = [hidden_layer1_neuron_count, hidden_layer2_neuron_count, hidden_layer3_neuron_count]
+
+        for i in range(hidden_layer_count):
+            if i == hidden_layer_count - 1:
+                net.add_layer(Dense(hidden_neurons[i], output_neuron_count))
+                net.add_layer(Activation(output_activation, output_activation))
+            else:
+                net.add_layer(Dense(hidden_neurons[i], hidden_neurons[i + 1]))
+                net.add_layer(Activation(hidden_activation, hidden_activation))
 
         self.x_generations = []
         self.y_best_individual_fitness = []
@@ -115,11 +132,6 @@ class GeneticTrainNewNetwork(BaseState):
         self.offspring_list: List[NeuralNetwork] = []
 
         # activation prime doesn't matter in feedforward, use base activation functions to avoid error
-        net = NeuralNetwork()
-        net.add_layer(Dense(input_neuron_count, hidden_neuron_count))
-        net.add_layer(Activation(hidden_activation, hidden_activation))
-        net.add_layer(Dense(hidden_neuron_count, output_neuron_count))
-        net.add_layer(Activation(output_activation, output_activation))
 
         self.model = Model(self.initial_board_size, self.initial_snake_size, True, net)
 
