@@ -17,6 +17,7 @@ from view import *
 from vision import get_vision_lines_snake_head
 
 
+# TODO make hidden layers count
 class GeneticTrainNewNetwork(BaseState):
     def __init__(self, ui_manager: UIManager):
         super().__init__(State.GENETIC_TRAIN_NEW_NETWORK)

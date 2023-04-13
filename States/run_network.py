@@ -15,7 +15,7 @@ from model import Model
 from view import draw_board, draw_neural_network_complete, draw_vision_lines
 from vision import get_vision_lines_snake_head, VisionLine
 
-
+# TODO add ratio graph
 class RunPretrained(BaseState):
     def __init__(self, ui_manager: UIManager):
         super().__init__(State.RUN_PRETRAINED)
