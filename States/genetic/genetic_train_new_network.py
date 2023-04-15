@@ -131,13 +131,11 @@ class GeneticTrainNewNetwork(BaseState):
         self.parent_list: List[Snake] = []
         self.offspring_list: List[NeuralNetwork] = []
 
-        # activation prime doesn't matter in feedforward, use base activation functions to avoid error
-
         self.model = Model(self.initial_board_size, self.initial_snake_size, True, net)
 
-        # TODO get all blocks that are not W, compare dist with all blocks (including walls) , get max | maybe dont include diagonal walls if only 4 directions
         # TODO dynamic max distance
-        # self.max_distance = distance((1, 1), (1, 11))
+        self.max_distance = self.distance_function((0, 1), (10, 1))
+        print(self.max_distance)
 
     def end(self):
         self.ui_manager.clear_and_reset()
@@ -177,7 +175,8 @@ class GeneticTrainNewNetwork(BaseState):
 
         total_fitness = sum(individual.fitness for individual in self.parent_list)
         # best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken))
-        best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken if individual.steps_taken != 0 else 0))
+        # best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken if individual.steps_taken != 0 else 0))
+        best_individual = max(self.parent_list, key=lambda individual: (individual.score, individual.score / individual.steps_taken if individual.steps_taken != 0 else 0))
 
         # TODO change order
         # best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken))

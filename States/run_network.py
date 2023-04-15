@@ -1,7 +1,9 @@
+import os.path
 from typing import List
 
 import pygame
 import pygame_gui
+from matplotlib import pyplot as plt
 from pygame_gui import UIManager
 from pygame_gui.core.utility import create_resource_path
 from pygame_gui.elements import UILabel, UIButton, UITextEntryLine
@@ -14,6 +16,7 @@ from game_config import State, ViewSettings, GameSettings
 from model import Model
 from view import draw_board, draw_neural_network_complete, draw_vision_lines
 from vision import get_vision_lines_snake_head, VisionLine
+
 
 # TODO add ratio graph
 class RunPretrained(BaseState):
@@ -59,7 +62,15 @@ class RunPretrained(BaseState):
         self.label_return_type: UILabel = None
         self.label_distance: UILabel = None
 
+        self.x_steps = []
+        self.y_ratio = []
+        self.x_score = []
+
     def start(self):
+        self.x_steps = []
+        self.y_ratio = []
+        self.x_score = []
+
         self.state_target = self.data_received["state"]
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
         self.label_return_type = UILabel(pygame.Rect((50, 25), (250, 35)), "", self.ui_manager)
@@ -87,15 +98,6 @@ class RunPretrained(BaseState):
         self.ui_manager.clear_and_reset()
         self.execute_network = False
 
-    @staticmethod
-    def print_vision_line(vision_line: VisionLine):
-        print(f" {vision_line.direction} w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_d {vision_line.segment_distance} ")
-
-    def print_all_vision_lines(self, vision_lines: List[VisionLine]):
-        for line in vision_lines:
-            self.print_vision_line(line)
-        print()
-
     def run_network(self, surface):
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
                                                    max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
@@ -111,10 +113,32 @@ class RunPretrained(BaseState):
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move(next_direction)
 
+        self.x_steps.append(self.model.snake.steps_taken)
+        self.y_ratio.append(self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0)
+        self.x_score.append(self.model.snake.score)
+
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
+
+            fig1 = plt.figure(figsize=(16, 9))
+            plt.plot(self.x_steps, self.y_ratio, )
+            plt.xlabel("Steps")
+            plt.ylabel("Ratio")
+            plt.savefig(os.path.dirname(self.file_path) + "/" + "step_ratio.pdf")
+            plt.show()
+
+            fig2 = plt.figure(figsize=(16, 9))
+            plt.plot(self.x_score, self.y_ratio, "b")
+            plt.xlabel("Score")
+            plt.ylabel("Ratio")
+            plt.savefig(os.path.dirname(self.file_path) + "/" + "score_ratio.pdf")
+            plt.show()
+
+            self.x_steps = []
+            self.y_ratio = []
+            self.x_score = []
 
     def run(self, surface, time_delta):
         if ViewSettings.DRAW:
@@ -150,7 +174,6 @@ class RunPretrained(BaseState):
                     # TODO dynamic max distance
                     self.max_dist = 10
                     self.execute_network = True
-                    # ViewSettings.DRAW = False
 
                 if event.ui_element == self.button_draw_network:
                     self.draw_network = not self.draw_network
