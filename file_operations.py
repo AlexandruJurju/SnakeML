@@ -106,7 +106,7 @@ def read_training_data_json(file_location) -> Tuple[List, List]:
 
 
 def save_neural_network_to_json(data_to_save: Dict, network: NeuralNetwork, path: str) -> None:
-    network_dict = []
+    network_list = []
     for i, layer in enumerate(network.layers):
         if type(layer) is Activation:
             layer_dict = {
@@ -122,16 +122,16 @@ def save_neural_network_to_json(data_to_save: Dict, network: NeuralNetwork, path
                 "weights": layer.weights.tolist(),
                 "bias": layer.bias.tolist()
             }
-        network_dict.append(layer_dict)
+        network_list.append(layer_dict)
 
-    generation_network = {"generation": data_to_save["generation"],
-                          "board_size": data_to_save["initial_board_size"],
-                          "snake_size": data_to_save["initial_snake_size"],
-                          "input_direction_count": data_to_save["input_direction_count"],
-                          "apple_return_type": data_to_save["apple_return_type"],
-                          "segment_return_type": data_to_save["segment_return_type"],
-                          "distance_function": data_to_save["distance_function"],
-                          "network": network_dict}
+    option_dict = {"generation": data_to_save["generation"],
+                   "board_size": data_to_save["initial_board_size"],
+                   "snake_size": data_to_save["initial_snake_size"],
+                   "input_direction_count": data_to_save["input_direction_count"],
+                   "apple_return_type": data_to_save["apple_return_type"],
+                   "segment_return_type": data_to_save["segment_return_type"],
+                   "distance_function": data_to_save["distance_function"],
+                   "network": network_list}
 
     path_tokens = path.split("/")
     path_tokens = path_tokens[:-1]
@@ -143,7 +143,7 @@ def save_neural_network_to_json(data_to_save: Dict, network: NeuralNetwork, path
         os.makedirs(real_path)
 
     network_file = open(path + ".json", "w")
-    json.dump(generation_network, network_file)
+    json.dump(option_dict, network_file)
     network_file.close()
 
 
