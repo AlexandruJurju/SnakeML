@@ -36,6 +36,9 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.button_back = None
 
     def start(self):
+        self.examples_to_be_corrected: List[TrainingExample] = []
+        self.training_examples: List[TrainingExample] = []
+        
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Backpropagation Train New Network", self.ui_manager)
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 
@@ -121,7 +124,7 @@ class BackpropagationTrainNewNetwork(BaseState):
                     case pygame.K_x:
                         return "X"
                     case pygame.K_ESCAPE:
-                        self.set_target_state_name(State.QUIT)
+                        self.set_target_state_name(State.BACKPROPAGATION_MENU)
                         self.trigger_transition()
                         break
 
@@ -205,7 +208,7 @@ class BackpropagationTrainNewNetwork(BaseState):
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self.set_target_state_name(State.QUIT)
+                        self.set_target_state_name(State.BACKPROPAGATION_MENU)
                         self.trigger_transition()
 
                 self.ui_manager.process_events(event)
