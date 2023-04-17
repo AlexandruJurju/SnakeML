@@ -24,7 +24,7 @@ class Snake(Individual):
         self.direction: Direction = None
 
     def calculate_fitness(self, max_score) -> None:
-        fitness_score = self.method1()
+        fitness_score = self.method4()
         self.fitness = fitness_score
 
     def method1(self) -> float:
