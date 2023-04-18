@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict
+from typing import Tuple, Dict
 
 import pygame
 import pygame_gui
@@ -67,8 +67,8 @@ class Options(BaseState):
         self.mutation_operators_dropdown: UIDropDownMenu = None
         self.mutation_operators_label = None
 
-        self.dropdown_distance: UIDropDownMenu = None
-        self.dropdown_distance_label: UILabel = None
+        self.distance_function: UILabel = None
+        self.distance_function_label: UILabel = None
 
         self.hidden_layer_count_dropdown: UIDropDownMenu = None
         self.hidden_layer_count_dropdown_label: UILabel = None
@@ -114,9 +114,8 @@ class Options(BaseState):
                                                        pygame.Rect((x_positions["left-left"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
         self.dropdown_hidden_function_label = UILabel(pygame.Rect((x_positions_label["left-left"], y_positions_label[0]), (250, 35)), "Hidden Activation Function", self.ui_manager)
 
-        self.dropdown_distance = UIDropDownMenu(GameSettings.AVAILABLE_DISTANCES, GameSettings.AVAILABLE_DISTANCES[0],
-                                                pygame.Rect((x_positions["right-right"] - 225 // 2, y_positions[1]), (225, 30)), self.ui_manager)
-        self.dropdown_distance_label = UILabel(pygame.Rect((x_positions_label["right-right"], y_positions_label[1]), (250, 35)), "Distance Function", self.ui_manager)
+        self.distance_function = UILabel(pygame.Rect((x_positions["right-right"] - 225 // 2, y_positions[1]), (225, 30)),"chebyshev", self.ui_manager)
+        self.distance_function_label = UILabel(pygame.Rect((x_positions_label["right-right"], y_positions_label[1]), (250, 35)), "Distance Function", self.ui_manager)
 
         self.dropdown_input_direction_count = UIDropDownMenu(GameSettings.AVAILABLE_INPUT_DIRECTIONS, GameSettings.AVAILABLE_INPUT_DIRECTIONS[0], pygame.Rect((x_positions["left-left"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
         self.dropdown_input_direction_count_label = UILabel(pygame.Rect((x_positions_label["left-left"], y_positions_label[1]), (250, 35)), "Input Direction Count", self.ui_manager)
@@ -191,7 +190,7 @@ class Options(BaseState):
                                             self.dropdown_segment_return, self.label_dropdown_segment_return,
                                             self.dropdown_apple_return, self.label_dropdown_apple_return,
                                             self.hidden_layer_count_dropdown, self.hidden_layer_count_dropdown_label,
-                                            self.dropdown_distance, self.dropdown_distance_label]
+                                            self.distance_function, self.distance_function_label]
 
         # ================================================
         self.file_name_entry = UITextEntryLine(pygame.Rect((x_positions["center"] - 175 // 2, y_positions[1]), (175, 30)), self.ui_manager)
@@ -306,7 +305,7 @@ class Options(BaseState):
                         "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
                         "segment_return_type": self.dropdown_segment_return.selected_option,
                         "apple_return_type": self.dropdown_apple_return.selected_option,
-                        "distance_function": self.dropdown_distance.selected_option,
+                        "distance_function": self.distance_function.text,
                         "file_name": self.file_name_entry.text,
                         "hidden_activation": self.dropdown_hidden_function.selected_option,
                         "output_activation": self.dropdown_activation_function_output.selected_option,
@@ -330,7 +329,7 @@ class Options(BaseState):
                         "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
                         "segment_return_type": self.dropdown_segment_return.selected_option,
                         "apple_return_type": self.dropdown_apple_return.selected_option,
-                        "distance_function": self.dropdown_distance.selected_option,
+                        "distance_function": self.distance_function.text,
                         "file_name": self.file_name_entry.text,
                         "hidden_activation": self.dropdown_hidden_function.selected_option,
                         "output_activation": self.dropdown_activation_function_output.selected_option,
@@ -355,6 +354,10 @@ class Options(BaseState):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
         self.neural_network_layers_entries["input"][0].set_text(str(int(self.dropdown_input_direction_count.selected_option) * 3 + 4))
+        if self.dropdown_input_direction_count.selected_option == "4":
+            self.distance_function.set_text(GameSettings.AVAILABLE_DISTANCES[0])
+        else:
+            self.distance_function.set_text(GameSettings.AVAILABLE_DISTANCES[1])
         self.draw_options()
 
         for event in pygame.event.get():

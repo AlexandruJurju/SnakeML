@@ -4,7 +4,6 @@ from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
 
 from States.base_state import BaseState
-from States.state_manager import StateManager
 from game_config import State, ViewSettings
 
 

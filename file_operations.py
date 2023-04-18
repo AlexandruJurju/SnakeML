@@ -2,8 +2,6 @@ import json
 import os.path
 from typing import Tuple, Dict
 
-import numpy as np
-
 import neural_network
 from game_config import Direction
 from neural_network import *

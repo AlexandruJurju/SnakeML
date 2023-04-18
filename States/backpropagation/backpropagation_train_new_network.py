@@ -38,7 +38,7 @@ class BackpropagationTrainNewNetwork(BaseState):
     def start(self):
         self.examples_to_be_corrected: List[TrainingExample] = []
         self.training_examples: List[TrainingExample] = []
-        
+
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Backpropagation Train New Network", self.ui_manager)
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
 

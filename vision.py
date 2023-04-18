@@ -1,26 +1,16 @@
-from typing import List, Tuple
+from typing import List
 
-import numpy
 import numpy as np
-from scipy.spatial.distance import chebyshev
 
 from game_config import *
 
 
-def distance(a, b):
-    return chebyshev_distance(a, b)
-
-
 def manhattan_distance(a, b):
-    return sum(abs(val1 - val2) for val1, val2 in zip(a, b))
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 
 def chebyshev_distance(a, b):
     return max(abs(a[0] - b[0]), abs(a[1] - b[1]))
-
-
-def euclidean_distance(a, b):
-    return numpy.linalg.norm(a - b)
 
 
 def find_snake_head_poz(board: np.ndarray) -> np.ndarray:

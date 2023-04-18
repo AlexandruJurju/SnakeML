@@ -1,5 +1,4 @@
 import os.path
-from typing import List
 
 import pygame
 import pygame_gui
@@ -15,7 +14,7 @@ from file_operations import read_all_from_json
 from game_config import State, ViewSettings, GameSettings
 from model import Model
 from view import draw_board, draw_neural_network_complete, draw_vision_lines
-from vision import get_vision_lines_snake_head, VisionLine
+from vision import get_vision_lines_snake_head
 
 
 # TODO add ratio graph
