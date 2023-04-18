@@ -213,7 +213,7 @@ def draw_next_snake_direction(window, board: np.ndarray, prediction: Direction, 
 
 def write_controls(window, pos_x, pos_y) -> None:
     font = pygame.font.SysFont("Arial", 20)
-    text_lines = ["CONTROLS", "WASD to move the snake", "ENTER to keep the same move", "X to end training and skip the rest of the example"]
+    text_lines = ["CONTROLS", "ESCAPE to return to menu", "WASD to move the snake", "ENTER to keep the same move", "X to end training and skip the rest of the example"]
 
     for i, line in enumerate(text_lines):
         text_surface = font.render(line, True, (255, 255, 255))
