@@ -11,7 +11,7 @@ class Individual:
         self.fitness: float = 0
         self.brain: NeuralNetwork = neural_network
 
-    def calculate_fitness(self, max_score):
+    def calculate_fitness(self):
         pass
 
 
@@ -24,8 +24,8 @@ class Snake(Individual):
         self.won: bool = False
         self.direction: Direction = None
 
-    def calculate_fitness(self, max_score) -> None:
-        fitness_score = self.method4()
+    def calculate_fitness(self) -> None:
+        fitness_score = self.method1()
         self.fitness = fitness_score
 
     def method1(self) -> float:
@@ -41,17 +41,7 @@ class Snake(Individual):
         fitness_score = fitness_score * 10000
         return fitness_score
 
-    # TODO change to dynamic
     def method3(self):
-        max_score = 97
-        max_steps = 97 * 200
-        s_prime = self.score / max_score
-        p_prime = 1 - (self.steps_taken / max_steps)
-        fitness_score = (s_prime * p_prime) / (s_prime + p_prime)
-        fitness_score *= 100000
-        return fitness_score
-
-    def method4(self):
         if self.steps_taken > 0:
             fitness_score = (self.steps_taken * self.score) / (self.steps_taken + self.score)
         else:

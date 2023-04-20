@@ -158,7 +158,7 @@ class GeneticTrainNewNetwork(BaseState):
         is_alive = self.model.move(next_direction)
 
         if not is_alive:
-            self.model.snake.calculate_fitness(self.model.max_score)
+            self.model.snake.calculate_fitness()
             self.parent_list.append(self.model.snake)
 
             if self.generation == 0:
