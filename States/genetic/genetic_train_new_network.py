@@ -133,8 +133,7 @@ class GeneticTrainNewNetwork(BaseState):
 
         self.model = Model(self.initial_board_size, self.initial_snake_size, True, net)
 
-        # TODO dynamic max distance
-        self.max_distance = self.distance_function((0, 1), (10, 1))
+        self.max_distance = self.distance_function((0, 1), (self.initial_board_size, 1))
         print(self.max_distance)
 
     def end(self):
@@ -142,7 +141,7 @@ class GeneticTrainNewNetwork(BaseState):
 
     def run_genetic(self, surface):
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
-                                                   max_dist=0, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
+                                                   max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
         neural_net_prediction = self.model.get_nn_output(vision_lines)
 
         if ViewSettings.DRAW:
@@ -166,9 +165,6 @@ class GeneticTrainNewNetwork(BaseState):
                 self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.model.snake.brain)
             else:
                 self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.offspring_list[len(self.parent_list) - 1])
-
-            if len(self.parent_list) == self.population_count:
-                self.next_generation()
 
     def next_generation(self):
         self.offspring_list = []
@@ -235,7 +231,7 @@ class GeneticTrainNewNetwork(BaseState):
             self.offspring_list.append(parent.brain)
 
         # np.random.shuffle(parents_for_mating)
-        np.random.shuffle(self.parent_list)
+        # np.random.shuffle(self.parent_list)
 
         while len(self.offspring_list) < self.population_count:
             parent1, parent2 = self.selection_operator(self.parent_list, 2)
@@ -262,7 +258,10 @@ class GeneticTrainNewNetwork(BaseState):
             self.generation_label.set_text("Generation : " + str(self.generation))
             self.individual_label.set_text("Individual : " + str(len(self.parent_list)) + " / " + str(self.population_count))
 
-        self.run_genetic(surface)
+        if len(self.parent_list) == self.population_count:
+            self.next_generation()
+        else:
+            self.run_genetic(surface)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

@@ -33,10 +33,9 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;ToolWindowRun.ShowToolbar&quot;: &quot;false&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;X:/School/Proiect Arhitecturi/Attack output&quot;,
+    &quot;last_opened_file_path&quot;: &quot;X:/Downloads/pygame_gui_examples-master&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -47,16 +46,14 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="X:\School Repos\SnakeML\Genetic_Networks" />
-      <recent name="X:\School Repos\SnakeML\Genetic_Networks\Met1 Chebyshev 1over Sd Ab" />
       <recent name="X:\School Repos\SnakeML\data\fonts" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="X:\School Repos\SnakeML\Genetic_Networks" />
       <recent name="X:\School Repos\SnakeML\States" />
       <recent name="X:\School Repos\SnakeML\data\themes" />
       <recent name="X:\School Repos\SnakeML\data\fonts" />
       <recent name="X:\School Repos\SnakeML\data" />
+      <recent name="X:\School Repos\SnakeML\States\backpropagation" />
     </key>
   </component>
   <component name="RunManager">
@@ -262,56 +259,12 @@
       <workItem from="1679813499782" duration="3521000" />
       <workItem from="1679820665995" duration="246000" />
       <workItem from="1679820933505" duration="12292000" />
-      <workItem from="1680195180209" duration="658000" />
-      <workItem from="1680251747081" duration="17000" />
-      <workItem from="1680255894247" duration="44000" />
-      <workItem from="1680255989564" duration="46000" />
-      <workItem from="1680264565110" duration="3118000" />
-      <workItem from="1680267898374" duration="51000" />
-      <workItem from="1680325588072" duration="621000" />
-      <workItem from="1680326284380" duration="9726000" />
-      <workItem from="1680339827792" duration="9765000" />
-      <workItem from="1680411598618" duration="41000" />
-      <workItem from="1680414879224" duration="624000" />
-      <workItem from="1680417256075" duration="47000" />
-      <workItem from="1680425302178" duration="22000" />
-      <workItem from="1680498999371" duration="11000" />
-      <workItem from="1680517777942" duration="21000" />
-      <workItem from="1680583206541" duration="15000" />
-      <workItem from="1680606811657" duration="1403000" />
-      <workItem from="1680661166828" duration="884000" />
-      <workItem from="1680668733785" duration="6586000" />
-      <workItem from="1680756267237" duration="1910000" />
-      <workItem from="1680770558957" duration="210000" />
-      <workItem from="1680771168448" duration="13343000" />
-      <workItem from="1680850512382" duration="1475000" />
-      <workItem from="1680862178464" duration="4714000" />
-      <workItem from="1680870494018" duration="1776000" />
-      <workItem from="1680872291672" duration="7205000" />
-      <workItem from="1680886488062" duration="480000" />
-      <workItem from="1680889540927" duration="60000" />
-      <workItem from="1680919426004" duration="177000" />
-      <workItem from="1680923187576" duration="9778000" />
-      <workItem from="1680939450665" duration="7240000" />
-      <workItem from="1680958278370" duration="347000" />
-      <workItem from="1681027043371" duration="415000" />
-      <workItem from="1681027985553" duration="3879000" />
-      <workItem from="1681191718863" duration="808000" />
-      <workItem from="1681192553808" duration="29000" />
-      <workItem from="1681195943731" duration="1487000" />
-      <workItem from="1681198104707" duration="1721000" />
-      <workItem from="1681200102511" duration="626000" />
-      <workItem from="1681201491594" duration="154000" />
-      <workItem from="1681201654869" duration="241000" />
-      <workItem from="1681389720405" duration="29000" />
-      <workItem from="1681389786725" duration="1128000" />
-      <workItem from="1681394143396" duration="43000" />
-      <workItem from="1681396877810" duration="392000" />
-      <workItem from="1681624049008" duration="194000" />
-      <workItem from="1681731160311" duration="78000" />
-      <workItem from="1681907182275" duration="2063000" />
-      <workItem from="1681966438769" duration="1865000" />
-      <workItem from="1681973015140" duration="9000" />
+      <workItem from="1679836237780" duration="34000" />
+      <workItem from="1679842034256" duration="3000" />
+      <workItem from="1679846718069" duration="5104000" />
+      <workItem from="1682059399908" duration="433000" />
+      <workItem from="1682061394212" duration="3000" />
+      <workItem from="1682064566667" duration="1770000" />
     </task>
     <servers />
   </component>
@@ -330,7 +283,7 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/SnakeML$Main.coverage" NAME="Main Coverage Results" MODIFIED="1681972972451" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/SnakeML$main.coverage" NAME="main Coverage Results" MODIFIED="1666945857744" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SnakeML$Main.coverage" NAME="Main Coverage Results" MODIFIED="1682064317217" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SnakeML$main.coverage" NAME="main Coverage Results" MODIFIED="1682064086524" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

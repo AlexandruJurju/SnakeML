@@ -119,21 +119,22 @@ class RunPretrained(BaseState):
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
+            print(self.model.snake.score / self.model.snake.steps_taken)
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
 
-            fig1 = plt.figure(figsize=(16, 9))
-            plt.plot(self.x_steps, self.y_ratio, )
-            plt.xlabel("Steps")
-            plt.ylabel("Ratio")
-            plt.savefig(os.path.dirname(self.file_path) + "/" + "step_ratio.pdf")
-            plt.show()
-
-            fig2 = plt.figure(figsize=(16, 9))
-            plt.plot(self.x_score, self.y_ratio, "b")
-            plt.xlabel("Score")
-            plt.ylabel("Ratio")
-            plt.savefig(os.path.dirname(self.file_path) + "/" + "score_ratio.pdf")
-            plt.show()
+            # fig1 = plt.figure(figsize=(16, 9))
+            # plt.plot(self.x_steps, self.y_ratio, )
+            # plt.xlabel("Steps")
+            # plt.ylabel("Ratio")
+            # plt.savefig(os.path.dirname(self.file_path) + "/" + "step_ratio.pdf")
+            # plt.show()
+            #
+            # fig2 = plt.figure(figsize=(16, 9))
+            # plt.plot(self.x_score, self.y_ratio, "b")
+            # plt.xlabel("Score")
+            # plt.ylabel("Ratio")
+            # plt.savefig(os.path.dirname(self.file_path) + "/" + "score_ratio.pdf")
+            # plt.show()
 
             self.x_steps = []
             self.y_ratio = []
