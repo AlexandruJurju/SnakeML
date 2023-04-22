@@ -38,37 +38,34 @@ class VisionLine:
 def look_in_direction_snake_head(board: np.ndarray, snake_head, direction: Direction, max_dist, apple_return_type, segment_return_type, distance_function) -> VisionLine:
     apple_coord = None
     segment_coord = None
-    apple_found = False
-    segment_found = False
 
     # search starts at one block in the given direction otherwise head is also check in the loop
-    current_block = [snake_head[0] + direction.value[0], snake_head[1] + direction.value[1]]
+    current_block = np.array([snake_head[0] + direction.value[0], snake_head[1] + direction.value[1]])
 
     # loop the blocks in the given direction and store position and coordinates
     while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
-        if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_found is False:
+        if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_coord is None:
             apple_coord = current_block
-            apple_found = True
-        elif board[current_block[0]][current_block[1]] == BoardConsts.SNAKE_BODY and segment_found is False:
+        elif board[current_block[0]][current_block[1]] == BoardConsts.SNAKE_BODY and segment_coord is None:
             segment_coord = current_block
-            segment_found = True
-        current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
+        current_block += np.array([direction.value[0], direction.value[1]])
 
     wall_distance = distance_function(snake_head, current_block)
     wall_output = 1 / wall_distance
-    if wall_output > 1:
-        print("GREATER")
     wall_coord = current_block
 
+    if wall_output > 1:
+        print("GREATER")
+
     if apple_return_type == "boolean":
-        apple_output = 1.0 if apple_found else 0.0
+        apple_output = 1.0 if apple_coord is not None else 0.0
     else:
-        apple_output = 1.0 / distance_function(snake_head, apple_coord) if apple_found else 0.0
+        apple_output = 1.0 / distance_function(snake_head, apple_coord) if apple_coord is not None else 0.0
 
     if segment_return_type == "boolean":
-        segment_output = 1.0 if segment_found else 0.0
+        segment_output = 1.0 if segment_coord is not None else 0.0
     else:
-        segment_output = 1.0 / distance_function(snake_head, segment_coord) if segment_found else 0.0
+        segment_output = 1.0 / distance_function(snake_head, segment_coord) if segment_coord is not None else 0.0
 
     vision_line = VisionLine(wall_coord, wall_output, apple_coord, apple_output, segment_coord, segment_output, direction)
     return vision_line
