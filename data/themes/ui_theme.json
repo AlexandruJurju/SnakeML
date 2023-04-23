@@ -1,7 +1,7 @@
 {
   "defaults": {
     "colours": {
-      "dark_bg": "#181818",
+      "dark_bg": "#242424",
       "normal_border": "#999999",
       "link_text": "#FF0000",
       "link_hover": "#FFFF00",

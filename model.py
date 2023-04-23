@@ -27,11 +27,13 @@ class Snake(Individual):
         self.direction: Direction = None
 
     def calculate_fitness(self) -> None:
-        fitness_score = self.method3()
+        fitness_score = self.method1()
         self.fitness = fitness_score
 
     def method1(self) -> float:
         fitness_score = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
+        if self.score == 97:
+            fitness_score *= 10 ** 5 * (self.score / self.steps_taken)
         return fitness_score
 
     def method2(self) -> float:
@@ -181,14 +183,13 @@ class Model:
 
     @staticmethod
     def get_nn_output_4directions(nn_output) -> Direction:
-        direction_index = list(nn_output).index(max(list(nn_output)))
+        direction_index = np.argmax(nn_output)
 
-        match direction_index:
-            case 0:
-                return Direction.UP
-            case 1:
-                return Direction.DOWN
-            case 2:
-                return Direction.LEFT
-            case 3:
-                return Direction.RIGHT
+        if direction_index == 0:
+            return Direction.UP
+        elif direction_index == 1:
+            return Direction.DOWN
+        elif direction_index == 2:
+            return Direction.LEFT
+        else:
+            return Direction.RIGHT

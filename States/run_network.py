@@ -100,7 +100,9 @@ class RunPretrained(BaseState):
     def run_network(self, surface):
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
                                                    max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
-        neural_net_prediction = self.model.get_nn_output(vision_lines)
+
+        nn_input = vision.get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
+        neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
 
         if ViewSettings.DRAW:
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
