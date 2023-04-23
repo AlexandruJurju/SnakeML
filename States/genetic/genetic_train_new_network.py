@@ -313,8 +313,9 @@ class GeneticTrainNewNetwork(BaseState):
                     plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "best_ratio.pdf")
                     plt.show()
 
-                    self.set_target_state_name(State.QUIT)
+                    self.set_target_state_name(State.GENETIC_MENU)
                     self.trigger_transition()
+                    ViewSettings.DRAW = True
 
                 if event.key == pygame.K_RETURN:
                     ViewSettings.DRAW = True
