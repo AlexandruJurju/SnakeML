@@ -81,9 +81,10 @@ class BackpropagationTrainNewNetwork(BaseState):
     def execute(self, surface):
         vision_lines = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
                                                           max_dist=0, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
-        nn_output = self.model.get_nn_output(vision_lines)
+        nn_input = vision.get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
+        neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
 
-        example_output = np.where(nn_output == np.max(nn_output), 1, 0)
+        example_output = np.where(neural_net_prediction == np.max(neural_net_prediction), 1, 0)
         example = TrainingExample(copy.deepcopy(self.model.board), self.model.snake.direction, vision_lines, example_output.ravel().tolist())
 
         if len(self.training_examples) == 0:
@@ -94,7 +95,7 @@ class BackpropagationTrainNewNetwork(BaseState):
 
         draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
-        next_direction = self.model.get_nn_output_4directions(nn_output)
+        next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move(next_direction)
         if not is_alive:
             self.training = True

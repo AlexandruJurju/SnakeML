@@ -138,21 +138,21 @@ class GeneticTrainNewNetwork(BaseState):
     def end(self):
         self.ui_manager.clear_and_reset()
 
-    # @staticmethod
-    # def print_vision_line(vision_line: VisionLine):
-    #     print(f" {vision_line.direction} w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_d {vision_line.segment_distance} ")
-    #
-    # def print_all_vision_lines(self, vision_lines: List[VisionLine]):
-    #     for line in vision_lines:
-    #         self.print_vision_line(line)
-    #     print()
+    @staticmethod
+    def print_vision_line(vision_line: VisionLine):
+        print(f" {vision_line.direction} w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_d {vision_line.segment_distance} ")
+
+    def print_all_vision_lines(self, vision_lines: List[VisionLine]):
+        for line in vision_lines:
+            self.print_vision_line(line)
+        print()
 
     def run_genetic(self, surface):
         # vision_lines = vision.get_vision_lines_snake_model(self.model, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
 
         vision_lines = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type,
                                                           distance_function=self.distance_function)
-        #
+        # self.print_all_vision_lines(vision_lines)
         # for i in range(len(vision_lines)):
         #     if vision_lines[i] != vision_lines2[i]:
         #         self.print_vision_line(vision_lines[i])

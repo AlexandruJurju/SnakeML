@@ -1,8 +1,7 @@
-import os.path
+from typing import List
 
 import pygame
 import pygame_gui
-from matplotlib import pyplot as plt
 from pygame_gui import UIManager
 from pygame_gui.core.utility import create_resource_path
 from pygame_gui.elements import UILabel, UIButton, UITextEntryLine
@@ -65,6 +64,14 @@ class RunPretrained(BaseState):
         self.y_ratio = []
         self.x_score = []
 
+    @staticmethod
+    def print_vision_line(vision_line: vision.VisionLine):
+        print(f" {vision_line.direction} w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_d {vision_line.segment_distance} ")
+
+    def print_all_vision_lines(self, vision_lines: List[vision.VisionLine]):
+        for line in vision_lines:
+            self.print_vision_line(line)
+
     def start(self):
         self.x_steps = []
         self.y_ratio = []
@@ -100,9 +107,15 @@ class RunPretrained(BaseState):
     def run_network(self, surface):
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
                                                    max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
+        self.print_all_vision_lines(vision_lines)
+        print(self.model.board)
 
         nn_input = vision.get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
         neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
+
+        print(nn_input)
+        print(neural_net_prediction)
+        print("")
 
         if ViewSettings.DRAW:
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
@@ -121,7 +134,7 @@ class RunPretrained(BaseState):
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
-            print(self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0 )
+            print(self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0)
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
 
             # fig1 = plt.figure(figsize=(16, 9))
@@ -176,6 +189,7 @@ class RunPretrained(BaseState):
                     # TODO dynamic max distance
                     self.max_dist = 10
                     self.execute_network = True
+                    # ViewSettings.MAX_FPS = 0.5
 
                 if event.ui_element == self.button_draw_network:
                     self.draw_network = not self.draw_network

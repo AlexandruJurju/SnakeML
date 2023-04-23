@@ -163,10 +163,7 @@ def get_parameters_in_nn_input_form(vision_lines: List[VisionLine], current_dire
         nn_input.append(line.apple_distance)
         nn_input.append(line.segment_distance)
 
-    for direction in MAIN_DIRECTIONS:
-        if current_direction == direction:
-            nn_input.append(1)
-        else:
-            nn_input.append(0)
+    nn_input.append(current_direction.value[0])
+    nn_input.append(current_direction.value[1])
 
     return np.reshape(nn_input, (len(nn_input), 1))

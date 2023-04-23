@@ -114,7 +114,7 @@ class Options(BaseState):
                                                        pygame.Rect((x_positions["left-left"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
         self.dropdown_hidden_function_label = UILabel(pygame.Rect((x_positions_label["left-left"], y_positions_label[0]), (250, 35)), "Hidden Activation Function", self.ui_manager)
 
-        self.distance_function = UILabel(pygame.Rect((x_positions["right-right"] - 225 // 2, y_positions[1]), (225, 30)),"chebyshev", self.ui_manager)
+        self.distance_function = UILabel(pygame.Rect((x_positions["right-right"] - 225 // 2, y_positions[1]), (225, 30)), "chebyshev", self.ui_manager)
         self.distance_function_label = UILabel(pygame.Rect((x_positions_label["right-right"], y_positions_label[1]), (250, 35)), "Distance Function", self.ui_manager)
 
         self.dropdown_input_direction_count = UIDropDownMenu(GameSettings.AVAILABLE_INPUT_DIRECTIONS, GameSettings.AVAILABLE_INPUT_DIRECTIONS[0], pygame.Rect((x_positions["left-left"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
@@ -129,7 +129,7 @@ class Options(BaseState):
         self.dropdown_apple_return = UIDropDownMenu(["boolean", "distance"], "boolean", pygame.Rect((x_positions["right-right"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
         self.label_dropdown_apple_return = UILabel(pygame.Rect((x_positions_label["right-right"], y_positions_label[0]), (250, 35)), "Apple Return type", self.ui_manager)
 
-        input_neuron_count = int(self.dropdown_input_direction_count.selected_option) * 3 + 4
+        input_neuron_count = int(self.dropdown_input_direction_count.selected_option) * 3 + 2
         input_layer = UILabel(pygame.Rect((x_positions["left-left"] - 75 // 2, y_positions[2]), (75, 30)), str(input_neuron_count), self.ui_manager)
         input_layer_label = UILabel(pygame.Rect((x_positions_label["left-left"], y_positions_label[2]), (250, 30)), "Input Layer", self.ui_manager)
 
@@ -353,7 +353,7 @@ class Options(BaseState):
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
 
-        self.neural_network_layers_entries["input"][0].set_text(str(int(self.dropdown_input_direction_count.selected_option) * 3 + 4))
+        self.neural_network_layers_entries["input"][0].set_text(str(int(self.dropdown_input_direction_count.selected_option) * 3 + 2))
         if self.dropdown_input_direction_count.selected_option == "4":
             self.distance_function.set_text(GameSettings.AVAILABLE_DISTANCES[0])
         else:
