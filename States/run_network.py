@@ -107,12 +107,15 @@ class RunPretrained(BaseState):
     def run_network(self, surface):
         vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
                                                    max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
+
+        if self.model.snake.brain.get_dense_layers()[0].input_size == 14:
+            nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
+        else:
+            nn_input = vision.get_parameters_in_nn_input_form_4d(vision_lines, self.model.snake.direction)
+        neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
+        
         self.print_all_vision_lines(vision_lines)
         print(self.model.board)
-
-        nn_input = vision.get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
-        neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
-
         print(nn_input)
         print(neural_net_prediction)
         print("")

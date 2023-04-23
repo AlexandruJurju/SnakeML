@@ -158,7 +158,7 @@ class GeneticTrainNewNetwork(BaseState):
         #         self.print_vision_line(vision_lines[i])
         #         self.print_vision_line(vision_lines2[i])
 
-        nn_input = vision.get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
+        nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
         neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
 

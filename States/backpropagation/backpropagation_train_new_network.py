@@ -81,7 +81,7 @@ class BackpropagationTrainNewNetwork(BaseState):
     def execute(self, surface):
         vision_lines = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
                                                           max_dist=0, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
-        nn_input = vision.get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
+        nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
         neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
 
         example_output = np.where(neural_net_prediction == np.max(neural_net_prediction), 1, 0)

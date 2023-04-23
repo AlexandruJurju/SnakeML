@@ -5,7 +5,7 @@ from typing import Tuple, Dict
 import neural_network
 from game_config import Direction
 from neural_network import *
-from vision import VisionLine, get_parameters_in_nn_input_form
+from vision import VisionLine, get_parameters_in_nn_input_form_2d
 
 
 class TrainingExample:
@@ -93,7 +93,7 @@ def read_training_data_json(file_location) -> Tuple[List, List]:
                 line = VisionLine(line["wall_coord"], line["wall_distance"], line["apple_coord"], line["apple_distance"], line["segment_coord"], line["segment_distance"], Direction[line["direction"]])
                 vision_lines.append(line)
 
-            x.append(get_parameters_in_nn_input_form(vision_lines, real_direction))
+            x.append(get_parameters_in_nn_input_form_2d(vision_lines, real_direction))
 
             outputs = [example["up"], example["down"], example["left"], example["right"]]
             y.append(outputs)
