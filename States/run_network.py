@@ -119,7 +119,7 @@ class RunPretrained(BaseState):
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
-            print(self.model.snake.score / self.model.snake.steps_taken)
+            print(self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0 )
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
 
             # fig1 = plt.figure(figsize=(16, 9))

@@ -1,5 +1,6 @@
 import copy
 import random
+import time
 from typing import Tuple
 
 from model import Individual
@@ -16,10 +17,10 @@ def roulette_selection(population: List[Individual], selection_count: int) -> Li
     :param selection_count: number of individuals to be extracted from the population
     :return: list on individuals selected from the population
     """
-
-    total_population_fitness = sum(individual.fitness for individual in population)
-    selection_probabilities = [individual.fitness / total_population_fitness for individual in population]
-    return list(np.random.choice(population, size=selection_count, p=selection_probabilities))
+    total_fitness = sum(individual.fitness for individual in population)
+    probabilities = [individual.fitness / total_fitness for individual in population]
+    selection = random.choices(population, probabilities, k=selection_count)
+    return selection
 
 
 def roulette_selection_negative(population: List[Individual], selection_count: int) -> List[Individual]:
@@ -29,6 +30,7 @@ def roulette_selection_negative(population: List[Individual], selection_count: i
      :param selection_count: number of individuals to be extracted from the population
      :return: list on individuals selected from the population
      """
+
     selected = []
     min_fitness = min(individual.fitness for individual in population)
     individuals_after_shift = [individual.fitness - min_fitness for individual in population]
@@ -45,6 +47,7 @@ def roulette_selection_negative(population: List[Individual], selection_count: i
             if current_fitness >= random_fitness:
                 selected.append(individual)
                 break
+
     return selected
 
 

@@ -14,7 +14,6 @@ from genetic_operators import elitist_selection, full_mutation, full_crossover
 from model import Snake
 from neural_network import NeuralNetwork, Activation
 from view import *
-from vision import get_vision_lines_snake_head
 
 
 # TODO make hidden layers count
@@ -139,10 +138,29 @@ class GeneticTrainNewNetwork(BaseState):
     def end(self):
         self.ui_manager.clear_and_reset()
 
+    # @staticmethod
+    # def print_vision_line(vision_line: VisionLine):
+    #     print(f" {vision_line.direction} w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_d {vision_line.segment_distance} ")
+    #
+    # def print_all_vision_lines(self, vision_lines: List[VisionLine]):
+    #     for line in vision_lines:
+    #         self.print_vision_line(line)
+    #     print()
+
     def run_genetic(self, surface):
-        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
-                                                   max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
-        neural_net_prediction = self.model.get_nn_output(vision_lines)
+        # vision_lines = vision.get_vision_lines_snake_model(self.model, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
+
+        vision_lines = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type,
+                                                          distance_function=self.distance_function)
+        #
+        # for i in range(len(vision_lines)):
+        #     if vision_lines[i] != vision_lines2[i]:
+        #         self.print_vision_line(vision_lines[i])
+        #         self.print_vision_line(vision_lines2[i])
+
+        nn_input = vision.get_parameters_in_nn_input_form(vision_lines, self.model.snake.direction)
+        neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
+        next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
 
         if ViewSettings.DRAW:
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
@@ -153,7 +171,6 @@ class GeneticTrainNewNetwork(BaseState):
             if self.draw_network:
                 draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 
-        next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move(next_direction)
 
         if not is_alive:
@@ -169,29 +186,27 @@ class GeneticTrainNewNetwork(BaseState):
     def next_generation(self):
         self.offspring_list = []
 
-        total_fitness = sum(individual.fitness for individual in self.parent_list)
+        # total_fitness = sum(individual.fitness for individual in self.parent_list)
         # best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken))
         # best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken if individual.steps_taken != 0 else 0))
-        best_individual = max(self.parent_list, key=lambda individual: (individual.score, individual.score / individual.steps_taken if individual.steps_taken != 0 else 0))
-
-        # TODO change order
         # best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken))
+        best_individual = max(self.parent_list, key=lambda individual: (individual.score, individual.score / individual.steps_taken if individual.steps_taken != 0 else 0))
 
         counts = {'won': 0, 'apple_count': 0, 'too_old': 0, 'steps_taken': 0}
         for individual in self.parent_list:
-            counts['apple_count'] += individual.score
-            counts['steps_taken'] += individual.steps_taken
+            # counts['apple_count'] += individual.score
+            # counts['steps_taken'] += individual.steps_taken
             if individual.won:
                 counts['won'] += 1
-            if individual.TTL == 0:
-                counts['too_old'] += 1
+            # if individual.TTL == 0:
+            #     counts['too_old'] += 1
 
         won_count = counts['won']
-        apple_count = counts['apple_count']
-        too_old = counts['too_old']
-        steps_taken = counts['steps_taken']
-        average_score = apple_count / len(self.parent_list)
-        average_fitness = total_fitness / self.population_count
+        # apple_count = counts['apple_count']
+        # too_old = counts['too_old']
+        # steps_taken = counts['steps_taken']
+        # average_score = apple_count / len(self.parent_list)
+        # average_fitness = total_fitness / self.population_count
 
         name = "Generation" + str(self.generation)
 
@@ -208,13 +223,13 @@ class GeneticTrainNewNetwork(BaseState):
         self.networks.append([data_to_save, best_individual.brain, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + name])
 
         training_data = (f"GEN: {self.generation + 1:<5} "
-                         f"AVG FITNESS: {average_fitness:<25}\t"
-                         f"AVG SCORE: {average_score:<10}\t"
-                         f"AVG RATIO: {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list)):<25}\t"
+                         # f"AVG FITNESS: {average_fitness:<25}\t"
+                         # f"AVG SCORE: {average_score:<10}\t"
+                         # f"AVG RATIO: {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list)):<25}\t"
                          f"BEST FITNESS: {best_individual.fitness:<25}\t"
                          f"BEST SCORE: {best_individual.score:<5}\t"
                          f"BEST RATIO: {best_individual.score / best_individual.steps_taken if best_individual.steps_taken > 0 else 0:<25}"
-                         f"TOO_OLD: {too_old:<8}\t"
+                         # f"TOO_OLD: {too_old:<8}\t"
                          f"WON: {won_count:<5}\t"
                          )
         print(training_data)
@@ -223,19 +238,21 @@ class GeneticTrainNewNetwork(BaseState):
         self.x_generations.append(self.generation)
         self.y_best_individual_fitness.append(best_individual.fitness)
         self.y_best_individual_score.append(best_individual.score)
-        self.y_average_score.append(average_score)
+        # self.y_average_score.append(average_score)
         self.y_best_ratio.append(best_individual.score / best_individual.steps_taken)
 
-        parents_for_mating = elitist_selection(self.parent_list, 100)
-        for parent in parents_for_mating[:100]:
+        parents_for_mating = elitist_selection(self.parent_list, self.population_count // 10)
+        for parent in parents_for_mating[:self.population_count // 10]:
             self.offspring_list.append(parent.brain)
-
         # np.random.shuffle(parents_for_mating)
         # np.random.shuffle(self.parent_list)
 
-        while len(self.offspring_list) < self.population_count:
-            parent1, parent2 = self.selection_operator(self.parent_list, 2)
-            child1, child2 = full_crossover(parent1.brain, parent1.brain, self.crossover_operator)
+        selected_parents = self.selection_operator(self.parent_list, (self.population_count - self.population_count // 10))
+        for i in range(0, (len(selected_parents)) - 1, 2):
+            parent1 = selected_parents[i].brain
+            parent2 = selected_parents[i + 1].brain
+
+            child1, child2 = full_crossover(parent1, parent2, self.crossover_operator)
 
             full_mutation(child1, self.mutation_rate, self.mutation_operator)
             full_mutation(child2, self.mutation_rate, self.mutation_operator)
@@ -250,7 +267,6 @@ class GeneticTrainNewNetwork(BaseState):
         self.parent_list = []
 
     def run(self, surface, time_delta):
-        # FILL TAKES ALOT OF TIME
         if ViewSettings.DRAW:
             surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
             pygame.draw.rect(surface, ViewSettings.COLOR_GREEN if self.draw_network else ViewSettings.COLOR_RED, self.rect_draw_network)
@@ -281,7 +297,7 @@ class GeneticTrainNewNetwork(BaseState):
 
                     fig1 = plt.figure(figsize=(16, 9))
                     plt.plot(self.x_generations, self.y_best_individual_score, "b", label="Best Individual Score")
-                    plt.plot(self.x_generations, self.y_average_score, "r", label="Generation Mean Score")
+                    # plt.plot(self.x_generations, self.y_average_score, "r", label="Generation Mean Score")
                     plt.legend(loc="upper left")
                     plt.xlabel("Generation")
                     plt.ylabel("Score")

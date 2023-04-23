@@ -1,8 +1,10 @@
 import random
-from typing import Tuple
+from typing import List, Tuple
 
+import numpy as np
+
+from game_config import BoardConsts, Direction, GameSettings, MAIN_DIRECTIONS
 from neural_network import NeuralNetwork
-from vision import *
 
 
 class Individual:
@@ -25,7 +27,7 @@ class Snake(Individual):
         self.direction: Direction = None
 
     def calculate_fitness(self) -> None:
-        fitness_score = self.method1()
+        fitness_score = self.method3()
         self.fitness = fitness_score
 
     def method1(self) -> float:
@@ -132,13 +134,11 @@ class Model:
         # loop all snake pieces and put S on board using their coordinates
         head_i, head_j = self.snake.body[0]
         self.board[head_i][head_j] = BoardConsts.SNAKE_HEAD
-        body_coords = self.snake.body[1:]
-        self.board[[i for i, _ in body_coords], [j for _, j in body_coords]] = BoardConsts.SNAKE_BODY
+        for i, j in self.snake.body[1:]:
+            self.board[i][j] = BoardConsts.SNAKE_BODY
 
     def clear_snake_on_board(self) -> None:
-        body_mask = self.board == BoardConsts.SNAKE_BODY
-        head_mask = self.board == BoardConsts.SNAKE_HEAD
-        self.board[body_mask | head_mask] = BoardConsts.EMPTY
+        self.board[(self.board == BoardConsts.SNAKE_BODY) | (self.board == BoardConsts.SNAKE_HEAD)] = BoardConsts.EMPTY
 
     def move(self, new_direction: Direction) -> bool:
         self.snake.direction = new_direction
@@ -178,11 +178,6 @@ class Model:
 
     def check_win_condition(self):
         return not any(cell == BoardConsts.EMPTY for row in self.board for cell in row)
-
-    def get_nn_output(self, vision_lines) -> np.ndarray:
-        nn_input = get_parameters_in_nn_input_form(vision_lines, self.snake.direction)
-        output = self.snake.brain.feed_forward(nn_input)
-        return output
 
     @staticmethod
     def get_nn_output_4directions(nn_output) -> Direction:
