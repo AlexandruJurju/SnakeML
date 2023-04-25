@@ -106,10 +106,10 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[Vision
                     # first ones are vision lines input, the last 4 are current snake direction
                     if i < input_neuron_count - 4:
                         # divide by number of attributes in vision line, 0 0 0, 1 1 1, 2 2 2
-                        line_label = font.render(vision_lines[int(i / 3)].direction.name + " " + param_type[i % (len(param_type))], True, ViewSettings.COLOR_WHITE)
+                        line_label = font.render(vision_lines[int(i / 3)].direction.name + " " + param_type[i % (len(param_type))], True, ViewSettings.COLOR_LABEL)
                         window.blit(line_label, (neuron_x - 125, neuron_y - 10))
                     else:
-                        line_label = font.render(MAIN_DIRECTIONS[i % 4].name, True, ViewSettings.COLOR_WHITE)
+                        line_label = font.render(MAIN_DIRECTIONS[i % 4].name, True, ViewSettings.COLOR_LABEL)
                         window.blit(line_label, (neuron_x - 125, neuron_y - 10))
 
                     inner_color = ViewSettings.COLOR_NEURON * layer.input[i]
@@ -134,7 +134,7 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[Vision
                 line_end_positions.append((neuron_x, neuron_y))
 
                 if layer_count == len(nn_layers) - 2:
-                    line_label = font.render(MAIN_DIRECTIONS[j].name, True, ViewSettings.COLOR_WHITE)
+                    line_label = font.render(MAIN_DIRECTIONS[j].name, True, ViewSettings.COLOR_LABEL)
                     window.blit(line_label, (neuron_x + 25, neuron_y - 10))
 
                 neuron_output = nn_layers[layer_count + 1].output[j]
@@ -143,8 +143,8 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[Vision
                 else:
                     inner_color = ViewSettings.COLOR_NEURON * neuron_output
                     inner_color = tuple(int(min(x, 255)) for x in inner_color)
-                pygame.draw.circle(window, inner_color, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS)
 
+                pygame.draw.circle(window, inner_color, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS)
                 pygame.draw.circle(window, ViewSettings.COLOR_WHITE, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS, width=1)
 
             neuron_offset_x += ViewSettings.NN_DISPLAY_NEURON_WIDTH_BETWEEN

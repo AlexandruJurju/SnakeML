@@ -58,10 +58,10 @@ class Model:
         self.size: int = model_size + 2
         self.board: np.ndarray = np.full((self.size, self.size), BoardConsts.EMPTY)
 
+        self.max_score = model_size ** 2 - snake_size
         self.snake_size: int = snake_size
         self.snake: Snake = Snake(net)
 
-        self.max_score = model_size ** 2 - snake_size
         self.make_board()
 
         if start_random:

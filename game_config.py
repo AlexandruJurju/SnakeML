@@ -22,6 +22,7 @@ class BoardConsts:
 
 class ViewSettings:
     DRAW = True
+    DARK_MODE = False
     MAX_FPS = 40
     WIDTH, HEIGHT = 1366, 768
     SQUARE_SIZE = 25
@@ -58,6 +59,7 @@ class ViewSettings:
     COLOR_BLACK = (0, 0, 0)
     COLOR_BACKGROUND = (47, 47, 47)
     COLOR_WHITE = (255, 255, 255)
+    COLOR_LABEL = COLOR_WHITE if DARK_MODE else COLOR_BLACK
     COLOR_SNAKE_SEGMENT = (30, 144, 255)
     COLOR_SNAKE_HEAD = (128, 0, 128)
     COLOR_APPLE = (199, 55, 47)

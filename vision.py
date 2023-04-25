@@ -174,11 +174,15 @@ def get_parameters_in_nn_input_form_4d(vision_lines: List[VisionLine], current_d
 
 
 def put_distances(board: np.ndarray, head):
+    output: np.ndarray = np.full((len(board), len(board)), 0)
+
     for i in range(len(board)):
         for j in range(len(board)):
             dist = chebyshev_distance([i, j], [head[0], head[1]])
             print(f"{i} {j} {dist}")
-            board[i][j] = str(dist - 1)
+            output[i][j] = str(dist)
+
+    print(output)
 
 
 def get_parameters_in_nn_input_form_2d(vision_lines: List[VisionLine], current_direction: Direction) -> np.ndarray:

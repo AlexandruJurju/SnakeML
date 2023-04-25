@@ -14,7 +14,7 @@ from States.run_network import RunPretrained
 from States.state_manager import StateManager
 from game_config import ViewSettings, State
 from model import Model
-from neural_network import NeuralNetwork, Dense, Activation, relu, sigmoid
+from neural_network import Dense, NeuralNetwork, Activation, sigmoid, relu
 
 
 def main():
@@ -70,19 +70,18 @@ if __name__ == '__main__':
     # net.add_layer(Activation(relu, relu))
     # net.add_layer(Dense(16, 4))
     # net.add_layer(Activation(sigmoid, sigmoid))
-    # #
+    #
     # model = Model(10, 3, False, net)
     # vision_lines = get_vision_lines_snake_head(model.board, model.snake.body[0], 4,
     #                                            max_dist=-1, apple_return_type="boolean", segment_return_type="boolean", distance_function=chebyshev)
-    #
     # print(model.board)
     # print_all_vision_lines(vision_lines)
-
-    main()
 
     # model = Model(10, 3, False, net)
     # vision.put_distances(model.board, model.snake.body[0])
     # print(model.board)
+
+    main()
 
     # net = NeuralNetwork()
     # net.add_layer(Dense(5, 10))
