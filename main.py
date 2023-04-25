@@ -3,6 +3,7 @@ import os
 import pygame
 from pygame_gui import UIManager
 
+import vision
 from States.backpropagation.backpropagation_menu import BackpropagationMenu
 from States.backpropagation.backpropagation_train_new_network import BackpropagationTrainNewNetwork
 from States.genetic.genetic_menu import GeneticMenu
@@ -12,6 +13,8 @@ from States.options import Options
 from States.run_network import RunPretrained
 from States.state_manager import StateManager
 from game_config import ViewSettings, State
+from model import Model
+from neural_network import NeuralNetwork, Dense, Activation, relu, sigmoid
 
 
 def main():
@@ -63,11 +66,11 @@ def main():
 
 if __name__ == '__main__':
     # net = NeuralNetwork()
-    # net.add_layer(Dense(16, 24))
+    # net.add_layer(Dense(14, 16))
     # net.add_layer(Activation(relu, relu))
-    # net.add_layer(Dense(24, 4))
+    # net.add_layer(Dense(16, 4))
     # net.add_layer(Activation(sigmoid, sigmoid))
-    #
+    # #
     # model = Model(10, 3, False, net)
     # vision_lines = get_vision_lines_snake_head(model.board, model.snake.body[0], 4,
     #                                            max_dist=-1, apple_return_type="boolean", segment_return_type="boolean", distance_function=chebyshev)
@@ -76,6 +79,10 @@ if __name__ == '__main__':
     # print_all_vision_lines(vision_lines)
 
     main()
+
+    # model = Model(10, 3, False, net)
+    # vision.put_distances(model.board, model.snake.body[0])
+    # print(model.board)
 
     # net = NeuralNetwork()
     # net.add_layer(Dense(5, 10))
