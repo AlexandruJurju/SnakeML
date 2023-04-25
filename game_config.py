@@ -22,7 +22,7 @@ class BoardConsts:
 
 class ViewSettings:
     DRAW = True
-    DARK_MODE = False
+    DARK_MODE = True
     MAX_FPS = 40
     WIDTH, HEIGHT = 1366, 768
     SQUARE_SIZE = 25
@@ -76,7 +76,7 @@ class ViewSettings:
     COLOR_MAP = {
         BoardConsts.EMPTY: (COLOR_ODD, COLOR_EVEN),
         BoardConsts.SNAKE_BODY: COLOR_SNAKE_SEGMENT,
-        BoardConsts.WALL: COLOR_FONT,
+        BoardConsts.WALL: COLOR_WHITE,
         BoardConsts.APPLE: COLOR_APPLE,
         BoardConsts.SNAKE_HEAD: COLOR_SNAKE_HEAD
     }
