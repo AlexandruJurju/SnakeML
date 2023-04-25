@@ -88,9 +88,9 @@ class Direction(Enum):
     LEFT = [0, -1]
     RIGHT = [0, 1]
     Q1 = [-1, 1]
-    Q2 = [1, 1]
+    Q2 = [-1, -1]
     Q3 = [1, -1]
-    Q4 = [-1, -1]
+    Q4 = [1, 1]
 
 
 DYNAMIC_DIRECTIONS = ["STRAIGHT", "LEFT", "RIGHT"]
