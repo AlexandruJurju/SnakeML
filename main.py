@@ -65,11 +65,11 @@ def main():
 
 
 if __name__ == '__main__':
-    net = NeuralNetwork()
-    net.add_layer(Dense(14, 16))
-    net.add_layer(Activation(relu, relu))
-    net.add_layer(Dense(16, 4))
-    net.add_layer(Activation(sigmoid, sigmoid))
+    # net = NeuralNetwork()
+    # net.add_layer(Dense(14, 16))
+    # net.add_layer(Activation(relu, relu))
+    # net.add_layer(Dense(16, 4))
+    # net.add_layer(Activation(sigmoid, sigmoid))
 
     # model = Model(10, 3, False, net)
     # vision_lines = get_vision_lines_snake_head(model.board, model.snake.body[0], 4,
@@ -77,11 +77,11 @@ if __name__ == '__main__':
     # print(model.board)
     # print_all_vision_lines(vision_lines)
 
-    model = Model(10, 3, False, net)
-    vision.put_distances(model.board, model.snake.body[0])
-    print(model.board)
+    # model = Model(10, 3, False, net)
+    # vision.put_distances(model.board, model.snake.body[0])
+    # print(model.board)
 
-    # main()
+    main()
 
     # net = NeuralNetwork()
     # net.add_layer(Dense(5, 10))

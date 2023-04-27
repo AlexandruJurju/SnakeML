@@ -137,7 +137,7 @@ class Options(BaseState):
         output_layer = UILabel(pygame.Rect((x_positions["right-right"] - 75 // 2, y_positions[2]), (75, 30)), str(output_neuron_count), self.ui_manager)
         output_layer_label = UILabel(pygame.Rect((x_positions_label["right-right"], y_positions_label[2]), (250, 30)), "Output Layer", self.ui_manager)
 
-        first_hidden_layer_neuron_count = input_neuron_count + 8
+        first_hidden_layer_neuron_count = input_neuron_count + 4
         first_hidden_layer = UITextEntryLine(pygame.Rect((x_positions["left-center"] - 75 // 2, y_positions[2]), (75, 30)), self.ui_manager)
         first_hidden_layer_label = UILabel(pygame.Rect((x_positions_label["left-center"], y_positions_label[2]), (250, 30)), "Hidden Layer 1", self.ui_manager)
         first_hidden_layer.set_text(str(first_hidden_layer_neuron_count))
