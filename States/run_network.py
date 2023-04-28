@@ -138,7 +138,7 @@ class RunPretrained(BaseState):
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
-            print(self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0)
+            print(f"score {self.model.snake.score} ratio {self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0}")
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
 
             # fig1 = plt.figure(figsize=(16, 9))
@@ -165,7 +165,7 @@ class RunPretrained(BaseState):
                 surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
             else:
                 surface.fill(self.ui_manager.ui_theme.get_colour("light_bg"))
-                
+
             pygame.draw.rect(surface, ViewSettings.COLOR_GREEN if self.draw_network else ViewSettings.COLOR_RED, self.rect_draw_network)
             pygame.draw.rect(surface, ViewSettings.COLOR_GREEN if self.draw_vision_lines else ViewSettings.COLOR_RED, self.rect_draw_vision_lines)
 
@@ -197,7 +197,7 @@ class RunPretrained(BaseState):
                     # TODO dynamic max distance
                     self.max_dist = 10
                     self.execute_network = True
-                    # ViewSettings.MAX_FPS = 0.5
+                    ViewSettings.DRAW = False
 
                 if event.ui_element == self.button_draw_network:
                     self.draw_network = not self.draw_network
