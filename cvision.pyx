@@ -2,6 +2,9 @@ import cython
 import numpy as np
 cimport numpy as np
 
+cdef extern from "stdlib.h":
+    cdef int abs(int n)
+
 cpdef int chebyshev_distance(int[:] a, int[:] b):
     cdef int dx = abs(a[0] - b[0])
     cdef int dy = abs(a[1] - b[1])
@@ -39,17 +42,22 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
     cdef list vision_lines = []
 
     cdef int x_offset, y_offset
-    cdef int[:] apple_coord, segment_coord, current_block, wall_coord
+    cdef int[2] apple_coord = [0,0]
+    cdef int[2] segment_coord = [0,0]
+    cdef int[2] current_block = [0,0]
+    cdef int[2] wall_coord = [0,0]
+
     cdef float wall_output, apple_output, segment_output
+    cdef int board_element
     cdef bint apple_found = False
     cdef bint segment_found = False
 
     for i in range(len(directions)):
         direction = directions[i]
-        current_block = np.empty(2, dtype=np.int32)
-        apple_coord = np.empty(2, dtype=np.int32)
-        wall_coord = np.empty(2, dtype=np.int32)
-        segment_coord = np.empty(2, dtype=np.int32)
+        current_block = [0,0]
+        apple_coord = [0,0]
+        wall_coord = [0,0]
+        segment_coord = [0,0]
 
         apple_found = False
         segment_found = False
@@ -60,20 +68,21 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
         # search starts at one block in the given direction otherwise head is also check in the loop
         current_block[0] = snake_head[0] + x_offset
         current_block[1] = snake_head[1] + y_offset
-
+        board_element = board[current_block[0], current_block[1]]
         # loop the blocks in the given direction and store position and coordinates
-        while board[current_block[0], current_block[1]] != -1:
-            if board[current_block[0], current_block[1]] == 2 and apple_found == False:
+        while board_element != -1:
+            if board_element == 2 and apple_found == False:
                 apple_coord[0] = current_block[0]
                 apple_coord[1] = current_block[1]
                 apple_found = True
-            elif board[current_block[0], current_block[1]] == -2 and segment_found == False:
+            elif board_element == -2 and segment_found == False:
                 segment_coord[0] = current_block[0]
                 segment_coord[1] = current_block[1]
                 segment_found = True
 
             current_block[0] = current_block[0] + x_offset
             current_block[1] = current_block[1] + y_offset
+            board_element = board[current_block[0], current_block[1]]
 
         wall_coord[0] = current_block[0]
         wall_coord[1] = current_block[1]

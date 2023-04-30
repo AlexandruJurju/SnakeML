@@ -342,7 +342,10 @@ class GeneticTrainNewNetwork(BaseState):
 
                     sum_py = sum(self.py_times)
                     sum_cy = sum(self.cy_times)
+                    print(f"sum py {sum_py}")
+                    print(f"sum cy {sum_cy}")
                     print(f"{sum_py - sum_cy}")
+                    print(f"{sum_cy / sum_py * 100}")
 
                 if event.key == pygame.K_RETURN:
                     ViewSettings.DRAW = True
