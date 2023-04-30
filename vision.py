@@ -9,7 +9,7 @@ def manhattan_distance(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 
-def chebyshev_distance(a, b):
+def chebyshev_distance(a: np.ndarray, b: np.ndarray):
     return max(abs(a[0] - b[0]), abs(a[1] - b[1]))
 
 
@@ -115,7 +115,7 @@ class VisionLine:
 #     return vision_line
 
 
-def get_vision_lines_snake_head(board: np.ndarray, snake_head, vision_direction_count: int, max_dist, apple_return_type: str, segment_return_type: str, distance_function) -> List[VisionLine]:
+def get_vision_lines_snake_head(board: np.ndarray, snake_head: np.ndarray, vision_direction_count: int, apple_return_type: str, segment_return_type: str) -> List[VisionLine]:
     directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
     if vision_direction_count == 8:
         directions += [Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
@@ -140,17 +140,17 @@ def get_vision_lines_snake_head(board: np.ndarray, snake_head, vision_direction_
             current_block = [current_block[0] + x_offset, current_block[1] + y_offset]
 
         wall_coord = current_block
-        wall_output = 1 / distance_function(snake_head, wall_coord)
+        wall_output = 1 / chebyshev_distance(snake_head, wall_coord)
 
         if apple_return_type == "boolean":
             apple_output = 1.0 if apple_coord is not None else 0.0
         else:
-            apple_output = 1.0 / distance_function(snake_head, apple_coord) if apple_coord is not None else 0.0
+            apple_output = 1.0 / chebyshev_distance(snake_head, apple_coord) if apple_coord is not None else 0.0
 
         if segment_return_type == "boolean":
             segment_output = 1.0 if segment_coord is not None else 0.0
         else:
-            segment_output = 1.0 / distance_function(snake_head, segment_coord) if segment_coord is not None else 0.0
+            segment_output = 1.0 / chebyshev_distance(snake_head, segment_coord) if segment_coord is not None else 0.0
 
         vision_lines.append(VisionLine(wall_coord, wall_output, apple_coord, apple_output, segment_coord, segment_output, direction))
 
@@ -185,12 +185,12 @@ def put_distances(board: np.ndarray, head):
     print(output)
 
 
-def get_parameters_in_nn_input_form_2d(vision_lines: List[VisionLine], current_direction: Direction) -> np.ndarray:
+def get_parameters_in_nn_input_form_2d(vision_lines, current_direction: Direction) -> np.ndarray:
     nn_input = []
     for line in vision_lines:
-        nn_input.append(line.wall_distance)
-        nn_input.append(line.apple_distance)
-        nn_input.append(line.segment_distance)
+        nn_input.append(line.wall_dist)
+        nn_input.append(line.apple_dist)
+        nn_input.append(line.segment_dist)
 
     nn_input.append(current_direction.value[0])
     nn_input.append(current_direction.value[1])

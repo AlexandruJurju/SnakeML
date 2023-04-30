@@ -2,6 +2,7 @@ import pygame_gui
 from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
 
+import cvision
 import genetic_operators
 import neural_network
 import vision
@@ -149,8 +150,9 @@ class GeneticTrainNewNetwork(BaseState):
     def run_genetic(self, surface):
         # vision_lines = vision.get_vision_lines_snake_model(self.model, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
 
-        vision_lines = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type,
-                                                          distance_function=self.distance_function)
+        snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
+        vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
+
         # self.print_all_vision_lines(vision_lines)
         # for i in range(len(vision_lines)):
         #     if vision_lines[i] != vision_lines2[i]:
@@ -164,11 +166,11 @@ class GeneticTrainNewNetwork(BaseState):
         if ViewSettings.DRAW:
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
-            if self.draw_vision_lines:
-                draw_vision_lines(surface, self.model.snake.body[0], vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-
-            if self.draw_network:
-                draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
+            # if self.draw_vision_lines:
+            #     draw_vision_lines(surface, self.model.snake.body[0], vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            #
+            # if self.draw_network:
+            #     draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 
         is_alive = self.model.move(next_direction)
 
