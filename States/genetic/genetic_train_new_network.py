@@ -167,10 +167,6 @@ class GeneticTrainNewNetwork(BaseState):
         pydiff = end - start
         self.py_times.append(pydiff)
         self.cy_times.append(cydif)
-        # if cydif != pydiff:
-        #     diff = pydiff - cydif
-        #     if diff > abs(0.01):
-        #         print(diff)
 
         # self.print_all_vision_lines(vision_lines)
         # for i in range(len(vision_lines)):
@@ -344,8 +340,8 @@ class GeneticTrainNewNetwork(BaseState):
                     sum_cy = sum(self.cy_times)
                     print(f"sum py {sum_py}")
                     print(f"sum cy {sum_cy}")
-                    print(f"{sum_py - sum_cy}")
-                    print(f"{sum_cy / sum_py * 100}")
+                    print(f"time diff {sum_py - sum_cy}")
+                    print(f"percent {100 - sum_cy / sum_py * 100}")
 
                 if event.key == pygame.K_RETURN:
                     ViewSettings.DRAW = True
