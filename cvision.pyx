@@ -1,6 +1,4 @@
 import cython
-from libc.string cimport strcmp
-
 
 cdef class VisionLine:
     cdef double wall_distance
@@ -100,7 +98,7 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
         output_distance =  max(dx, dy)
         wall_output = 1.0 / output_distance
 
-        if strcmp(apple_return_type,"boolean")==0:
+        if apple_return_type == "boolean":
             apple_output = 1.0 if apple_found else 0.0
         else:
             if apple_found:
@@ -112,7 +110,7 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
             else:
                 apple_output = 0.0
 
-        if strcmp(segment_return_type,"boolean")==0:
+        if segment_return_type == "boolean":
             segment_output = 1.0 if segment_found else 0.0
         else:
             if segment_found:
