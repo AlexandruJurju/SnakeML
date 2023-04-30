@@ -1,3 +1,5 @@
+import time
+
 import pygame_gui
 from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
@@ -151,7 +153,20 @@ class GeneticTrainNewNetwork(BaseState):
         # vision_lines = vision.get_vision_lines_snake_model(self.model, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
 
         snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
+        # start = time.time()
         vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
+        # end = time.time()
+        # cydif = end - start
+
+        # start = time.time()
+        # vision_lines2 = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], 4, self.apple_return_type, self.segment_return_type)
+        # end = time.time()
+        # pydiff = end - start
+        #
+        # if cydif != pydiff:
+        #     diff = pydiff - cydif
+        #     if diff > abs(0.01):
+        #         print(diff)
 
         # self.print_all_vision_lines(vision_lines)
         # for i in range(len(vision_lines)):

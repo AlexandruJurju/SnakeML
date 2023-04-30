@@ -1,4 +1,4 @@
-
+import cython
 import numpy as np
 cimport numpy as np
 
@@ -37,6 +37,8 @@ cdef class VisionLine:
     def segment_dist(self):
         return self.segment_distance
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 cpdef get_vision_lines_snake_head(np.ndarray[np.int32_t, ndim=2] board, np.ndarray[np.int32_t, ndim=1] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
     cdef int[:,:] directions = np.array([[-1, 0], [1, 0], [0, -1], [0, 1]], dtype=np.int32)
     if vision_direction_count == 8:
@@ -51,10 +53,10 @@ cpdef get_vision_lines_snake_head(np.ndarray[np.int32_t, ndim=2] board, np.ndarr
     cdef bint segment_found = False
 
     for direction_tuple in directions:
-        current_block = np.zeros(2, dtype=np.int32)
-        apple_coord = np.zeros(2, dtype=np.int32)
-        wall_coord = np.zeros(2, dtype=np.int32)
-        segment_coord = np.zeros(2, dtype=np.int32)
+        current_block = np.empty(2, dtype=np.int32)
+        apple_coord = np.empty(2, dtype=np.int32)
+        wall_coord = np.empty(2, dtype=np.int32)
+        segment_coord = np.empty(2, dtype=np.int32)
 
         apple_found = False
         segment_found = False
