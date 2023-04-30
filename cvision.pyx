@@ -1,4 +1,7 @@
-import cython
+
+#cython: boundscheck=False
+#cython: wraparound=False
+#cython: cdivision=False
 
 cdef class VisionLine:
     cdef double wall_distance
@@ -22,9 +25,7 @@ cdef class VisionLine:
     def segment_dist(self):
         return self.segment_distance
 
-@cython.boundscheck(False)
-@cython.wraparound(False)
-@cython.cdivision(True)
+
 cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
 
     cdef int directions[8][2]
@@ -125,3 +126,21 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
         vision_lines.append(VisionLine(wall_output, apple_output, segment_output))
 
     return vision_lines
+
+cpdef update_board_from_snake(int[:, :] board,int[:,:]body):
+    cdef int x, y
+    cdef int width = board.shape[0]
+    cdef int height = board.shape[1]
+    for x in range(width):
+        for y in range(height):
+            board_val = board[x,y]
+            if board_val == 1:
+                board[x,y] = 0
+            if board_val == -2:
+                board[x, y] = 0
+
+    board[body[0][0],body[0][1]] = 1
+    for i in range(1,len(body)):
+        board[body[i][0],body[i][1]] = -2
+
+    return board

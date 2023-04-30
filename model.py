@@ -3,6 +3,7 @@ from typing import List, Tuple
 
 import numpy as np
 
+import cvision
 from game_config import BoardConsts, Direction, GameSettings, MAIN_DIRECTIONS
 from neural_network import NeuralNetwork
 
@@ -130,17 +131,8 @@ class Model:
         self.snake.direction = random.choice(self.get_valid_direction_for_block(self.snake.body[0]))
 
     def update_board_from_snake(self) -> None:
-        # remove previous snake position on board
-        self.clear_snake_on_board()
-
-        # loop all snake pieces and put S on board using their coordinates
-        head_i, head_j = self.snake.body[0]
-        self.board[head_i][head_j] = BoardConsts.SNAKE_HEAD
-        for i, j in self.snake.body[1:]:
-            self.board[i][j] = BoardConsts.SNAKE_BODY
-
-    def clear_snake_on_board(self) -> None:
-        self.board[(self.board == BoardConsts.SNAKE_BODY) | (self.board == BoardConsts.SNAKE_HEAD)] = BoardConsts.EMPTY
+        snake_body_array = np.array(self.snake.body, dtype=np.int32)
+        self.board = cvision.update_board_from_snake(self.board, snake_body_array)
 
     def move(self, new_direction: Direction) -> bool:
         self.snake.direction = new_direction
