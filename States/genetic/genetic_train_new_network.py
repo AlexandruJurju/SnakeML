@@ -68,6 +68,9 @@ class GeneticTrainNewNetwork(BaseState):
         self.button_stop_drawing = None
         self.draw_switch = True
 
+        self.py_times = []
+        self.cy_times = []
+
     def start(self):
         self.initial_board_size = self.data_received["board_size"]
         self.initial_snake_size = self.data_received["initial_snake_size"]
@@ -153,16 +156,17 @@ class GeneticTrainNewNetwork(BaseState):
         # vision_lines = vision.get_vision_lines_snake_model(self.model, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
 
         snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
-        # start = time.time()
+        start = time.time()
         vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
-        # end = time.time()
-        # cydif = end - start
+        end = time.time()
+        cydif = end - start
 
-        # start = time.time()
-        # vision_lines2 = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], 4, self.apple_return_type, self.segment_return_type)
-        # end = time.time()
-        # pydiff = end - start
-        #
+        start = time.time()
+        vision_lines2 = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], 4, self.apple_return_type, self.segment_return_type)
+        end = time.time()
+        pydiff = end - start
+        self.py_times.append(pydiff)
+        self.cy_times.append(cydif)
         # if cydif != pydiff:
         #     diff = pydiff - cydif
         #     if diff > abs(0.01):
@@ -335,6 +339,10 @@ class GeneticTrainNewNetwork(BaseState):
                     self.set_target_state_name(State.GENETIC_MENU)
                     self.trigger_transition()
                     ViewSettings.DRAW = True
+
+                    sum_py = sum(self.py_times)
+                    sum_cy = sum(self.cy_times)
+                    print(f"{sum_py - sum_cy}")
 
                 if event.key == pygame.K_RETURN:
                     ViewSettings.DRAW = True
