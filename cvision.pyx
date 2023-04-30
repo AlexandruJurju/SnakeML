@@ -1,14 +1,6 @@
 import cython
-import numpy as np
-cimport numpy as np
+from libc.string cimport strcmp
 
-cdef extern from "stdlib.h":
-    cdef int abs(int n)
-
-cpdef int chebyshev_distance(int[:] a, int[:] b):
-    cdef int dx = abs(a[0] - b[0])
-    cdef int dy = abs(a[1] - b[1])
-    return max(dx, dy)
 
 cdef class VisionLine:
     cdef double wall_distance
@@ -34,6 +26,7 @@ cdef class VisionLine:
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
 
     cdef int directions[8][2]
@@ -61,10 +54,12 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
     cdef int[2] current_block = [0,0]
     cdef int[2] wall_coord = [0,0]
 
-    cdef float wall_output, apple_output, segment_output
+    cdef float wall_output, apple_output, segment_output, output_distance
     cdef int board_element
     cdef bint apple_found = False
     cdef bint segment_found = False
+    cdef int dx
+    cdef int dy
 
     for i in range(vision_direction_count):
         current_block = [0,0]
@@ -99,17 +94,35 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
 
         wall_coord[0] = current_block[0]
         wall_coord[1] = current_block[1]
-        wall_output = 1.0 / chebyshev_distance(snake_head, wall_coord)
 
-        if apple_return_type == "boolean":
+        dx = abs(snake_head[0] - wall_coord[0])
+        dy = abs(snake_head[1] - wall_coord[1])
+        output_distance =  max(dx, dy)
+        wall_output = 1.0 / output_distance
+
+        if strcmp(apple_return_type,"boolean")==0:
             apple_output = 1.0 if apple_found else 0.0
         else:
-            apple_output = 1.0 / chebyshev_distance(snake_head, apple_coord) if apple_found else 0.0
+            if apple_found:
+                dx = abs(snake_head[0] - apple_coord[0])
+                dy = abs(snake_head[1] - apple_coord[1])
+                output_distance =  max(dx, dy)
+                apple_output = 1.0 / output_distance
 
-        if segment_return_type == "boolean":
+            else:
+                apple_output = 0.0
+
+        if strcmp(segment_return_type,"boolean")==0:
             segment_output = 1.0 if segment_found else 0.0
         else:
-            segment_output = 1.0 / chebyshev_distance(snake_head, segment_coord) if segment_found else 0.0
+            if segment_found:
+                dx = abs(snake_head[0] - segment_coord[0])
+                dy = abs(snake_head[1] - segment_coord[1])
+                output_distance =  max(dx, dy)
+
+                segment_output = 1.0/output_distance
+            else:
+                segment_output = 0.0
 
         vision_lines.append(VisionLine(wall_output, apple_output, segment_output))
 
