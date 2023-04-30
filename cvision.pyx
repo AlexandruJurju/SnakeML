@@ -31,7 +31,7 @@ cdef class VisionLine:
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-cpdef get_vision_lines_snake_head(np.ndarray[np.int32_t, ndim=2] board, np.ndarray[np.int32_t, ndim=1] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
+cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
     cdef int[:,:] directions = np.array([[-1, 0], [1, 0], [0, -1], [0, 1]], dtype=np.int32)
     if vision_direction_count == 8:
         directions = np.append(directions, np.array([[-1, 1], [-1, -1], [1, -1], [1, 1]], dtype=np.int32), axis=0)
@@ -44,7 +44,8 @@ cpdef get_vision_lines_snake_head(np.ndarray[np.int32_t, ndim=2] board, np.ndarr
     cdef bint apple_found = False
     cdef bint segment_found = False
 
-    for direction_tuple in directions:
+    for i in range(len(directions)):
+        direction = directions[i]
         current_block = np.empty(2, dtype=np.int32)
         apple_coord = np.empty(2, dtype=np.int32)
         wall_coord = np.empty(2, dtype=np.int32)
@@ -53,8 +54,8 @@ cpdef get_vision_lines_snake_head(np.ndarray[np.int32_t, ndim=2] board, np.ndarr
         apple_found = False
         segment_found = False
 
-        x_offset = direction_tuple[0]
-        y_offset = direction_tuple[1]
+        x_offset = direction[0]
+        y_offset = direction[1]
 
         # search starts at one block in the given direction otherwise head is also check in the loop
         current_block[0] = snake_head[0] + x_offset
