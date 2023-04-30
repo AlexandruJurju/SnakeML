@@ -13,11 +13,11 @@ class State(Enum):
 
 
 class BoardConsts:
-    APPLE = "A"
-    WALL = "W"
-    EMPTY = "."
-    SNAKE_BODY = "S"
-    SNAKE_HEAD = "H"
+    APPLE = 2
+    WALL = -1
+    EMPTY = 0
+    SNAKE_BODY = -2
+    SNAKE_HEAD = 1
 
 
 class ViewSettings:
