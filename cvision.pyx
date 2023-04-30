@@ -2,14 +2,6 @@ import cython
 import numpy as np
 cimport numpy as np
 
-
-cdef class BoardConsts:
-    APPLE = 2
-    WALL = -1
-    EMPTY = 0
-    SNAKE_BODY = -2
-    SNAKE_HEAD = 1
-
 cpdef int chebyshev_distance(int[:] a, int[:] b):
     cdef int dx = abs(a[0] - b[0])
     cdef int dy = abs(a[1] - b[1])
