@@ -156,17 +156,17 @@ class GeneticTrainNewNetwork(BaseState):
         # vision_lines = vision.get_vision_lines_snake_model(self.model, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
 
         snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
-        start = time.time()
+        # start = time.time()
         vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
-        end = time.time()
-        cydif = end - start
+        # end = time.time()
+        # cydif = end - start
 
-        start = time.time()
-        vision_lines2 = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], 4, self.apple_return_type, self.segment_return_type)
-        end = time.time()
-        pydiff = end - start
-        self.py_times.append(pydiff)
-        self.cy_times.append(cydif)
+        # start = time.time()
+        # vision_lines2 = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], 4, self.apple_return_type, self.segment_return_type)
+        # end = time.time()
+        # pydiff = end - start
+        # self.py_times.append(pydiff)
+        # self.cy_times.append(cydif)
 
         # self.print_all_vision_lines(vision_lines)
         # for i in range(len(vision_lines)):
@@ -336,12 +336,12 @@ class GeneticTrainNewNetwork(BaseState):
                     self.trigger_transition()
                     ViewSettings.DRAW = True
 
-                    sum_py = sum(self.py_times)
-                    sum_cy = sum(self.cy_times)
-                    print(f"sum py {sum_py}")
-                    print(f"sum cy {sum_cy}")
-                    print(f"time diff {sum_py - sum_cy}")
-                    print(f"percent {100 - sum_cy / sum_py * 100}")
+                    # sum_py = sum(self.py_times)
+                    # sum_cy = sum(self.cy_times)
+                    # print(f"sum py {sum_py}")
+                    # print(f"sum cy {sum_cy}")
+                    # print(f"time diff {sum_py - sum_cy}")
+                    # print(f"percent {100 - sum_cy / sum_py * 100}")
 
                 if event.key == pygame.K_RETURN:
                     ViewSettings.DRAW = True
