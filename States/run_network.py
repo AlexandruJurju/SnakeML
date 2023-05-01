@@ -143,8 +143,8 @@ class RunPretrained(BaseState):
         if not is_alive:
             ratio = self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0
             print(np.asarray(self.model.board))
+            print(self.model.snake.direction)
             self.print_all_vision_lines(vision_lines)
-            # print(f"score {self.model.snake.score} ratio {ratio}")
             if self.model.snake.score == 97:
                 self.ratio_test.append(ratio)
                 print(f"mean ratio {np.mean(self.ratio_test)}")
