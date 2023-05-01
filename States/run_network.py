@@ -1,5 +1,6 @@
 from typing import List
 
+import numpy as np
 import pygame
 import pygame_gui
 from pygame_gui import UIManager
@@ -7,13 +8,13 @@ from pygame_gui.core.utility import create_resource_path
 from pygame_gui.elements import UILabel, UIButton, UITextEntryLine
 from pygame_gui.windows import UIFileDialog
 
+import cvision
 import vision
 from States.base_state import BaseState
 from file_operations import read_all_from_json
 from game_config import State, ViewSettings, GameSettings
 from model import Model
-from view import draw_board, draw_neural_network_complete, draw_vision_lines
-from vision import get_vision_lines_snake_head
+from view import draw_board
 
 
 # TODO add ratio graph
@@ -64,6 +65,8 @@ class RunPretrained(BaseState):
         self.y_ratio = []
         self.x_score = []
 
+        self.ratio_test = []
+
     @staticmethod
     def print_vision_line(vision_line: vision.VisionLine):
         print(f" {vision_line.direction} w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_d {vision_line.segment_distance} ")
@@ -105,8 +108,8 @@ class RunPretrained(BaseState):
         self.execute_network = False
 
     def run_network(self, surface):
-        vision_lines = get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
-                                                   max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
+        snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
+        vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
 
         if self.model.snake.brain.get_dense_layers()[0].input_size != 14:
             nn_input = vision.get_parameters_in_nn_input_form_4d(vision_lines, self.model.snake.direction)
@@ -123,10 +126,10 @@ class RunPretrained(BaseState):
 
         if ViewSettings.DRAW:
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-            if self.draw_vision_lines:
-                draw_vision_lines(surface, self.model.snake.body[0], vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-            if self.draw_network:
-                draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
+            # if self.draw_vision_lines:
+            #     draw_vision_lines(surface, self.model.snake.body[0], vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            # if self.draw_network:
+            #     draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move(next_direction)
@@ -138,7 +141,11 @@ class RunPretrained(BaseState):
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
-            print(f"score {self.model.snake.score} ratio {self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0}")
+            ratio = self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0
+            # print(f"score {self.model.snake.score} ratio {ratio}")
+            if self.model.snake.score == 97:
+                self.ratio_test.append(ratio)
+                print(f"mean ratio {np.mean(self.ratio_test)}")
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
 
             # fig1 = plt.figure(figsize=(16, 9))

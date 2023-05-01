@@ -157,12 +157,12 @@ def get_vision_lines_snake_head(board: np.ndarray, snake_head: np.ndarray, visio
     return vision_lines
 
 
-def get_parameters_in_nn_input_form_4d(vision_lines: List[VisionLine], current_direction: Direction) -> np.ndarray:
+def get_parameters_in_nn_input_form_4d(vision_lines, current_direction: Direction) -> np.ndarray:
     nn_input = []
     for line in vision_lines:
-        nn_input.append(line.wall_distance)
-        nn_input.append(line.apple_distance)
-        nn_input.append(line.segment_distance)
+        nn_input.append(line.wall_dist)
+        nn_input.append(line.apple_dist)
+        nn_input.append(line.segment_dist)
 
     for direction in MAIN_DIRECTIONS:
         if current_direction == direction:

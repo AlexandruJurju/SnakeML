@@ -142,7 +142,6 @@ class Model:
         new_head_value = self.board[next_head[0]][next_head[1]]
 
         if (new_head_value == BoardConsts.WALL) or (new_head_value == BoardConsts.SNAKE_BODY):
-            self.snake.hit_obstacle = True
             return False
 
         self.snake.body.insert(0, next_head)
@@ -169,9 +168,6 @@ class Model:
                 return False
 
         return True
-
-    def check_win_condition(self):
-        return not any(cell == BoardConsts.EMPTY for row in self.board for cell in row)
 
     @staticmethod
     def get_nn_output_4directions(nn_output) -> Direction:
