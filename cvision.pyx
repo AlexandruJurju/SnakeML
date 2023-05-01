@@ -3,6 +3,16 @@
 #cython: wraparound=False
 #cython: cdivision=False
 
+cpdef get_all_random_blocks(int[:, :] board,int rows,int cols):
+    cdef list empty = []
+
+    for i in range(1,rows):
+        for j in range(1,cols):
+            if board[i][j] == 0:
+                empty.append([i,j])
+
+    return empty
+
 cdef class VisionLine:
     cdef double wall_distance
     cdef double apple_distance

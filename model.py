@@ -90,8 +90,9 @@ class Model:
         self.snake.direction = direction
 
     def get_random_empty_block(self) -> []:
-        empty = [[i, j] for i in range(1, self.size) for j in range(1, self.size) if self.board[i][j] == BoardConsts.EMPTY]
-        return random.choice(empty)
+        rows, cols = self.board.shape
+        empty_blocks = cvision.get_all_random_blocks(self.board, rows, cols)
+        return random.choice(empty_blocks)
 
     def place_new_apple(self) -> None:
         rand_block = self.get_random_empty_block()
