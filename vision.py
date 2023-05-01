@@ -186,14 +186,12 @@ def put_distances(board: np.ndarray, head):
 
 
 def get_parameters_in_nn_input_form_2d(vision_lines, current_direction: Direction) -> np.ndarray:
-    size = len(vision_lines) * 3
+    size = len(vision_lines) * 3 + 2
     nn_input = [0] * size
 
-    nn_input[::3] = [line.wall_dist for line in vision_lines]
-    nn_input[1::3] = [line.apple_dist for line in vision_lines]
-    nn_input[2::3] = [line.segment_dist for line in vision_lines]
-
-    nn_input.append(current_direction.value[0])
-    nn_input.append(current_direction.value[1])
+    nn_input[:-2:3] = [line.wall_dist for line in vision_lines]
+    nn_input[1:-2:3] = [line.apple_dist for line in vision_lines]
+    nn_input[2:-2:3] = [line.segment_dist for line in vision_lines]
+    nn_input[-2:] = current_direction.value
 
     return np.reshape(nn_input, (len(nn_input), 1))
