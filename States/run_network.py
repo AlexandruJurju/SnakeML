@@ -68,8 +68,8 @@ class RunPretrained(BaseState):
         self.ratio_test = []
 
     @staticmethod
-    def print_vision_line(vision_line: vision.VisionLine):
-        print(f" {vision_line.direction} w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_d {vision_line.segment_distance} ")
+    def print_vision_line(vision_line: cvision.VisionLine):
+        print(f" w_d {vision_line.wall_dist} || a_d {vision_line.apple_dist} || s_d {vision_line.segment_dist} ")
 
     def print_all_vision_lines(self, vision_lines: List[vision.VisionLine]):
         for line in vision_lines:
@@ -142,6 +142,8 @@ class RunPretrained(BaseState):
 
         if not is_alive:
             ratio = self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0
+            print(np.asarray(self.model.board))
+            self.print_all_vision_lines(vision_lines)
             # print(f"score {self.model.snake.score} ratio {ratio}")
             if self.model.snake.score == 97:
                 self.ratio_test.append(ratio)
@@ -204,7 +206,7 @@ class RunPretrained(BaseState):
                     # TODO dynamic max distance
                     self.max_dist = 10
                     self.execute_network = True
-                    ViewSettings.DRAW = False
+                    # ViewSettings.DRAW = False
 
                 if event.ui_element == self.button_draw_network:
                     self.draw_network = not self.draw_network
