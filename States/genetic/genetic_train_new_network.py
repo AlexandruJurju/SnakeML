@@ -143,21 +143,12 @@ class GeneticTrainNewNetwork(BaseState):
     def end(self):
         self.ui_manager.clear_and_reset()
 
-    @staticmethod
-    def print_vision_line(vision_line: VisionLine):
-        print(f" {vision_line.direction} w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_d {vision_line.segment_distance} ")
-
-    def print_all_vision_lines(self, vision_lines: List[VisionLine]):
-        for line in vision_lines:
-            self.print_vision_line(line)
-        print()
-
     def run_genetic(self, surface):
         while True:
             # vision_lines = vision.get_vision_lines_snake_model(self.model, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
 
-            snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
             # start = time.time()
+            snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
             vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
             # end = time.time()
             # cydif = end - start
@@ -169,12 +160,6 @@ class GeneticTrainNewNetwork(BaseState):
             # self.py_times.append(pydiff)
             # self.cy_times.append(cydif)
 
-            # self.print_all_vision_lines(vision_lines)
-            # for i in range(len(vision_lines)):
-            #     if vision_lines[i] != vision_lines2[i]:
-            #         self.print_vision_line(vision_lines[i])
-            #         self.print_vision_line(vision_lines2[i])
-
             nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
             neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
             next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
@@ -182,9 +167,9 @@ class GeneticTrainNewNetwork(BaseState):
             if ViewSettings.DRAW:
                 draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
-                # if self.draw_vision_lines:
-                #     draw_vision_lines(surface, self.model.snake.body[0], vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-                #
+                if self.draw_vision_lines:
+                    draw_vision_lines(surface, self.model.snake.body[0], vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+
                 # if self.draw_network:
                 #     draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 

@@ -13,27 +13,26 @@ cpdef get_all_random_blocks(int[:, :] board,int rows,int cols):
 
     return empty
 
-cdef class VisionLine:
-    cdef double wall_distance
-    cdef double apple_distance
-    cdef double segment_distance
+cdef struct Pair:
+     int x
+     int y
 
-    def __init__(self, double wall_output, double apple_output, double segment_output):
+cdef class VisionLine:
+    cdef public Pair wall_coord
+    cdef public double wall_distance
+    cdef public Pair apple_coord
+    cdef public double apple_distance
+    cdef public Pair segment_coord
+    cdef public double segment_distance
+
+    def __init__(self,Pair wall_coord, double wall_output,Pair apple_coord, double apple_output,Pair segment_coord, double segment_output):
+        self.wall_coord = wall_coord
         self.wall_distance = wall_output
+        self.apple_coord = apple_coord
         self.apple_distance = apple_output
+        self.segment_coord = segment_coord
         self.segment_distance = segment_output
 
-    @property
-    def wall_dist(self):
-        return self.wall_distance
-
-    @property
-    def apple_dist(self):
-        return self.apple_distance
-
-    @property
-    def segment_dist(self):
-        return self.segment_distance
 
 
 cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
@@ -58,10 +57,7 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
 
     cdef list vision_lines = []
     cdef int x_offset, y_offset
-    cdef int[2] apple_coord = [0,0]
-    cdef int[2] segment_coord = [0,0]
-    cdef int[2] current_block = [0,0]
-    cdef int[2] wall_coord = [0,0]
+    cdef Pair apple_coord, segment_coord, current_block, wall_coord
 
     cdef float wall_output, apple_output, segment_output, output_distance
     cdef int board_element
@@ -72,10 +68,14 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
     cdef int dy
 
     for i in range(vision_direction_count):
-        current_block = [0,0]
-        apple_coord = [0,0]
-        wall_coord = [0,0]
-        segment_coord = [0,0]
+        apple_coord.x = 0
+        apple_coord.y = 0
+        segment_coord.x = 0
+        segment_coord.y = 0
+        current_block.x = 0
+        current_block.y = 0
+        wall_coord.x = 0
+        wall_coord.y = 0
 
         apple_found = False
         segment_found = False
@@ -85,33 +85,30 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
         y_offset = directions[i][1]
 
         # search starts at one block in the given direction otherwise head is also check in the loop
-        current_block[0] = snake_head[0] + x_offset
-        current_block[1] = snake_head[1] + y_offset
-        board_element = board[current_block[0], current_block[1]]
+        current_block.x = snake_head[0] + x_offset
+        current_block.y = snake_head[1] + y_offset
+        board_element = board[current_block.x, current_block.y]
 
         if board_element == -2:
-            segment_coord[0] = current_block[0]
-            segment_coord[1] = current_block[1]
+            segment_coord = current_block
             segment_found = True
 
         if board_element == -1:
-            wall_coord[0] = current_block[0]
-            wall_coord[1] = current_block[1]
+            wall_coord = current_block
             wall_found = True
 
         # loop the blocks in the given direction and store position and coordinates
         while board_element != -1:
             if board_element == 2 and apple_found == False:
-                apple_coord[0] = current_block[0]
-                apple_coord[1] = current_block[1]
+                apple_coord = current_block
                 apple_found = True
-            current_block[0] = current_block[0] + x_offset
-            current_block[1] = current_block[1] + y_offset
-            board_element = board[current_block[0], current_block[1]]
+            current_block.x += x_offset
+            current_block.y += y_offset
+            board_element = board[current_block.x, current_block.y]
 
         if wall_found:
-            dx = abs(snake_head[0] - wall_coord[0])
-            dy = abs(snake_head[1] - wall_coord[1])
+            dx = abs(snake_head[0] - wall_coord.x)
+            dy = abs(snake_head[1] - wall_coord.y)
             output_distance =  max(dx, dy)
             wall_output = 1.0 / output_distance
         else:
@@ -121,8 +118,8 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
             apple_output = 1.0 if apple_found else 0.0
         else:
             if apple_found:
-                dx = abs(snake_head[0] - apple_coord[0])
-                dy = abs(snake_head[1] - apple_coord[1])
+                dx = abs(snake_head[0] - apple_coord.x)
+                dy = abs(snake_head[1] - apple_coord.y)
                 output_distance =  max(dx, dy)
                 apple_output = 1.0 / output_distance
 
@@ -133,15 +130,15 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
             segment_output = 1.0 if segment_found else 0.0
         else:
             if segment_found:
-                dx = abs(snake_head[0] - segment_coord[0])
-                dy = abs(snake_head[1] - segment_coord[1])
+                dx = abs(snake_head[0] - segment_coord.x)
+                dy = abs(snake_head[1] - segment_coord.y)
                 output_distance =  max(dx, dy)
 
                 segment_output = 1.0/output_distance
             else:
                 segment_output = 0.0
 
-        vision_lines.append(VisionLine(wall_output, apple_output, segment_output))
+        vision_lines.append(VisionLine(wall_coord,wall_output, apple_coord,apple_output,segment_coord, segment_output))
 
     return vision_lines
 
