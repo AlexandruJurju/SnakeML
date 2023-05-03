@@ -98,15 +98,15 @@ class RunTrained(BaseState):
 
     def run_network(self, surface):
         snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
-        vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
+        vision_lines = cvision.get_vision_lines_snake_head_1_ahead(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
         nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
         neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
 
         if ViewSettings.DRAW:
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             old_vis = vision.cvision_to_old_vision(vision_lines)
-            if self.draw_vision_lines:
-                draw_vision_lines(surface, self.model.snake.body[0], old_vis, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            # if self.draw_vision_lines:
+            #     draw_vision_lines(surface, self.model.snake.body[0], old_vis, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             if self.draw_network:
                 draw_neural_network_complete(surface, self.model, old_vis, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 

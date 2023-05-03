@@ -5,7 +5,7 @@ from pygame_gui.elements import UILabel, UIButton
 import genetic_operators
 import neural_network
 from States.base_state import BaseState
-from cvision import get_vision_lines_snake_head
+from cvision import get_vision_lines_snake_head_1_ahead
 from file_operations import save_neural_network_to_json, write_genetic_training
 from game_config import GameSettings
 from game_config import State
@@ -147,7 +147,7 @@ class GeneticTrainNewNetwork(BaseState):
 
         # start = time.time()
         snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
-        vision_lines = get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
+        vision_lines = get_vision_lines_snake_head_1_ahead(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
         # end = time.time()
         # cydif = end - start
 
@@ -165,8 +165,8 @@ class GeneticTrainNewNetwork(BaseState):
         if ViewSettings.DRAW:
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
-            if self.draw_vision_lines:
-                draw_vision_lines(surface, self.model.snake.body[0], cvision_to_old_vision(vision_lines), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            # if self.draw_vision_lines:
+                # draw_vision_lines(surface, self.model.snake.body[0], cvision_to_old_vision(vision_lines), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
             # if self.draw_network:
             #     draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])

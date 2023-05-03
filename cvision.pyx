@@ -3,6 +3,8 @@
 #cython: wraparound=False
 #cython: cdivision=False
 
+
+
 cpdef get_all_random_blocks(int[:, :] board,int rows,int cols):
     cdef list empty = []
 
@@ -34,9 +36,16 @@ cdef class VisionLine:
         self.segment_distance = segment_output
 
 
+cpdef chebyshev_distance(int[:] a, Pair b):
+    cdef int dist_x = abs(a[0]-b.x)
+    cdef int dist_y = abs(a[1]-b.y)
+    if dist_x > dist_y:
+        return dist_x
+    else:
+        return dist_y
 
-cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
 
+cpdef get_vision_lines_snake_head_max_distance(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
     cdef int directions[8][2]
     directions[0][0] = -1
     directions[0][1] = 0
@@ -89,8 +98,6 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
         current_block.y = snake_head[1] + y_offset
         board_element = board[current_block.x, current_block.y]
 
-
-
         # loop the blocks in the given direction and store position and coordinates
         while board_element != -1:
             if board_element == 2 and apple_found == False:
@@ -104,21 +111,15 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
             board_element = board[current_block.x, current_block.y]
 
         wall_coord = current_block
-        dx = abs(snake_head[0] - wall_coord.x)
-        dy = abs(snake_head[1] - wall_coord.y)
-        output_distance =  max(dx, dy)
+        output_distance = chebyshev_distance(snake_head,wall_coord)
         wall_output = 1.0 / output_distance
-
 
         if apple_return_type == "boolean":
             apple_output = 1.0 if apple_found else 0.0
         else:
             if apple_found:
-                dx = abs(snake_head[0] - apple_coord.x)
-                dy = abs(snake_head[1] - apple_coord.y)
-                output_distance =  max(dx, dy)
+                output_distance =  chebyshev_distance(snake_head,apple_coord)
                 apple_output = 1.0 / output_distance
-
             else:
                 apple_output = 0.0
 
@@ -126,10 +127,7 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
             segment_output = 1.0 if segment_found else 0.0
         else:
             if segment_found:
-                dx = abs(snake_head[0] - segment_coord.x)
-                dy = abs(snake_head[1] - segment_coord.y)
-                output_distance =  max(dx, dy)
-
+                output_distance = chebyshev_distance(snake_head,segment_coord)
                 segment_output = 1.0/output_distance
             else:
                 segment_output = 0.0
@@ -137,6 +135,97 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
         vision_lines.append(VisionLine(wall_coord,wall_output, apple_coord,apple_output,segment_coord, segment_output))
 
     return vision_lines
+
+cpdef get_vision_lines_snake_head_1_ahead(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
+    cdef int directions[8][2]
+    directions[0][0] = -1
+    directions[0][1] = 0
+    directions[1][0] = 1
+    directions[1][1] = 0
+    directions[2][0] = 0
+    directions[2][1] = -1
+    directions[3][0] = 0
+    directions[3][1] = 1
+    directions[4][0] = -1
+    directions[4][1] = 1
+    directions[5][0] = -1
+    directions[5][1] = -1
+    directions[6][0] = 1
+    directions[6][1] = -1
+    directions[7][0] = 1
+    directions[7][1] = 1
+
+    cdef list vision_lines = []
+    cdef int x_offset, y_offset
+    cdef Pair apple_coord, segment_coord, current_block, wall_coord
+
+    cdef float wall_output, apple_output, segment_output, output_distance
+    cdef int board_element
+    cdef bint apple_found = False
+    cdef bint segment_found = False
+    cdef bint wall_found = False
+    cdef int dx
+    cdef int dy
+
+    for i in range(vision_direction_count):
+        apple_coord.x = -1
+        apple_coord.y = -1
+        segment_coord.x = -1
+        segment_coord.y = -1
+        current_block.x = -1
+        current_block.y = -1
+        wall_coord.x = -1
+        wall_coord.y = -1
+
+        apple_found = False
+        segment_found = False
+        wall_found = False
+
+        x_offset = directions[i][0]
+        y_offset = directions[i][1]
+
+        # search starts at one block in the given direction otherwise head is also check in the loop
+        current_block.x = snake_head[0] + x_offset
+        current_block.y = snake_head[1] + y_offset
+        board_element = board[current_block.x, current_block.y]
+
+        # loop the blocks in the given direction and store position and coordinates
+
+        if board_element == -2:
+            segment_coord = current_block
+            segment_found = True
+
+        if board_element == -1:
+            wall_coord = current_block
+            wall_found = True
+
+        # loop the blocks in the given direction and store position and coordinates
+        while board_element != -1 and apple_found == False:
+            if board_element == 2:
+                apple_coord = current_block
+                apple_found = True
+            current_block.x = current_block.x + x_offset
+            current_block.y = current_block.y + y_offset
+            board_element = board[current_block.x, current_block.y]
+
+        wall_output = 1.0 if wall_found else 0.0
+
+        if apple_return_type == "boolean":
+            apple_output = 1.0 if apple_found else 0.0
+        else:
+            if apple_found:
+                output_distance = chebyshev_distance(snake_head,apple_coord)
+                apple_output = 1.0 / output_distance
+            else:
+                apple_output = 0.0
+
+
+        segment_output = 1.0 if segment_found else 0.0
+
+        vision_lines.append(VisionLine(wall_coord,wall_output, apple_coord,apple_output, segment_coord,segment_output))
+
+    return vision_lines
+
 
 cpdef update_board_from_snake(int[:, :] board,int[:,:]body):
     cdef int x, y

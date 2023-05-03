@@ -5,8 +5,8 @@ from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
 
 import neural_network
-import vision
 from States.base_state import BaseState
+from cvision import get_vision_lines_snake_head_max_distance
 from file_operations import TrainingExample, save_neural_network_to_json, read_training_data_and_train, write_examples_to_json_4d
 from game_config import State, GameSettings
 from neural_network import *
@@ -79,8 +79,7 @@ class BackpropagationTrainNewNetwork(BaseState):
         return False
 
     def execute(self, surface):
-        vision_lines = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
-                                                          max_dist=0, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
+        vision_lines = get_vision_lines_snake_head_max_distance(self.model.board, self.model.snake.body[0], self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
         nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
         neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
 
