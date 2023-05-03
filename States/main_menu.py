@@ -25,13 +25,13 @@ class MainMenu(BaseState):
                        "center": ViewSettings.X_CENTER,
                        "right-center": ViewSettings.X_CENTER + 250,
                        "right-right": ViewSettings.X_CENTER + 500}
-        y_positions = [ViewSettings.Y_CENTER - 250, ViewSettings.Y_CENTER - 50, ViewSettings.Y_CENTER + 150]
+        y_positions = [ViewSettings.Y_CENTER - 75, ViewSettings.Y_CENTER, ViewSettings.Y_CENTER + 75]
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Main Menu", self.ui_manager)
         self.button_quit = UIButton(pygame.Rect(((ViewSettings.WIDTH - 150) // 2, 650), (150, 35)), "QUIT", self.ui_manager)
 
         self.button_genetic_menu = UIButton(pygame.Rect((x_positions["right-center"] - 350 // 2, y_positions[0]), (350, 35)), "Train using Genetic Algorithm", self.ui_manager)
 
-        self.button_backpropagation_menu = UIButton(pygame.Rect((x_positions["right-center"] - 350 // 2, y_positions[1]), (350, 35)), "Train using Backpropagation", self.ui_manager)
+        self.button_backpropagation_menu = UIButton(pygame.Rect((x_positions["right-center"] - 350 // 2, y_positions[2]), (350, 35)), "Train using Backpropagation", self.ui_manager)
 
         self.button_run = UIButton(pygame.Rect((x_positions["left-center"] - 250 // 2, y_positions[1]), (250, 35)), "Run Trained Network", self.ui_manager)
 
