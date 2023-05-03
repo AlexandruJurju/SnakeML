@@ -104,10 +104,11 @@ class RunTrained(BaseState):
 
         if ViewSettings.DRAW:
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            old_vis = vision.cvision_to_old_vision(vision_lines)
             if self.draw_vision_lines:
-                draw_vision_lines(surface, self.model.snake.body[0], vision.old_vis_to_new(vision_lines), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+                draw_vision_lines(surface, self.model.snake.body[0], old_vis, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             if self.draw_network:
-                draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
+                draw_neural_network_complete(surface, self.model, old_vis, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move(next_direction)

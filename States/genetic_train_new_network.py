@@ -12,7 +12,7 @@ from genetic_operators import elitist_selection, full_mutation, full_crossover
 from model import Snake
 from neural_network import NeuralNetwork, Activation
 from view import *
-from vision import old_vis_to_new
+from vision import cvision_to_old_vision
 
 
 # TODO make hidden layers count
@@ -165,7 +165,7 @@ class GeneticTrainNewNetwork(BaseState):
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
             if self.draw_vision_lines:
-                draw_vision_lines(surface, self.model.snake.body[0], old_vis_to_new(vision_lines), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+                draw_vision_lines(surface, self.model.snake.body[0], cvision_to_old_vision(vision_lines), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
             # if self.draw_network:
             #     draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])

@@ -3,7 +3,6 @@ from typing import List, Tuple
 import numpy as np
 import pygame
 
-import cvision
 import vision
 from game_config import ViewSettings, MAIN_DIRECTIONS, Direction, BoardConsts
 from model import Model
@@ -68,7 +67,7 @@ def draw_vision_line(window, color, width, line_coord_1, line_coord_0, line_end_
                      (line_end_x, line_end_y), width=width)
 
 
-def draw_neural_network_complete(window, model: Model, vision_lines: List[cvision.VisionLine], offset_x, offset_y):
+def draw_neural_network_complete(window, model: Model, vision_lines: List[vision.VisionLine], offset_x, offset_y):
     nn_layers = model.snake.brain.layers
     dense_layers = model.snake.brain.get_dense_layers()
     neuron_offset_x = 100 + offset_x
@@ -139,12 +138,19 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[cvisio
                     line_label = font.render(MAIN_DIRECTIONS[j].name, True, ViewSettings.COLOR_LABEL)
                     window.blit(line_label, (neuron_x + 25, neuron_y - 10))
 
-                neuron_output = nn_layers[layer_count + 1].output[j]
-                if neuron_output <= 0:
-                    inner_color = ViewSettings.COLOR_BLACK
+                    max_neuron_output = np.max(nn_layers[layer_count + 1].output)
+
+                    if nn_layers[layer_count + 1].output[j] == max_neuron_output:
+                        inner_color = (0, 255, 0)
+                    else:
+                        inner_color = (0, 0, 0)
                 else:
-                    inner_color = ViewSettings.COLOR_NEURON * neuron_output
-                    inner_color = tuple(int(min(x, 255)) for x in inner_color)
+                    neuron_output = nn_layers[layer_count + 1].output[j]
+                    if neuron_output <= 0:
+                        inner_color = ViewSettings.COLOR_BLACK
+                    else:
+                        inner_color = ViewSettings.COLOR_NEURON * neuron_output
+                        inner_color = tuple(int(min(x, 255)) for x in inner_color)
 
                 pygame.draw.circle(window, inner_color, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS)
                 pygame.draw.circle(window, ViewSettings.COLOR_WHITE, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS, width=1)

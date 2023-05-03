@@ -1,5 +1,8 @@
+from typing import List
+
 import numpy as np
 
+import cvision
 from game_config import *
 
 
@@ -47,7 +50,7 @@ def get_parameters_in_nn_input_form_2d(vision_lines, current_direction: Directio
     return np.reshape(nn_input, (len(nn_input), 1))
 
 
-def old_vis_to_new(old):
+def cvision_to_old_vision(old: List[cvision.VisionLine]):
     lines = []
     i = 0
     for line in old:
