@@ -68,14 +68,14 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
     cdef int dy
 
     for i in range(vision_direction_count):
-        apple_coord.x = 0
-        apple_coord.y = 0
-        segment_coord.x = 0
-        segment_coord.y = 0
-        current_block.x = 0
-        current_block.y = 0
-        wall_coord.x = 0
-        wall_coord.y = 0
+        apple_coord.x = -1
+        apple_coord.y = -1
+        segment_coord.x = -1
+        segment_coord.y = -1
+        current_block.x = -1
+        current_block.y = -1
+        wall_coord.x = -1
+        wall_coord.y = -1
 
         apple_found = False
         segment_found = False
@@ -89,30 +89,26 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
         current_block.y = snake_head[1] + y_offset
         board_element = board[current_block.x, current_block.y]
 
-        if board_element == -2:
-            segment_coord = current_block
-            segment_found = True
 
-        if board_element == -1:
-            wall_coord = current_block
-            wall_found = True
 
         # loop the blocks in the given direction and store position and coordinates
         while board_element != -1:
             if board_element == 2 and apple_found == False:
                 apple_coord = current_block
                 apple_found = True
+            if board_element == -2 and segment_found == False:
+                segment_coord = current_block
+                segment_found = True
             current_block.x += x_offset
             current_block.y += y_offset
             board_element = board[current_block.x, current_block.y]
 
-        if wall_found:
-            dx = abs(snake_head[0] - wall_coord.x)
-            dy = abs(snake_head[1] - wall_coord.y)
-            output_distance =  max(dx, dy)
-            wall_output = 1.0 / output_distance
-        else:
-            wall_output = 0.0
+        wall_coord = current_block
+        dx = abs(snake_head[0] - wall_coord.x)
+        dy = abs(snake_head[1] - wall_coord.y)
+        output_distance =  max(dx, dy)
+        wall_output = 1.0 / output_distance
+
 
         if apple_return_type == "boolean":
             apple_output = 1.0 if apple_found else 0.0

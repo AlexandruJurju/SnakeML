@@ -4,6 +4,7 @@ import numpy as np
 import pygame
 
 import cvision
+import vision
 from game_config import ViewSettings, MAIN_DIRECTIONS, Direction, BoardConsts
 from model import Model
 from neural_network import Dense
@@ -29,19 +30,19 @@ def draw_board(window, board: np.ndarray, offset_x, offset_y) -> None:
             pygame.draw.rect(window, ViewSettings.COLOR_SQUARE_DELIMITER, square_rect.move(x_position, y_position), width=1)
 
 
-def draw_vision_lines(window, snake_head, vision_lines: List[cvision.VisionLine], offset_x, offset_y) -> None:
+def draw_vision_lines(window, snake_head, vision_lines: List[vision.VisionLine], offset_x, offset_y) -> None:
     # loop over all lines in given vision lines
 
     font = pygame.font.SysFont("arial", 17, bold=True)
     # TODO put direction name in visionline
     for line in vision_lines:
-        # line_label = font.render(line.direction.name[:2] if line.direction.name.startswith("Q") else line.direction.name[0], True, ViewSettings.COLOR_BLACK)
+        line_label = font.render(line.direction.name[:2] if line.direction.name.startswith("Q") else line.direction.name[0], True, ViewSettings.COLOR_BLACK)
 
         # render vision line text at wall position
-        line_center_x = line.wall_coord["y"] * ViewSettings.SQUARE_SIZE + ViewSettings.SQUARE_SIZE // 2 + offset_x
-        line_center_y = line.wall_coord["x"] * ViewSettings.SQUARE_SIZE + ViewSettings.SQUARE_SIZE // 2 + offset_y
-        # text_rect = line_label.get_rect(center=(line_center_x, line_center_y))
-        # window.blit(line_label, text_rect)
+        line_center_x = line.wall_coord[1] * ViewSettings.SQUARE_SIZE + ViewSettings.SQUARE_SIZE // 2 + offset_x
+        line_center_y = line.wall_coord[0] * ViewSettings.SQUARE_SIZE + ViewSettings.SQUARE_SIZE // 2 + offset_y
+        text_rect = line_label.get_rect(center=(line_center_x, line_center_y))
+        window.blit(line_label, text_rect)
 
         # draw line from head to wall, draw before body and apple lines
         # drawing uses SQUARE_SIZE//2 so that lines go through the middle of the squares
@@ -49,15 +50,15 @@ def draw_vision_lines(window, snake_head, vision_lines: List[cvision.VisionLine]
         line_end_y = snake_head[0] * ViewSettings.SQUARE_SIZE + ViewSettings.SQUARE_SIZE // 2 + offset_y
 
         # draw line form snake head until wall block
-        draw_vision_line(window, ViewSettings.COLOR_APPLE, 1, line.wall_coord["y"], line.wall_coord["x"], line_end_x, line_end_y, offset_x, offset_y)
+        draw_vision_line(window, ViewSettings.COLOR_APPLE, 1, line.wall_coord[1], line.wall_coord[0], line_end_x, line_end_y, offset_x, offset_y)
 
         # draw another line from snake head to first segment found
         if line.segment_coord is not None:
-            draw_vision_line(window, ViewSettings.COLOR_RED, 5, line.segment_coord["y"], line.segment_coord["x"], line_end_x, line_end_y, offset_x, offset_y)
+            draw_vision_line(window, ViewSettings.COLOR_RED, 5, line.segment_coord[1], line.segment_coord[0], line_end_x, line_end_y, offset_x, offset_y)
 
         # draw another line from snake to apple if apple is found
         if line.apple_coord is not None:
-            draw_vision_line(window, ViewSettings.COLOR_GREEN, 5, line.apple_coord["y"], line.apple_coord["x"], line_end_x, line_end_y, offset_x, offset_y)
+            draw_vision_line(window, ViewSettings.COLOR_GREEN, 5, line.apple_coord[1], line.apple_coord[0], line_end_x, line_end_y, offset_x, offset_y)
 
 
 def draw_vision_line(window, color, width, line_coord_1, line_coord_0, line_end_x, line_end_y, offset_x, offset_y) -> None:
