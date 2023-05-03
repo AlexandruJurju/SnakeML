@@ -4,7 +4,6 @@ from pygame_gui.elements import UILabel, UIButton
 
 import genetic_operators
 import neural_network
-import vision
 from States.base_state import BaseState
 from file_operations import save_neural_network_to_json, write_genetic_training
 from game_config import GameSettings
@@ -13,6 +12,7 @@ from genetic_operators import elitist_selection, full_mutation, full_crossover
 from model import Snake
 from neural_network import NeuralNetwork, Activation
 from view import *
+from vision import old_vis_to_new
 
 
 # TODO make hidden layers count
@@ -64,6 +64,9 @@ class GeneticTrainNewNetwork(BaseState):
 
         self.button_stop_drawing = None
         self.draw_switch = True
+
+        self.py_times = []
+        self.cy_times = []
 
     def start(self):
         self.initial_board_size = self.data_received["board_size"]
@@ -137,25 +140,22 @@ class GeneticTrainNewNetwork(BaseState):
     def end(self):
         self.ui_manager.clear_and_reset()
 
-    @staticmethod
-    def print_vision_line(vision_line: VisionLine):
-        print(f" {vision_line.direction} w_c {vision_line.wall_coord} w_d {vision_line.wall_distance} || a_c {vision_line.apple_coord} a_d {vision_line.apple_distance} || s_c {vision_line.segment_coord} s_d {vision_line.segment_distance} ")
-
-    def print_all_vision_lines(self, vision_lines: List[VisionLine]):
-        for line in vision_lines:
-            self.print_vision_line(line)
-        print()
-
     def run_genetic(self, surface):
+
         # vision_lines = vision.get_vision_lines_snake_model(self.model, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
 
-        vision_lines = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count, max_dist=self.max_distance, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type,
-                                                          distance_function=self.distance_function)
-        # self.print_all_vision_lines(vision_lines)
-        # for i in range(len(vision_lines)):
-        #     if vision_lines[i] != vision_lines2[i]:
-        #         self.print_vision_line(vision_lines[i])
-        #         self.print_vision_line(vision_lines2[i])
+        # start = time.time()
+        snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
+        vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
+        # end = time.time()
+        # cydif = end - start
+
+        # start = time.time()
+        # vision_lines2 = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], 4, self.apple_return_type, self.segment_return_type)
+        # end = time.time()
+        # pydiff = end - start
+        # self.py_times.append(pydiff)
+        # self.cy_times.append(cydif)
 
         nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
         neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
@@ -165,10 +165,10 @@ class GeneticTrainNewNetwork(BaseState):
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
             if self.draw_vision_lines:
-                draw_vision_lines(surface, self.model.snake.body[0], vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+                draw_vision_lines(surface, self.model.snake.body[0], old_vis_to_new(vision_lines), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
-            if self.draw_network:
-                draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
+            # if self.draw_network:
+            #     draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 
         is_alive = self.model.move(next_direction)
 
@@ -318,6 +318,13 @@ class GeneticTrainNewNetwork(BaseState):
                     self.set_target_state_name(State.GENETIC_MENU)
                     self.trigger_transition()
                     ViewSettings.DRAW = True
+
+                    # sum_py = sum(self.py_times)
+                    # sum_cy = sum(self.cy_times)
+                    # print(f"sum py {sum_py}")
+                    # print(f"sum cy {sum_cy}")
+                    # print(f"time diff {sum_py - sum_cy}")
+                    # print(f"percent {100 - sum_cy / sum_py * 100}")
 
                 if event.key == pygame.K_RETURN:
                     ViewSettings.DRAW = True

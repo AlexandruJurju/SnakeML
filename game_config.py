@@ -81,7 +81,7 @@ class ViewSettings:
         BoardConsts.SNAKE_HEAD: COLOR_SNAKE_HEAD
     }
 
-
+# TODO 2 neuroni cu valori
 class Direction(Enum):
     UP = [-1, 0]
     DOWN = [1, 0]

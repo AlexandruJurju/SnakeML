@@ -3,6 +3,7 @@ from typing import List, Tuple
 
 import numpy as np
 
+import cvision
 from game_config import BoardConsts, Direction, GameSettings, MAIN_DIRECTIONS
 from neural_network import NeuralNetwork
 
@@ -89,8 +90,9 @@ class Model:
         self.snake.direction = direction
 
     def get_random_empty_block(self) -> []:
-        empty = [[i, j] for i in range(1, self.size) for j in range(1, self.size) if self.board[i][j] == BoardConsts.EMPTY]
-        return random.choice(empty)
+        rows, cols = self.board.shape
+        empty_blocks = cvision.get_all_random_blocks(self.board, rows, cols)
+        return random.choice(empty_blocks)
 
     def place_new_apple(self) -> None:
         rand_block = self.get_random_empty_block()
@@ -130,17 +132,8 @@ class Model:
         self.snake.direction = random.choice(self.get_valid_direction_for_block(self.snake.body[0]))
 
     def update_board_from_snake(self) -> None:
-        # remove previous snake position on board
-        self.clear_snake_on_board()
-
-        # loop all snake pieces and put S on board using their coordinates
-        head_i, head_j = self.snake.body[0]
-        self.board[head_i][head_j] = BoardConsts.SNAKE_HEAD
-        for i, j in self.snake.body[1:]:
-            self.board[i][j] = BoardConsts.SNAKE_BODY
-
-    def clear_snake_on_board(self) -> None:
-        self.board[(self.board == BoardConsts.SNAKE_BODY) | (self.board == BoardConsts.SNAKE_HEAD)] = BoardConsts.EMPTY
+        snake_body_array = np.array(self.snake.body, dtype=np.int32)
+        self.board = cvision.update_board_from_snake(self.board, snake_body_array)
 
     def move(self, new_direction: Direction) -> bool:
         self.snake.direction = new_direction
@@ -150,7 +143,6 @@ class Model:
         new_head_value = self.board[next_head[0]][next_head[1]]
 
         if (new_head_value == BoardConsts.WALL) or (new_head_value == BoardConsts.SNAKE_BODY):
-            self.snake.hit_obstacle = True
             return False
 
         self.snake.body.insert(0, next_head)
@@ -177,9 +169,6 @@ class Model:
                 return False
 
         return True
-
-    def check_win_condition(self):
-        return not any(cell == BoardConsts.EMPTY for row in self.board for cell in row)
 
     @staticmethod
     def get_nn_output_4directions(nn_output) -> Direction:

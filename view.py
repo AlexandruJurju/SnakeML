@@ -3,10 +3,12 @@ from typing import List, Tuple
 import numpy as np
 import pygame
 
+import cvision
+import vision
 from game_config import ViewSettings, MAIN_DIRECTIONS, Direction, BoardConsts
 from model import Model
 from neural_network import Dense
-from vision import VisionLine, find_snake_head_poz
+from vision import find_snake_head_poz
 
 
 def draw_board(window, board: np.ndarray, offset_x, offset_y) -> None:
@@ -28,15 +30,15 @@ def draw_board(window, board: np.ndarray, offset_x, offset_y) -> None:
             pygame.draw.rect(window, ViewSettings.COLOR_SQUARE_DELIMITER, square_rect.move(x_position, y_position), width=1)
 
 
-def draw_vision_lines(window, snake_head, vision_lines: List[VisionLine], offset_x, offset_y) -> None:
+def draw_vision_lines(window, snake_head, vision_lines: List[vision.VisionLine], offset_x, offset_y) -> None:
     # loop over all lines in given vision lines
 
     font = pygame.font.SysFont("arial", 17, bold=True)
-
+    # TODO put direction name in visionline
     for line in vision_lines:
         line_label = font.render(line.direction.name[:2] if line.direction.name.startswith("Q") else line.direction.name[0], True, ViewSettings.COLOR_BLACK)
 
-        # render vision line text at wall position\
+        # render vision line text at wall position
         line_center_x = line.wall_coord[1] * ViewSettings.SQUARE_SIZE + ViewSettings.SQUARE_SIZE // 2 + offset_x
         line_center_y = line.wall_coord[0] * ViewSettings.SQUARE_SIZE + ViewSettings.SQUARE_SIZE // 2 + offset_y
         text_rect = line_label.get_rect(center=(line_center_x, line_center_y))
@@ -66,7 +68,7 @@ def draw_vision_line(window, color, width, line_coord_1, line_coord_0, line_end_
                      (line_end_x, line_end_y), width=width)
 
 
-def draw_neural_network_complete(window, model: Model, vision_lines: List[VisionLine], offset_x, offset_y):
+def draw_neural_network_complete(window, model: Model, vision_lines: List[cvision.VisionLine], offset_x, offset_y):
     nn_layers = model.snake.brain.layers
     dense_layers = model.snake.brain.get_dense_layers()
     neuron_offset_x = 100 + offset_x
