@@ -1,5 +1,3 @@
-from typing import List
-
 import numpy as np
 import pygame
 import pygame_gui
@@ -14,7 +12,7 @@ from States.base_state import BaseState
 from file_operations import read_all_from_json
 from game_config import State, ViewSettings, GameSettings
 from model import Model
-from view import draw_board
+from view import draw_board, draw_vision_lines
 
 
 # TODO add ratio graph
@@ -102,24 +100,13 @@ class RunPretrained(BaseState):
     def run_network(self, surface):
         snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
         vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
-
-        if self.model.snake.brain.get_dense_layers()[0].input_size != 14:
-            nn_input = vision.get_parameters_in_nn_input_form_4d(vision_lines, self.model.snake.direction)
-        else:
-            nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
-
+        nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
         neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
-
-        # self.print_all_vision_lines(vision_lines)
-        # print(self.model.board)
-        # print(nn_input)
-        # print(neural_net_prediction)
-        # print("")
 
         if ViewSettings.DRAW:
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-            # if self.draw_vision_lines:
-            #     draw_vision_lines(surface, self.model.snake.body[0], vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            if self.draw_vision_lines:
+                draw_vision_lines(surface, self.model.snake.body[0], vision.old_vis_to_new(vision_lines), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             # if self.draw_network:
             #     draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 

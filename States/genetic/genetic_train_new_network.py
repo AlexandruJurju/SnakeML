@@ -4,10 +4,9 @@ from pygame_gui.elements import UILabel, UIButton
 
 import genetic_operators
 import neural_network
-import vision
 from States.base_state import BaseState
 from file_operations import save_neural_network_to_json, write_genetic_training
-from game_config import GameSettings
+from game_config import GameSettings, ALL_DIRECTIONS
 from game_config import State
 from genetic_operators import elitist_selection, full_mutation, full_crossover
 from model import Snake
@@ -140,33 +139,6 @@ class GeneticTrainNewNetwork(BaseState):
     def end(self):
         self.ui_manager.clear_and_reset()
 
-    def old_vis_to_new(self, old: List[cvision.VisionLine]):
-        lines = []
-        i = 0
-        for line in old:
-            segment_coord = None
-            apple_coord = None
-            wall_coord = None
-            if line.segment_coord["x"] != -1:
-                segment_coord = [0] * 2
-                segment_coord[0] = line.segment_coord["x"]
-                segment_coord[1] = line.segment_coord["y"]
-
-            if line.apple_coord["x"] != -1:
-                apple_coord = [0] * 2
-                apple_coord[0] = line.apple_coord["x"]
-                apple_coord[1] = line.apple_coord["y"]
-
-            if line.wall_coord["x"] != -1:
-                wall_coord = [0] * 2
-                wall_coord[0] = line.wall_coord["x"]
-                wall_coord[1] = line.wall_coord["y"]
-
-            new_line = vision.VisionLine(wall_coord, line.wall_distance, apple_coord, line.apple_distance, segment_coord, line.segment_distance, MAIN_DIRECTIONS[i])
-            lines.append(new_line)
-            i += 1
-
-        return lines
 
     def run_genetic(self, surface):
 
