@@ -6,12 +6,13 @@ import genetic_operators
 import neural_network
 from States.base_state import BaseState
 from file_operations import save_neural_network_to_json, write_genetic_training
-from game_config import GameSettings, ALL_DIRECTIONS
+from game_config import GameSettings
 from game_config import State
 from genetic_operators import elitist_selection, full_mutation, full_crossover
 from model import Snake
 from neural_network import NeuralNetwork, Activation
 from view import *
+from vision import old_vis_to_new
 
 
 # TODO make hidden layers count
@@ -139,7 +140,6 @@ class GeneticTrainNewNetwork(BaseState):
     def end(self):
         self.ui_manager.clear_and_reset()
 
-
     def run_genetic(self, surface):
 
         # vision_lines = vision.get_vision_lines_snake_model(self.model, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
@@ -165,7 +165,7 @@ class GeneticTrainNewNetwork(BaseState):
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
             if self.draw_vision_lines:
-                draw_vision_lines(surface, self.model.snake.body[0], self.old_vis_to_new(vision_lines), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+                draw_vision_lines(surface, self.model.snake.body[0], old_vis_to_new(vision_lines), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
             # if self.draw_network:
             #     draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
