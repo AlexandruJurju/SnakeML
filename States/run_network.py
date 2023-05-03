@@ -10,15 +10,15 @@ import cvision
 import vision
 from States.base_state import BaseState
 from file_operations import read_all_from_json
-from game_config import State, ViewSettings, GameSettings
+from game_config import State, ViewSettings
 from model import Model
 from view import draw_board, draw_vision_lines, draw_neural_network_complete
 
 
 # TODO add ratio graph
-class RunPretrained(BaseState):
+class RunTrained(BaseState):
     def __init__(self, ui_manager: UIManager):
-        super().__init__(State.RUN_PRETRAINED)
+        super().__init__(State.RUN_TRAINED)
 
         self.max_distance = None
         self.network = None
@@ -70,7 +70,6 @@ class RunPretrained(BaseState):
         self.y_ratio = []
         self.x_score = []
 
-        self.state_target = self.data_received["state"]
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
         self.label_return_type = UILabel(pygame.Rect((50, 25), (250, 35)), "", self.ui_manager)
         self.label_distance = UILabel(pygame.Rect((50, 50), (250, 35)), "", self.ui_manager)
@@ -173,10 +172,7 @@ class RunPretrained(BaseState):
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_back:
-                    if self.state_target == "genetic":
-                        self.set_target_state_name(State.GENETIC_MENU)
-                    else:
-                        self.set_target_state_name(State.BACKPROPAGATION_MENU)
+                    self.set_target_state_name(State.MAIN_MENU)
                     self.trigger_transition()
 
                 if event.ui_element == self.button_run:
@@ -196,10 +192,7 @@ class RunPretrained(BaseState):
                     self.execute_network = False
                     self.button_run.disable()
 
-                    if self.state_target == "genetic":
-                        file_path = "Genetic_Networks/"
-                    else:
-                        file_path = GameSettings.BACKPROPAGATION_NETWORK_FOLDER
+                    file_path = "Trained Neural Networks/"
 
                     self.file_dialog = UIFileDialog(pygame.Rect((150, 50), (450, 450)), self.ui_manager, window_title="Load Network", initial_file_path=file_path,
                                                     allow_picking_directories=False,

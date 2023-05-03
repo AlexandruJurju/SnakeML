@@ -3,18 +3,13 @@ import os
 import pygame
 from pygame_gui import UIManager
 
-import vision
-from States.backpropagation.backpropagation_menu import BackpropagationMenu
-from States.backpropagation.backpropagation_train_new_network import BackpropagationTrainNewNetwork
-from States.genetic.genetic_menu import GeneticMenu
-from States.genetic.genetic_train_new_network import GeneticTrainNewNetwork
+from States.backpropagation_train_new_network import BackpropagationTrainNewNetwork
+from States.genetic_train_new_network import GeneticTrainNewNetwork
 from States.main_menu import MainMenu
 from States.options import Options
-from States.run_network import RunPretrained
+from States.run_network import RunTrained
 from States.state_manager import StateManager
 from game_config import ViewSettings, State
-from model import Model
-from neural_network import Dense, NeuralNetwork, Activation, sigmoid, relu
 
 
 def main():
@@ -49,10 +44,8 @@ def main():
     state_manager = StateManager()
     state_manager.add_state(MainMenu(ui_manager))
     state_manager.add_state(Options(ui_manager))
-    state_manager.add_state(RunPretrained(ui_manager))
-    state_manager.add_state(GeneticMenu(ui_manager))
+    state_manager.add_state(RunTrained(ui_manager))
     state_manager.add_state(GeneticTrainNewNetwork(ui_manager))
-    state_manager.add_state(BackpropagationMenu(ui_manager))
     state_manager.add_state(BackpropagationTrainNewNetwork(ui_manager))
 
     state_manager.set_initial_state(State.MAIN_MENU)

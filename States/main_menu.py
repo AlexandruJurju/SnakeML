@@ -17,12 +17,23 @@ class MainMenu(BaseState):
         self.button_backpropagation_menu = None
         self.button_genetic_menu = None
         self.button_quit = None
+        self.button_run = None
 
     def start(self):
+        x_positions = {"left-left": ViewSettings.X_CENTER - 500,
+                       "left-center": ViewSettings.X_CENTER - 250,
+                       "center": ViewSettings.X_CENTER,
+                       "right-center": ViewSettings.X_CENTER + 250,
+                       "right-right": ViewSettings.X_CENTER + 500}
+        y_positions = [ViewSettings.Y_CENTER - 250, ViewSettings.Y_CENTER - 50, ViewSettings.Y_CENTER + 150]
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Main Menu", self.ui_manager)
-        self.button_backpropagation_menu = UIButton(pygame.Rect(((ViewSettings.WIDTH - 250) // 2, 250), (250, 35)), "Backpropagation", self.ui_manager)
-        self.button_genetic_menu = UIButton(pygame.Rect(((ViewSettings.WIDTH - 250) // 2, 350), (250, 35)), "Genetic Algorithm", self.ui_manager)
-        self.button_quit = UIButton(pygame.Rect(((ViewSettings.WIDTH - 150) // 2, 500), (150, 35)), "QUIT", self.ui_manager)
+        self.button_quit = UIButton(pygame.Rect(((ViewSettings.WIDTH - 150) // 2, 650), (150, 35)), "QUIT", self.ui_manager)
+
+        self.button_genetic_menu = UIButton(pygame.Rect((x_positions["right-center"] - 350 // 2, y_positions[0]), (350, 35)), "Train using Genetic Algorithm", self.ui_manager)
+
+        self.button_backpropagation_menu = UIButton(pygame.Rect((x_positions["right-center"] - 350 // 2, y_positions[1]), (350, 35)), "Train using Backpropagation", self.ui_manager)
+
+        self.button_run = UIButton(pygame.Rect((x_positions["left-center"] - 250 // 2, y_positions[1]), (250, 35)), "Run Trained Network", self.ui_manager)
 
     def end(self):
         self.ui_manager.clear_and_reset()
@@ -41,12 +52,21 @@ class MainMenu(BaseState):
             self.ui_manager.process_events(event)
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
+                if event.ui_element == self.button_run:
+                    self.set_target_state_name(State.RUN_TRAINED)
+                    self.trigger_transition()
                 if event.ui_element == self.button_backpropagation_menu:
-                    self.set_target_state_name(State.BACKPROPAGATION_MENU)
+                    self.set_target_state_name(State.OPTIONS)
                     self.trigger_transition()
+                    self.data_to_send = {
+                        "state": "backpropagation"
+                    }
                 if event.ui_element == self.button_genetic_menu:
-                    self.set_target_state_name(State.GENETIC_MENU)
+                    self.set_target_state_name(State.OPTIONS)
                     self.trigger_transition()
+                    self.data_to_send = {
+                        "state": "genetic"
+                    }
                 if event.ui_element == self.button_quit:
                     self.set_target_state_name(State.QUIT)
                     self.trigger_transition()

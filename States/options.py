@@ -251,10 +251,7 @@ class Options(BaseState):
     def draw_options(self):
         match self.options_state:
             case -1:
-                if self.options_target == "genetic":
-                    self.set_target_state_name(State.GENETIC_MENU)
-                else:
-                    self.set_target_state_name(State.BACKPROPAGATION_MENU)
+                self.set_target_state_name(State.MAIN_MENU)
                 self.trigger_transition()
 
             case 0:

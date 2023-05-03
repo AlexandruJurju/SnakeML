@@ -4,12 +4,10 @@ from enum import Enum
 class State(Enum):
     QUIT = 0
     MAIN_MENU = 1
-    BACKPROPAGATION_MENU = 2
-    GENETIC_MENU = 3
+    OPTIONS = 2
+    RUN_TRAINED = 3
     GENETIC_TRAIN_NEW_NETWORK = 4
     BACKPROPAGATION_TRAIN_NEW_NETWORK = 5
-    OPTIONS = 6
-    RUN_PRETRAINED = 7
 
 
 class BoardConsts:
@@ -81,7 +79,7 @@ class ViewSettings:
         BoardConsts.SNAKE_HEAD: COLOR_SNAKE_HEAD
     }
 
-# TODO 2 neuroni cu valori
+
 class Direction(Enum):
     UP = [-1, 0]
     DOWN = [1, 0]
@@ -110,12 +108,12 @@ class GameSettings:
     AVAILABLE_INPUT_DIRECTIONS = ["4", "8"]
     AVAILABLE_VISION_LINES_RETURN_TYPE = ["boolean", "distance"]
 
-    AVAILABLE_ACTIVATION_FUNCTIONS = ["sigmoid", "tanh", "relu", "leaky_relu"]
+    AVAILABLE_ACTIVATION_FUNCTIONS = ["sigmoid", "tanh", "relu"]
 
-    AVAILABLE_SELECTION_OPERATORS = ["roulette_selection", "tournament_selection", "elitist_selection"]
+    AVAILABLE_SELECTION_OPERATORS = ["roulette_selection", "elitist_selection"]
     AVAILABLE_CROSSOVER_OPERATORS = ["one_point_crossover", "two_point_crossover", "uniform_crossover"]
     AVAILABLE_MUTATION_OPERATORS = ["gaussian_mutation"]
     AVAILABLE_DISTANCES = ["chebyshev_distance", "manhattan_distance"]
 
-    GENETIC_NETWORK_FOLDER = "Genetic_Networks/"
-    BACKPROPAGATION_NETWORK_FOLDER = "Backpropagation_Networks/"
+    GENETIC_NETWORK_FOLDER = "Trained Neural Networks/Genetic Networks/"
+    BACKPROPAGATION_NETWORK_FOLDER = "Trained Neural Networks/Backpropagation Networks/"

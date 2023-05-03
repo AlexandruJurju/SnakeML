@@ -125,7 +125,7 @@ class BackpropagationTrainNewNetwork(BaseState):
                     case pygame.K_x:
                         return "X"
                     case pygame.K_ESCAPE:
-                        self.set_target_state_name(State.BACKPROPAGATION_MENU)
+                        self.set_target_state_name(State.MAIN_MENU)
                         self.trigger_transition()
                         break
 
@@ -209,7 +209,7 @@ class BackpropagationTrainNewNetwork(BaseState):
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self.set_target_state_name(State.BACKPROPAGATION_MENU)
+                        self.set_target_state_name(State.MAIN_MENU)
                         self.trigger_transition()
 
                 self.ui_manager.process_events(event)
