@@ -34,9 +34,15 @@ cdef class VisionLine:
         self.segment_distance = segment_output
 
 
+cdef double chebyshev_distance(Pair a, Pair b):
+    cdef int dx = abs(a.x - b.x)
+    cdef int dy = abs(a.y - b.y)
+    if dx > dy:
+        return dx
+    else:
+        return dy
 
 cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
-
     cdef int directions[8][2]
     directions[0][0] = -1
     directions[0][1] = 0
@@ -57,7 +63,9 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
 
     cdef list vision_lines = []
     cdef int x_offset, y_offset
-    cdef Pair apple_coord, segment_coord, current_block, wall_coord
+    cdef Pair apple_coord, segment_coord, current_block, wall_coord,snake_head_pair
+    snake_head_pair.x = snake_head[0]
+    snake_head_pair.y = snake_head[1]
 
     cdef float wall_output, apple_output, segment_output, output_distance
     cdef int board_element
@@ -85,11 +93,9 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
         y_offset = directions[i][1]
 
         # search starts at one block in the given direction otherwise head is also check in the loop
-        current_block.x = snake_head[0] + x_offset
-        current_block.y = snake_head[1] + y_offset
+        current_block.x = snake_head_pair.x + x_offset
+        current_block.y = snake_head_pair.y + y_offset
         board_element = board[current_block.x, current_block.y]
-
-
 
         # loop the blocks in the given direction and store position and coordinates
         while board_element != -1:
@@ -104,21 +110,15 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
             board_element = board[current_block.x, current_block.y]
 
         wall_coord = current_block
-        dx = abs(snake_head[0] - wall_coord.x)
-        dy = abs(snake_head[1] - wall_coord.y)
-        output_distance =  max(dx, dy)
+        output_distance =  chebyshev_distance(snake_head_pair,wall_coord)
         wall_output = 1.0 / output_distance
-
 
         if apple_return_type == "boolean":
             apple_output = 1.0 if apple_found else 0.0
         else:
             if apple_found:
-                dx = abs(snake_head[0] - apple_coord.x)
-                dy = abs(snake_head[1] - apple_coord.y)
-                output_distance =  max(dx, dy)
+                output_distance =  chebyshev_distance(snake_head_pair,apple_coord)
                 apple_output = 1.0 / output_distance
-
             else:
                 apple_output = 0.0
 
@@ -126,11 +126,8 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
             segment_output = 1.0 if segment_found else 0.0
         else:
             if segment_found:
-                dx = abs(snake_head[0] - segment_coord.x)
-                dy = abs(snake_head[1] - segment_coord.y)
-                output_distance =  max(dx, dy)
-
-                segment_output = 1.0/output_distance
+                output_distance =  chebyshev_distance(snake_head_pair,segment_coord)
+                segment_output = 1.0 / output_distance
             else:
                 segment_output = 0.0
 
