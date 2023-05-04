@@ -25,11 +25,11 @@ class MainMenu(BaseState):
                        "center": ViewSettings.X_CENTER,
                        "right-center": ViewSettings.X_CENTER + 250,
                        "right-right": ViewSettings.X_CENTER + 500}
-        y_positions = [ViewSettings.Y_CENTER - 75, ViewSettings.Y_CENTER, ViewSettings.Y_CENTER + 75]
+        y_positions = [ViewSettings.Y_CENTER - 50 - 100, ViewSettings.Y_CENTER - 100, ViewSettings.Y_CENTER + 125 - 100]
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Main Menu", self.ui_manager)
         self.button_quit = UIButton(pygame.Rect(((ViewSettings.WIDTH - 150) // 2, 650), (150, 35)), "QUIT", self.ui_manager)
 
-        self.button_genetic_menu = UIButton(pygame.Rect((x_positions["right-center"] - 350 // 2, y_positions[0]), (350, 35)), "Train using Genetic Algorithm", self.ui_manager)
+        self.button_genetic_menu = UIButton(pygame.Rect((x_positions["right-center"] - 350 // 2, y_positions[1]), (350, 35)), "Train using Genetic Algorithm", self.ui_manager)
 
         self.button_backpropagation_menu = UIButton(pygame.Rect((x_positions["right-center"] - 350 // 2, y_positions[2]), (350, 35)), "Train using Backpropagation", self.ui_manager)
 
@@ -71,10 +71,7 @@ class MainMenu(BaseState):
                     self.set_target_state_name(State.QUIT)
                     self.trigger_transition()
 
-        if ViewSettings.DARK_MODE:
-            surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
-        else:
-            surface.fill(self.ui_manager.ui_theme.get_colour("light_bg"))
+        surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
 
         self.ui_manager.update(time_delta)
         self.ui_manager.draw_ui(surface)

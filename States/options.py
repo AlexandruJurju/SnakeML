@@ -348,7 +348,7 @@ class Options(BaseState):
             pass
 
     def run(self, surface, time_delta):
-        surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+        surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
 
         self.neural_network_layers_entries["input"][0].set_text(str(int(self.dropdown_input_direction_count.selected_option) * 3 + 2))
         if self.dropdown_input_direction_count.selected_option == "4":

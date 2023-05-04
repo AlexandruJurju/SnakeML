@@ -181,7 +181,7 @@ class BackpropagationTrainNewNetwork(BaseState):
             self.training = False
 
     def run(self, surface, time_delta):
-        surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+        surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
 
         if not self.training:
             self.execute(surface)

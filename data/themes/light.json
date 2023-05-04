@@ -1,0 +1,45 @@
+{
+  "defaults": {
+    "colours": {
+      "dark_bg": "#ffffff",
+      "normal_bg": "#ffffff",
+      "hovered_bg": "#4169E1",
+      "selected_bg": "#4169E1",
+      "normal_text": "#000000",
+      "hovered_text": "#ffffff",
+      "selected_text": "#FFFFFF",
+      "normal_border": "#000000",
+      "hovered_border": "#B0B0B0",
+      "disabled_border": "#808080",
+      "selected_border": "#8080B0",
+      "active_border": "#8080B0"
+    }
+  },
+  "text_entry_line": {
+    "misc": {
+      "text_horiz_alignment": "middle"
+    }
+  },
+  "button": {
+    "misc": {
+      "border_width": "3",
+      "text_horiz_alignment": "middle"
+    }
+  },
+  "selection_list": {
+    "colours": {
+      "dark_bg": "#ffffff",
+      "normal_border": "#999999"
+    },
+    "misc": {
+      "border_width": "1",
+      "shadow_width": "15",
+      "list_item_height": "30"
+    }
+  },
+  "selection_list.@selection_list_item": {
+    "misc": {
+      "border_width": "2"
+    }
+  }
+}

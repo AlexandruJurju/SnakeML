@@ -80,10 +80,10 @@ class RunTrained(BaseState):
         self.button_draw_vision_lines = UIButton(pygame.Rect((50, 500), (175, 30)), "Draw Vision Lines", self.ui_manager)
         self.rect_draw_vision_lines = pygame.Rect((250, 500), (30, 30))
 
-        self.score_counter = UILabel(pygame.Rect((150, 100), (150, 35)), "Score: ", self.ui_manager)
+        self.score_counter = UILabel(pygame.Rect((200, 100), (150, 35)), "Score: ", self.ui_manager)
 
-        self.button_load = UIButton(pygame.Rect((25, 100), (125, 35)), "Load Network", self.ui_manager)
-        self.button_run = UIButton(pygame.Rect((25, 150), (125, 35)), "Run Network", self.ui_manager)
+        self.button_load = UIButton(pygame.Rect((25, 100), (175, 35)), "Load Network", self.ui_manager)
+        self.button_run = UIButton(pygame.Rect((25, 150), (175, 35)), "Run Network", self.ui_manager)
         self.button_run.disable()
 
         self.board_size_label = UILabel(pygame.Rect((25, 250), (125, 35)), "Board Size", self.ui_manager)
@@ -148,10 +148,7 @@ class RunTrained(BaseState):
 
     def run(self, surface, time_delta):
         if ViewSettings.DRAW:
-            if ViewSettings.DARK_MODE:
-                surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
-            else:
-                surface.fill(self.ui_manager.ui_theme.get_colour("light_bg"))
+            surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
 
             pygame.draw.rect(surface, ViewSettings.COLOR_GREEN if self.draw_network else ViewSettings.COLOR_RED, self.rect_draw_network)
             pygame.draw.rect(surface, ViewSettings.COLOR_GREEN if self.draw_vision_lines else ViewSettings.COLOR_RED, self.rect_draw_vision_lines)

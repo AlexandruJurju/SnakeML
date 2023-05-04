@@ -19,7 +19,7 @@ def main():
     pygame.display.set_caption('Snake AI')
     screen = pygame.display.set_mode((ViewSettings.WIDTH, ViewSettings.HEIGHT))
 
-    ui_manager = UIManager(screen.get_size(), "data/themes/ui_theme.json")
+    ui_manager = UIManager(screen.get_size(), "data/themes/light.json")
     # ui_manager.add_font_paths("jetbrainsmono", "data/fonts/JetBrainsMono-Regular.ttf", "data/fonts/JetBrainsMono-Bold.ttf", "data/fonts/JetBrainsMono-Italic.ttf", "data/fonts/JetBrainsMono-BoldItalic.ttf")
     # ui_manager.preload_fonts([{'name': 'jetbrainsmono', 'point_size': 14, 'style': 'regular'}])
 

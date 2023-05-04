@@ -142,46 +142,36 @@ class GeneticTrainNewNetwork(BaseState):
         self.ui_manager.clear_and_reset()
 
     def run_genetic(self, surface):
+        while True:
+            snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
+            vision_lines = get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
 
-        # vision_lines = vision.get_vision_lines_snake_model(self.model, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
+            nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
+            neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
+            next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
 
-        # start = time.time()
-        snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
-        vision_lines = get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
-        # end = time.time()
-        # cydif = end - start
+            if ViewSettings.DRAW:
+                draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
-        # start = time.time()
-        # vision_lines2 = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], 4, self.apple_return_type, self.segment_return_type)
-        # end = time.time()
-        # pydiff = end - start
-        # self.py_times.append(pydiff)
-        # self.cy_times.append(cydif)
+                if self.draw_vision_lines:
+                    draw_vision_lines(surface, self.model.snake.body[0], cvision_to_old_vision(vision_lines), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
-        nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
-        neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
-        next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
+                if self.draw_network:
+                    draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 
-        if ViewSettings.DRAW:
-            draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            is_alive = self.model.move(next_direction)
 
-            if self.draw_vision_lines:
-                draw_vision_lines(surface, self.model.snake.body[0], cvision_to_old_vision(vision_lines), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            if not is_alive:
+                self.model.snake.calculate_fitness()
+                self.parent_list.append(self.model.snake)
 
-            # if self.draw_network:
-            #     draw_neural_network_complete(surface, self.model, vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
+                if self.generation == 0:
+                    self.model.snake.brain.reinit_weights_and_biases()
+                    self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.model.snake.brain)
+                else:
+                    self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.offspring_list[len(self.parent_list) - 1])
 
-        is_alive = self.model.move(next_direction)
-
-        if not is_alive:
-            self.model.snake.calculate_fitness()
-            self.parent_list.append(self.model.snake)
-
-            if self.generation == 0:
-                self.model.snake.brain.reinit_weights_and_biases()
-                self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.model.snake.brain)
-            else:
-                self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.offspring_list[len(self.parent_list) - 1])
+                break
 
     def next_generation(self):
         self.offspring_list = []
@@ -271,7 +261,7 @@ class GeneticTrainNewNetwork(BaseState):
 
     def run(self, surface, time_delta):
         if ViewSettings.DRAW:
-            surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+            surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
             pygame.draw.rect(surface, ViewSettings.COLOR_GREEN if self.draw_network else ViewSettings.COLOR_RED, self.rect_draw_network)
             pygame.draw.rect(surface, ViewSettings.COLOR_GREEN if self.draw_vision_lines else ViewSettings.COLOR_RED, self.rect_draw_vision_lines)
             self.generation_label.set_text("Generation : " + str(self.generation))
@@ -347,11 +337,11 @@ class GeneticTrainNewNetwork(BaseState):
                     self.draw_vision_lines = not self.draw_vision_lines
 
                 if event.ui_element == self.button_stop_drawing:
-                    surface.fill(self.ui_manager.ui_theme.get_colour("dark_bg"))
+                    surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
 
-                    font = pygame.font.SysFont("Arial", 20)
+                    font = pygame.font.SysFont("Arial", 32)
                     text_line = "PRESS ENTER TO TURN ON DRAWING"
-                    text_surface = font.render(text_line, True, (255, 255, 255))
+                    text_surface = font.render(text_line, True, (255, 255, 255) if ViewSettings.DARK_MODE else (0, 0, 0))
                     text_rect = text_surface.get_rect()
                     text_rect.center = (ViewSettings.X_CENTER, ViewSettings.Y_CENTER)
                     surface.blit(text_surface, text_rect)
