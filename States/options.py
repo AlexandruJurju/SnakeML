@@ -124,7 +124,7 @@ class Options(BaseState):
 
         available_returns = ["boolean", "distance"]
         if self.options_target == "backpropagation":
-            available_returns = ["distance"]
+            available_returns = ["distance", "boolean"]
         self.dropdown_segment_return = UIDropDownMenu(available_returns, available_returns[0], pygame.Rect((x_positions["right-center"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
         self.label_dropdown_segment_return = UILabel(pygame.Rect((x_positions_label["right-center"], y_positions_label[0]), (250, 35)), "Segment Return type", self.ui_manager)
 
