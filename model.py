@@ -29,6 +29,8 @@ class Snake(Individual):
 
     def calculate_fitness(self) -> None:
         fitness_score = self.method1()
+        if self.score == 97:
+            fitness_score = fitness_score + (10 ** 25) * (self.score / self.steps_taken)
         self.fitness = fitness_score
 
     def method1(self) -> float:
@@ -65,11 +67,12 @@ class Model:
 
         if start_random:
             self.create_random_snake()
+            self.update_board_from_snake()
             self.place_new_apple()
         else:
             self.place_apple_at_coords([5, 5])
             self.place_snake_at_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
-        self.update_board_from_snake()
+            self.update_board_from_snake()
 
     def make_board(self) -> None:
         self.board[1:-1, 1:-1] = BoardConsts.EMPTY
