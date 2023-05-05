@@ -137,10 +137,7 @@ class BackpropagationTrainNewNetwork(BaseState):
 
         draw_board(surface, current_example.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
         snake_head = find_snake_head_poz(current_example.board)
-        snake_head = np.asarray(snake_head, dtype=np.int32)
-        vision_lines = get_vision_lines_snake_head(current_example.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
-        old_lines = vision.cvision_to_old_vision(vision_lines)
-        draw_vision_lines(surface, snake_head, old_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+        draw_vision_lines(surface, snake_head, current_example.vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
         draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
         write_controls(surface, 300, 300)
