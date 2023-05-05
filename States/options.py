@@ -55,7 +55,7 @@ class Options(BaseState):
         self.dropdown_hidden_function: UIDropDownMenu = None
         self.dropdown_hidden_function_label: UILabel = None
 
-        self.dropdown_activation_function_output: UIDropDownMenu = None
+        self.dropdown_activation_function_output: UILabel = None
         self.dropdown_activation_function_output_label: UILabel = None
 
         self.crossover_operators_dropdown: UIDropDownMenu = None
@@ -106,8 +106,7 @@ class Options(BaseState):
         self.board_size_entry.set_text(str(GameSettings.INITIAL_BOARD_SIZE))
 
         # ================================================
-        self.dropdown_activation_function_output = UIDropDownMenu(GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[0], GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[0],
-                                                                  pygame.Rect((x_positions["left-center"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
+        self.dropdown_activation_function_output = UILabel(pygame.Rect((x_positions["left-center"] - 125 // 2, y_positions[0]), (125, 30)), GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[0], self.ui_manager)
         self.dropdown_activation_function_output_label = UILabel(pygame.Rect((x_positions_label["left-center"], y_positions_label[0]), (250, 35)), "Output Activation Function", self.ui_manager)
 
         self.dropdown_hidden_function = UIDropDownMenu(GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS, GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[2],
@@ -299,46 +298,38 @@ class Options(BaseState):
                 self.button_next.set_text("RUN")
 
             case 4:
+                self.data_to_send = {
+                    "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
+                    "segment_return_type": self.dropdown_segment_return.selected_option,
+                    "apple_return_type": self.dropdown_apple_return.selected_option,
+                    "distance_function": self.distance_function.text,
+                    "file_name": self.file_name_entry.text,
+                    "hidden_activation": self.dropdown_hidden_function.selected_option,
+                    "output_activation": self.dropdown_activation_function_output.text,
+                    "input_layer_neurons": int(self.neural_network_layers_entries["input"][0].text),
+                    "hidden_layer_neurons": int(self.neural_network_layers_entries["first"][0].text),
+                    "output_layer_neurons": int(self.neural_network_layers_entries["output"][0].text),
+                    "initial_snake_size": int(self.starting_snake_size_entry.text),
+                    "board_size": int(self.board_size_entry.text)
+                }
+
                 if self.options_target == "genetic":
                     self.set_target_state_name(State.GENETIC_TRAIN_NEW_NETWORK)
-                    self.data_to_send = {
-                        "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
-                        "segment_return_type": self.dropdown_segment_return.selected_option,
-                        "apple_return_type": self.dropdown_apple_return.selected_option,
-                        "distance_function": self.distance_function.text,
-                        "file_name": self.file_name_entry.text,
-                        "hidden_activation": self.dropdown_hidden_function.selected_option,
-                        "output_activation": self.dropdown_activation_function_output.selected_option,
-                        "hidden_layer_count": int(self.hidden_layer_count_dropdown.selected_option),
-                        "input_layer_neurons": int(self.neural_network_layers_entries["input"][0].text),
-                        "hidden_layer1_neuron_count": int(self.neural_network_layers_entries["first"][0].text),
-                        "hidden_layer2_neuron_count": int(self.neural_network_layers_entries["second"][0].text),
-                        "hidden_layer3_neuron_count": int(self.neural_network_layers_entries["third"][0].text),
-                        "output_layer_neurons": int(self.neural_network_layers_entries["output"][0].text),
-                        "population_count": int(self.population_count_entry.text),
-                        "selection_operator": self.selection_operators_dropdown.selected_option,
-                        "crossover_operator": self.crossover_operators_dropdown.selected_option,
-                        "mutation_operator": self.mutation_operators_dropdown.selected_option,
-                        "mutation_rate": float(self.mutation_rate_entry.text),
-                        "initial_snake_size": int(self.starting_snake_size_entry.text),
-                        "board_size": int(self.board_size_entry.text)
-                    }
+                    self.data_to_send.update(
+                        {
+                            "hidden_layer_count": int(self.hidden_layer_count_dropdown.selected_option),
+                            "hidden_layer1_neuron_count": int(self.neural_network_layers_entries["first"][0].text),
+                            "hidden_layer2_neuron_count": int(self.neural_network_layers_entries["second"][0].text),
+                            "hidden_layer3_neuron_count": int(self.neural_network_layers_entries["third"][0].text),
+                            "population_count": int(self.population_count_entry.text),
+                            "selection_operator": self.selection_operators_dropdown.selected_option,
+                            "crossover_operator": self.crossover_operators_dropdown.selected_option,
+                            "mutation_operator": self.mutation_operators_dropdown.selected_option,
+                            "mutation_rate": float(self.mutation_rate_entry.text)
+                        }
+                    )
                 else:
                     self.set_target_state_name(State.BACKPROPAGATION_TRAIN_NEW_NETWORK)
-                    self.data_to_send = {
-                        "input_direction_count": int(self.dropdown_input_direction_count.selected_option),
-                        "segment_return_type": self.dropdown_segment_return.selected_option,
-                        "apple_return_type": self.dropdown_apple_return.selected_option,
-                        "distance_function": self.distance_function.text,
-                        "file_name": self.file_name_entry.text,
-                        "hidden_activation": self.dropdown_hidden_function.selected_option,
-                        "output_activation": self.dropdown_activation_function_output.selected_option,
-                        "input_layer_neurons": int(self.neural_network_layers_entries["input"][0].text),
-                        "hidden_layer_neurons": int(self.neural_network_layers_entries["first"][0].text),
-                        "output_layer_neurons": int(self.neural_network_layers_entries["output"][0].text),
-                        "initial_snake_size": int(self.starting_snake_size_entry.text),
-                        "board_size": int(self.board_size_entry.text)
-                    }
 
                 self.trigger_transition()
 
