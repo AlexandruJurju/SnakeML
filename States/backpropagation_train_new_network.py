@@ -5,8 +5,8 @@ from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
 
 import neural_network
-import vision
 from States.base_state import BaseState
+from cvision import get_vision_lines_snake_head
 from file_operations import TrainingExample, save_neural_network_to_json, read_training_data_and_train, write_examples_to_json_4d
 from game_config import State, GameSettings
 from neural_network import *
@@ -79,13 +79,15 @@ class BackpropagationTrainNewNetwork(BaseState):
         return False
 
     def execute(self, surface):
-        vision_lines = vision.get_vision_lines_snake_head(self.model.board, self.model.snake.body[0], self.input_direction_count,
-                                                          max_dist=0, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type, distance_function=self.distance_function)
+        snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
+        vision_lines = get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
         nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
         neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
 
+        old_lines = vision.cvision_to_old_vision(vision_lines)
+
         example_output = np.where(neural_net_prediction == np.max(neural_net_prediction), 1, 0)
-        example = TrainingExample(copy.deepcopy(self.model.board), self.model.snake.direction, vision_lines, example_output.ravel().tolist())
+        example = TrainingExample(copy.deepcopy(np.asarray(self.model.board)), self.model.snake.direction, old_lines, example_output.ravel().tolist())
 
         if len(self.training_examples) == 0:
             self.examples_to_be_corrected.append(example)
@@ -135,9 +137,10 @@ class BackpropagationTrainNewNetwork(BaseState):
 
         draw_board(surface, current_example.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
         snake_head = find_snake_head_poz(current_example.board)
-        vision_lines = vision.get_vision_lines_snake_head(current_example.board, snake_head, self.input_direction_count, max_dist=0, apple_return_type=self.apple_return_type,
-                                                          segment_return_type=self.segment_return_type, distance_function=self.distance_function)
-        draw_vision_lines(surface, snake_head, vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+        snake_head = np.asarray(snake_head, dtype=np.int32)
+        vision_lines = get_vision_lines_snake_head(current_example.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
+        old_lines = vision.cvision_to_old_vision(vision_lines)
+        draw_vision_lines(surface, snake_head, old_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
         draw_next_snake_direction(surface, current_example.board, self.model.get_nn_output_4directions(current_example.predictions), ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
         write_controls(surface, 300, 300)

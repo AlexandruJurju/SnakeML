@@ -2,15 +2,14 @@ import json
 import os.path
 from typing import Tuple, Dict
 
-import cvision
 import neural_network
 from game_config import Direction
 from neural_network import *
-from vision import get_parameters_in_nn_input_form_2d
+from vision import get_parameters_in_nn_input_form_2d, VisionLine
 
 
 class TrainingExample:
-    def __init__(self, board: np.ndarray, current_direction: Direction, vision_lines: List[cvision.VisionLine], predictions: List[float]):
+    def __init__(self, board: np.ndarray, current_direction: Direction, vision_lines: List[VisionLine], predictions: List[float]):
         self.board = board
         self.current_direction = current_direction
         self.vision_lines = vision_lines

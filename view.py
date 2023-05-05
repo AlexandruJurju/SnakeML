@@ -224,7 +224,7 @@ def write_controls(window, pos_x, pos_y) -> None:
     text_lines = ["CONTROLS", "ESCAPE to return to menu", "WASD to move the snake", "ENTER to keep the same move", "X to end training and skip the rest of the example"]
 
     for i, line in enumerate(text_lines):
-        text_surface = font.render(line, True, ViewSettings.COLOR_FONT)
+        text_surface = font.render(line, True, ViewSettings.COLOR_WHITE if ViewSettings.DARK_MODE else ViewSettings.COLOR_BLACK)
         text_rect = text_surface.get_rect()
         text_rect.center = (pos_x, pos_y + i * (font.get_linesize() + 8))
         window.blit(text_surface, text_rect)

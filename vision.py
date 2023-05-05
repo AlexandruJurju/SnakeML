@@ -47,6 +47,8 @@ def get_parameters_in_nn_input_form_2d(vision_lines, current_direction: Directio
     nn_input[2:-2:3] = [line.segment_distance for line in vision_lines]
     nn_input[-2:] = current_direction.value
 
+    print(nn_input)
+
     return np.reshape(nn_input, (len(nn_input), 1))
 
 
