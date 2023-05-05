@@ -15,3 +15,8 @@ GEN: 14    BEST FITNESS: 14659.159824943901       	BEST SCORE: 5    	BEST RATIO:
 GEN: 15    BEST FITNESS: 5024.719635813122        	BEST SCORE: 3    	BEST RATIO: 0.2                      WON: 0    	WON AVG RATIO: 0                        	
 GEN: 16    BEST FITNESS: 5027.633040365744        	BEST SCORE: 3    	BEST RATIO: 0.2727272727272727       WON: 0    	WON AVG RATIO: 0                        	
 
+GEN: 1     BEST FITNESS: 2149.9540739565236       	BEST SCORE: 2    	BEST RATIO: 0.2222222222222222       WON: 0    	WON AVG RATIO: 0                        	
+GEN: 2     BEST FITNESS: 502.8350615111534        	BEST SCORE: 1    	BEST RATIO: 1.0                      WON: 0    	WON AVG RATIO: 0                        	
+GEN: 3     BEST FITNESS: 2149.890070823094        	BEST SCORE: 2    	BEST RATIO: 0.25                     WON: 0    	WON AVG RATIO: 0                        	
+GEN: 4     BEST FITNESS: 2149.9540739565236       	BEST SCORE: 2    	BEST RATIO: 0.2222222222222222       WON: 0    	WON AVG RATIO: 0                        	
+

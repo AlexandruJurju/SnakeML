@@ -21,9 +21,9 @@ class BoardConsts:
 class ViewSettings:
     DRAW = True
     DARK_MODE = False
-    MAX_FPS = 30
+    MAX_FPS = 100000000000000000
     WIDTH, HEIGHT = 1366, 768
-    SQUARE_SIZE = 25
+    SQUARE_SIZE = 23
     # WINDOW_START_X, WINDOW_START_Y = 50, 50
 
     # NN_DISPLAY_OFFSET_X = 50

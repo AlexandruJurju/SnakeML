@@ -19,26 +19,13 @@ class TrainingExample:
 def read_training_data_and_train(network: NeuralNetwork, file_path: str) -> None:
     x, y = read_training_data_json(file_path)
 
-    # example for points
-    # x is (10000,2) 10000 lines, 2 columns ; 10000 examples each with x coord and y coord
-    # when using a single example x_test from x, x_test is (2,)
-    # resizing can be done for the whole training data resize(10000,2,1)
-    # or for just one example resize(2,1)
-
     input_neuron_count = network.get_dense_layers()[0].input_size
     output_neuron_count = network.get_dense_layers()[-1].output_size
 
     x = np.reshape(x, (len(x), input_neuron_count, 1))
     y = np.reshape(y, (len(y), output_neuron_count, 1))
 
-    network.train(mse, mse_prime, x, y, 0.5)
-
-    # for x_test, y_test in zip(x, y):
-    #     output = network.feed_forward(x_test)
-    #     output_index = list(output).index(max(list(output)))
-    #     target_index = list(y_test).index(max(list(y_test)))
-    #     print(f"target = {target_index}, output = {output_index}")
-    #     print("============================================")
+    network.train(mse, mse_prime, x, y, 0.2)
 
 
 def write_examples_to_json_4d(examples: List[TrainingExample], output_file_location: str) -> None:

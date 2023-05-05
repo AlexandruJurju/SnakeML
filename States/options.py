@@ -106,7 +106,7 @@ class Options(BaseState):
         self.board_size_entry.set_text(str(GameSettings.INITIAL_BOARD_SIZE))
 
         # ================================================
-        self.dropdown_activation_function_output = UIDropDownMenu(GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS, GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[0],
+        self.dropdown_activation_function_output = UIDropDownMenu(GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[0], GameSettings.AVAILABLE_ACTIVATION_FUNCTIONS[0],
                                                                   pygame.Rect((x_positions["left-center"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
         self.dropdown_activation_function_output_label = UILabel(pygame.Rect((x_positions_label["left-center"], y_positions_label[0]), (250, 35)), "Output Activation Function", self.ui_manager)
 
@@ -123,10 +123,13 @@ class Options(BaseState):
         self.hidden_layer_count_dropdown = UIDropDownMenu(["1", "2", "3"], "1", pygame.Rect((x_positions["center"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
         self.hidden_layer_count_dropdown_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[1]), (250, 35)), "Hidden Layer Count", self.ui_manager)
 
-        self.dropdown_segment_return = UIDropDownMenu(["boolean", "distance"], "boolean", pygame.Rect((x_positions["right-center"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
+        available_returns = ["boolean", "distance"]
+        if self.options_target == "backpropagation":
+            available_returns = ["distance"]
+        self.dropdown_segment_return = UIDropDownMenu(available_returns, available_returns[0], pygame.Rect((x_positions["right-center"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
         self.label_dropdown_segment_return = UILabel(pygame.Rect((x_positions_label["right-center"], y_positions_label[0]), (250, 35)), "Segment Return type", self.ui_manager)
 
-        self.dropdown_apple_return = UIDropDownMenu(["boolean", "distance"], "boolean", pygame.Rect((x_positions["right-right"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
+        self.dropdown_apple_return = UIDropDownMenu(available_returns, available_returns[0], pygame.Rect((x_positions["right-right"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
         self.label_dropdown_apple_return = UILabel(pygame.Rect((x_positions_label["right-right"], y_positions_label[0]), (250, 35)), "Apple Return type", self.ui_manager)
 
         input_neuron_count = int(self.dropdown_input_direction_count.selected_option) * 3 + 2
