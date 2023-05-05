@@ -72,13 +72,11 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
     snake_head_pair.x = snake_head[0]
     snake_head_pair.y = snake_head[1]
 
-    cdef float wall_output, apple_output, segment_output, output_distance
+    cdef double wall_output, apple_output, segment_output, output_distance
     cdef int board_element
     cdef bint apple_found = False
     cdef bint segment_found = False
     cdef bint wall_found = False
-    cdef int dx
-    cdef int dy
 
     for i in range(vision_direction_count):
         apple_coord.x = -1
@@ -116,10 +114,7 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
 
         # for wall
         wall_coord = current_block
-        if vision_direction_count == 4:
-            output_distance =  chebyshev_distance(snake_head_pair,wall_coord)
-        else:
-            output_distance =  manhattan_distance(snake_head_pair,wall_coord)
+        output_distance =  chebyshev_distance(snake_head_pair,wall_coord)
         wall_output = 1.0 / output_distance
 
         # for apple
@@ -127,10 +122,7 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
             apple_output = 1.0 if apple_found else 0.0
         else:
             if apple_found:
-                if vision_direction_count == 4:
-                    output_distance =  chebyshev_distance(snake_head_pair,apple_coord)
-                else:
-                    output_distance = manhattan_distance(snake_head_pair,apple_coord)
+                output_distance =  chebyshev_distance(snake_head_pair,apple_coord)
                 apple_output = 1.0 / output_distance
             else:
                 apple_output = 0.0
@@ -140,10 +132,7 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
             segment_output = 1.0 if segment_found else 0.0
         else:
             if segment_found:
-                if vision_direction_count == 4:
-                    output_distance =  chebyshev_distance(snake_head_pair,segment_coord)
-                else:
-                    output_distance = manhattan_distance(snake_head_pair, segment_coord)
+                output_distance =  chebyshev_distance(snake_head_pair,segment_coord)
                 segment_output = 1.0 / output_distance
             else:
                 segment_output = 0.0
