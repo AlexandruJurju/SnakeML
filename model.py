@@ -29,7 +29,7 @@ class Snake(Individual):
         self.direction: Direction = None
 
     def calculate_fitness(self) -> None:
-        fitness_score = self.method2()
+        fitness_score = self.method3()
         self.fitness = fitness_score
 
     def method1(self) -> float:
@@ -72,7 +72,7 @@ class Model:
             self.place_new_apple()
         else:
             self.place_apple_at_coords([5, 5])
-            self.place_snake_at_given_position([[10, 1], [9, 1], [8, 1]], Direction.DOWN)
+            self.place_snake_at_given_position([[5, 1], [4, 1], [3, 1]], Direction.DOWN)
             self.update_board_from_snake()
 
     def find(self):

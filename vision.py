@@ -38,6 +38,47 @@ def find_snake_head_poz(board: np.ndarray) -> np.ndarray:
         return np.array([])
 
 
+def get_vision_lines_snake_head(board: np.ndarray, snake_head, vision_direction_count: int, apple_return_type: str, segment_return_type: str) -> List[VisionLine]:
+    directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
+    distance_function = chebyshev_distance
+    if vision_direction_count == 8:
+        directions += [Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
+        distance_function = manhattan_distance
+
+    vision_lines = []
+    for direction in directions:
+        apple_coord = None
+        segment_coord = None
+
+        # search starts at one block in the given direction otherwise head is also check in the loop
+        current_block = [snake_head[0] + direction.value[0], snake_head[1] + direction.value[1]]
+
+        # loop the blocks in the given direction and store position and coordinates
+        while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
+            if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_coord is None:
+                apple_coord = current_block
+            elif board[current_block[0]][current_block[1]] == BoardConsts.SNAKE_BODY and segment_coord is None:
+                segment_coord = current_block
+            current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
+
+        wall_coord = current_block
+        wall_distance = distance_function(snake_head, wall_coord)
+        wall_output = 1 / wall_distance
+
+        if apple_return_type == "boolean":
+            apple_output = 1.0 if apple_coord is not None else 0.0
+        else:
+            apple_output = 1.0 / distance_function(snake_head, apple_coord) if apple_coord is not None else 0.0
+
+        if segment_return_type == "boolean":
+            segment_output = 1.0 if segment_coord is not None else 0.0
+        else:
+            segment_output = 1.0 / distance_function(snake_head, segment_coord) if segment_coord is not None else 0.0
+
+        vision_lines.append(VisionLine(wall_coord, wall_output, apple_coord, apple_output, segment_coord, segment_output, direction))
+    return vision_lines
+
+
 def get_parameters_in_nn_input_form_2d(vision_lines, current_direction: Direction) -> np.ndarray:
     size = len(vision_lines) * 3 + 2
     nn_input = [0] * size
