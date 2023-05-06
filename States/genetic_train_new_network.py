@@ -185,16 +185,17 @@ class GeneticTrainNewNetwork(BaseState):
         best_individual = max(self.parent_list, key=lambda individual: (individual.score, individual.score / individual.steps_taken if individual.steps_taken != 0 else 0))
 
         counts = {'won': 0, 'apple_count': 0, 'too_old': 0, 'steps_taken': 0}
-        won_average_ratio = 0
+        won_ratios = []
         for individual in self.parent_list:
             # counts['apple_count'] += individual.score
             # counts['steps_taken'] += individual.steps_taken
             if individual.won:
                 counts['won'] += 1
-                won_average_ratio += individual.score / individual.steps_taken
+                won_ratios.append(individual.score / individual.steps_taken)
             # if individual.TTL == 0:
             #     counts['too_old'] += 1
 
+        won_ratios.sort()
         won_count = counts['won']
         # apple_count = counts['apple_count']
         # too_old = counts['too_old']
@@ -225,7 +226,8 @@ class GeneticTrainNewNetwork(BaseState):
                          f"BEST RATIO: {best_individual.score / best_individual.steps_taken if best_individual.steps_taken > 0 else 0:<25}"
                          # f"TOO_OLD: {too_old:<8}\t"
                          f"WON: {won_count:<5}\t"
-                         f"WON AVG RATIO: {won_average_ratio / won_count if won_count >= 1 else 0 :<25}\t"
+                         f"WON AVG RATIO: {np.mean(won_ratios) if len(won_ratios) > 0 else 0 :<25}\t"
+                         f"WON MEDIAN RATIO: {np.median(won_ratios) if len(won_ratios) > 0 else 0}"
                          )
         print(training_data)
         self.training_data += training_data + "\n"

@@ -20,26 +20,8 @@ def main():
     screen = pygame.display.set_mode((ViewSettings.WIDTH, ViewSettings.HEIGHT))
 
     ui_manager = UIManager(screen.get_size(), "data/themes/light.json")
-    # ui_manager.add_font_paths("jetbrainsmono", "data/fonts/JetBrainsMono-Regular.ttf", "data/fonts/JetBrainsMono-Bold.ttf", "data/fonts/JetBrainsMono-Italic.ttf", "data/fonts/JetBrainsMono-BoldItalic.ttf")
-    # ui_manager.preload_fonts([{'name': 'jetbrainsmono', 'point_size': 14, 'style': 'regular'}])
-
-    # ui_manager.add_font_paths("Montserrat",
-    #                           "data/fonts/Montserrat-Regular.ttf",
-    #                           "data/fonts/Montserrat-Bold.ttf",
-    #                           "data/fonts/Montserrat-Italic.ttf",
-    #                           "data/fonts/Montserrat-BoldItalic.ttf")
-    #
-    # ui_manager.preload_fonts([{'name': 'Montserrat', 'html_size': 4.5, 'style': 'bold'},
-    #                           {'name': 'Montserrat', 'html_size': 4.5, 'style': 'regular'},
-    #                           {'name': 'Montserrat', 'html_size': 2, 'style': 'regular'},
-    #                           {'name': 'Montserrat', 'html_size': 2, 'style': 'italic'},
-    #                           {'name': 'Montserrat', 'html_size': 6, 'style': 'bold'},
-    #                           {'name': 'Montserrat', 'html_size': 6, 'style': 'regular'},
-    #                           {'name': 'Montserrat', 'html_size': 6, 'style': 'bold_italic'},
-    #                           {'name': 'Montserrat', 'html_size': 4, 'style': 'bold'},
-    #                           {'name': 'Montserrat', 'html_size': 4, 'style': 'regular'},
-    #                           {'name': 'Montserrat', 'html_size': 4, 'style': 'italic'}
-    #                           ])
+    ui_manager.add_font_paths('jetbrains', "data/fonts/JetBrainsMono-Regular.ttf")
+    ui_manager.preload_fonts([{'name': 'jetbrains', 'point_size': 18, 'style': 'regular'}])
 
     state_manager = StateManager()
     state_manager.add_state(MainMenu(ui_manager))

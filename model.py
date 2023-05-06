@@ -19,16 +19,17 @@ class Individual:
 
 
 class Snake(Individual):
-    def __init__(self, neural_network: NeuralNetwork):
+    def __init__(self, neural_network: NeuralNetwork, max_ttl: int):
         super().__init__(neural_network)
         self.body: List = []
         self.TTL: int = GameSettings.SNAKE_MAX_TTL
+        self.MAX_TTL: int = max_ttl
         self.steps_taken: int = 0
         self.won: bool = False
         self.direction: Direction = None
 
     def calculate_fitness(self) -> None:
-        fitness_score = self.method1()
+        fitness_score = self.method2()
         self.fitness = fitness_score
 
     def method1(self) -> float:
@@ -61,7 +62,7 @@ class Model:
 
         self.max_score = model_size ** 2 - snake_size
         self.snake_size: int = snake_size
-        self.snake: Snake = Snake(net)
+        self.snake: Snake = Snake(net, model_size ** 2)
 
         self.make_board()
 
