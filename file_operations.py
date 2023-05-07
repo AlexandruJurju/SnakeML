@@ -115,7 +115,6 @@ def save_neural_network_to_json(data_to_save: Dict, network: NeuralNetwork, path
                    "input_direction_count": data_to_save["input_direction_count"],
                    "apple_return_type": data_to_save["apple_return_type"],
                    "segment_return_type": data_to_save["segment_return_type"],
-                   "distance_function": data_to_save["distance_function"],
                    "network": network_list}
 
     path_tokens = path.split("/")

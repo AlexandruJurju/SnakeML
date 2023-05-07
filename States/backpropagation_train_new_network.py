@@ -4,9 +4,9 @@ import pygame_gui
 from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
 
+import cvision
 import neural_network
 from States.base_state import BaseState
-from cvision import get_vision_lines_snake_head
 from file_operations import TrainingExample, save_neural_network_to_json, read_training_data_and_train, write_examples_to_json_4d
 from game_config import State, GameSettings
 from neural_network import *
@@ -78,29 +78,65 @@ class BackpropagationTrainNewNetwork(BaseState):
                 return True
         return False
 
-    def execute(self, surface):
-        snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
-        vision_lines = get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
-        nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
-        neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
+    def check_if_already_seen(self, board):
+        for example in self.examples_to_be_corrected:
+            if np.array_equal(example.board, board):
+                return True, example.predictions
+        return False, None
 
-        old_lines = vision.cvision_to_old_vision(vision_lines)
-
-        example_output = np.where(neural_net_prediction == np.max(neural_net_prediction), 1, 0)
-        example = TrainingExample(copy.deepcopy(np.asarray(self.model.board)), self.model.snake.direction, old_lines, example_output.ravel().tolist())
-
-        if len(self.training_examples) == 0:
-            self.examples_to_be_corrected.append(example)
+    def manual(self, surface, time_delta):
+        is_contained, predictions = self.check_if_already_seen(self.model.board)
+        if is_contained:
+            direction = self.model.get_nn_output_4directions(predictions)
+            self.model.move(direction)
+            draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
         else:
-            if not self.is_example_in_evaluated(example):
-                self.examples_to_be_corrected.append(example)
+            snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
+            vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
+            old_lines = vision.cvision_to_old_vision(vision_lines)
 
-        draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            draw_vision_lines(surface, snake_head, old_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
 
-        next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
-        is_alive = self.model.move(next_direction)
-        if not is_alive:
-            self.training = True
+            write_controls(surface, 300, 300)
+            self.ui_manager.update(time_delta)
+            self.ui_manager.draw_ui(surface)
+            pygame.display.flip()
+
+            input_string = self.wait_for_key()
+            target_output = [0.0, 0.0, 0.0, 0.0]
+            direction_to_move = None
+            if input_string == "W":
+                target_output[0] = 1.0
+                direction_to_move = Direction.UP
+            if input_string == "S":
+                target_output[1] = 1.0
+                direction_to_move = Direction.DOWN
+            if input_string == "A":
+                target_output[2] = 1.0
+                direction_to_move = Direction.LEFT
+            if input_string == "D":
+                target_output[3] = 1.0
+                direction_to_move = Direction.RIGHT
+
+            example = TrainingExample(copy.deepcopy(np.asarray(self.model.board)), self.model.snake.direction, old_lines, target_output)
+            self.examples_to_be_corrected.append(example)
+            is_alive = self.model.move(direction_to_move)
+            if not is_alive:
+                input_neuron_count = self.data_received["input_layer_neurons"]
+                hidden_neuron_count = self.data_received["hidden_layer_neurons"]
+                output_neuron_count = self.data_received["output_layer_neurons"]
+
+                hidden_activation = getattr(neural_network, self.data_received["hidden_activation"])
+                output_activation = getattr(neural_network, self.data_received["output_activation"])
+                hidden_activation_prime = getattr(neural_network, self.data_received["hidden_activation"] + "_prime")
+                output_activation_prime = getattr(neural_network, self.data_received["output_activation"] + "_prime")
+                net = NeuralNetwork()
+                net.add_layer(Dense(input_neuron_count, hidden_neuron_count))
+                net.add_layer(Activation(hidden_activation, hidden_activation_prime))
+                net.add_layer(Dense(hidden_neuron_count, output_neuron_count))
+                net.add_layer(Activation(output_activation, output_activation_prime))
+                self.model = Model(self.initial_board_size, self.initial_snake_size, False, net)
 
     def wait_for_key(self) -> str:
         while True:
@@ -127,6 +163,26 @@ class BackpropagationTrainNewNetwork(BaseState):
                     case pygame.K_x:
                         return "X"
                     case pygame.K_ESCAPE:
+                        data_to_save = {
+                            "generation": -1,
+                            "initial_board_size": self.initial_board_size,
+                            "initial_snake_size": self.initial_snake_size,
+                            "input_direction_count": self.input_direction_count,
+                            "apple_return_type": self.apple_return_type,
+                            "segment_return_type": self.segment_return_type
+                        }
+
+                        file_path = "Backpropagation_Training/" + str(self.input_direction_count) + "_in_directions_" + str(self.data_received["output_layer_neurons"]) + "_out_directions.json"
+                        write_examples_to_json_4d(self.examples_to_be_corrected, file_path)
+
+                        self.model.snake.brain.reinit_weights_and_biases()
+                        self.model = Model(self.initial_board_size, self.initial_snake_size, False, self.model.snake.brain)
+                        read_training_data_and_train(self.model.snake.brain, file_path)
+
+                        save_neural_network_to_json(data_to_save,
+                                                    self.model.snake.brain,
+                                                    GameSettings.BACKPROPAGATION_NETWORK_FOLDER + self.data_received["file_name"])
+
                         self.set_target_state_name(State.MAIN_MENU)
                         self.trigger_transition()
                         break
@@ -183,45 +239,6 @@ class BackpropagationTrainNewNetwork(BaseState):
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
 
-        if not self.training:
-            self.execute(surface)
-        else:
-            self.correct_and_train(surface, time_delta)
-
-            data_to_save = {
-                "generation": -1,
-                "initial_board_size": self.initial_board_size,
-                "initial_snake_size": self.initial_snake_size,
-                "input_direction_count": self.input_direction_count,
-                "apple_return_type": self.apple_return_type,
-                "segment_return_type": self.segment_return_type,
-                "distance_function": self.data_received["distance_function"]
-            }
-
-            save_neural_network_to_json(data_to_save,
-                                        self.model.snake.brain,
-                                        GameSettings.BACKPROPAGATION_NETWORK_FOLDER + self.data_received["file_name"])
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.set_target_state_name(State.QUIT)
-                    self.trigger_transition()
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.set_target_state_name(State.MAIN_MENU)
-                        self.trigger_transition()
-
-                self.ui_manager.process_events(event)
-
-                if event.type == pygame_gui.UI_BUTTON_PRESSED:
-                    if event.ui_element == self.button_back:
-                        self.set_target_state_name(State.OPTIONS)
-                        self.data_to_send = {
-                            "state": "backpropagation"
-                        }
-                        self.trigger_transition()
-
-            self.ui_manager.update(time_delta)
-
-            self.ui_manager.draw_ui(surface)
+        self.manual(surface, time_delta)
+        self.ui_manager.update(time_delta)
+        self.ui_manager.draw_ui(surface)

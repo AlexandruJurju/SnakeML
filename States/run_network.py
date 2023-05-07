@@ -99,7 +99,7 @@ class RunTrained(BaseState):
     def run_network(self, surface):
         snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
         vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
-        nn_input = vision.get_parameters_in_nn_input_form_4d(vision_lines, self.model.snake.direction)
+        nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
         neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
 
         if ViewSettings.DRAW:
@@ -174,11 +174,10 @@ class RunTrained(BaseState):
                     self.trigger_transition()
 
                 if event.ui_element == self.button_run:
-                    self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.network)
-                    # TODO dynamic max distance
-                    self.max_dist = 10
+                    self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True if self.state_target == "genetic" else False, self.network)
+                    # # TODO dynamic max distance
+                    # self.max_dist = 10
                     self.execute_network = True
-                    # ViewSettings.DRAW = False
 
                 if event.ui_element == self.button_draw_network:
                     self.draw_network = not self.draw_network
@@ -200,15 +199,20 @@ class RunTrained(BaseState):
                 try:
                     self.file_path = create_resource_path(event.text)
                     config = read_all_from_json(self.file_path)
+                    if config["generation"] == -1:
+                        self.state_target = "backpropagation"
+                    else:
+                        self.state_target = "genetic"
+
                     self.network = config["network"]
                     self.input_direction_count = config["input_direction_count"]
                     self.apple_return_type = config["apple_return_type"]
                     self.segment_return_type = config["segment_return_type"]
-                    self.distance_function = getattr(vision, config["distance_function"])
+                    self.distance_function = "chebyshev" if self.input_direction_count == 4 else "manhattan"
                     self.board_size_entry.set_text(str(config["board_size"]))
                     self.snake_size_entry.set_text(str(config["snake_size"]))
                     self.label_return_type.set_text("Segment: " + self.segment_return_type + " Apple: " + self.apple_return_type)
-                    self.label_distance.set_text("Distance: " + config["distance_function"])
+                    self.label_distance.set_text("Distance: " + self.distance_function)
                     self.button_load.enable()
                     self.button_run.enable()
 
