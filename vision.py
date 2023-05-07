@@ -79,6 +79,17 @@ def get_vision_lines_snake_head(board: np.ndarray, snake_head, vision_direction_
     return vision_lines
 
 
+def get_parameters_in_nn_input_form_0d(vision_lines, current_direction: Direction) -> np.ndarray:
+    size = len(vision_lines) * 3
+    nn_input = [0] * size
+
+    nn_input[::3] = [line.wall_distance for line in vision_lines]
+    nn_input[1::3] = [line.apple_distance for line in vision_lines]
+    nn_input[2::3] = [line.segment_distance for line in vision_lines]
+
+    return np.reshape(nn_input, (len(nn_input), 1))
+
+
 def get_parameters_in_nn_input_form_2d(vision_lines, current_direction: Direction) -> np.ndarray:
     size = len(vision_lines) * 3 + 2
     nn_input = [0] * size
@@ -87,6 +98,26 @@ def get_parameters_in_nn_input_form_2d(vision_lines, current_direction: Directio
     nn_input[1:-2:3] = [line.apple_distance for line in vision_lines]
     nn_input[2:-2:3] = [line.segment_distance for line in vision_lines]
     nn_input[-2:] = current_direction.value
+
+    return np.reshape(nn_input, (len(nn_input), 1))
+
+
+def get_parameters_in_nn_input_form_4d(vision_lines, current_direction: Direction) -> np.ndarray:
+    size = len(vision_lines) * 3 + 4
+    nn_input = [0] * size
+
+    nn_input[:-4:3] = [line.wall_distance for line in vision_lines]
+    nn_input[1:-4:3] = [line.apple_distance for line in vision_lines]
+    nn_input[2:-4:3] = [line.segment_distance for line in vision_lines]
+
+    if current_direction == Direction.UP:
+        nn_input[-4] = 1
+    if current_direction == Direction.DOWN:
+        nn_input[-3] = 1
+    if current_direction == Direction.LEFT:
+        nn_input[-2] = 1
+    if current_direction == Direction.RIGHT:
+        nn_input[-1] = 1
 
     return np.reshape(nn_input, (len(nn_input), 1))
 
