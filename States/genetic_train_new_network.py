@@ -152,12 +152,10 @@ class GeneticTrainNewNetwork(BaseState):
 
             if ViewSettings.DRAW:
                 draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-
                 old_vision_lines = cvision_to_old_vision(vision_lines)
 
                 if self.draw_vision_lines:
                     draw_vision_lines(surface, self.model.snake.body[0], old_vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-
                 if self.draw_network:
                     draw_neural_network_complete(surface, self.model, old_vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
 
