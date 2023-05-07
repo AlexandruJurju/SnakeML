@@ -9,8 +9,7 @@ from vision import get_parameters_in_nn_input_form_2d, VisionLine
 
 
 class TrainingExample:
-    def __init__(self, board: np.ndarray, current_direction: Direction, vision_lines: List[VisionLine], predictions: List[float]):
-        self.board = board
+    def __init__(self, current_direction: Direction, vision_lines: List[VisionLine], predictions: List[float]):
         self.current_direction = current_direction
         self.vision_lines = vision_lines
         self.predictions = predictions
