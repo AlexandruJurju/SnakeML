@@ -4,6 +4,7 @@ from pygame_gui.elements import UILabel, UIButton
 
 import cvision
 import neural_network
+import view
 from States.base_state import BaseState
 from file_operations import TrainingExample, save_neural_network_to_json, read_training_data_and_train, write_examples_to_json_4d
 from game_config import State, GameSettings
@@ -76,26 +77,52 @@ class BackpropagationTrainNewNetwork(BaseState):
                 return True
         return False
 
-    def check_if_already_seen(self, vision_lines):
+    def check_if_already_seen(self, vision_lines) -> TrainingExample:
         for example in self.examples_to_be_corrected:
             if np.array_equal(example.vision_lines, vision_lines):
-                return True, example.predictions
-        return False, None
+                return example
+        return None
 
     def manual(self, surface, time_delta):
         snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
         vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
         old_lines = vision.cvision_to_old_vision(vision_lines)
-        is_contained, predictions = self.check_if_already_seen(old_lines)
+        example = self.check_if_already_seen(old_lines)
 
-        if is_contained:
-            direction = self.model.get_nn_output_4directions(predictions)
-            self.model.move(direction)
+        if example is not None:
+            direction = self.model.get_nn_output_4directions(example.predictions)
+            print(self.model.snake.body[0])
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            view.draw_next_snake_direction(surface, self.model.snake.body[0], direction, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            write_controls(surface, 300, 300)
+            self.ui_manager.update(time_delta)
+            self.ui_manager.draw_ui(surface)
+            pygame.display.flip()
+
+            input_string = self.wait_for_key()
+            target_output = [0.0, 0.0, 0.0, 0.0]
+            direction_to_move = None
+            if input_string == "W":
+                target_output[0] = 1.0
+                direction_to_move = Direction.UP
+            if input_string == "S":
+                target_output[1] = 1.0
+                direction_to_move = Direction.DOWN
+            if input_string == "A":
+                target_output[2] = 1.0
+                direction_to_move = Direction.LEFT
+            if input_string == "D":
+                target_output[3] = 1.0
+                direction_to_move = Direction.RIGHT
+            if input_string == "":
+                target_output = example.predictions
+                direction_to_move = direction
+
+            self.model.move(direction_to_move)
+
         else:
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             draw_vision_lines(surface, snake_head, old_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
-
             write_controls(surface, 300, 300)
             self.ui_manager.update(time_delta)
             self.ui_manager.draw_ui(surface)

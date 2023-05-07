@@ -7,7 +7,6 @@ import vision
 from game_config import ViewSettings, MAIN_DIRECTIONS, Direction, BoardConsts
 from model import Model
 from neural_network import Dense
-from vision import find_snake_head_poz
 
 
 def draw_board(window, board: np.ndarray, offset_x, offset_y) -> None:
@@ -180,15 +179,14 @@ def draw_colored_lines_between_neurons(window, layer: Dense, line_end: List, lin
             pygame.draw.line(window, color, line_start[j], line_end[i], width=1)
 
 
-def draw_next_snake_direction(window, board: np.ndarray, prediction: Direction, offset_x, offset_y) -> None:
-    head = find_snake_head_poz(board)
+def draw_next_snake_direction(window, snake_head, prediction: Direction, offset_x, offset_y) -> None:
     font_size = 15
-    current_x = head[1] * ViewSettings.SQUARE_SIZE + offset_x + ViewSettings.SQUARE_SIZE // 2
-    current_y = head[0] * ViewSettings.SQUARE_SIZE + offset_y + ViewSettings.SQUARE_SIZE // 2
+    current_x = snake_head[1] * ViewSettings.SQUARE_SIZE + offset_x + ViewSettings.SQUARE_SIZE // 2
+    current_y = snake_head[0] * ViewSettings.SQUARE_SIZE + offset_y + ViewSettings.SQUARE_SIZE // 2
     font = pygame.font.SysFont("arial", font_size)
 
     # draw next position of snake
-    next_position = [head[0] + prediction.value[0], head[1] + prediction.value[1]]
+    next_position = [snake_head[0] + prediction.value[0], snake_head[1] + prediction.value[1]]
     next_x = next_position[1] * ViewSettings.SQUARE_SIZE + offset_x
     next_y = next_position[0] * ViewSettings.SQUARE_SIZE + offset_y
     pygame.draw.rect(window, ViewSettings.COLOR_NEXT_MOVE, pygame.Rect(next_x, next_y, ViewSettings.SQUARE_SIZE, ViewSettings.SQUARE_SIZE))
