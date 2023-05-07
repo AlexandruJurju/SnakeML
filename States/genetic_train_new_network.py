@@ -77,11 +77,11 @@ class GeneticTrainNewNetwork(BaseState):
         self.apple_return_type = self.data_received["apple_return_type"]
         self.distance_function = getattr(vision, self.data_received["distance_function"])
         self.population_count = self.data_received["population_count"]
-        self.selection_operator = getattr(genetic_operators, self.data_received["selection_operator"])
         self.crossover_operator = getattr(genetic_operators, self.data_received["crossover_operator"])
         self.mutation_operator = getattr(genetic_operators, self.data_received["mutation_operator"])
         self.mutation_rate = self.data_received["mutation_rate"]
         self.file_name = self.data_received["file_name"]
+        self.population_count += self.population_count // 10
 
         hidden_layer_count = self.data_received["hidden_layer_count"]
         input_neuron_count = self.data_received["input_layer_neurons"]
@@ -135,8 +135,8 @@ class GeneticTrainNewNetwork(BaseState):
 
         self.model = Model(self.initial_board_size, self.initial_snake_size, True, net)
 
-        self.max_distance = self.distance_function((0, 1), (self.initial_board_size, 1))
-        print(self.max_distance)
+        # self.max_distance = self.distance_function((0, 1), (self.initial_board_size, 1))
+        # print(self.max_distance)
 
     def end(self):
         self.ui_manager.clear_and_reset()
@@ -230,11 +230,11 @@ class GeneticTrainNewNetwork(BaseState):
         print(training_data)
         self.training_data += training_data + "\n"
 
-        self.x_generations.append(self.generation)
-        self.y_best_individual_fitness.append(best_individual.fitness)
-        self.y_best_individual_score.append(best_individual.score)
+        # self.x_generations.append(self.generation)
+        # self.y_best_individual_fitness.append(best_individual.fitness)
+        # self.y_best_individual_score.append(best_individual.score)
         # self.y_average_score.append(average_score)
-        self.y_best_ratio.append(best_individual.score / best_individual.steps_taken)
+        # self.y_best_ratio.append(best_individual.score / best_individual.steps_taken)
 
         parents_for_mating = elitist_selection(self.parent_list, self.population_count // 10)
         for parent in parents_for_mating[:self.population_count // 10]:
@@ -242,7 +242,7 @@ class GeneticTrainNewNetwork(BaseState):
         # np.random.shuffle(parents_for_mating)
         # np.random.shuffle(self.parent_list)
 
-        selected_parents = self.selection_operator(self.parent_list, (self.population_count - self.population_count // 10))
+        selected_parents = genetic_operators.roulette_selection(self.parent_list, (self.population_count - self.population_count // 10))
         for i in range(0, (len(selected_parents)) - 1, 2):
             parent1 = selected_parents[i].brain
             parent2 = selected_parents[i + 1].brain
@@ -255,9 +255,7 @@ class GeneticTrainNewNetwork(BaseState):
             self.offspring_list.append(child1)
             self.offspring_list.append(child2)
 
-        # self.model.snake.brain.reinit_weights_and_biases()
         self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.offspring_list[0])
-
         self.generation += 1
         self.parent_list = []
 
@@ -311,13 +309,6 @@ class GeneticTrainNewNetwork(BaseState):
                     self.set_target_state_name(State.MAIN_MENU)
                     self.trigger_transition()
                     ViewSettings.DRAW = True
-
-                    # sum_py = sum(self.py_times)
-                    # sum_cy = sum(self.cy_times)
-                    # print(f"sum py {sum_py}")
-                    # print(f"sum cy {sum_cy}")
-                    # print(f"time diff {sum_py - sum_cy}")
-                    # print(f"percent {100 - sum_cy / sum_py * 100}")
 
                 if event.key == pygame.K_RETURN:
                     ViewSettings.DRAW = True
