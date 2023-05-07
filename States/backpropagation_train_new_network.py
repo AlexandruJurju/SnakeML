@@ -77,21 +77,22 @@ class BackpropagationTrainNewNetwork(BaseState):
                 return True
         return False
 
-    def check_if_already_seen(self, vision_lines) -> TrainingExample:
-        for example in self.examples_to_be_corrected:
-            if np.array_equal(example.vision_lines, vision_lines):
-                return example
+    def check_if_already_seen(self, vision_lines) -> int:
+        for i in range(len(self.examples_to_be_corrected)):
+            if np.array_equal(self.examples_to_be_corrected[i].vision_lines, vision_lines):
+                return i
         return None
 
     def manual(self, surface, time_delta):
         snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
         vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
         old_lines = vision.cvision_to_old_vision(vision_lines)
-        example = self.check_if_already_seen(old_lines)
+        example_index = self.check_if_already_seen(old_lines)
 
-        if example is not None:
-            direction = self.model.get_nn_output_4directions(example.predictions)
-            print(self.model.snake.body[0])
+        if example_index is not None:
+            predictions = self.examples_to_be_corrected[example_index].predictions
+            direction = self.model.get_nn_output_4directions(predictions)
+
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             view.draw_next_snake_direction(surface, self.model.snake.body[0], direction, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             write_controls(surface, 300, 300)
@@ -99,24 +100,26 @@ class BackpropagationTrainNewNetwork(BaseState):
             self.ui_manager.draw_ui(surface)
             pygame.display.flip()
 
-            input_string = self.wait_for_key()
-            target_output = [0.0, 0.0, 0.0, 0.0]
             direction_to_move = None
-            if input_string == "W":
-                target_output[0] = 1.0
-                direction_to_move = Direction.UP
-            if input_string == "S":
-                target_output[1] = 1.0
-                direction_to_move = Direction.DOWN
-            if input_string == "A":
-                target_output[2] = 1.0
-                direction_to_move = Direction.LEFT
-            if input_string == "D":
-                target_output[3] = 1.0
-                direction_to_move = Direction.RIGHT
+            input_string = self.wait_for_key()
             if input_string == "":
-                target_output = example.predictions
                 direction_to_move = direction
+            else:
+                target_output = [0.0, 0.0, 0.0, 0.0]
+                if input_string == "W":
+                    target_output[0] = 1.0
+                    direction_to_move = Direction.UP
+                if input_string == "S":
+                    target_output[1] = 1.0
+                    direction_to_move = Direction.DOWN
+                if input_string == "A":
+                    target_output[2] = 1.0
+                    direction_to_move = Direction.LEFT
+                if input_string == "D":
+                    target_output[3] = 1.0
+                    direction_to_move = Direction.RIGHT
+
+                self.examples_to_be_corrected[example_index].predictions = target_output
 
             self.model.move(direction_to_move)
 
@@ -144,8 +147,8 @@ class BackpropagationTrainNewNetwork(BaseState):
                 target_output[3] = 1.0
                 direction_to_move = Direction.RIGHT
 
-            example = TrainingExample(self.model.snake.direction, old_lines, target_output)
-            self.examples_to_be_corrected.append(example)
+            example_index = TrainingExample(self.model.snake.direction, old_lines, target_output)
+            self.examples_to_be_corrected.append(example_index)
             is_alive = self.model.move(direction_to_move)
             if not is_alive:
                 self.model = Model(self.initial_board_size, self.initial_snake_size, False, self.model.snake.brain)
