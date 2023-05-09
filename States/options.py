@@ -123,7 +123,7 @@ class Options(BaseState):
         self.hidden_layer_count_dropdown = UIDropDownMenu(["1", "2", "3"], "1", pygame.Rect((x_positions["center"] - 75 // 2, y_positions[1]), (75, 30)), self.ui_manager)
         self.hidden_layer_count_dropdown_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[1]), (250, 35)), "Hidden Layer Count", self.ui_manager)
 
-        available_returns = ["boolean", "distance"] if self.options_target == "backpropagation" else ["distance", "boolean"]
+        available_returns = ["boolean", "distance"] if self.options_target == "genetic" else ["distance", "boolean"]
         self.dropdown_segment_return = UIDropDownMenu(available_returns, available_returns[0], pygame.Rect((x_positions["right-center"] - 125 // 2, y_positions[0]), (125, 30)), self.ui_manager)
         self.label_dropdown_segment_return = UILabel(pygame.Rect((x_positions_label["right-center"], y_positions_label[0]), (250, 35)), "Segment Return type", self.ui_manager)
 
@@ -343,7 +343,7 @@ class Options(BaseState):
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
 
-        self.neural_network_layers_entries["input"][0].set_text(str(int(self.dropdown_input_direction_count.selected_option) * 3 + 2))
+        self.neural_network_layers_entries["input"][0].set_text(str(int(self.dropdown_input_direction_count.selected_option) * 3 ))
         if self.dropdown_input_direction_count.selected_option == "4":
             self.distance_function.set_text(GameSettings.AVAILABLE_DISTANCES[0])
         else:
