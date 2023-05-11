@@ -29,7 +29,7 @@ class Snake(Individual):
         self.direction: Direction = None
 
     def calculate_fitness(self) -> None:
-        fitness_score = self.method3()
+        fitness_score = self.method2()
         self.fitness = fitness_score
 
     def method1(self) -> float:
@@ -38,19 +38,13 @@ class Snake(Individual):
 
     def method2(self) -> float:
         if self.steps_taken == 0:
-            self.steps_taken = 1
-        over = self.steps_taken - (self.steps_taken / (self.score + 1))
-        under = self.steps_taken + (self.steps_taken / (self.score + 1))
-        fitness_score = self.score + 0.5 + (0.5 * (over / under))
-        fitness_score = fitness_score * 10000
-        return fitness_score
+            return 0
+        return (2 * self.steps_taken * self.score) / (self.steps_taken + self.score)
 
     def method3(self):
-        if self.steps_taken > 0:
-            fitness_score = (self.steps_taken * self.score) / (self.steps_taken + self.score)
-        else:
-            fitness_score = 0
-        return fitness_score
+        if self.steps_taken == 0:
+            return 0
+        return (self.steps_taken * self.score) / (self.steps_taken + self.score)
 
 
 class Model:

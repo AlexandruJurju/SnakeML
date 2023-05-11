@@ -121,8 +121,8 @@ class RunTrained(BaseState):
 
         if not is_alive:
             ratio = self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0
-            print(np.asarray(self.model.board))
-            print(self.model.snake.direction)
+            # print(np.asarray(self.model.board))
+            # print(self.model.snake.direction)
             if self.model.snake.score == 97:
                 self.ratio_test.append(ratio)
                 print(f"mean ratio {np.mean(self.ratio_test)}")
@@ -178,6 +178,7 @@ class RunTrained(BaseState):
                     # # TODO dynamic max distance
                     # self.max_dist = 10
                     self.execute_network = True
+                    # ViewSettings.DRAW = False
 
                 if event.ui_element == self.button_draw_network:
                     self.draw_network = not self.draw_network
