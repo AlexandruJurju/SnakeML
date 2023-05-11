@@ -47,6 +47,12 @@ cdef double manhattan_distance(Pair a, Pair b):
     cdef double dy = abs(a.y - b.y)
     return dx + dy
 
+cdef double distance(Pair a,Pair b, int vision_count):
+    if vision_count == 4:
+        return chebyshev_distance(a,b)
+    else:
+        return manhattan_distance(a,b)
+
 cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
     cdef int directions[8][2]
     directions[0][0] = -1
@@ -65,6 +71,7 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
     directions[6][1] = -1
     directions[7][0] = 1
     directions[7][1] = 1
+
 
     cdef list vision_lines = []
     cdef int x_offset, y_offset
@@ -114,16 +121,14 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
 
         # for wall
         wall_coord = current_block
-        output_distance =  chebyshev_distance(snake_head_pair,wall_coord)
-        wall_output = 1.0 / output_distance
+        wall_output = 1.0 / distance(snake_head_pair,wall_coord,vision_direction_count)
 
         # for apple
         if apple_return_type == "boolean":
             apple_output = 1.0 if apple_found else 0.0
         else:
             if apple_found:
-                output_distance =  chebyshev_distance(snake_head_pair,apple_coord)
-                apple_output = 1.0 / output_distance
+                apple_output = 1.0 / distance(snake_head_pair,apple_coord,vision_direction_count)
             else:
                 apple_output = 0.0
 
@@ -132,8 +137,7 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
             segment_output = 1.0 if segment_found else 0.0
         else:
             if segment_found:
-                output_distance =  chebyshev_distance(snake_head_pair,segment_coord)
-                segment_output = 1.0 / output_distance
+                segment_output = 1.0 / distance(snake_head_pair,segment_coord,vision_direction_count)
             else:
                 segment_output = 0.0
 
