@@ -48,9 +48,6 @@ cdef double manhattan_distance(Pair a, Pair b):
     return dx + dy
 
 cdef double distance(Pair a,Pair b, int vision_count):
-    if vision_count == 4:
-        return chebyshev_distance(a,b)
-    else:
         return manhattan_distance(a,b)
 
 cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
