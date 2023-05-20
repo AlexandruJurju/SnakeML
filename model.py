@@ -8,19 +8,12 @@ from game_config import BoardConsts, Direction, GameSettings, MAIN_DIRECTIONS
 from neural_network import NeuralNetwork
 
 
-class Individual:
-    def __init__(self, neural_network: NeuralNetwork):
-        self.score: int = 0
-        self.fitness: float = 0
-        self.brain: NeuralNetwork = neural_network
-
-    def calculate_fitness(self):
-        pass
-
-
-class Snake(Individual):
+class Snake:
     def __init__(self, neural_network: NeuralNetwork, max_ttl: int):
-        super().__init__(neural_network)
+        self.brain = neural_network
+        self.score = 0
+        self.fitness = 0
+
         self.body: List = []
         self.TTL: int = GameSettings.SNAKE_MAX_TTL
         self.MAX_TTL: int = max_ttl
@@ -36,12 +29,7 @@ class Snake(Individual):
         fitness_score = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
         return fitness_score
 
-    def method2(self) -> float:
-        if self.steps_taken == 0:
-            return 0
-        return (2 * self.steps_taken * self.score) / (self.steps_taken + self.score)
-
-    def method3(self):
+    def method2(self):
         if self.steps_taken == 0:
             return 0
         return (self.steps_taken * self.score) / (self.steps_taken + self.score)
