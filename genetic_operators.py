@@ -3,14 +3,14 @@ import random
 import time
 from typing import Tuple
 
-from model import Individual
+from model import Snake
 from neural_network import *
 
 
 # operators from pymoo
 # https://github.com/anyoptimization/pymoo/tree/main/pymoo/operators
 
-def roulette_selection(population: List[Individual], selection_count: int) -> List[Individual]:
+def roulette_selection(population: List[Snake], selection_count: int) -> List[Snake]:
     """
     In Roulette selection the chance for and individual to be selected is directly proportional with that individual's fitness
     :param population: list containing all individuals
@@ -23,7 +23,7 @@ def roulette_selection(population: List[Individual], selection_count: int) -> Li
     return selection
 
 
-def roulette_selection_negative(population: List[Individual], selection_count: int) -> List[Individual]:
+def roulette_selection_negative(population: List[Snake], selection_count: int) -> List[Snake]:
     """
      In Roulette selection the chance for and individual to be selected is directly proportional with that individual's fitness
      :param population: list containing all individuals
@@ -51,7 +51,7 @@ def roulette_selection_negative(population: List[Individual], selection_count: i
     return selected
 
 
-def tournament_selection(population: List[Individual], selection_count: int, tournament_size: int) -> List[Individual]:
+def tournament_selection(population: List[Snake], selection_count: int, tournament_size: int) -> List[Snake]:
     """
     The function selects random individuals from the population and returns the fittest one from the selected ones
 
@@ -69,7 +69,7 @@ def tournament_selection(population: List[Individual], selection_count: int, tou
     return selected
 
 
-def elitist_selection(population: List[Individual], selection_count: int) -> List[Individual]:
+def elitist_selection(population: List[Snake], selection_count: int) -> List[Snake]:
     """
     Elitist selection sorts the population by fitness in descending order and selects the individuals with the
     greatest fitness first
