@@ -28,14 +28,12 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.ui_manager = ui_manager
         self.model = None
 
-        self.examples_to_be_corrected: List[TrainingExample] = []
         self.training_examples: List[TrainingExample] = []
 
         self.title_label = None
         self.button_back = None
 
     def start(self):
-        self.examples_to_be_corrected: List[TrainingExample] = []
         self.training_examples: List[TrainingExample] = []
 
         self.title_label = UILabel(pygame.Rect(ViewSettings.TITLE_LABEL_POSITION, ViewSettings.TITLE_LABEL_DIMENSION), "Backpropagation Train New Network", self.ui_manager)
@@ -71,26 +69,20 @@ class BackpropagationTrainNewNetwork(BaseState):
         self.title_label.kill()
         self.button_back.kill()
 
-    def is_example_in_evaluated(self, example: TrainingExample):
-        for eval_example in self.training_examples:
-            if eval_example.vision_lines == example.vision_lines:
-                return True
-        return False
-
     def check_if_already_seen(self, vision_lines) -> int:
-        for i in range(len(self.examples_to_be_corrected)):
-            if np.array_equal(self.examples_to_be_corrected[i].vision_lines, vision_lines):
+        for i in range(len(self.training_examples)):
+            if np.array_equal(self.training_examples[i].vision_lines, vision_lines):
                 return i
         return None
 
-    def manual(self, surface, time_delta):
+    def play_game_manual(self, surface, time_delta):
         snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
         vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
         old_lines = vision.cvision_to_old_vision(vision_lines)
         example_index = self.check_if_already_seen(old_lines)
 
         if example_index is not None:
-            predictions = self.examples_to_be_corrected[example_index].predictions
+            predictions = self.training_examples[example_index].user_move
             direction = self.model.get_nn_output_4directions(predictions)
 
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
@@ -119,7 +111,7 @@ class BackpropagationTrainNewNetwork(BaseState):
                     target_output[3] = 1.0
                     direction_to_move = Direction.RIGHT
 
-                self.examples_to_be_corrected[example_index].predictions = target_output
+                self.training_examples[example_index].user_move = target_output
 
             self.model.move(direction_to_move)
 
@@ -147,8 +139,8 @@ class BackpropagationTrainNewNetwork(BaseState):
                 target_output[3] = 1.0
                 direction_to_move = Direction.RIGHT
 
-            example_index = TrainingExample(self.model.snake.direction, old_lines, target_output)
-            self.examples_to_be_corrected.append(example_index)
+            example = TrainingExample(self.model.snake.direction, old_lines, target_output)
+            self.training_examples.append(example)
             is_alive = self.model.move(direction_to_move)
             if not is_alive:
                 self.model = Model(self.initial_board_size, self.initial_snake_size, False, self.model.snake.brain)
@@ -189,7 +181,7 @@ class BackpropagationTrainNewNetwork(BaseState):
                         }
 
                         file_path = "Backpropagation_Training/" + str(self.input_direction_count) + "_in_directions_" + str(self.data_received["output_layer_neurons"]) + "_out_directions.json"
-                        write_examples_to_json_4d(self.examples_to_be_corrected, file_path)
+                        write_examples_to_json_4d(self.training_examples, file_path)
 
                         self.model.snake.brain.reinit_weights_and_biases()
                         self.model = Model(self.initial_board_size, self.initial_snake_size, False, self.model.snake.brain)
@@ -206,7 +198,24 @@ class BackpropagationTrainNewNetwork(BaseState):
 
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
+        file_path = "Backpropagation_Training/" + str(self.input_direction_count) + "_in_directions_" + str(self.data_received["output_layer_neurons"]) + "_out_directions.json"
+        self.model.snake.brain.reinit_weights_and_biases()
+        self.model = Model(self.initial_board_size, self.initial_snake_size, False, self.model.snake.brain)
+        read_training_data_and_train(self.model.snake.brain, file_path)
 
-        self.manual(surface, time_delta)
+        data_to_save = {
+            "generation": -1,
+            "initial_board_size": self.initial_board_size,
+            "initial_snake_size": self.initial_snake_size,
+            "input_direction_count": self.input_direction_count,
+            "apple_return_type": self.apple_return_type,
+            "segment_return_type": self.segment_return_type
+        }
+
+        save_neural_network_to_json(data_to_save,
+                                    self.model.snake.brain,
+                                    GameSettings.BACKPROPAGATION_NETWORK_FOLDER + self.data_received["file_name"])
+
+        # self.play_game_manual(surface, time_delta)
         self.ui_manager.update(time_delta)
         self.ui_manager.draw_ui(surface)

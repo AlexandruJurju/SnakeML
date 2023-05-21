@@ -51,8 +51,8 @@ class Model:
             self.update_board_from_snake()
             self.place_new_apple()
         else:
-            self.place_apple_at_coords([5, 5])
-            self.place_snake_at_given_position([[5, 1], [4, 1], [3, 1]], Direction.DOWN)
+            self.place_apple_at_coords([1, 2])
+            self.place_snake_at_given_position([[1, 1], [2, 1], [3, 1]], Direction.DOWN)
             self.update_board_from_snake()
 
     def find(self):

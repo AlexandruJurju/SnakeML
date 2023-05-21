@@ -143,7 +143,7 @@ class NeuralNetwork:
     def train(self, loss, loss_prime, x_train, y_train, learning_rate) -> None:
         error = 10000
         epoch = 0
-        while error > 0.01:
+        while error > 2:
             error = 0
             for x, y in zip(x_train, y_train):
                 output = self.feed_forward(x)
@@ -158,6 +158,6 @@ class NeuralNetwork:
 
             # error /= len(x_train)
             epoch += 1
-
-            print(f"epoch = {epoch}, error = {error}")
+            if epoch % 100 == 0:
+                print(f"epoch = {epoch}, error = {error}")
         print(f"final error {error}  \n")

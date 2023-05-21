@@ -9,10 +9,10 @@ from vision import get_parameters_in_nn_input_form_2d, VisionLine
 
 
 class TrainingExample:
-    def __init__(self, current_direction: Direction, vision_lines: List[VisionLine], predictions: List[float]):
+    def __init__(self, current_direction: Direction, vision_lines: List[VisionLine], user_move: List[float]):
         self.current_direction = current_direction
         self.vision_lines = vision_lines
-        self.predictions = predictions
+        self.user_move = user_move
 
 
 def read_training_data_and_train(network: NeuralNetwork, file_path: str) -> None:
@@ -24,17 +24,17 @@ def read_training_data_and_train(network: NeuralNetwork, file_path: str) -> None
     x = np.reshape(x, (len(x), input_neuron_count, 1))
     y = np.reshape(y, (len(y), output_neuron_count, 1))
 
-    network.train(mse, mse_prime, x, y, 0.2)
+    network.train(mse, mse_prime, x, y, 0.5)
 
 
 def write_examples_to_json_4d(examples: List[TrainingExample], output_file_location: str) -> None:
     dictionary_list: List[Dict] = []
 
     for example in examples:
-        up = example.predictions[0]
-        down = example.predictions[1]
-        left = example.predictions[2]
-        right = example.predictions[3]
+        up = example.user_move[0]
+        down = example.user_move[1]
+        left = example.user_move[2]
+        right = example.user_move[3]
 
         vision_lines = []
         for line in example.vision_lines:
