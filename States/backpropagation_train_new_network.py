@@ -197,25 +197,27 @@ class BackpropagationTrainNewNetwork(BaseState):
                         break
 
     def run(self, surface, time_delta):
-        surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
-        file_path = "Backpropagation_Training/" + str(self.input_direction_count) + "_in_directions_" + str(self.data_received["output_layer_neurons"]) + "_out_directions.json"
-        self.model.snake.brain.reinit_weights_and_biases()
-        self.model = Model(self.initial_board_size, self.initial_snake_size, False, self.model.snake.brain)
-        read_training_data_and_train(self.model.snake.brain, file_path)
+        if ViewSettings.DRAW:
+            surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
+        # file_path = "Backpropagation_Training/" + str(self.input_direction_count) + "_in_directions_" + str(self.data_received["output_layer_neurons"]) + "_out_directions.json"
+        # self.model.snake.brain.reinit_weights_and_biases()
+        # self.model = Model(self.initial_board_size, self.initial_snake_size, False, self.model.snake.brain)
+        # read_training_data_and_train(self.model.snake.brain, file_path)
+        #
+        # data_to_save = {
+        #     "generation": -1,
+        #     "initial_board_size": self.initial_board_size,
+        #     "initial_snake_size": self.initial_snake_size,
+        #     "input_direction_count": self.input_direction_count,
+        #     "apple_return_type": self.apple_return_type,
+        #     "segment_return_type": self.segment_return_type
+        # }
+        #
+        # save_neural_network_to_json(data_to_save,
+        #                             self.model.snake.brain,
+        #                             GameSettings.BACKPROPAGATION_NETWORK_FOLDER + self.data_received["file_name"])
 
-        data_to_save = {
-            "generation": -1,
-            "initial_board_size": self.initial_board_size,
-            "initial_snake_size": self.initial_snake_size,
-            "input_direction_count": self.input_direction_count,
-            "apple_return_type": self.apple_return_type,
-            "segment_return_type": self.segment_return_type
-        }
-
-        save_neural_network_to_json(data_to_save,
-                                    self.model.snake.brain,
-                                    GameSettings.BACKPROPAGATION_NETWORK_FOLDER + self.data_received["file_name"])
-
-        # self.play_game_manual(surface, time_delta)
-        self.ui_manager.update(time_delta)
-        self.ui_manager.draw_ui(surface)
+        self.play_game_manual(surface, time_delta)
+        if ViewSettings.DRAW:
+            self.ui_manager.update(time_delta)
+            self.ui_manager.draw_ui(surface)

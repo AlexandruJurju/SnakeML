@@ -5,7 +5,7 @@ from typing import Tuple, Dict
 import neural_network
 from game_config import Direction
 from neural_network import *
-from vision import VisionLine, get_parameters_in_nn_input_form_4d
+from vision import VisionLine, get_parameters_in_nn_input_form_4d, get_parameters_in_nn_input_form_2d
 
 
 class TrainingExample:
@@ -27,22 +27,22 @@ def read_training_data_and_train(network: NeuralNetwork, file_path: str) -> None
     network.train(mse, mse_prime, x, y, 0.5)
 
 
-def train_using_training_examples(network: NeuralNetwork, training_examples: List[TrainingExample]):
-    x = []
-    y = []
-
-    for example in training_examples:
-        real_direction = Direction[example.current_direction]
-
-        vision_lines = []
-        for line in example.vision_lines:
-            line = VisionLine(line.wall_coord, line.wall_distance, line.apple_coord, line.apple_distance, line.segment_coord, line.segment_distance, Direction[line.direction])
-            vision_lines.append(line)
-
-        x.append(get_parameters_in_nn_input_form_4d(vision_lines, real_direction))
-
-        outputs = [example.user_move[0], example.user_move[1], example.user_move[2], example.user_move[3]]
-        y.append(outputs)
+# def train_using_training_examples(network: NeuralNetwork, training_examples: List[TrainingExample]):
+#     x = []
+#     y = []
+#
+#     for example in training_examples:
+#         real_direction = Direction[example.current_direction]
+#
+#         vision_lines = []
+#         for line in example.vision_lines:
+#             line = VisionLine(line.wall_coord, line.wall_distance, line.apple_coord, line.apple_distance, line.segment_coord, line.segment_distance, Direction[line.direction])
+#             vision_lines.append(line)
+#
+#         x.append(get_parameters_in_nn_input_form_2d(vision_lines, real_direction))
+#
+#         outputs = [example.user_move[0], example.user_move[1], example.user_move[2], example.user_move[3]]
+#         y.append(outputs)
 
 
 def write_examples_to_json_4d(examples: List[TrainingExample], output_file_location: str) -> None:
@@ -97,7 +97,7 @@ def read_training_data_json(file_location) -> Tuple[List, List]:
                 line = VisionLine(line["wall_coord"], line["wall_distance"], line["apple_coord"], line["apple_distance"], line["segment_coord"], line["segment_distance"], Direction[line["direction"]])
                 vision_lines.append(line)
 
-            x.append(get_parameters_in_nn_input_form_4d(vision_lines, real_direction))
+            x.append(get_parameters_in_nn_input_form_2d(vision_lines, real_direction))
 
             outputs = [example["up"], example["down"], example["left"], example["right"]]
             y.append(outputs)
