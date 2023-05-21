@@ -180,7 +180,7 @@ class BackpropagationTrainNewNetwork(BaseState):
                             "segment_return_type": self.segment_return_type
                         }
 
-                        file_path = "Backpropagation_Training/" + str(self.input_direction_count) + "_in_directions_" + str(self.data_received["output_layer_neurons"]) + "_out_directions.json"
+                        file_path = "Backpropagation_Training/" + self.data_received["file_name"] + ".json"
                         write_examples_to_json_4d(self.training_examples, file_path)
 
                         self.model.snake.brain.reinit_weights_and_biases()
