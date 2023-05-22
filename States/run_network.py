@@ -18,7 +18,7 @@ from view import draw_board, draw_vision_lines, draw_neural_network_complete
 # TODO add ratio graph
 class RunTrained(BaseState):
     def __init__(self, ui_manager: UIManager):
-        super().__init__(State.RUN_TRAINED)
+        super().__init__(State.RUN_TRAINED_NETWORK)
 
         self.max_distance = None
         self.network = None

@@ -53,7 +53,7 @@ class MainMenu(BaseState):
 
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
                 if event.ui_element == self.button_run:
-                    self.set_target_state_name(State.RUN_TRAINED)
+                    self.set_target_state_name(State.RUN_TRAINED_NETWORK)
                     self.trigger_transition()
                 if event.ui_element == self.button_backpropagation_menu:
                     self.set_target_state_name(State.OPTIONS)

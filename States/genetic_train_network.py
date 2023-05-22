@@ -16,10 +16,9 @@ from view import *
 from vision import cvision_to_old_vision
 
 
-# TODO make hidden layers count
-class GeneticTrainNewNetwork(BaseState):
+class GeneticTrainNetwork(BaseState):
     def __init__(self, ui_manager: UIManager):
-        super().__init__(State.GENETIC_TRAIN_NEW_NETWORK)
+        super().__init__(State.GENETIC_TRAIN_NETWORK)
 
         self.crossover_operator = None
         self.distance_function = None
@@ -169,7 +168,6 @@ class GeneticTrainNewNetwork(BaseState):
                 self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.model.snake.brain)
             else:
                 self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.offspring_list[len(self.parent_list) - 1])
-
 
     def next_generation(self):
         self.offspring_list = []

@@ -12,9 +12,9 @@ from neural_network import *
 from view import *
 
 
-class BackpropagationTrainNewNetwork(BaseState):
+class BackpropagationTrainNetwork(BaseState):
     def __init__(self, ui_manager: UIManager):
-        super().__init__(State.BACKPROPAGATION_TRAIN_NEW_NETWORK)
+        super().__init__(State.BACKPROPAGATION_TRAIN_NETWORK)
 
         self.training = None
         self.initial_board_size = None

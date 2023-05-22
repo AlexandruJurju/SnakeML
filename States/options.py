@@ -313,7 +313,7 @@ class Options(BaseState):
                 }
 
                 if self.options_target == "genetic":
-                    self.set_target_state_name(State.GENETIC_TRAIN_NEW_NETWORK)
+                    self.set_target_state_name(State.GENETIC_TRAIN_NETWORK)
                     self.data_to_send.update(
                         {
                             "hidden_layer_count": int(self.hidden_layer_count_dropdown.selected_option),
@@ -328,7 +328,7 @@ class Options(BaseState):
                         }
                     )
                 else:
-                    self.set_target_state_name(State.BACKPROPAGATION_TRAIN_NEW_NETWORK)
+                    self.set_target_state_name(State.BACKPROPAGATION_TRAIN_NETWORK)
 
                 self.trigger_transition()
 
