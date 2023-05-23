@@ -61,7 +61,7 @@ class Options(BaseState):
         self.crossover_operators_dropdown: UIDropDownMenu = None
         self.crossover_operators_label = None
 
-        self.selection_operators_dropdown: UIDropDownMenu = None
+        self.selection_operators_dropdown: UILabel = None
         self.selection_operators_label = None
 
         self.mutation_operators_dropdown: UIDropDownMenu = None
@@ -165,7 +165,7 @@ class Options(BaseState):
         self.crossover_operators_dropdown = UIDropDownMenu(GameSettings.AVAILABLE_CROSSOVER_OPERATORS, GameSettings.AVAILABLE_CROSSOVER_OPERATORS[0], pygame.Rect((x_positions["center"] - 225 // 2, y_positions[1]), (225, 30)), self.ui_manager)
         self.crossover_operators_label = UILabel(pygame.Rect((x_positions_label["center"], y_positions_label[1]), (250, 35)), "Crossover Operators", self.ui_manager)
 
-        self.selection_operators_dropdown = UIDropDownMenu(GameSettings.AVAILABLE_SELECTION_OPERATORS, GameSettings.AVAILABLE_SELECTION_OPERATORS[0], pygame.Rect((x_positions["left-left"] - 225 // 2, y_positions[1]), (225, 30)), self.ui_manager)
+        self.selection_operators_dropdown = UILabel(pygame.Rect((x_positions["left-left"] - 225 // 2, y_positions[1]), (225, 30)), "Roulette Wheel", self.ui_manager)
         self.selection_operators_label = UILabel(pygame.Rect((x_positions_label["left-left"], y_positions_label[1]), (250, 35)), "Selection Operators", self.ui_manager)
 
         self.mutation_operators_dropdown = UIDropDownMenu(GameSettings.AVAILABLE_MUTATION_OPERATORS, GameSettings.AVAILABLE_MUTATION_OPERATORS[0], pygame.Rect((x_positions["right-right"] - 225 // 2, y_positions[1]), (225, 30)), self.ui_manager)
@@ -321,7 +321,6 @@ class Options(BaseState):
                             "hidden_layer2_neuron_count": int(self.neural_network_layers_entries["second"][0].text),
                             "hidden_layer3_neuron_count": int(self.neural_network_layers_entries["third"][0].text),
                             "population_count": int(self.population_count_entry.text),
-                            "selection_operator": self.selection_operators_dropdown.selected_option,
                             "crossover_operator": self.crossover_operators_dropdown.selected_option,
                             "mutation_operator": self.mutation_operators_dropdown.selected_option,
                             "mutation_rate": float(self.mutation_rate_entry.text)
