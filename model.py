@@ -36,7 +36,7 @@ class Snake:
 
 
 class Model:
-    def __init__(self, model_size: int, snake_size: int, start_random: bool, net: NeuralNetwork):
+    def __init__(self, model_size: int, snake_size: int, net: NeuralNetwork):
         self.size: int = model_size + 2
         self.board: np.ndarray = np.full((self.size, self.size), BoardConsts.EMPTY)
 
@@ -45,15 +45,9 @@ class Model:
         self.snake: Snake = Snake(net, model_size ** 2)
 
         self.make_board()
-
-        if start_random:
-            self.create_random_snake()
-            self.update_board_from_snake()
-            self.place_new_apple()
-        else:
-            self.place_apple_at_coords([1, 2])
-            self.place_snake_at_given_position([[1, 1], [2, 1], [3, 1]], Direction.DOWN)
-            self.update_board_from_snake()
+        self.create_random_snake()
+        self.update_board_from_snake()
+        self.place_new_apple()
 
     def find(self):
         for i in range(len(self.board)):

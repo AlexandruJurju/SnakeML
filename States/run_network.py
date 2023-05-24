@@ -126,7 +126,7 @@ class RunTrained(BaseState):
             if self.model.snake.score == 97:
                 self.ratio_test.append(ratio)
                 print(f"mean ratio {np.mean(self.ratio_test)}")
-            self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True, self.model.snake.brain)
+            self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), self.model.snake.brain)
 
             # fig1 = plt.figure(figsize=(16, 9))
             # plt.plot(self.x_steps, self.y_ratio, )
@@ -174,7 +174,7 @@ class RunTrained(BaseState):
                     self.trigger_transition()
 
                 if event.ui_element == self.button_run:
-                    self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), True if self.state_target == "genetic" else False, self.network)
+                    self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), self.network)
                     # # TODO dynamic max distance
                     # self.max_dist = 10
                     self.execute_network = True

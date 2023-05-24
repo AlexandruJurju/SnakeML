@@ -62,7 +62,7 @@ class BackpropagationTrainNetwork(BaseState):
         net.add_layer(Dense(hidden_neuron_count, output_neuron_count))
         net.add_layer(Activation(output_activation, output_activation_prime))
 
-        self.model = Model(self.initial_board_size, self.initial_snake_size, False, net)
+        self.model = Model(self.initial_board_size, self.initial_snake_size, net)
         self.training = False
 
     def end(self):
@@ -143,7 +143,7 @@ class BackpropagationTrainNetwork(BaseState):
             self.training_examples.append(example)
             is_alive = self.model.move(direction_to_move)
             if not is_alive:
-                self.model = Model(self.initial_board_size, self.initial_snake_size, False, self.model.snake.brain)
+                self.model = Model(self.initial_board_size, self.initial_snake_size, self.model.snake.brain)
 
     def wait_for_key(self) -> str:
         while True:
@@ -184,7 +184,7 @@ class BackpropagationTrainNetwork(BaseState):
                         write_examples_to_json_4d(self.training_examples, file_path)
 
                         self.model.snake.brain.reinit_weights_and_biases()
-                        self.model = Model(self.initial_board_size, self.initial_snake_size, False, self.model.snake.brain)
+                        self.model = Model(self.initial_board_size, self.initial_snake_size, self.model.snake.brain)
                         read_training_data_and_train(self.model.snake.brain, file_path)
 
                         save_neural_network_to_json(data_to_save,

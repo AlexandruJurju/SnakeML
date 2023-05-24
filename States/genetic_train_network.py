@@ -132,7 +132,7 @@ class GeneticTrainNetwork(BaseState):
         self.parent_list: List[Snake] = []
         self.offspring_list: List[NeuralNetwork] = []
 
-        self.model = Model(self.initial_board_size, self.initial_snake_size, True, net)
+        self.model = Model(self.initial_board_size, self.initial_snake_size, net)
 
         # self.max_distance = self.distance_function((0, 1), (self.initial_board_size, 1))
         # print(self.max_distance)
@@ -165,9 +165,9 @@ class GeneticTrainNetwork(BaseState):
 
             if self.generation == 0:
                 self.model.snake.brain.reinit_weights_and_biases()
-                self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.model.snake.brain)
+                self.model = Model(self.initial_board_size, self.initial_snake_size, self.model.snake.brain)
             else:
-                self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.offspring_list[len(self.parent_list) - 1])
+                self.model = Model(self.initial_board_size, self.initial_snake_size, self.offspring_list[len(self.parent_list) - 1])
 
     def next_generation(self):
         self.offspring_list = []
@@ -251,7 +251,7 @@ class GeneticTrainNetwork(BaseState):
             self.offspring_list.append(child1)
             self.offspring_list.append(child2)
 
-        self.model = Model(self.initial_board_size, self.initial_snake_size, True, self.offspring_list[0])
+        self.model = Model(self.initial_board_size, self.initial_snake_size, self.offspring_list[0])
         self.generation += 1
         self.parent_list = []
 
