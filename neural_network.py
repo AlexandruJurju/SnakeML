@@ -1,6 +1,7 @@
 from typing import List
 
 import numpy as np
+from numba import jit
 
 
 def relu(x):
@@ -11,6 +12,7 @@ def relu_prime(x):
     return np.where(x > 0, 1.0, 0.0)
 
 
+@jit(nopython=True)
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 

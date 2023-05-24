@@ -1,23 +1,28 @@
 from typing import List
 
 import numpy as np
+from numba import float64, njit, jit
+from numba.experimental import jitclass
 
 import cvision
 from game_config import *
 
 
+@njit
 def manhattan_distance(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
+
+@jitclass(spec=[
+    ('wall_distance', float64),
+    ('apple_distance', float64),
+    ('segment_distance', float64)
+])
 class VisionLine:
-    def __init__(self, wall_coord, wall_distance: float, apple_coord, apple_distance: float, segment_coord, segment_distance: float, direction: Direction):
-        self.wall_coord = wall_coord
+    def __init__(self, wall_distance: float, apple_distance: float, segment_distance: float):
         self.wall_distance: float = wall_distance
-        self.apple_coord = apple_coord
         self.apple_distance: float = apple_distance
-        self.segment_coord = segment_coord
         self.segment_distance: float = segment_distance
-        self.direction = direction
 
     def __eq__(self, other):
         return self.wall_coord == other.wall_coord and self.wall_distance == other.wall_distance and \
@@ -33,43 +38,61 @@ def find_snake_head_poz(board: np.ndarray) -> np.ndarray:
         return np.array([])
 
 
+@jit(nopython=True)
 def get_vision_lines_snake_head(board: np.ndarray, snake_head, vision_direction_count: int, apple_return_type: str, segment_return_type: str) -> List[VisionLine]:
-    directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
-    distance_function = manhattan_distance
-    if vision_direction_count == 8:
-        directions += [Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
+    APPLE = 2
+    WALL = -1
+    SNAKE_BODY = -2
+
+    directions = [[0, 0] for _ in range(8)]
+    directions[0][0] = -1
+    directions[0][1] = 0
+    directions[1][0] = 1
+    directions[1][1] = 0
+    directions[2][0] = 0
+    directions[2][1] = -1
+    directions[3][0] = 0
+    directions[3][1] = 1
+    directions[4][0] = -1
+    directions[4][1] = 1
+    directions[5][0] = -1
+    directions[5][1] = -1
+    directions[6][0] = 1
+    directions[6][1] = -1
+    directions[7][0] = 1
+    directions[7][1] = 1
 
     vision_lines = []
-    for direction in directions:
+    for i in range(vision_direction_count):
         apple_coord = None
         segment_coord = None
 
         # search starts at one block in the given direction otherwise head is also check in the loop
-        current_block = [snake_head[0] + direction.value[0], snake_head[1] + direction.value[1]]
+        current_block = [snake_head[0] + directions[i][0], snake_head[1] + directions[i][1]]
 
         # loop the blocks in the given direction and store position and coordinates
-        while board[current_block[0]][current_block[1]] != BoardConsts.WALL:
-            if board[current_block[0]][current_block[1]] == BoardConsts.APPLE and apple_coord is None:
+        while board[current_block[0]][current_block[1]] != WALL:
+            if board[current_block[0]][current_block[1]] == APPLE and apple_coord is None:
                 apple_coord = current_block
-            elif board[current_block[0]][current_block[1]] == BoardConsts.SNAKE_BODY and segment_coord is None:
+            elif board[current_block[0]][current_block[1]] == SNAKE_BODY and segment_coord is None:
                 segment_coord = current_block
-            current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
+            current_block = [current_block[0] + directions[i][0], current_block[1] + directions[i][1]]
 
         wall_coord = current_block
-        wall_distance = distance_function(snake_head, wall_coord)
+        wall_distance = manhattan_distance(snake_head, wall_coord)
         wall_output = 1 / wall_distance
 
         if apple_return_type == "boolean":
             apple_output = 1.0 if apple_coord is not None else 0.0
         else:
-            apple_output = 1.0 / distance_function(snake_head, apple_coord) if apple_coord is not None else 0.0
+            apple_output = 1.0 / manhattan_distance(snake_head, apple_coord) if apple_coord is not None else 0.0
 
         if segment_return_type == "boolean":
             segment_output = 1.0 if segment_coord is not None else 0.0
         else:
-            segment_output = 1.0 / distance_function(snake_head, segment_coord) if segment_coord is not None else 0.0
+            segment_output = 1.0 / manhattan_distance(snake_head, segment_coord) if segment_coord is not None else 0.0
 
-        vision_lines.append(VisionLine(wall_coord, wall_output, apple_coord, apple_output, segment_coord, segment_output, direction))
+        vision_lines.append(VisionLine(wall_output, apple_output, segment_output))
     return vision_lines
 
 
