@@ -101,6 +101,12 @@ cpdef get_vision_lines(int[:, :] board, int[:] snake_head,int vision_direction_c
     directions[15][0] = 1
     directions[15][1] = 2
 
+    cdef int APPLE = 2
+    cdef int WALL = -1
+    cdef int EMPTY = 0
+    cdef int SNAKE_BODY = -2
+    cdef int SNAKE_HEAD = 1
+
 
     cdef list vision_lines = []
     cdef int x_offset, y_offset
@@ -137,40 +143,41 @@ cpdef get_vision_lines(int[:, :] board, int[:] snake_head,int vision_direction_c
         board_element = board[current_block.x, current_block.y]
 
         # loop the blocks in the given direction and store position and coordinates
-        while board_element != -1:
-            if board_element == 2 and apple_found == False:
+        while 0 <= current_block.x <= len(board) and 0<= current_block.y <= len(board):
+            if board_element == APPLE and apple_found == False:
                 apple_coord = current_block
                 apple_found = True
-            if board_element == -2 and segment_found == False:
+
+            if board_element == SNAKE_BODY and segment_found == False:
                 segment_coord = current_block
                 segment_found = True
+
+            if board_element == WALL and wall_found == False:
+                wall_coord = current_block
+                wall_found = True
+                break
+
             current_block.x += x_offset
             current_block.y += y_offset
             board_element = board[current_block.x, current_block.y]
 
         # for wall
-        wall_coord = current_block
-        wall_output = 1.0 / distance(snake_head_pair,wall_coord,vision_direction_count)
+        wall_output = 1.0 / distance(snake_head_pair,wall_coord,vision_direction_count) if wall_found else 0.0
 
         # for apple
         if apple_return_type == "boolean":
             apple_output = 1.0 if apple_found else 0.0
         else:
-            if apple_found:
-                apple_output = 1.0 / distance(snake_head_pair,apple_coord,vision_direction_count)
-            else:
-                apple_output = 0.0
+            apple_output = 1.0 / distance(snake_head_pair,apple_coord,vision_direction_count) if apple_found else 0.0
 
         # for segment
         if segment_return_type == "boolean":
             segment_output = 1.0 if segment_found else 0.0
         else:
-            if segment_found:
-                segment_output = 1.0 / distance(snake_head_pair,segment_coord,vision_direction_count)
-            else:
-                segment_output = 0.0
+            segment_output = 1.0 / distance(snake_head_pair,segment_coord,vision_direction_count) if segment_found else 0.0
 
-        vision_lines.append(VisionLine(wall_coord,wall_output, apple_coord,apple_output,segment_coord, segment_output))
+
+        vision_lines.append(VisionLine(wall_coord, wall_output, apple_coord,apple_output,segment_coord, segment_output))
 
     return vision_lines
 #

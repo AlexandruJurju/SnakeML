@@ -58,7 +58,7 @@ class GeneticTrainNetwork(BaseState):
         self.rect_draw_network = None
 
         self.button_draw_vision_lines = None
-        self.draw_vision_lines = False
+        self.draw_vision_lines = True
         self.rect_draw_vision_lines = None
 
         self.button_stop_drawing = None
@@ -140,7 +140,7 @@ class GeneticTrainNetwork(BaseState):
 
     def print_all_vision_lines(self, lines: List[vision.VisionLine]):
         for i, line in enumerate(lines):
-            print(f"{ALL_DIRECTIONS[i]:<25} Wall_C: {line.wall_coord} Wall_D: {line.wall_distance:<30} Apple_D: {line.apple_distance:<30} Segment_D: {line.segment_distance:<30}")
+            print(f"{ALL_DIRECTIONS[i]:<25} Wall_C:{line.wall_coord}  Wall_D: {line.wall_distance:<30} Apple_C: {line.apple_coord} Apple_D: {line.apple_distance:<30} Segment_D: {line.segment_distance:<30} Segment_C: {line.segment_coord}")
         print()
 
     def run_genetic(self, surface):
