@@ -9,11 +9,6 @@ from game_config import *
 def manhattan_distance(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
-
-def chebyshev_distance(a: np.ndarray, b: np.ndarray):
-    return max(abs(a[0] - b[0]), abs(a[1] - b[1]))
-
-
 class VisionLine:
     def __init__(self, wall_coord, wall_distance: float, apple_coord, apple_distance: float, segment_coord, segment_distance: float, direction: Direction):
         self.wall_coord = wall_coord
@@ -40,10 +35,9 @@ def find_snake_head_poz(board: np.ndarray) -> np.ndarray:
 
 def get_vision_lines_snake_head(board: np.ndarray, snake_head, vision_direction_count: int, apple_return_type: str, segment_return_type: str) -> List[VisionLine]:
     directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
-    distance_function = chebyshev_distance
+    distance_function = manhattan_distance
     if vision_direction_count == 8:
         directions += [Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
-        distance_function = manhattan_distance
 
     vision_lines = []
     for direction in directions:

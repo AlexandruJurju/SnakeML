@@ -33,7 +33,6 @@ class RunTrained(BaseState):
         self.execute_network = False
         self.input_direction_count = None
         self.segment_return_type = None
-        self.distance_function = None
         self.apple_return_type = None
 
         self.score_counter = None
@@ -71,8 +70,8 @@ class RunTrained(BaseState):
         self.x_score = []
 
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
-        self.label_return_type = UILabel(pygame.Rect((50, 25), (250, 35)), "", self.ui_manager)
-        self.label_distance = UILabel(pygame.Rect((50, 50), (250, 35)), "", self.ui_manager)
+        self.label_return_type = UILabel(pygame.Rect((25, 25), (350, 35)), "", self.ui_manager)
+        self.label_distance = UILabel(pygame.Rect((25, 50), (350, 35)), "", self.ui_manager)
 
         self.button_draw_network = UIButton(pygame.Rect((50, 400), (175, 30)), "Draw Network", self.ui_manager)
         self.rect_draw_network = pygame.Rect((250, 400), (30, 30))
@@ -209,11 +208,10 @@ class RunTrained(BaseState):
                     self.input_direction_count = config["input_direction_count"]
                     self.apple_return_type = config["apple_return_type"]
                     self.segment_return_type = config["segment_return_type"]
-                    self.distance_function = "chebyshev" if self.input_direction_count == 4 else "manhattan"
                     self.board_size_entry.set_text(str(config["board_size"]))
                     self.snake_size_entry.set_text(str(config["snake_size"]))
                     self.label_return_type.set_text("Segment: " + self.segment_return_type + " Apple: " + self.apple_return_type)
-                    self.label_distance.set_text("Distance: " + self.distance_function)
+                    self.label_distance.set_text("Distance: Manhattan")
                     self.button_load.enable()
                     self.button_run.enable()
 

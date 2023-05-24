@@ -21,7 +21,6 @@ class GeneticTrainNetwork(BaseState):
         super().__init__(State.GENETIC_TRAIN_NETWORK)
 
         self.crossover_operator = None
-        self.distance_function = None
         self.apple_return_type = None
         self.segment_return_type = None
         self.selection_operator = None
@@ -74,7 +73,6 @@ class GeneticTrainNetwork(BaseState):
         self.input_direction_count = self.data_received["input_direction_count"]
         self.segment_return_type = self.data_received["segment_return_type"]
         self.apple_return_type = self.data_received["apple_return_type"]
-        self.distance_function = getattr(vision, self.data_received["distance_function"])
         self.population_count = self.data_received["population_count"]
         self.crossover_operator = getattr(genetic_operators, self.data_received["crossover_operator"])
         self.mutation_operator = getattr(genetic_operators, self.data_received["mutation_operator"])

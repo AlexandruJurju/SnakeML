@@ -23,7 +23,6 @@ class BackpropagationTrainNetwork(BaseState):
         self.segment_return_type = None
         self.apple_return_type = None
         self.segment_return_type = None
-        self.distance_function = None
         self.file_name = None
         self.ui_manager = ui_manager
         self.model = None
@@ -44,7 +43,6 @@ class BackpropagationTrainNetwork(BaseState):
         self.input_direction_count = self.data_received["input_direction_count"]
         self.segment_return_type = self.data_received["segment_return_type"]
         self.apple_return_type = self.data_received["apple_return_type"]
-        self.distance_function = getattr(vision, self.data_received["distance_function"])
         self.file_name = self.data_received["file_name"]
 
         input_neuron_count = self.data_received["input_layer_neurons"]
