@@ -7,7 +7,7 @@ import neural_network
 from States.base_state import BaseState
 from cvision import get_vision_lines
 from file_operations import save_neural_network_to_json, write_genetic_training
-from game_config import GameSettings
+from game_config import GameSettings, ALL_DIRECTIONS
 from game_config import State
 from genetic_operators import elitist_selection, full_mutation, full_crossover
 from model import Snake
@@ -139,8 +139,8 @@ class GeneticTrainNetwork(BaseState):
         self.ui_manager.clear_and_reset()
 
     def print_all_vision_lines(self, lines: List[vision.VisionLine]):
-        for line in lines:
-            print(f"{line.direction:<30} Wall_D: {line.wall_distance:<30} Apple_D: {line.apple_distance:<30} Segment_D: {line.segment_distance:<30}")
+        for i, line in enumerate(lines):
+            print(f"{ALL_DIRECTIONS[i]:<25} Wall_C: {line.wall_coord} Wall_D: {line.wall_distance:<30} Apple_D: {line.apple_distance:<30} Segment_D: {line.segment_distance:<30}")
         print()
 
     def run_genetic(self, surface):
