@@ -2520,11 +2520,9 @@ static PyObject *indirect_contiguous = 0;
 static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
 static PyObject *__pyx_f_7cvision_get_all_random_blocks(__Pyx_memviewslice, int, int, int __pyx_skip_dispatch); /*proto*/
-static double __pyx_f_7cvision_chebyshev_distance(struct __pyx_t_7cvision_Pair, struct __pyx_t_7cvision_Pair); /*proto*/
 static double __pyx_f_7cvision_manhattan_distance(struct __pyx_t_7cvision_Pair, struct __pyx_t_7cvision_Pair); /*proto*/
 static double __pyx_f_7cvision_distance(struct __pyx_t_7cvision_Pair, struct __pyx_t_7cvision_Pair, int); /*proto*/
-static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice, __Pyx_memviewslice, int, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
-static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head_1_ahead(__Pyx_memviewslice, __Pyx_memviewslice, int, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
+static PyObject *__pyx_f_7cvision_get_vision_lines(__Pyx_memviewslice, __Pyx_memviewslice, int, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
 static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice, __Pyx_memviewslice, int __pyx_skip_dispatch); /*proto*/
 static struct __pyx_t_7cvision_Pair __pyx_convert__from_py_struct____pyx_t_7cvision_Pair(PyObject *); /*proto*/
 static int __pyx_array_allocate_buffer(struct __pyx_array_obj *); /*proto*/
@@ -2594,7 +2592,7 @@ static const char __pyx_k__8[] = "'";
 static const char __pyx_k__9[] = ")";
 static const char __pyx_k_gc[] = "gc";
 static const char __pyx_k_id[] = "id";
-static const char __pyx_k__33[] = "?";
+static const char __pyx_k__32[] = "?";
 static const char __pyx_k_abc[] = "abc";
 static const char __pyx_k_and[] = " and ";
 static const char __pyx_k_got[] = " (got ";
@@ -2685,6 +2683,7 @@ static const char __pyx_k_collections_abc[] = "collections.abc";
 static const char __pyx_k_dtype_is_object[] = "dtype_is_object";
 static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
+static const char __pyx_k_get_vision_lines[] = "get_vision_lines";
 static const char __pyx_k_apple_return_type[] = "apple_return_type";
 static const char __pyx_k_pyx_unpickle_Enum[] = "__pyx_unpickle_Enum";
 static const char __pyx_k_asyncio_coroutines[] = "asyncio.coroutines";
@@ -2705,7 +2704,6 @@ static const char __pyx_k_Dimension_d_is_not_direct[] = "Dimension %d is not dir
 static const char __pyx_k_Index_out_of_bounds_axis_d[] = "Index out of bounds (axis %d)";
 static const char __pyx_k_VisionLine___reduce_cython[] = "VisionLine.__reduce_cython__";
 static const char __pyx_k_Step_may_not_be_zero_axis_d[] = "Step may not be zero (axis %d)";
-static const char __pyx_k_get_vision_lines_snake_head[] = "get_vision_lines_snake_head";
 static const char __pyx_k_itemsize_0_for_cython_array[] = "itemsize <= 0 for cython.array";
 static const char __pyx_k_VisionLine___setstate_cython[] = "VisionLine.__setstate_cython__";
 static const char __pyx_k_unable_to_allocate_array_data[] = "unable to allocate array data.";
@@ -2724,7 +2722,6 @@ static const char __pyx_k_Invalid_mode_expected_c_or_fortr[] = "Invalid mode, ex
 static const char __pyx_k_No_value_specified_for_struct_at[] = "No value specified for struct attribute 'x'";
 static const char __pyx_k_Out_of_bounds_on_buffer_access_a[] = "Out of bounds on buffer access (axis ";
 static const char __pyx_k_Unable_to_convert_item_to_object[] = "Unable to convert item to object";
-static const char __pyx_k_get_vision_lines_snake_head_1_ah[] = "get_vision_lines_snake_head_1_ahead";
 static const char __pyx_k_got_differing_extents_in_dimensi[] = "got differing extents in dimension ";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
 static const char __pyx_k_unable_to_allocate_shape_and_str[] = "unable to allocate shape and strides.";
@@ -2787,9 +2784,8 @@ static PyObject *__pyx_pf_7cvision_10VisionLine_16segment_distance___get__(struc
 static int __pyx_pf_7cvision_10VisionLine_16segment_distance_2__set__(struct __pyx_obj_7cvision_VisionLine *__pyx_v_self, PyObject *__pyx_v_value); /* proto */
 static PyObject *__pyx_pf_7cvision_10VisionLine_2__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_7cvision_VisionLine *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_7cvision_10VisionLine_4__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_7cvision_VisionLine *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
-static PyObject *__pyx_pf_7cvision_2get_vision_lines_snake_head(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_snake_head, int __pyx_v_vision_direction_count, PyObject *__pyx_v_apple_return_type, PyObject *__pyx_v_segment_return_type); /* proto */
-static PyObject *__pyx_pf_7cvision_4get_vision_lines_snake_head_1_ahead(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_snake_head, int __pyx_v_vision_direction_count, PyObject *__pyx_v_apple_return_type, PyObject *__pyx_v_segment_return_type); /* proto */
-static PyObject *__pyx_pf_7cvision_6update_board_from_snake(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_body); /* proto */
+static PyObject *__pyx_pf_7cvision_2get_vision_lines(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_snake_head, int __pyx_v_vision_direction_count, PyObject *__pyx_v_apple_return_type, PyObject *__pyx_v_segment_return_type); /* proto */
+static PyObject *__pyx_pf_7cvision_4update_board_from_snake(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_body); /* proto */
 static PyObject *__pyx_tp_new_memoryview(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new__memoryviewslice(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tp_new_Enum(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
@@ -2872,7 +2868,7 @@ typedef struct {
   PyObject *__pyx_n_s_VisionLine___reduce_cython;
   PyObject *__pyx_n_s_VisionLine___setstate_cython;
   PyObject *__pyx_kp_u__3;
-  PyObject *__pyx_n_s__33;
+  PyObject *__pyx_n_s__32;
   PyObject *__pyx_kp_u__4;
   PyObject *__pyx_n_s__5;
   PyObject *__pyx_kp_u__8;
@@ -2914,8 +2910,7 @@ typedef struct {
   PyObject *__pyx_n_u_fortran;
   PyObject *__pyx_kp_u_gc;
   PyObject *__pyx_n_s_get_all_random_blocks;
-  PyObject *__pyx_n_s_get_vision_lines_snake_head;
-  PyObject *__pyx_n_s_get_vision_lines_snake_head_1_ah;
+  PyObject *__pyx_n_s_get_vision_lines;
   PyObject *__pyx_n_s_getstate;
   PyObject *__pyx_kp_u_got;
   PyObject *__pyx_kp_u_got_differing_extents_in_dimensi;
@@ -3008,14 +3003,13 @@ typedef struct {
   PyObject *__pyx_tuple__24;
   PyObject *__pyx_tuple__26;
   PyObject *__pyx_tuple__28;
-  PyObject *__pyx_tuple__31;
+  PyObject *__pyx_tuple__30;
   PyObject *__pyx_codeobj__21;
   PyObject *__pyx_codeobj__23;
   PyObject *__pyx_codeobj__25;
   PyObject *__pyx_codeobj__27;
   PyObject *__pyx_codeobj__29;
-  PyObject *__pyx_codeobj__30;
-  PyObject *__pyx_codeobj__32;
+  PyObject *__pyx_codeobj__31;
 } __pyx_mstate;
 
 #if CYTHON_USE_MODULE_STATE
@@ -3106,7 +3100,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_s_VisionLine___reduce_cython);
   Py_CLEAR(clear_module_state->__pyx_n_s_VisionLine___setstate_cython);
   Py_CLEAR(clear_module_state->__pyx_kp_u__3);
-  Py_CLEAR(clear_module_state->__pyx_n_s__33);
+  Py_CLEAR(clear_module_state->__pyx_n_s__32);
   Py_CLEAR(clear_module_state->__pyx_kp_u__4);
   Py_CLEAR(clear_module_state->__pyx_n_s__5);
   Py_CLEAR(clear_module_state->__pyx_kp_u__8);
@@ -3148,8 +3142,7 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_n_u_fortran);
   Py_CLEAR(clear_module_state->__pyx_kp_u_gc);
   Py_CLEAR(clear_module_state->__pyx_n_s_get_all_random_blocks);
-  Py_CLEAR(clear_module_state->__pyx_n_s_get_vision_lines_snake_head);
-  Py_CLEAR(clear_module_state->__pyx_n_s_get_vision_lines_snake_head_1_ah);
+  Py_CLEAR(clear_module_state->__pyx_n_s_get_vision_lines);
   Py_CLEAR(clear_module_state->__pyx_n_s_getstate);
   Py_CLEAR(clear_module_state->__pyx_kp_u_got);
   Py_CLEAR(clear_module_state->__pyx_kp_u_got_differing_extents_in_dimensi);
@@ -3242,14 +3235,13 @@ static int __pyx_m_clear(PyObject *m) {
   Py_CLEAR(clear_module_state->__pyx_tuple__24);
   Py_CLEAR(clear_module_state->__pyx_tuple__26);
   Py_CLEAR(clear_module_state->__pyx_tuple__28);
-  Py_CLEAR(clear_module_state->__pyx_tuple__31);
+  Py_CLEAR(clear_module_state->__pyx_tuple__30);
   Py_CLEAR(clear_module_state->__pyx_codeobj__21);
   Py_CLEAR(clear_module_state->__pyx_codeobj__23);
   Py_CLEAR(clear_module_state->__pyx_codeobj__25);
   Py_CLEAR(clear_module_state->__pyx_codeobj__27);
   Py_CLEAR(clear_module_state->__pyx_codeobj__29);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__30);
-  Py_CLEAR(clear_module_state->__pyx_codeobj__32);
+  Py_CLEAR(clear_module_state->__pyx_codeobj__31);
   return 0;
 }
 #endif
@@ -3318,7 +3310,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_s_VisionLine___reduce_cython);
   Py_VISIT(traverse_module_state->__pyx_n_s_VisionLine___setstate_cython);
   Py_VISIT(traverse_module_state->__pyx_kp_u__3);
-  Py_VISIT(traverse_module_state->__pyx_n_s__33);
+  Py_VISIT(traverse_module_state->__pyx_n_s__32);
   Py_VISIT(traverse_module_state->__pyx_kp_u__4);
   Py_VISIT(traverse_module_state->__pyx_n_s__5);
   Py_VISIT(traverse_module_state->__pyx_kp_u__8);
@@ -3360,8 +3352,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_n_u_fortran);
   Py_VISIT(traverse_module_state->__pyx_kp_u_gc);
   Py_VISIT(traverse_module_state->__pyx_n_s_get_all_random_blocks);
-  Py_VISIT(traverse_module_state->__pyx_n_s_get_vision_lines_snake_head);
-  Py_VISIT(traverse_module_state->__pyx_n_s_get_vision_lines_snake_head_1_ah);
+  Py_VISIT(traverse_module_state->__pyx_n_s_get_vision_lines);
   Py_VISIT(traverse_module_state->__pyx_n_s_getstate);
   Py_VISIT(traverse_module_state->__pyx_kp_u_got);
   Py_VISIT(traverse_module_state->__pyx_kp_u_got_differing_extents_in_dimensi);
@@ -3454,14 +3445,13 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
   Py_VISIT(traverse_module_state->__pyx_tuple__24);
   Py_VISIT(traverse_module_state->__pyx_tuple__26);
   Py_VISIT(traverse_module_state->__pyx_tuple__28);
-  Py_VISIT(traverse_module_state->__pyx_tuple__31);
+  Py_VISIT(traverse_module_state->__pyx_tuple__30);
   Py_VISIT(traverse_module_state->__pyx_codeobj__21);
   Py_VISIT(traverse_module_state->__pyx_codeobj__23);
   Py_VISIT(traverse_module_state->__pyx_codeobj__25);
   Py_VISIT(traverse_module_state->__pyx_codeobj__27);
   Py_VISIT(traverse_module_state->__pyx_codeobj__29);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__30);
-  Py_VISIT(traverse_module_state->__pyx_codeobj__32);
+  Py_VISIT(traverse_module_state->__pyx_codeobj__31);
   return 0;
 }
 #endif
@@ -3540,7 +3530,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_s_VisionLine___reduce_cython __pyx_mstate_global->__pyx_n_s_VisionLine___reduce_cython
 #define __pyx_n_s_VisionLine___setstate_cython __pyx_mstate_global->__pyx_n_s_VisionLine___setstate_cython
 #define __pyx_kp_u__3 __pyx_mstate_global->__pyx_kp_u__3
-#define __pyx_n_s__33 __pyx_mstate_global->__pyx_n_s__33
+#define __pyx_n_s__32 __pyx_mstate_global->__pyx_n_s__32
 #define __pyx_kp_u__4 __pyx_mstate_global->__pyx_kp_u__4
 #define __pyx_n_s__5 __pyx_mstate_global->__pyx_n_s__5
 #define __pyx_kp_u__8 __pyx_mstate_global->__pyx_kp_u__8
@@ -3582,8 +3572,7 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_n_u_fortran __pyx_mstate_global->__pyx_n_u_fortran
 #define __pyx_kp_u_gc __pyx_mstate_global->__pyx_kp_u_gc
 #define __pyx_n_s_get_all_random_blocks __pyx_mstate_global->__pyx_n_s_get_all_random_blocks
-#define __pyx_n_s_get_vision_lines_snake_head __pyx_mstate_global->__pyx_n_s_get_vision_lines_snake_head
-#define __pyx_n_s_get_vision_lines_snake_head_1_ah __pyx_mstate_global->__pyx_n_s_get_vision_lines_snake_head_1_ah
+#define __pyx_n_s_get_vision_lines __pyx_mstate_global->__pyx_n_s_get_vision_lines
 #define __pyx_n_s_getstate __pyx_mstate_global->__pyx_n_s_getstate
 #define __pyx_kp_u_got __pyx_mstate_global->__pyx_kp_u_got
 #define __pyx_kp_u_got_differing_extents_in_dimensi __pyx_mstate_global->__pyx_kp_u_got_differing_extents_in_dimensi
@@ -3676,14 +3665,13 @@ static int __pyx_m_traverse(PyObject *m, visitproc visit, void *arg) {
 #define __pyx_tuple__24 __pyx_mstate_global->__pyx_tuple__24
 #define __pyx_tuple__26 __pyx_mstate_global->__pyx_tuple__26
 #define __pyx_tuple__28 __pyx_mstate_global->__pyx_tuple__28
-#define __pyx_tuple__31 __pyx_mstate_global->__pyx_tuple__31
+#define __pyx_tuple__30 __pyx_mstate_global->__pyx_tuple__30
 #define __pyx_codeobj__21 __pyx_mstate_global->__pyx_codeobj__21
 #define __pyx_codeobj__23 __pyx_mstate_global->__pyx_codeobj__23
 #define __pyx_codeobj__25 __pyx_mstate_global->__pyx_codeobj__25
 #define __pyx_codeobj__27 __pyx_mstate_global->__pyx_codeobj__27
 #define __pyx_codeobj__29 __pyx_mstate_global->__pyx_codeobj__29
-#define __pyx_codeobj__30 __pyx_mstate_global->__pyx_codeobj__30
-#define __pyx_codeobj__32 __pyx_mstate_global->__pyx_codeobj__32
+#define __pyx_codeobj__31 __pyx_mstate_global->__pyx_codeobj__31
 /* #### Code section: module_code ### */
 
 /* "FromPyStructUtility":12
@@ -18694,7 +18682,7 @@ static double __pyx_f_7cvision_distance(struct __pyx_t_7cvision_Pair __pyx_v_a, 
  * cdef double distance(Pair a,Pair b, int vision_count):
  *         return manhattan_distance(a,b)             # <<<<<<<<<<<<<<
  * 
- * cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
+ * cpdef get_vision_lines(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
  */
   __pyx_t_1 = __pyx_f_7cvision_manhattan_distance(__pyx_v_a, __pyx_v_b); if (unlikely(__pyx_t_1 == ((double)-1) && PyErr_Occurred())) __PYX_ERR(0, 51, __pyx_L1_error)
   __pyx_r = __pyx_t_1;
@@ -18720,20 +18708,20 @@ static double __pyx_f_7cvision_distance(struct __pyx_t_7cvision_Pair __pyx_v_a, 
 /* "cvision.pyx":53
  *         return manhattan_distance(a,b)
  * 
- * cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):             # <<<<<<<<<<<<<<
- *     cdef int directions[8][2]
- *     directions[0][0] = -1
+ * cpdef get_vision_lines(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):             # <<<<<<<<<<<<<<
+ *     cdef int directions[16][2]
+ *     # UP
  */
 
-static PyObject *__pyx_pw_7cvision_3get_vision_lines_snake_head(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_7cvision_3get_vision_lines(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_snake_head, int __pyx_v_vision_direction_count, PyObject *__pyx_v_apple_return_type, PyObject *__pyx_v_segment_return_type, CYTHON_UNUSED int __pyx_skip_dispatch) {
-  int __pyx_v_directions[8][2];
+static PyObject *__pyx_f_7cvision_get_vision_lines(__Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_snake_head, int __pyx_v_vision_direction_count, PyObject *__pyx_v_apple_return_type, PyObject *__pyx_v_segment_return_type, CYTHON_UNUSED int __pyx_skip_dispatch) {
+  int __pyx_v_directions[16][2];
   PyObject *__pyx_v_vision_lines = 0;
   int __pyx_v_x_offset;
   int __pyx_v_y_offset;
@@ -18771,165 +18759,309 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("get_vision_lines_snake_head", 0);
+  __Pyx_RefNannySetupContext("get_vision_lines", 0);
 
-  /* "cvision.pyx":55
- * cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
- *     cdef int directions[8][2]
+  /* "cvision.pyx":56
+ *     cdef int directions[16][2]
+ *     # UP
  *     directions[0][0] = -1             # <<<<<<<<<<<<<<
  *     directions[0][1] = 0
- *     directions[1][0] = 1
+ *     # DOWN
  */
   ((__pyx_v_directions[0])[0]) = -1;
 
-  /* "cvision.pyx":56
- *     cdef int directions[8][2]
+  /* "cvision.pyx":57
+ *     # UP
  *     directions[0][0] = -1
  *     directions[0][1] = 0             # <<<<<<<<<<<<<<
+ *     # DOWN
  *     directions[1][0] = 1
- *     directions[1][1] = 0
  */
   ((__pyx_v_directions[0])[1]) = 0;
 
-  /* "cvision.pyx":57
- *     directions[0][0] = -1
+  /* "cvision.pyx":59
  *     directions[0][1] = 0
+ *     # DOWN
  *     directions[1][0] = 1             # <<<<<<<<<<<<<<
  *     directions[1][1] = 0
- *     directions[2][0] = 0
+ *     # LEFT
  */
   ((__pyx_v_directions[1])[0]) = 1;
 
-  /* "cvision.pyx":58
- *     directions[0][1] = 0
+  /* "cvision.pyx":60
+ *     # DOWN
  *     directions[1][0] = 1
  *     directions[1][1] = 0             # <<<<<<<<<<<<<<
+ *     # LEFT
  *     directions[2][0] = 0
- *     directions[2][1] = -1
  */
   ((__pyx_v_directions[1])[1]) = 0;
 
-  /* "cvision.pyx":59
- *     directions[1][0] = 1
+  /* "cvision.pyx":62
  *     directions[1][1] = 0
+ *     # LEFT
  *     directions[2][0] = 0             # <<<<<<<<<<<<<<
  *     directions[2][1] = -1
- *     directions[3][0] = 0
+ *     # RIGHT
  */
   ((__pyx_v_directions[2])[0]) = 0;
 
-  /* "cvision.pyx":60
- *     directions[1][1] = 0
+  /* "cvision.pyx":63
+ *     # LEFT
  *     directions[2][0] = 0
  *     directions[2][1] = -1             # <<<<<<<<<<<<<<
+ *     # RIGHT
  *     directions[3][0] = 0
- *     directions[3][1] = 1
  */
   ((__pyx_v_directions[2])[1]) = -1;
 
-  /* "cvision.pyx":61
- *     directions[2][0] = 0
+  /* "cvision.pyx":65
  *     directions[2][1] = -1
+ *     # RIGHT
  *     directions[3][0] = 0             # <<<<<<<<<<<<<<
  *     directions[3][1] = 1
- *     directions[4][0] = -1
+ *     # Q1
  */
   ((__pyx_v_directions[3])[0]) = 0;
 
-  /* "cvision.pyx":62
- *     directions[2][1] = -1
+  /* "cvision.pyx":66
+ *     # RIGHT
  *     directions[3][0] = 0
  *     directions[3][1] = 1             # <<<<<<<<<<<<<<
+ *     # Q1
  *     directions[4][0] = -1
- *     directions[4][1] = 1
  */
   ((__pyx_v_directions[3])[1]) = 1;
 
-  /* "cvision.pyx":63
- *     directions[3][0] = 0
+  /* "cvision.pyx":68
  *     directions[3][1] = 1
+ *     # Q1
  *     directions[4][0] = -1             # <<<<<<<<<<<<<<
  *     directions[4][1] = 1
- *     directions[5][0] = -1
+ *     # Q2
  */
   ((__pyx_v_directions[4])[0]) = -1;
 
-  /* "cvision.pyx":64
- *     directions[3][1] = 1
+  /* "cvision.pyx":69
+ *     # Q1
  *     directions[4][0] = -1
  *     directions[4][1] = 1             # <<<<<<<<<<<<<<
+ *     # Q2
  *     directions[5][0] = -1
- *     directions[5][1] = -1
  */
   ((__pyx_v_directions[4])[1]) = 1;
 
-  /* "cvision.pyx":65
- *     directions[4][0] = -1
+  /* "cvision.pyx":71
  *     directions[4][1] = 1
+ *     # Q2
  *     directions[5][0] = -1             # <<<<<<<<<<<<<<
  *     directions[5][1] = -1
- *     directions[6][0] = 1
+ *     # Q3
  */
   ((__pyx_v_directions[5])[0]) = -1;
 
-  /* "cvision.pyx":66
- *     directions[4][1] = 1
+  /* "cvision.pyx":72
+ *     # Q2
  *     directions[5][0] = -1
  *     directions[5][1] = -1             # <<<<<<<<<<<<<<
+ *     # Q3
  *     directions[6][0] = 1
- *     directions[6][1] = -1
  */
   ((__pyx_v_directions[5])[1]) = -1;
 
-  /* "cvision.pyx":67
- *     directions[5][0] = -1
+  /* "cvision.pyx":74
  *     directions[5][1] = -1
+ *     # Q3
  *     directions[6][0] = 1             # <<<<<<<<<<<<<<
  *     directions[6][1] = -1
- *     directions[7][0] = 1
+ *     # Q4
  */
   ((__pyx_v_directions[6])[0]) = 1;
 
-  /* "cvision.pyx":68
- *     directions[5][1] = -1
+  /* "cvision.pyx":75
+ *     # Q3
  *     directions[6][0] = 1
  *     directions[6][1] = -1             # <<<<<<<<<<<<<<
+ *     # Q4
  *     directions[7][0] = 1
- *     directions[7][1] = 1
  */
   ((__pyx_v_directions[6])[1]) = -1;
 
-  /* "cvision.pyx":69
- *     directions[6][0] = 1
+  /* "cvision.pyx":77
  *     directions[6][1] = -1
+ *     # Q4
  *     directions[7][0] = 1             # <<<<<<<<<<<<<<
  *     directions[7][1] = 1
- * 
+ *     # Q11
  */
   ((__pyx_v_directions[7])[0]) = 1;
 
-  /* "cvision.pyx":70
- *     directions[6][1] = -1
+  /* "cvision.pyx":78
+ *     # Q4
  *     directions[7][0] = 1
  *     directions[7][1] = 1             # <<<<<<<<<<<<<<
- * 
- * 
+ *     # Q11
+ *     directions[8][0] = -1
  */
   ((__pyx_v_directions[7])[1]) = 1;
 
-  /* "cvision.pyx":73
+  /* "cvision.pyx":80
+ *     directions[7][1] = 1
+ *     # Q11
+ *     directions[8][0] = -1             # <<<<<<<<<<<<<<
+ *     directions[8][1] = 2
+ *     # Q12
+ */
+  ((__pyx_v_directions[8])[0]) = -1;
+
+  /* "cvision.pyx":81
+ *     # Q11
+ *     directions[8][0] = -1
+ *     directions[8][1] = 2             # <<<<<<<<<<<<<<
+ *     # Q12
+ *     directions[9][0] = -2
+ */
+  ((__pyx_v_directions[8])[1]) = 2;
+
+  /* "cvision.pyx":83
+ *     directions[8][1] = 2
+ *     # Q12
+ *     directions[9][0] = -2             # <<<<<<<<<<<<<<
+ *     directions[9][1] = 1
+ *     # Q21
+ */
+  ((__pyx_v_directions[9])[0]) = -2;
+
+  /* "cvision.pyx":84
+ *     # Q12
+ *     directions[9][0] = -2
+ *     directions[9][1] = 1             # <<<<<<<<<<<<<<
+ *     # Q21
+ *     directions[10][0] = -2
+ */
+  ((__pyx_v_directions[9])[1]) = 1;
+
+  /* "cvision.pyx":86
+ *     directions[9][1] = 1
+ *     # Q21
+ *     directions[10][0] = -2             # <<<<<<<<<<<<<<
+ *     directions[10][1] = 1
+ *     # Q22
+ */
+  ((__pyx_v_directions[10])[0]) = -2;
+
+  /* "cvision.pyx":87
+ *     # Q21
+ *     directions[10][0] = -2
+ *     directions[10][1] = 1             # <<<<<<<<<<<<<<
+ *     # Q22
+ *     directions[11][0] = -1
+ */
+  ((__pyx_v_directions[10])[1]) = 1;
+
+  /* "cvision.pyx":89
+ *     directions[10][1] = 1
+ *     # Q22
+ *     directions[11][0] = -1             # <<<<<<<<<<<<<<
+ *     directions[11][1] = -2
+ *     # Q31
+ */
+  ((__pyx_v_directions[11])[0]) = -1;
+
+  /* "cvision.pyx":90
+ *     # Q22
+ *     directions[11][0] = -1
+ *     directions[11][1] = -2             # <<<<<<<<<<<<<<
+ *     # Q31
+ *     directions[12][0] = 1
+ */
+  ((__pyx_v_directions[11])[1]) = -2;
+
+  /* "cvision.pyx":92
+ *     directions[11][1] = -2
+ *     # Q31
+ *     directions[12][0] = 1             # <<<<<<<<<<<<<<
+ *     directions[12][1] = -2
+ *     # Q32
+ */
+  ((__pyx_v_directions[12])[0]) = 1;
+
+  /* "cvision.pyx":93
+ *     # Q31
+ *     directions[12][0] = 1
+ *     directions[12][1] = -2             # <<<<<<<<<<<<<<
+ *     # Q32
+ *     directions[13][0] = 2
+ */
+  ((__pyx_v_directions[12])[1]) = -2;
+
+  /* "cvision.pyx":95
+ *     directions[12][1] = -2
+ *     # Q32
+ *     directions[13][0] = 2             # <<<<<<<<<<<<<<
+ *     directions[13][1] = -1
+ *     # Q41
+ */
+  ((__pyx_v_directions[13])[0]) = 2;
+
+  /* "cvision.pyx":96
+ *     # Q32
+ *     directions[13][0] = 2
+ *     directions[13][1] = -1             # <<<<<<<<<<<<<<
+ *     # Q41
+ *     directions[14][0] = 2
+ */
+  ((__pyx_v_directions[13])[1]) = -1;
+
+  /* "cvision.pyx":98
+ *     directions[13][1] = -1
+ *     # Q41
+ *     directions[14][0] = 2             # <<<<<<<<<<<<<<
+ *     directions[14][1] = 1
+ *     # Q42
+ */
+  ((__pyx_v_directions[14])[0]) = 2;
+
+  /* "cvision.pyx":99
+ *     # Q41
+ *     directions[14][0] = 2
+ *     directions[14][1] = 1             # <<<<<<<<<<<<<<
+ *     # Q42
+ *     directions[15][0] = 1
+ */
+  ((__pyx_v_directions[14])[1]) = 1;
+
+  /* "cvision.pyx":101
+ *     directions[14][1] = 1
+ *     # Q42
+ *     directions[15][0] = 1             # <<<<<<<<<<<<<<
+ *     directions[15][1] = 2
+ * 
+ */
+  ((__pyx_v_directions[15])[0]) = 1;
+
+  /* "cvision.pyx":102
+ *     # Q42
+ *     directions[15][0] = 1
+ *     directions[15][1] = 2             # <<<<<<<<<<<<<<
+ * 
+ * 
+ */
+  ((__pyx_v_directions[15])[1]) = 2;
+
+  /* "cvision.pyx":105
  * 
  * 
  *     cdef list vision_lines = []             # <<<<<<<<<<<<<<
  *     cdef int x_offset, y_offset
  *     cdef Pair apple_coord, segment_coord, current_block, wall_coord,snake_head_pair
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 73, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 105, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_vision_lines = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "cvision.pyx":76
+  /* "cvision.pyx":108
  *     cdef int x_offset, y_offset
  *     cdef Pair apple_coord, segment_coord, current_block, wall_coord,snake_head_pair
  *     snake_head_pair.x = snake_head[0]             # <<<<<<<<<<<<<<
@@ -18939,7 +19071,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
   __pyx_t_2 = 0;
   __pyx_v_snake_head_pair.x = (*((int *) ( /* dim=0 */ (__pyx_v_snake_head.data + __pyx_t_2 * __pyx_v_snake_head.strides[0]) )));
 
-  /* "cvision.pyx":77
+  /* "cvision.pyx":109
  *     cdef Pair apple_coord, segment_coord, current_block, wall_coord,snake_head_pair
  *     snake_head_pair.x = snake_head[0]
  *     snake_head_pair.y = snake_head[1]             # <<<<<<<<<<<<<<
@@ -18949,7 +19081,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
   __pyx_t_2 = 1;
   __pyx_v_snake_head_pair.y = (*((int *) ( /* dim=0 */ (__pyx_v_snake_head.data + __pyx_t_2 * __pyx_v_snake_head.strides[0]) )));
 
-  /* "cvision.pyx":81
+  /* "cvision.pyx":113
  *     cdef double wall_output, apple_output, segment_output, output_distance
  *     cdef int board_element
  *     cdef bint apple_found = False             # <<<<<<<<<<<<<<
@@ -18958,7 +19090,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
   __pyx_v_apple_found = 0;
 
-  /* "cvision.pyx":82
+  /* "cvision.pyx":114
  *     cdef int board_element
  *     cdef bint apple_found = False
  *     cdef bint segment_found = False             # <<<<<<<<<<<<<<
@@ -18967,7 +19099,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
   __pyx_v_segment_found = 0;
 
-  /* "cvision.pyx":83
+  /* "cvision.pyx":115
  *     cdef bint apple_found = False
  *     cdef bint segment_found = False
  *     cdef bint wall_found = False             # <<<<<<<<<<<<<<
@@ -18976,7 +19108,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
   __pyx_v_wall_found = 0;
 
-  /* "cvision.pyx":85
+  /* "cvision.pyx":117
  *     cdef bint wall_found = False
  * 
  *     for i in range(vision_direction_count):             # <<<<<<<<<<<<<<
@@ -18988,7 +19120,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
   for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
     __pyx_v_i = __pyx_t_5;
 
-    /* "cvision.pyx":86
+    /* "cvision.pyx":118
  * 
  *     for i in range(vision_direction_count):
  *         apple_coord.x = -1             # <<<<<<<<<<<<<<
@@ -18997,7 +19129,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_apple_coord.x = -1;
 
-    /* "cvision.pyx":87
+    /* "cvision.pyx":119
  *     for i in range(vision_direction_count):
  *         apple_coord.x = -1
  *         apple_coord.y = -1             # <<<<<<<<<<<<<<
@@ -19006,7 +19138,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_apple_coord.y = -1;
 
-    /* "cvision.pyx":88
+    /* "cvision.pyx":120
  *         apple_coord.x = -1
  *         apple_coord.y = -1
  *         segment_coord.x = -1             # <<<<<<<<<<<<<<
@@ -19015,7 +19147,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_segment_coord.x = -1;
 
-    /* "cvision.pyx":89
+    /* "cvision.pyx":121
  *         apple_coord.y = -1
  *         segment_coord.x = -1
  *         segment_coord.y = -1             # <<<<<<<<<<<<<<
@@ -19024,7 +19156,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_segment_coord.y = -1;
 
-    /* "cvision.pyx":90
+    /* "cvision.pyx":122
  *         segment_coord.x = -1
  *         segment_coord.y = -1
  *         current_block.x = -1             # <<<<<<<<<<<<<<
@@ -19033,7 +19165,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_current_block.x = -1;
 
-    /* "cvision.pyx":91
+    /* "cvision.pyx":123
  *         segment_coord.y = -1
  *         current_block.x = -1
  *         current_block.y = -1             # <<<<<<<<<<<<<<
@@ -19042,7 +19174,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_current_block.y = -1;
 
-    /* "cvision.pyx":92
+    /* "cvision.pyx":124
  *         current_block.x = -1
  *         current_block.y = -1
  *         wall_coord.x = -1             # <<<<<<<<<<<<<<
@@ -19051,7 +19183,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_wall_coord.x = -1;
 
-    /* "cvision.pyx":93
+    /* "cvision.pyx":125
  *         current_block.y = -1
  *         wall_coord.x = -1
  *         wall_coord.y = -1             # <<<<<<<<<<<<<<
@@ -19060,7 +19192,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_wall_coord.y = -1;
 
-    /* "cvision.pyx":95
+    /* "cvision.pyx":127
  *         wall_coord.y = -1
  * 
  *         apple_found = False             # <<<<<<<<<<<<<<
@@ -19069,7 +19201,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_apple_found = 0;
 
-    /* "cvision.pyx":96
+    /* "cvision.pyx":128
  * 
  *         apple_found = False
  *         segment_found = False             # <<<<<<<<<<<<<<
@@ -19078,7 +19210,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_segment_found = 0;
 
-    /* "cvision.pyx":97
+    /* "cvision.pyx":129
  *         apple_found = False
  *         segment_found = False
  *         wall_found = False             # <<<<<<<<<<<<<<
@@ -19087,7 +19219,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_wall_found = 0;
 
-    /* "cvision.pyx":99
+    /* "cvision.pyx":131
  *         wall_found = False
  * 
  *         x_offset = directions[i][0]             # <<<<<<<<<<<<<<
@@ -19096,7 +19228,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_x_offset = ((__pyx_v_directions[__pyx_v_i])[0]);
 
-    /* "cvision.pyx":100
+    /* "cvision.pyx":132
  * 
  *         x_offset = directions[i][0]
  *         y_offset = directions[i][1]             # <<<<<<<<<<<<<<
@@ -19105,7 +19237,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_y_offset = ((__pyx_v_directions[__pyx_v_i])[1]);
 
-    /* "cvision.pyx":103
+    /* "cvision.pyx":135
  * 
  *         # search starts at one block in the given direction otherwise head is also check in the loop
  *         current_block.x = snake_head_pair.x + x_offset             # <<<<<<<<<<<<<<
@@ -19114,7 +19246,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_current_block.x = (__pyx_v_snake_head_pair.x + __pyx_v_x_offset);
 
-    /* "cvision.pyx":104
+    /* "cvision.pyx":136
  *         # search starts at one block in the given direction otherwise head is also check in the loop
  *         current_block.x = snake_head_pair.x + x_offset
  *         current_block.y = snake_head_pair.y + y_offset             # <<<<<<<<<<<<<<
@@ -19123,7 +19255,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_current_block.y = (__pyx_v_snake_head_pair.y + __pyx_v_y_offset);
 
-    /* "cvision.pyx":105
+    /* "cvision.pyx":137
  *         current_block.x = snake_head_pair.x + x_offset
  *         current_block.y = snake_head_pair.y + y_offset
  *         board_element = board[current_block.x, current_block.y]             # <<<<<<<<<<<<<<
@@ -19134,7 +19266,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
     __pyx_t_6 = __pyx_v_current_block.y;
     __pyx_v_board_element = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_board.data + __pyx_t_2 * __pyx_v_board.strides[0]) ) + __pyx_t_6 * __pyx_v_board.strides[1]) )));
 
-    /* "cvision.pyx":108
+    /* "cvision.pyx":140
  * 
  *         # loop the blocks in the given direction and store position and coordinates
  *         while board_element != -1:             # <<<<<<<<<<<<<<
@@ -19145,7 +19277,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
       __pyx_t_7 = (__pyx_v_board_element != -1L);
       if (!__pyx_t_7) break;
 
-      /* "cvision.pyx":109
+      /* "cvision.pyx":141
  *         # loop the blocks in the given direction and store position and coordinates
  *         while board_element != -1:
  *             if board_element == 2 and apple_found == False:             # <<<<<<<<<<<<<<
@@ -19163,7 +19295,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
       __pyx_L8_bool_binop_done:;
       if (__pyx_t_7) {
 
-        /* "cvision.pyx":110
+        /* "cvision.pyx":142
  *         while board_element != -1:
  *             if board_element == 2 and apple_found == False:
  *                 apple_coord = current_block             # <<<<<<<<<<<<<<
@@ -19172,7 +19304,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
         __pyx_v_apple_coord = __pyx_v_current_block;
 
-        /* "cvision.pyx":111
+        /* "cvision.pyx":143
  *             if board_element == 2 and apple_found == False:
  *                 apple_coord = current_block
  *                 apple_found = True             # <<<<<<<<<<<<<<
@@ -19181,7 +19313,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
         __pyx_v_apple_found = 1;
 
-        /* "cvision.pyx":109
+        /* "cvision.pyx":141
  *         # loop the blocks in the given direction and store position and coordinates
  *         while board_element != -1:
  *             if board_element == 2 and apple_found == False:             # <<<<<<<<<<<<<<
@@ -19190,7 +19322,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
       }
 
-      /* "cvision.pyx":112
+      /* "cvision.pyx":144
  *                 apple_coord = current_block
  *                 apple_found = True
  *             if board_element == -2 and segment_found == False:             # <<<<<<<<<<<<<<
@@ -19208,7 +19340,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
       __pyx_L11_bool_binop_done:;
       if (__pyx_t_7) {
 
-        /* "cvision.pyx":113
+        /* "cvision.pyx":145
  *                 apple_found = True
  *             if board_element == -2 and segment_found == False:
  *                 segment_coord = current_block             # <<<<<<<<<<<<<<
@@ -19217,7 +19349,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
         __pyx_v_segment_coord = __pyx_v_current_block;
 
-        /* "cvision.pyx":114
+        /* "cvision.pyx":146
  *             if board_element == -2 and segment_found == False:
  *                 segment_coord = current_block
  *                 segment_found = True             # <<<<<<<<<<<<<<
@@ -19226,7 +19358,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
         __pyx_v_segment_found = 1;
 
-        /* "cvision.pyx":112
+        /* "cvision.pyx":144
  *                 apple_coord = current_block
  *                 apple_found = True
  *             if board_element == -2 and segment_found == False:             # <<<<<<<<<<<<<<
@@ -19235,7 +19367,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
       }
 
-      /* "cvision.pyx":115
+      /* "cvision.pyx":147
  *                 segment_coord = current_block
  *                 segment_found = True
  *             current_block.x += x_offset             # <<<<<<<<<<<<<<
@@ -19244,7 +19376,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
       __pyx_v_current_block.x = (__pyx_v_current_block.x + __pyx_v_x_offset);
 
-      /* "cvision.pyx":116
+      /* "cvision.pyx":148
  *                 segment_found = True
  *             current_block.x += x_offset
  *             current_block.y += y_offset             # <<<<<<<<<<<<<<
@@ -19253,7 +19385,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
       __pyx_v_current_block.y = (__pyx_v_current_block.y + __pyx_v_y_offset);
 
-      /* "cvision.pyx":117
+      /* "cvision.pyx":149
  *             current_block.x += x_offset
  *             current_block.y += y_offset
  *             board_element = board[current_block.x, current_block.y]             # <<<<<<<<<<<<<<
@@ -19265,7 +19397,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
       __pyx_v_board_element = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_board.data + __pyx_t_6 * __pyx_v_board.strides[0]) ) + __pyx_t_2 * __pyx_v_board.strides[1]) )));
     }
 
-    /* "cvision.pyx":120
+    /* "cvision.pyx":152
  * 
  *         # for wall
  *         wall_coord = current_block             # <<<<<<<<<<<<<<
@@ -19274,31 +19406,31 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
  */
     __pyx_v_wall_coord = __pyx_v_current_block;
 
-    /* "cvision.pyx":121
+    /* "cvision.pyx":153
  *         # for wall
  *         wall_coord = current_block
  *         wall_output = 1.0 / distance(snake_head_pair,wall_coord,vision_direction_count)             # <<<<<<<<<<<<<<
  * 
  *         # for apple
  */
-    __pyx_t_9 = __pyx_f_7cvision_distance(__pyx_v_snake_head_pair, __pyx_v_wall_coord, __pyx_v_vision_direction_count); if (unlikely(__pyx_t_9 == ((double)-1) && PyErr_Occurred())) __PYX_ERR(0, 121, __pyx_L1_error)
+    __pyx_t_9 = __pyx_f_7cvision_distance(__pyx_v_snake_head_pair, __pyx_v_wall_coord, __pyx_v_vision_direction_count); if (unlikely(__pyx_t_9 == ((double)-1) && PyErr_Occurred())) __PYX_ERR(0, 153, __pyx_L1_error)
     if (unlikely(__pyx_t_9 == 0)) {
       PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-      __PYX_ERR(0, 121, __pyx_L1_error)
+      __PYX_ERR(0, 153, __pyx_L1_error)
     }
     __pyx_v_wall_output = (1.0 / __pyx_t_9);
 
-    /* "cvision.pyx":124
+    /* "cvision.pyx":156
  * 
  *         # for apple
  *         if apple_return_type == "boolean":             # <<<<<<<<<<<<<<
  *             apple_output = 1.0 if apple_found else 0.0
  *         else:
  */
-    __pyx_t_7 = (__Pyx_PyUnicode_Equals(__pyx_v_apple_return_type, __pyx_n_u_boolean, Py_EQ)); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_7 = (__Pyx_PyUnicode_Equals(__pyx_v_apple_return_type, __pyx_n_u_boolean, Py_EQ)); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 156, __pyx_L1_error)
     if (__pyx_t_7) {
 
-      /* "cvision.pyx":125
+      /* "cvision.pyx":157
  *         # for apple
  *         if apple_return_type == "boolean":
  *             apple_output = 1.0 if apple_found else 0.0             # <<<<<<<<<<<<<<
@@ -19312,7 +19444,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
       }
       __pyx_v_apple_output = __pyx_t_9;
 
-      /* "cvision.pyx":124
+      /* "cvision.pyx":156
  * 
  *         # for apple
  *         if apple_return_type == "boolean":             # <<<<<<<<<<<<<<
@@ -19322,7 +19454,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
       goto __pyx_L13;
     }
 
-    /* "cvision.pyx":127
+    /* "cvision.pyx":159
  *             apple_output = 1.0 if apple_found else 0.0
  *         else:
  *             if apple_found:             # <<<<<<<<<<<<<<
@@ -19332,21 +19464,21 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
     /*else*/ {
       if (__pyx_v_apple_found) {
 
-        /* "cvision.pyx":128
+        /* "cvision.pyx":160
  *         else:
  *             if apple_found:
  *                 apple_output = 1.0 / distance(snake_head_pair,apple_coord,vision_direction_count)             # <<<<<<<<<<<<<<
  *             else:
  *                 apple_output = 0.0
  */
-        __pyx_t_9 = __pyx_f_7cvision_distance(__pyx_v_snake_head_pair, __pyx_v_apple_coord, __pyx_v_vision_direction_count); if (unlikely(__pyx_t_9 == ((double)-1) && PyErr_Occurred())) __PYX_ERR(0, 128, __pyx_L1_error)
+        __pyx_t_9 = __pyx_f_7cvision_distance(__pyx_v_snake_head_pair, __pyx_v_apple_coord, __pyx_v_vision_direction_count); if (unlikely(__pyx_t_9 == ((double)-1) && PyErr_Occurred())) __PYX_ERR(0, 160, __pyx_L1_error)
         if (unlikely(__pyx_t_9 == 0)) {
           PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-          __PYX_ERR(0, 128, __pyx_L1_error)
+          __PYX_ERR(0, 160, __pyx_L1_error)
         }
         __pyx_v_apple_output = (1.0 / __pyx_t_9);
 
-        /* "cvision.pyx":127
+        /* "cvision.pyx":159
  *             apple_output = 1.0 if apple_found else 0.0
  *         else:
  *             if apple_found:             # <<<<<<<<<<<<<<
@@ -19356,7 +19488,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
         goto __pyx_L14;
       }
 
-      /* "cvision.pyx":130
+      /* "cvision.pyx":162
  *                 apple_output = 1.0 / distance(snake_head_pair,apple_coord,vision_direction_count)
  *             else:
  *                 apple_output = 0.0             # <<<<<<<<<<<<<<
@@ -19370,17 +19502,17 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
     }
     __pyx_L13:;
 
-    /* "cvision.pyx":133
+    /* "cvision.pyx":165
  * 
  *         # for segment
  *         if segment_return_type == "boolean":             # <<<<<<<<<<<<<<
  *             segment_output = 1.0 if segment_found else 0.0
  *         else:
  */
-    __pyx_t_7 = (__Pyx_PyUnicode_Equals(__pyx_v_segment_return_type, __pyx_n_u_boolean, Py_EQ)); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 133, __pyx_L1_error)
+    __pyx_t_7 = (__Pyx_PyUnicode_Equals(__pyx_v_segment_return_type, __pyx_n_u_boolean, Py_EQ)); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 165, __pyx_L1_error)
     if (__pyx_t_7) {
 
-      /* "cvision.pyx":134
+      /* "cvision.pyx":166
  *         # for segment
  *         if segment_return_type == "boolean":
  *             segment_output = 1.0 if segment_found else 0.0             # <<<<<<<<<<<<<<
@@ -19394,7 +19526,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
       }
       __pyx_v_segment_output = __pyx_t_9;
 
-      /* "cvision.pyx":133
+      /* "cvision.pyx":165
  * 
  *         # for segment
  *         if segment_return_type == "boolean":             # <<<<<<<<<<<<<<
@@ -19404,7 +19536,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
       goto __pyx_L15;
     }
 
-    /* "cvision.pyx":136
+    /* "cvision.pyx":168
  *             segment_output = 1.0 if segment_found else 0.0
  *         else:
  *             if segment_found:             # <<<<<<<<<<<<<<
@@ -19414,21 +19546,21 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
     /*else*/ {
       if (__pyx_v_segment_found) {
 
-        /* "cvision.pyx":137
+        /* "cvision.pyx":169
  *         else:
  *             if segment_found:
  *                 segment_output = 1.0 / distance(snake_head_pair,segment_coord,vision_direction_count)             # <<<<<<<<<<<<<<
  *             else:
  *                 segment_output = 0.0
  */
-        __pyx_t_9 = __pyx_f_7cvision_distance(__pyx_v_snake_head_pair, __pyx_v_segment_coord, __pyx_v_vision_direction_count); if (unlikely(__pyx_t_9 == ((double)-1) && PyErr_Occurred())) __PYX_ERR(0, 137, __pyx_L1_error)
+        __pyx_t_9 = __pyx_f_7cvision_distance(__pyx_v_snake_head_pair, __pyx_v_segment_coord, __pyx_v_vision_direction_count); if (unlikely(__pyx_t_9 == ((double)-1) && PyErr_Occurred())) __PYX_ERR(0, 169, __pyx_L1_error)
         if (unlikely(__pyx_t_9 == 0)) {
           PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-          __PYX_ERR(0, 137, __pyx_L1_error)
+          __PYX_ERR(0, 169, __pyx_L1_error)
         }
         __pyx_v_segment_output = (1.0 / __pyx_t_9);
 
-        /* "cvision.pyx":136
+        /* "cvision.pyx":168
  *             segment_output = 1.0 if segment_found else 0.0
  *         else:
  *             if segment_found:             # <<<<<<<<<<<<<<
@@ -19438,7 +19570,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
         goto __pyx_L16;
       }
 
-      /* "cvision.pyx":139
+      /* "cvision.pyx":171
  *                 segment_output = 1.0 / distance(snake_head_pair,segment_coord,vision_direction_count)
  *             else:
  *                 segment_output = 0.0             # <<<<<<<<<<<<<<
@@ -19452,26 +19584,26 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
     }
     __pyx_L15:;
 
-    /* "cvision.pyx":141
+    /* "cvision.pyx":173
  *                 segment_output = 0.0
  * 
  *         vision_lines.append(VisionLine(wall_coord,wall_output, apple_coord,apple_output,segment_coord, segment_output))             # <<<<<<<<<<<<<<
  * 
  *     return vision_lines
  */
-    __pyx_t_1 = __pyx_convert__to_py_struct____pyx_t_7cvision_Pair(__pyx_v_wall_coord); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 141, __pyx_L1_error)
+    __pyx_t_1 = __pyx_convert__to_py_struct____pyx_t_7cvision_Pair(__pyx_v_wall_coord); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 173, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_10 = PyFloat_FromDouble(__pyx_v_wall_output); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 141, __pyx_L1_error)
+    __pyx_t_10 = PyFloat_FromDouble(__pyx_v_wall_output); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 173, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_11 = __pyx_convert__to_py_struct____pyx_t_7cvision_Pair(__pyx_v_apple_coord); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 141, __pyx_L1_error)
+    __pyx_t_11 = __pyx_convert__to_py_struct____pyx_t_7cvision_Pair(__pyx_v_apple_coord); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 173, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_12 = PyFloat_FromDouble(__pyx_v_apple_output); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 141, __pyx_L1_error)
+    __pyx_t_12 = PyFloat_FromDouble(__pyx_v_apple_output); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 173, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_13 = __pyx_convert__to_py_struct____pyx_t_7cvision_Pair(__pyx_v_segment_coord); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 141, __pyx_L1_error)
+    __pyx_t_13 = __pyx_convert__to_py_struct____pyx_t_7cvision_Pair(__pyx_v_segment_coord); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 173, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_14 = PyFloat_FromDouble(__pyx_v_segment_output); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 141, __pyx_L1_error)
+    __pyx_t_14 = PyFloat_FromDouble(__pyx_v_segment_output); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 173, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_14);
-    __pyx_t_15 = PyTuple_New(6); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 141, __pyx_L1_error)
+    __pyx_t_15 = PyTuple_New(6); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 173, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_15);
     __Pyx_GIVEREF(__pyx_t_1);
     PyTuple_SET_ITEM(__pyx_t_15, 0, __pyx_t_1);
@@ -19491,19 +19623,19 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
     __pyx_t_12 = 0;
     __pyx_t_13 = 0;
     __pyx_t_14 = 0;
-    __pyx_t_14 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cvision_VisionLine), __pyx_t_15, NULL); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 141, __pyx_L1_error)
+    __pyx_t_14 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cvision_VisionLine), __pyx_t_15, NULL); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 173, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_14);
     __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-    __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_vision_lines, __pyx_t_14); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 141, __pyx_L1_error)
+    __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_vision_lines, __pyx_t_14); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 173, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
   }
 
-  /* "cvision.pyx":143
+  /* "cvision.pyx":175
  *         vision_lines.append(VisionLine(wall_coord,wall_output, apple_coord,apple_output,segment_coord, segment_output))
  * 
  *     return vision_lines             # <<<<<<<<<<<<<<
- * 
- * cpdef get_vision_lines_snake_head_1_ahead(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
+ * #
+ * # cpdef get_vision_lines_snake_head_1_ahead(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_vision_lines);
@@ -19513,9 +19645,9 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
   /* "cvision.pyx":53
  *         return manhattan_distance(a,b)
  * 
- * cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):             # <<<<<<<<<<<<<<
- *     cdef int directions[8][2]
- *     directions[0][0] = -1
+ * cpdef get_vision_lines(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):             # <<<<<<<<<<<<<<
+ *     cdef int directions[16][2]
+ *     # UP
  */
 
   /* function exit code */
@@ -19527,7 +19659,7 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
   __Pyx_XDECREF(__pyx_t_13);
   __Pyx_XDECREF(__pyx_t_14);
   __Pyx_XDECREF(__pyx_t_15);
-  __Pyx_AddTraceback("cvision.get_vision_lines_snake_head", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cvision.get_vision_lines", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_vision_lines);
@@ -19537,15 +19669,15 @@ static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head(__Pyx_memviewslice
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7cvision_3get_vision_lines_snake_head(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_7cvision_3get_vision_lines(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_7cvision_3get_vision_lines_snake_head = {"get_vision_lines_snake_head", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cvision_3get_vision_lines_snake_head, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_7cvision_3get_vision_lines_snake_head(PyObject *__pyx_self, 
+static PyMethodDef __pyx_mdef_7cvision_3get_vision_lines = {"get_vision_lines", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cvision_3get_vision_lines, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_7cvision_3get_vision_lines(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -19566,7 +19698,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("get_vision_lines_snake_head (wrapper)", 0);
+  __Pyx_RefNannySetupContext("get_vision_lines (wrapper)", 0);
   {
     PyObject **__pyx_pyargnames[] = {&__pyx_n_s_board,&__pyx_n_s_snake_head,&__pyx_n_s_vision_direction_count,&__pyx_n_s_apple_return_type,&__pyx_n_s_segment_return_type,0};
     PyObject* values[5] = {0,0,0,0,0};
@@ -19597,33 +19729,33 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
         if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_snake_head)) != 0)) kw_args--;
         else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 53, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("get_vision_lines_snake_head", 1, 5, 5, 1); __PYX_ERR(0, 53, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_vision_lines", 1, 5, 5, 1); __PYX_ERR(0, 53, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_vision_direction_count)) != 0)) kw_args--;
         else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 53, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("get_vision_lines_snake_head", 1, 5, 5, 2); __PYX_ERR(0, 53, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_vision_lines", 1, 5, 5, 2); __PYX_ERR(0, 53, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_apple_return_type)) != 0)) kw_args--;
         else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 53, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("get_vision_lines_snake_head", 1, 5, 5, 3); __PYX_ERR(0, 53, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_vision_lines", 1, 5, 5, 3); __PYX_ERR(0, 53, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_segment_return_type)) != 0)) kw_args--;
         else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 53, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("get_vision_lines_snake_head", 1, 5, 5, 4); __PYX_ERR(0, 53, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_vision_lines", 1, 5, 5, 4); __PYX_ERR(0, 53, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "get_vision_lines_snake_head") < 0)) __PYX_ERR(0, 53, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "get_vision_lines") < 0)) __PYX_ERR(0, 53, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 5)) {
       goto __pyx_L5_argtuple_error;
@@ -19642,17 +19774,17 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("get_vision_lines_snake_head", 1, 5, 5, __pyx_nargs); __PYX_ERR(0, 53, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get_vision_lines", 1, 5, 5, __pyx_nargs); __PYX_ERR(0, 53, __pyx_L3_error)
   __pyx_L3_error:;
   __PYX_XCLEAR_MEMVIEW(&__pyx_v_board, 1);
   __PYX_XCLEAR_MEMVIEW(&__pyx_v_snake_head, 1);
-  __Pyx_AddTraceback("cvision.get_vision_lines_snake_head", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cvision.get_vision_lines", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_apple_return_type), (&PyUnicode_Type), 1, "apple_return_type", 1))) __PYX_ERR(0, 53, __pyx_L1_error)
   if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_segment_return_type), (&PyUnicode_Type), 1, "segment_return_type", 1))) __PYX_ERR(0, 53, __pyx_L1_error)
-  __pyx_r = __pyx_pf_7cvision_2get_vision_lines_snake_head(__pyx_self, __pyx_v_board, __pyx_v_snake_head, __pyx_v_vision_direction_count, __pyx_v_apple_return_type, __pyx_v_segment_return_type);
+  __pyx_r = __pyx_pf_7cvision_2get_vision_lines(__pyx_self, __pyx_v_board, __pyx_v_snake_head, __pyx_v_vision_direction_count, __pyx_v_apple_return_type, __pyx_v_segment_return_type);
 
   /* function exit code */
   goto __pyx_L0;
@@ -19665,18 +19797,18 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7cvision_2get_vision_lines_snake_head(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_snake_head, int __pyx_v_vision_direction_count, PyObject *__pyx_v_apple_return_type, PyObject *__pyx_v_segment_return_type) {
+static PyObject *__pyx_pf_7cvision_2get_vision_lines(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_snake_head, int __pyx_v_vision_direction_count, PyObject *__pyx_v_apple_return_type, PyObject *__pyx_v_segment_return_type) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("get_vision_lines_snake_head", 0);
+  __Pyx_RefNannySetupContext("get_vision_lines", 0);
   __Pyx_XDECREF(__pyx_r);
   if (unlikely(!__pyx_v_board.memview)) { __Pyx_RaiseUnboundLocalError("board"); __PYX_ERR(0, 53, __pyx_L1_error) }
   if (unlikely(!__pyx_v_snake_head.memview)) { __Pyx_RaiseUnboundLocalError("snake_head"); __PYX_ERR(0, 53, __pyx_L1_error) }
-  __pyx_t_1 = __pyx_f_7cvision_get_vision_lines_snake_head(__pyx_v_board, __pyx_v_snake_head, __pyx_v_vision_direction_count, __pyx_v_apple_return_type, __pyx_v_segment_return_type, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_7cvision_get_vision_lines(__pyx_v_board, __pyx_v_snake_head, __pyx_v_vision_direction_count, __pyx_v_apple_return_type, __pyx_v_segment_return_type, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -19685,7 +19817,7 @@ static PyObject *__pyx_pf_7cvision_2get_vision_lines_snake_head(CYTHON_UNUSED Py
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cvision.get_vision_lines_snake_head", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cvision.get_vision_lines", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -19693,955 +19825,15 @@ static PyObject *__pyx_pf_7cvision_2get_vision_lines_snake_head(CYTHON_UNUSED Py
   return __pyx_r;
 }
 
-/* "cvision.pyx":145
- *     return vision_lines
- * 
- * cpdef get_vision_lines_snake_head_1_ahead(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):             # <<<<<<<<<<<<<<
- *     cdef int directions[8][2]
- *     directions[0][0] = -1
- */
-
-static PyObject *__pyx_pw_7cvision_5get_vision_lines_snake_head_1_ahead(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyObject *__pyx_f_7cvision_get_vision_lines_snake_head_1_ahead(__Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_snake_head, int __pyx_v_vision_direction_count, PyObject *__pyx_v_apple_return_type, CYTHON_UNUSED PyObject *__pyx_v_segment_return_type, CYTHON_UNUSED int __pyx_skip_dispatch) {
-  int __pyx_v_directions[8][2];
-  PyObject *__pyx_v_vision_lines = 0;
-  int __pyx_v_x_offset;
-  int __pyx_v_y_offset;
-  struct __pyx_t_7cvision_Pair __pyx_v_apple_coord;
-  struct __pyx_t_7cvision_Pair __pyx_v_segment_coord;
-  struct __pyx_t_7cvision_Pair __pyx_v_current_block;
-  struct __pyx_t_7cvision_Pair __pyx_v_wall_coord;
-  struct __pyx_t_7cvision_Pair __pyx_v_snake_head_pair;
-  double __pyx_v_wall_output;
-  double __pyx_v_apple_output;
-  double __pyx_v_segment_output;
-  double __pyx_v_output_distance;
-  int __pyx_v_board_element;
-  int __pyx_v_apple_found;
-  int __pyx_v_segment_found;
-  int __pyx_v_wall_found;
-  int __pyx_v_i;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  Py_ssize_t __pyx_t_2;
-  int __pyx_t_3;
-  int __pyx_t_4;
-  int __pyx_t_5;
-  Py_ssize_t __pyx_t_6;
-  int __pyx_t_7;
-  int __pyx_t_8;
-  double __pyx_t_9;
-  PyObject *__pyx_t_10 = NULL;
-  PyObject *__pyx_t_11 = NULL;
-  PyObject *__pyx_t_12 = NULL;
-  PyObject *__pyx_t_13 = NULL;
-  PyObject *__pyx_t_14 = NULL;
-  PyObject *__pyx_t_15 = NULL;
-  int __pyx_t_16;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("get_vision_lines_snake_head_1_ahead", 0);
-
-  /* "cvision.pyx":147
- * cpdef get_vision_lines_snake_head_1_ahead(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
- *     cdef int directions[8][2]
- *     directions[0][0] = -1             # <<<<<<<<<<<<<<
- *     directions[0][1] = 0
- *     directions[1][0] = 1
- */
-  ((__pyx_v_directions[0])[0]) = -1;
-
-  /* "cvision.pyx":148
- *     cdef int directions[8][2]
- *     directions[0][0] = -1
- *     directions[0][1] = 0             # <<<<<<<<<<<<<<
- *     directions[1][0] = 1
- *     directions[1][1] = 0
- */
-  ((__pyx_v_directions[0])[1]) = 0;
-
-  /* "cvision.pyx":149
- *     directions[0][0] = -1
- *     directions[0][1] = 0
- *     directions[1][0] = 1             # <<<<<<<<<<<<<<
- *     directions[1][1] = 0
- *     directions[2][0] = 0
- */
-  ((__pyx_v_directions[1])[0]) = 1;
-
-  /* "cvision.pyx":150
- *     directions[0][1] = 0
- *     directions[1][0] = 1
- *     directions[1][1] = 0             # <<<<<<<<<<<<<<
- *     directions[2][0] = 0
- *     directions[2][1] = -1
- */
-  ((__pyx_v_directions[1])[1]) = 0;
-
-  /* "cvision.pyx":151
- *     directions[1][0] = 1
- *     directions[1][1] = 0
- *     directions[2][0] = 0             # <<<<<<<<<<<<<<
- *     directions[2][1] = -1
- *     directions[3][0] = 0
- */
-  ((__pyx_v_directions[2])[0]) = 0;
-
-  /* "cvision.pyx":152
- *     directions[1][1] = 0
- *     directions[2][0] = 0
- *     directions[2][1] = -1             # <<<<<<<<<<<<<<
- *     directions[3][0] = 0
- *     directions[3][1] = 1
- */
-  ((__pyx_v_directions[2])[1]) = -1;
-
-  /* "cvision.pyx":153
- *     directions[2][0] = 0
- *     directions[2][1] = -1
- *     directions[3][0] = 0             # <<<<<<<<<<<<<<
- *     directions[3][1] = 1
- *     directions[4][0] = -1
- */
-  ((__pyx_v_directions[3])[0]) = 0;
-
-  /* "cvision.pyx":154
- *     directions[2][1] = -1
- *     directions[3][0] = 0
- *     directions[3][1] = 1             # <<<<<<<<<<<<<<
- *     directions[4][0] = -1
- *     directions[4][1] = 1
- */
-  ((__pyx_v_directions[3])[1]) = 1;
-
-  /* "cvision.pyx":155
- *     directions[3][0] = 0
- *     directions[3][1] = 1
- *     directions[4][0] = -1             # <<<<<<<<<<<<<<
- *     directions[4][1] = 1
- *     directions[5][0] = -1
- */
-  ((__pyx_v_directions[4])[0]) = -1;
-
-  /* "cvision.pyx":156
- *     directions[3][1] = 1
- *     directions[4][0] = -1
- *     directions[4][1] = 1             # <<<<<<<<<<<<<<
- *     directions[5][0] = -1
- *     directions[5][1] = -1
- */
-  ((__pyx_v_directions[4])[1]) = 1;
-
-  /* "cvision.pyx":157
- *     directions[4][0] = -1
- *     directions[4][1] = 1
- *     directions[5][0] = -1             # <<<<<<<<<<<<<<
- *     directions[5][1] = -1
- *     directions[6][0] = 1
- */
-  ((__pyx_v_directions[5])[0]) = -1;
-
-  /* "cvision.pyx":158
- *     directions[4][1] = 1
- *     directions[5][0] = -1
- *     directions[5][1] = -1             # <<<<<<<<<<<<<<
- *     directions[6][0] = 1
- *     directions[6][1] = -1
- */
-  ((__pyx_v_directions[5])[1]) = -1;
-
-  /* "cvision.pyx":159
- *     directions[5][0] = -1
- *     directions[5][1] = -1
- *     directions[6][0] = 1             # <<<<<<<<<<<<<<
- *     directions[6][1] = -1
- *     directions[7][0] = 1
- */
-  ((__pyx_v_directions[6])[0]) = 1;
-
-  /* "cvision.pyx":160
- *     directions[5][1] = -1
- *     directions[6][0] = 1
- *     directions[6][1] = -1             # <<<<<<<<<<<<<<
- *     directions[7][0] = 1
- *     directions[7][1] = 1
- */
-  ((__pyx_v_directions[6])[1]) = -1;
-
-  /* "cvision.pyx":161
- *     directions[6][0] = 1
- *     directions[6][1] = -1
- *     directions[7][0] = 1             # <<<<<<<<<<<<<<
- *     directions[7][1] = 1
- * 
- */
-  ((__pyx_v_directions[7])[0]) = 1;
-
-  /* "cvision.pyx":162
- *     directions[6][1] = -1
- *     directions[7][0] = 1
- *     directions[7][1] = 1             # <<<<<<<<<<<<<<
- * 
- *     cdef list vision_lines = []
- */
-  ((__pyx_v_directions[7])[1]) = 1;
-
-  /* "cvision.pyx":164
- *     directions[7][1] = 1
- * 
- *     cdef list vision_lines = []             # <<<<<<<<<<<<<<
- *     cdef int x_offset, y_offset
- *     cdef Pair apple_coord, segment_coord, current_block, wall_coord, snake_head_pair
- */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 164, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_v_vision_lines = ((PyObject*)__pyx_t_1);
-  __pyx_t_1 = 0;
-
-  /* "cvision.pyx":167
- *     cdef int x_offset, y_offset
- *     cdef Pair apple_coord, segment_coord, current_block, wall_coord, snake_head_pair
- *     snake_head_pair.x = snake_head[0]             # <<<<<<<<<<<<<<
- *     snake_head_pair.y = snake_head[1]
- * 
- */
-  __pyx_t_2 = 0;
-  __pyx_v_snake_head_pair.x = (*((int *) ( /* dim=0 */ (__pyx_v_snake_head.data + __pyx_t_2 * __pyx_v_snake_head.strides[0]) )));
-
-  /* "cvision.pyx":168
- *     cdef Pair apple_coord, segment_coord, current_block, wall_coord, snake_head_pair
- *     snake_head_pair.x = snake_head[0]
- *     snake_head_pair.y = snake_head[1]             # <<<<<<<<<<<<<<
- * 
- *     cdef double wall_output, apple_output, segment_output, output_distance
- */
-  __pyx_t_2 = 1;
-  __pyx_v_snake_head_pair.y = (*((int *) ( /* dim=0 */ (__pyx_v_snake_head.data + __pyx_t_2 * __pyx_v_snake_head.strides[0]) )));
-
-  /* "cvision.pyx":172
- *     cdef double wall_output, apple_output, segment_output, output_distance
- *     cdef int board_element
- *     cdef bint apple_found = False             # <<<<<<<<<<<<<<
- *     cdef bint segment_found = False
- *     cdef bint wall_found = False
- */
-  __pyx_v_apple_found = 0;
-
-  /* "cvision.pyx":173
- *     cdef int board_element
- *     cdef bint apple_found = False
- *     cdef bint segment_found = False             # <<<<<<<<<<<<<<
- *     cdef bint wall_found = False
- *     cdef int dx
- */
-  __pyx_v_segment_found = 0;
-
-  /* "cvision.pyx":174
- *     cdef bint apple_found = False
- *     cdef bint segment_found = False
- *     cdef bint wall_found = False             # <<<<<<<<<<<<<<
- *     cdef int dx
- *     cdef int dy
- */
-  __pyx_v_wall_found = 0;
-
-  /* "cvision.pyx":178
- *     cdef int dy
- * 
- *     for i in range(vision_direction_count):             # <<<<<<<<<<<<<<
- *         apple_coord.x = -1
- *         apple_coord.y = -1
- */
-  __pyx_t_3 = __pyx_v_vision_direction_count;
-  __pyx_t_4 = __pyx_t_3;
-  for (__pyx_t_5 = 0; __pyx_t_5 < __pyx_t_4; __pyx_t_5+=1) {
-    __pyx_v_i = __pyx_t_5;
-
-    /* "cvision.pyx":179
- * 
- *     for i in range(vision_direction_count):
- *         apple_coord.x = -1             # <<<<<<<<<<<<<<
- *         apple_coord.y = -1
- *         segment_coord.x = -1
- */
-    __pyx_v_apple_coord.x = -1;
-
-    /* "cvision.pyx":180
- *     for i in range(vision_direction_count):
- *         apple_coord.x = -1
- *         apple_coord.y = -1             # <<<<<<<<<<<<<<
- *         segment_coord.x = -1
- *         segment_coord.y = -1
- */
-    __pyx_v_apple_coord.y = -1;
-
-    /* "cvision.pyx":181
- *         apple_coord.x = -1
- *         apple_coord.y = -1
- *         segment_coord.x = -1             # <<<<<<<<<<<<<<
- *         segment_coord.y = -1
- *         current_block.x = -1
- */
-    __pyx_v_segment_coord.x = -1;
-
-    /* "cvision.pyx":182
- *         apple_coord.y = -1
- *         segment_coord.x = -1
- *         segment_coord.y = -1             # <<<<<<<<<<<<<<
- *         current_block.x = -1
- *         current_block.y = -1
- */
-    __pyx_v_segment_coord.y = -1;
-
-    /* "cvision.pyx":183
- *         segment_coord.x = -1
- *         segment_coord.y = -1
- *         current_block.x = -1             # <<<<<<<<<<<<<<
- *         current_block.y = -1
- *         wall_coord.x = -1
- */
-    __pyx_v_current_block.x = -1;
-
-    /* "cvision.pyx":184
- *         segment_coord.y = -1
- *         current_block.x = -1
- *         current_block.y = -1             # <<<<<<<<<<<<<<
- *         wall_coord.x = -1
- *         wall_coord.y = -1
- */
-    __pyx_v_current_block.y = -1;
-
-    /* "cvision.pyx":185
- *         current_block.x = -1
- *         current_block.y = -1
- *         wall_coord.x = -1             # <<<<<<<<<<<<<<
- *         wall_coord.y = -1
- * 
- */
-    __pyx_v_wall_coord.x = -1;
-
-    /* "cvision.pyx":186
- *         current_block.y = -1
- *         wall_coord.x = -1
- *         wall_coord.y = -1             # <<<<<<<<<<<<<<
- * 
- *         apple_found = False
- */
-    __pyx_v_wall_coord.y = -1;
-
-    /* "cvision.pyx":188
- *         wall_coord.y = -1
- * 
- *         apple_found = False             # <<<<<<<<<<<<<<
- *         segment_found = False
- *         wall_found = False
- */
-    __pyx_v_apple_found = 0;
-
-    /* "cvision.pyx":189
- * 
- *         apple_found = False
- *         segment_found = False             # <<<<<<<<<<<<<<
- *         wall_found = False
- * 
- */
-    __pyx_v_segment_found = 0;
-
-    /* "cvision.pyx":190
- *         apple_found = False
- *         segment_found = False
- *         wall_found = False             # <<<<<<<<<<<<<<
- * 
- *         x_offset = directions[i][0]
- */
-    __pyx_v_wall_found = 0;
-
-    /* "cvision.pyx":192
- *         wall_found = False
- * 
- *         x_offset = directions[i][0]             # <<<<<<<<<<<<<<
- *         y_offset = directions[i][1]
- * 
- */
-    __pyx_v_x_offset = ((__pyx_v_directions[__pyx_v_i])[0]);
-
-    /* "cvision.pyx":193
- * 
- *         x_offset = directions[i][0]
- *         y_offset = directions[i][1]             # <<<<<<<<<<<<<<
- * 
- *         # search starts at one block in the given direction otherwise head is also check in the loop
- */
-    __pyx_v_y_offset = ((__pyx_v_directions[__pyx_v_i])[1]);
-
-    /* "cvision.pyx":196
- * 
- *         # search starts at one block in the given direction otherwise head is also check in the loop
- *         current_block.x = snake_head[0] + x_offset             # <<<<<<<<<<<<<<
- *         current_block.y = snake_head[1] + y_offset
- *         board_element = board[current_block.x, current_block.y]
- */
-    __pyx_t_2 = 0;
-    __pyx_v_current_block.x = ((*((int *) ( /* dim=0 */ (__pyx_v_snake_head.data + __pyx_t_2 * __pyx_v_snake_head.strides[0]) ))) + __pyx_v_x_offset);
-
-    /* "cvision.pyx":197
- *         # search starts at one block in the given direction otherwise head is also check in the loop
- *         current_block.x = snake_head[0] + x_offset
- *         current_block.y = snake_head[1] + y_offset             # <<<<<<<<<<<<<<
- *         board_element = board[current_block.x, current_block.y]
- * 
- */
-    __pyx_t_2 = 1;
-    __pyx_v_current_block.y = ((*((int *) ( /* dim=0 */ (__pyx_v_snake_head.data + __pyx_t_2 * __pyx_v_snake_head.strides[0]) ))) + __pyx_v_y_offset);
-
-    /* "cvision.pyx":198
- *         current_block.x = snake_head[0] + x_offset
- *         current_block.y = snake_head[1] + y_offset
- *         board_element = board[current_block.x, current_block.y]             # <<<<<<<<<<<<<<
- * 
- *         # loop the blocks in the given direction and store position and coordinates
- */
-    __pyx_t_2 = __pyx_v_current_block.x;
-    __pyx_t_6 = __pyx_v_current_block.y;
-    __pyx_v_board_element = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_board.data + __pyx_t_2 * __pyx_v_board.strides[0]) ) + __pyx_t_6 * __pyx_v_board.strides[1]) )));
-
-    /* "cvision.pyx":202
- *         # loop the blocks in the given direction and store position and coordinates
- * 
- *         if board_element == -2:             # <<<<<<<<<<<<<<
- *             segment_coord = current_block
- *             segment_found = True
- */
-    __pyx_t_7 = (__pyx_v_board_element == -2L);
-    if (__pyx_t_7) {
-
-      /* "cvision.pyx":203
- * 
- *         if board_element == -2:
- *             segment_coord = current_block             # <<<<<<<<<<<<<<
- *             segment_found = True
- * 
- */
-      __pyx_v_segment_coord = __pyx_v_current_block;
-
-      /* "cvision.pyx":204
- *         if board_element == -2:
- *             segment_coord = current_block
- *             segment_found = True             # <<<<<<<<<<<<<<
- * 
- *         if board_element == -1:
- */
-      __pyx_v_segment_found = 1;
-
-      /* "cvision.pyx":202
- *         # loop the blocks in the given direction and store position and coordinates
- * 
- *         if board_element == -2:             # <<<<<<<<<<<<<<
- *             segment_coord = current_block
- *             segment_found = True
- */
-    }
-
-    /* "cvision.pyx":206
- *             segment_found = True
- * 
- *         if board_element == -1:             # <<<<<<<<<<<<<<
- *             wall_coord = current_block
- *             wall_found = True
- */
-    __pyx_t_7 = (__pyx_v_board_element == -1L);
-    if (__pyx_t_7) {
-
-      /* "cvision.pyx":207
- * 
- *         if board_element == -1:
- *             wall_coord = current_block             # <<<<<<<<<<<<<<
- *             wall_found = True
- * 
- */
-      __pyx_v_wall_coord = __pyx_v_current_block;
-
-      /* "cvision.pyx":208
- *         if board_element == -1:
- *             wall_coord = current_block
- *             wall_found = True             # <<<<<<<<<<<<<<
- * 
- *         # loop the blocks in the given direction and store position and coordinates
- */
-      __pyx_v_wall_found = 1;
-
-      /* "cvision.pyx":206
- *             segment_found = True
- * 
- *         if board_element == -1:             # <<<<<<<<<<<<<<
- *             wall_coord = current_block
- *             wall_found = True
- */
-    }
-
-    /* "cvision.pyx":211
- * 
- *         # loop the blocks in the given direction and store position and coordinates
- *         while board_element != -1 and apple_found == False:             # <<<<<<<<<<<<<<
- *             if board_element == 2:
- *                 apple_coord = current_block
- */
-    while (1) {
-      __pyx_t_8 = (__pyx_v_board_element != -1L);
-      if (__pyx_t_8) {
-      } else {
-        __pyx_t_7 = __pyx_t_8;
-        goto __pyx_L9_bool_binop_done;
-      }
-      __pyx_t_8 = (__pyx_v_apple_found == 0);
-      __pyx_t_7 = __pyx_t_8;
-      __pyx_L9_bool_binop_done:;
-      if (!__pyx_t_7) break;
-
-      /* "cvision.pyx":212
- *         # loop the blocks in the given direction and store position and coordinates
- *         while board_element != -1 and apple_found == False:
- *             if board_element == 2:             # <<<<<<<<<<<<<<
- *                 apple_coord = current_block
- *                 apple_found = True
- */
-      __pyx_t_7 = (__pyx_v_board_element == 2);
-      if (__pyx_t_7) {
-
-        /* "cvision.pyx":213
- *         while board_element != -1 and apple_found == False:
- *             if board_element == 2:
- *                 apple_coord = current_block             # <<<<<<<<<<<<<<
- *                 apple_found = True
- *             current_block.x = current_block.x + x_offset
- */
-        __pyx_v_apple_coord = __pyx_v_current_block;
-
-        /* "cvision.pyx":214
- *             if board_element == 2:
- *                 apple_coord = current_block
- *                 apple_found = True             # <<<<<<<<<<<<<<
- *             current_block.x = current_block.x + x_offset
- *             current_block.y = current_block.y + y_offset
- */
-        __pyx_v_apple_found = 1;
-
-        /* "cvision.pyx":212
- *         # loop the blocks in the given direction and store position and coordinates
- *         while board_element != -1 and apple_found == False:
- *             if board_element == 2:             # <<<<<<<<<<<<<<
- *                 apple_coord = current_block
- *                 apple_found = True
- */
-      }
-
-      /* "cvision.pyx":215
- *                 apple_coord = current_block
- *                 apple_found = True
- *             current_block.x = current_block.x + x_offset             # <<<<<<<<<<<<<<
- *             current_block.y = current_block.y + y_offset
- *             board_element = board[current_block.x, current_block.y]
- */
-      __pyx_v_current_block.x = (__pyx_v_current_block.x + __pyx_v_x_offset);
-
-      /* "cvision.pyx":216
- *                 apple_found = True
- *             current_block.x = current_block.x + x_offset
- *             current_block.y = current_block.y + y_offset             # <<<<<<<<<<<<<<
- *             board_element = board[current_block.x, current_block.y]
- * 
- */
-      __pyx_v_current_block.y = (__pyx_v_current_block.y + __pyx_v_y_offset);
-
-      /* "cvision.pyx":217
- *             current_block.x = current_block.x + x_offset
- *             current_block.y = current_block.y + y_offset
- *             board_element = board[current_block.x, current_block.y]             # <<<<<<<<<<<<<<
- * 
- *         wall_output = 1.0 if wall_found else 0.0
- */
-      __pyx_t_6 = __pyx_v_current_block.x;
-      __pyx_t_2 = __pyx_v_current_block.y;
-      __pyx_v_board_element = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_board.data + __pyx_t_6 * __pyx_v_board.strides[0]) ) + __pyx_t_2 * __pyx_v_board.strides[1]) )));
-    }
-
-    /* "cvision.pyx":219
- *             board_element = board[current_block.x, current_block.y]
- * 
- *         wall_output = 1.0 if wall_found else 0.0             # <<<<<<<<<<<<<<
- * 
- *         if apple_return_type == "boolean":
- */
-    if (__pyx_v_wall_found) {
-      __pyx_t_9 = 1.0;
-    } else {
-      __pyx_t_9 = 0.0;
-    }
-    __pyx_v_wall_output = __pyx_t_9;
-
-    /* "cvision.pyx":221
- *         wall_output = 1.0 if wall_found else 0.0
- * 
- *         if apple_return_type == "boolean":             # <<<<<<<<<<<<<<
- *             apple_output = 1.0 if apple_found else 0.0
- *         else:
- */
-    __pyx_t_7 = (__Pyx_PyUnicode_Equals(__pyx_v_apple_return_type, __pyx_n_u_boolean, Py_EQ)); if (unlikely((__pyx_t_7 < 0))) __PYX_ERR(0, 221, __pyx_L1_error)
-    if (__pyx_t_7) {
-
-      /* "cvision.pyx":222
- * 
- *         if apple_return_type == "boolean":
- *             apple_output = 1.0 if apple_found else 0.0             # <<<<<<<<<<<<<<
- *         else:
- *             if apple_found:
- */
-      if (__pyx_v_apple_found) {
-        __pyx_t_9 = 1.0;
-      } else {
-        __pyx_t_9 = 0.0;
-      }
-      __pyx_v_apple_output = __pyx_t_9;
-
-      /* "cvision.pyx":221
- *         wall_output = 1.0 if wall_found else 0.0
- * 
- *         if apple_return_type == "boolean":             # <<<<<<<<<<<<<<
- *             apple_output = 1.0 if apple_found else 0.0
- *         else:
- */
-      goto __pyx_L12;
-    }
-
-    /* "cvision.pyx":224
- *             apple_output = 1.0 if apple_found else 0.0
- *         else:
- *             if apple_found:             # <<<<<<<<<<<<<<
- *                 output_distance = chebyshev_distance(snake_head_pair,apple_coord)
- *                 apple_output = 1.0 / output_distance
- */
-    /*else*/ {
-      if (__pyx_v_apple_found) {
-
-        /* "cvision.pyx":225
- *         else:
- *             if apple_found:
- *                 output_distance = chebyshev_distance(snake_head_pair,apple_coord)             # <<<<<<<<<<<<<<
- *                 apple_output = 1.0 / output_distance
- *             else:
- */
-        __pyx_t_9 = __pyx_f_7cvision_chebyshev_distance(__pyx_v_snake_head_pair, __pyx_v_apple_coord); if (unlikely(__pyx_t_9 == ((double)-1) && PyErr_Occurred())) __PYX_ERR(0, 225, __pyx_L1_error)
-        __pyx_v_output_distance = __pyx_t_9;
-
-        /* "cvision.pyx":226
- *             if apple_found:
- *                 output_distance = chebyshev_distance(snake_head_pair,apple_coord)
- *                 apple_output = 1.0 / output_distance             # <<<<<<<<<<<<<<
- *             else:
- *                 apple_output = 0.0
- */
-        if (unlikely(__pyx_v_output_distance == 0)) {
-          PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-          __PYX_ERR(0, 226, __pyx_L1_error)
-        }
-        __pyx_v_apple_output = (1.0 / __pyx_v_output_distance);
-
-        /* "cvision.pyx":224
- *             apple_output = 1.0 if apple_found else 0.0
- *         else:
- *             if apple_found:             # <<<<<<<<<<<<<<
- *                 output_distance = chebyshev_distance(snake_head_pair,apple_coord)
- *                 apple_output = 1.0 / output_distance
- */
-        goto __pyx_L13;
-      }
-
-      /* "cvision.pyx":228
- *                 apple_output = 1.0 / output_distance
- *             else:
- *                 apple_output = 0.0             # <<<<<<<<<<<<<<
- * 
- * 
- */
-      /*else*/ {
-        __pyx_v_apple_output = 0.0;
-      }
-      __pyx_L13:;
-    }
-    __pyx_L12:;
-
-    /* "cvision.pyx":231
- * 
- * 
- *         segment_output = 1.0 if segment_found else 0.0             # <<<<<<<<<<<<<<
- * 
- *         vision_lines.append(VisionLine(wall_coord,wall_output, apple_coord,apple_output, segment_coord,segment_output))
- */
-    if (__pyx_v_segment_found) {
-      __pyx_t_9 = 1.0;
-    } else {
-      __pyx_t_9 = 0.0;
-    }
-    __pyx_v_segment_output = __pyx_t_9;
-
-    /* "cvision.pyx":233
- *         segment_output = 1.0 if segment_found else 0.0
- * 
- *         vision_lines.append(VisionLine(wall_coord,wall_output, apple_coord,apple_output, segment_coord,segment_output))             # <<<<<<<<<<<<<<
- * 
- *     return vision_lines
- */
-    __pyx_t_1 = __pyx_convert__to_py_struct____pyx_t_7cvision_Pair(__pyx_v_wall_coord); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 233, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_10 = PyFloat_FromDouble(__pyx_v_wall_output); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 233, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_11 = __pyx_convert__to_py_struct____pyx_t_7cvision_Pair(__pyx_v_apple_coord); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 233, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_12 = PyFloat_FromDouble(__pyx_v_apple_output); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 233, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_13 = __pyx_convert__to_py_struct____pyx_t_7cvision_Pair(__pyx_v_segment_coord); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 233, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_14 = PyFloat_FromDouble(__pyx_v_segment_output); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 233, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_14);
-    __pyx_t_15 = PyTuple_New(6); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 233, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_15);
-    __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_15, 0, __pyx_t_1);
-    __Pyx_GIVEREF(__pyx_t_10);
-    PyTuple_SET_ITEM(__pyx_t_15, 1, __pyx_t_10);
-    __Pyx_GIVEREF(__pyx_t_11);
-    PyTuple_SET_ITEM(__pyx_t_15, 2, __pyx_t_11);
-    __Pyx_GIVEREF(__pyx_t_12);
-    PyTuple_SET_ITEM(__pyx_t_15, 3, __pyx_t_12);
-    __Pyx_GIVEREF(__pyx_t_13);
-    PyTuple_SET_ITEM(__pyx_t_15, 4, __pyx_t_13);
-    __Pyx_GIVEREF(__pyx_t_14);
-    PyTuple_SET_ITEM(__pyx_t_15, 5, __pyx_t_14);
-    __pyx_t_1 = 0;
-    __pyx_t_10 = 0;
-    __pyx_t_11 = 0;
-    __pyx_t_12 = 0;
-    __pyx_t_13 = 0;
-    __pyx_t_14 = 0;
-    __pyx_t_14 = __Pyx_PyObject_Call(((PyObject *)__pyx_ptype_7cvision_VisionLine), __pyx_t_15, NULL); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 233, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_14);
-    __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-    __pyx_t_16 = __Pyx_PyList_Append(__pyx_v_vision_lines, __pyx_t_14); if (unlikely(__pyx_t_16 == ((int)-1))) __PYX_ERR(0, 233, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-  }
-
-  /* "cvision.pyx":235
- *         vision_lines.append(VisionLine(wall_coord,wall_output, apple_coord,apple_output, segment_coord,segment_output))
- * 
- *     return vision_lines             # <<<<<<<<<<<<<<
- * 
- * cpdef update_board_from_snake(int[:, :] board,int[:,:]body):
- */
-  __Pyx_XDECREF(__pyx_r);
-  __Pyx_INCREF(__pyx_v_vision_lines);
-  __pyx_r = __pyx_v_vision_lines;
-  goto __pyx_L0;
-
-  /* "cvision.pyx":145
- *     return vision_lines
- * 
- * cpdef get_vision_lines_snake_head_1_ahead(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):             # <<<<<<<<<<<<<<
- *     cdef int directions[8][2]
- *     directions[0][0] = -1
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_10);
-  __Pyx_XDECREF(__pyx_t_11);
-  __Pyx_XDECREF(__pyx_t_12);
-  __Pyx_XDECREF(__pyx_t_13);
-  __Pyx_XDECREF(__pyx_t_14);
-  __Pyx_XDECREF(__pyx_t_15);
-  __Pyx_AddTraceback("cvision.get_vision_lines_snake_head_1_ahead", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_vision_lines);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* Python wrapper */
-static PyObject *__pyx_pw_7cvision_5get_vision_lines_snake_head_1_ahead(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-); /*proto*/
-static PyMethodDef __pyx_mdef_7cvision_5get_vision_lines_snake_head_1_ahead = {"get_vision_lines_snake_head_1_ahead", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cvision_5get_vision_lines_snake_head_1_ahead, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_7cvision_5get_vision_lines_snake_head_1_ahead(PyObject *__pyx_self, 
-#if CYTHON_METH_FASTCALL
-PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
-#else
-PyObject *__pyx_args, PyObject *__pyx_kwds
-#endif
-) {
-  __Pyx_memviewslice __pyx_v_board = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_snake_head = { 0, 0, { 0 }, { 0 }, { 0 } };
-  int __pyx_v_vision_direction_count;
-  PyObject *__pyx_v_apple_return_type = 0;
-  PyObject *__pyx_v_segment_return_type = 0;
-  #if !CYTHON_METH_FASTCALL
-  CYTHON_UNUSED const Py_ssize_t __pyx_nargs = PyTuple_GET_SIZE(__pyx_args);
-  #endif
-  CYTHON_UNUSED PyObject *const *__pyx_kwvalues = __Pyx_KwValues_FASTCALL(__pyx_args, __pyx_nargs);
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("get_vision_lines_snake_head_1_ahead (wrapper)", 0);
-  {
-    PyObject **__pyx_pyargnames[] = {&__pyx_n_s_board,&__pyx_n_s_snake_head,&__pyx_n_s_vision_direction_count,&__pyx_n_s_apple_return_type,&__pyx_n_s_segment_return_type,0};
-    PyObject* values[5] = {0,0,0,0,0};
-    if (__pyx_kwds) {
-      Py_ssize_t kw_args;
-      switch (__pyx_nargs) {
-        case  5: values[4] = __Pyx_Arg_FASTCALL(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
-        case  4: values[3] = __Pyx_Arg_FASTCALL(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
-        case  3: values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = __Pyx_NumKwargs_FASTCALL(__pyx_kwds);
-      switch (__pyx_nargs) {
-        case  0:
-        if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_board)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 145, __pyx_L3_error)
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_snake_head)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 145, __pyx_L3_error)
-        else {
-          __Pyx_RaiseArgtupleInvalid("get_vision_lines_snake_head_1_ahead", 1, 5, 5, 1); __PYX_ERR(0, 145, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (likely((values[2] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_vision_direction_count)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 145, __pyx_L3_error)
-        else {
-          __Pyx_RaiseArgtupleInvalid("get_vision_lines_snake_head_1_ahead", 1, 5, 5, 2); __PYX_ERR(0, 145, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  3:
-        if (likely((values[3] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_apple_return_type)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 145, __pyx_L3_error)
-        else {
-          __Pyx_RaiseArgtupleInvalid("get_vision_lines_snake_head_1_ahead", 1, 5, 5, 3); __PYX_ERR(0, 145, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  4:
-        if (likely((values[4] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_segment_return_type)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 145, __pyx_L3_error)
-        else {
-          __Pyx_RaiseArgtupleInvalid("get_vision_lines_snake_head_1_ahead", 1, 5, 5, 4); __PYX_ERR(0, 145, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "get_vision_lines_snake_head_1_ahead") < 0)) __PYX_ERR(0, 145, __pyx_L3_error)
-      }
-    } else if (unlikely(__pyx_nargs != 5)) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
-      values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
-      values[2] = __Pyx_Arg_FASTCALL(__pyx_args, 2);
-      values[3] = __Pyx_Arg_FASTCALL(__pyx_args, 3);
-      values[4] = __Pyx_Arg_FASTCALL(__pyx_args, 4);
-    }
-    __pyx_v_board = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_board.memview)) __PYX_ERR(0, 145, __pyx_L3_error)
-    __pyx_v_snake_head = __Pyx_PyObject_to_MemoryviewSlice_ds_int(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_snake_head.memview)) __PYX_ERR(0, 145, __pyx_L3_error)
-    __pyx_v_vision_direction_count = __Pyx_PyInt_As_int(values[2]); if (unlikely((__pyx_v_vision_direction_count == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 145, __pyx_L3_error)
-    __pyx_v_apple_return_type = ((PyObject*)values[3]);
-    __pyx_v_segment_return_type = ((PyObject*)values[4]);
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("get_vision_lines_snake_head_1_ahead", 1, 5, 5, __pyx_nargs); __PYX_ERR(0, 145, __pyx_L3_error)
-  __pyx_L3_error:;
-  __PYX_XCLEAR_MEMVIEW(&__pyx_v_board, 1);
-  __PYX_XCLEAR_MEMVIEW(&__pyx_v_snake_head, 1);
-  __Pyx_AddTraceback("cvision.get_vision_lines_snake_head_1_ahead", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_apple_return_type), (&PyUnicode_Type), 1, "apple_return_type", 1))) __PYX_ERR(0, 145, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_segment_return_type), (&PyUnicode_Type), 1, "segment_return_type", 1))) __PYX_ERR(0, 145, __pyx_L1_error)
-  __pyx_r = __pyx_pf_7cvision_4get_vision_lines_snake_head_1_ahead(__pyx_self, __pyx_v_board, __pyx_v_snake_head, __pyx_v_vision_direction_count, __pyx_v_apple_return_type, __pyx_v_segment_return_type);
-
-  /* function exit code */
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __PYX_XCLEAR_MEMVIEW(&__pyx_v_board, 1);
-  __PYX_XCLEAR_MEMVIEW(&__pyx_v_snake_head, 1);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_7cvision_4get_vision_lines_snake_head_1_ahead(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_snake_head, int __pyx_v_vision_direction_count, PyObject *__pyx_v_apple_return_type, PyObject *__pyx_v_segment_return_type) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("get_vision_lines_snake_head_1_ahead", 0);
-  __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_board.memview)) { __Pyx_RaiseUnboundLocalError("board"); __PYX_ERR(0, 145, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_snake_head.memview)) { __Pyx_RaiseUnboundLocalError("snake_head"); __PYX_ERR(0, 145, __pyx_L1_error) }
-  __pyx_t_1 = __pyx_f_7cvision_get_vision_lines_snake_head_1_ahead(__pyx_v_board, __pyx_v_snake_head, __pyx_v_vision_direction_count, __pyx_v_apple_return_type, __pyx_v_segment_return_type, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cvision.get_vision_lines_snake_head_1_ahead", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cvision.pyx":237
- *     return vision_lines
+/* "cvision.pyx":269
+ * #     return vision_lines
  * 
  * cpdef update_board_from_snake(int[:, :] board,int[:,:]body):             # <<<<<<<<<<<<<<
  *     cdef int x, y
  *     cdef int width = board.shape[0]
  */
 
-static PyObject *__pyx_pw_7cvision_7update_board_from_snake(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_7cvision_5update_board_from_snake(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -20679,7 +19871,7 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("update_board_from_snake", 0);
 
-  /* "cvision.pyx":239
+  /* "cvision.pyx":271
  * cpdef update_board_from_snake(int[:, :] board,int[:,:]body):
  *     cdef int x, y
  *     cdef int width = board.shape[0]             # <<<<<<<<<<<<<<
@@ -20688,7 +19880,7 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
  */
   __pyx_v_width = (__pyx_v_board.shape[0]);
 
-  /* "cvision.pyx":240
+  /* "cvision.pyx":272
  *     cdef int x, y
  *     cdef int width = board.shape[0]
  *     cdef int height = board.shape[1]             # <<<<<<<<<<<<<<
@@ -20697,7 +19889,7 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
  */
   __pyx_v_height = (__pyx_v_board.shape[1]);
 
-  /* "cvision.pyx":241
+  /* "cvision.pyx":273
  *     cdef int width = board.shape[0]
  *     cdef int height = board.shape[1]
  *     for x in range(width):             # <<<<<<<<<<<<<<
@@ -20709,7 +19901,7 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_x = __pyx_t_3;
 
-    /* "cvision.pyx":242
+    /* "cvision.pyx":274
  *     cdef int height = board.shape[1]
  *     for x in range(width):
  *         for y in range(height):             # <<<<<<<<<<<<<<
@@ -20721,7 +19913,7 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
     for (__pyx_t_6 = 0; __pyx_t_6 < __pyx_t_5; __pyx_t_6+=1) {
       __pyx_v_y = __pyx_t_6;
 
-      /* "cvision.pyx":243
+      /* "cvision.pyx":275
  *     for x in range(width):
  *         for y in range(height):
  *             board_val = board[x,y]             # <<<<<<<<<<<<<<
@@ -20732,7 +19924,7 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
       __pyx_t_8 = __pyx_v_y;
       __pyx_v_board_val = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_board.data + __pyx_t_7 * __pyx_v_board.strides[0]) ) + __pyx_t_8 * __pyx_v_board.strides[1]) )));
 
-      /* "cvision.pyx":244
+      /* "cvision.pyx":276
  *         for y in range(height):
  *             board_val = board[x,y]
  *             if board_val == 1:             # <<<<<<<<<<<<<<
@@ -20742,7 +19934,7 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
       __pyx_t_9 = (__pyx_v_board_val == 1);
       if (__pyx_t_9) {
 
-        /* "cvision.pyx":245
+        /* "cvision.pyx":277
  *             board_val = board[x,y]
  *             if board_val == 1:
  *                 board[x,y] = 0             # <<<<<<<<<<<<<<
@@ -20753,7 +19945,7 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
         __pyx_t_7 = __pyx_v_y;
         *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_board.data + __pyx_t_8 * __pyx_v_board.strides[0]) ) + __pyx_t_7 * __pyx_v_board.strides[1]) )) = 0;
 
-        /* "cvision.pyx":244
+        /* "cvision.pyx":276
  *         for y in range(height):
  *             board_val = board[x,y]
  *             if board_val == 1:             # <<<<<<<<<<<<<<
@@ -20762,7 +19954,7 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
  */
       }
 
-      /* "cvision.pyx":246
+      /* "cvision.pyx":278
  *             if board_val == 1:
  *                 board[x,y] = 0
  *             if board_val == -2:             # <<<<<<<<<<<<<<
@@ -20772,7 +19964,7 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
       __pyx_t_9 = (__pyx_v_board_val == -2L);
       if (__pyx_t_9) {
 
-        /* "cvision.pyx":247
+        /* "cvision.pyx":279
  *                 board[x,y] = 0
  *             if board_val == -2:
  *                 board[x, y] = 0             # <<<<<<<<<<<<<<
@@ -20783,7 +19975,7 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
         __pyx_t_8 = __pyx_v_y;
         *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_board.data + __pyx_t_7 * __pyx_v_board.strides[0]) ) + __pyx_t_8 * __pyx_v_board.strides[1]) )) = 0;
 
-        /* "cvision.pyx":246
+        /* "cvision.pyx":278
  *             if board_val == 1:
  *                 board[x,y] = 0
  *             if board_val == -2:             # <<<<<<<<<<<<<<
@@ -20794,7 +19986,7 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
     }
   }
 
-  /* "cvision.pyx":249
+  /* "cvision.pyx":281
  *                 board[x, y] = 0
  * 
  *     board[body[0][0],body[0][1]] = 1             # <<<<<<<<<<<<<<
@@ -20809,7 +20001,7 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
   __pyx_t_13 = (*((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_body.data + __pyx_t_10 * __pyx_v_body.strides[0]) ) + __pyx_t_11 * __pyx_v_body.strides[1]) )));
   *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_board.data + __pyx_t_12 * __pyx_v_board.strides[0]) ) + __pyx_t_13 * __pyx_v_board.strides[1]) )) = 1;
 
-  /* "cvision.pyx":250
+  /* "cvision.pyx":282
  * 
  *     board[body[0][0],body[0][1]] = 1
  *     for i in range(1,len(body)):             # <<<<<<<<<<<<<<
@@ -20821,7 +20013,7 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
   for (__pyx_t_16 = 1; __pyx_t_16 < __pyx_t_15; __pyx_t_16+=1) {
     __pyx_v_i = __pyx_t_16;
 
-    /* "cvision.pyx":251
+    /* "cvision.pyx":283
  *     board[body[0][0],body[0][1]] = 1
  *     for i in range(1,len(body)):
  *         board[body[i][0],body[i][1]] = -2             # <<<<<<<<<<<<<<
@@ -20837,20 +20029,20 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
     *((int *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_board.data + __pyx_t_13 * __pyx_v_board.strides[0]) ) + __pyx_t_12 * __pyx_v_board.strides[1]) )) = -2;
   }
 
-  /* "cvision.pyx":253
+  /* "cvision.pyx":285
  *         board[body[i][0],body[i][1]] = -2
  * 
  *     return board             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_17 = __pyx_memoryview_fromslice(__pyx_v_board, 2, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 253, __pyx_L1_error)
+  __pyx_t_17 = __pyx_memoryview_fromslice(__pyx_v_board, 2, (PyObject *(*)(char *)) __pyx_memview_get_int, (int (*)(char *, PyObject *)) __pyx_memview_set_int, 0);; if (unlikely(!__pyx_t_17)) __PYX_ERR(0, 285, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_17);
   __pyx_r = __pyx_t_17;
   __pyx_t_17 = 0;
   goto __pyx_L0;
 
-  /* "cvision.pyx":237
- *     return vision_lines
+  /* "cvision.pyx":269
+ * #     return vision_lines
  * 
  * cpdef update_board_from_snake(int[:, :] board,int[:,:]body):             # <<<<<<<<<<<<<<
  *     cdef int x, y
@@ -20869,15 +20061,15 @@ static PyObject *__pyx_f_7cvision_update_board_from_snake(__Pyx_memviewslice __p
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_7cvision_7update_board_from_snake(PyObject *__pyx_self, 
+static PyObject *__pyx_pw_7cvision_5update_board_from_snake(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
 PyObject *__pyx_args, PyObject *__pyx_kwds
 #endif
 ); /*proto*/
-static PyMethodDef __pyx_mdef_7cvision_7update_board_from_snake = {"update_board_from_snake", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cvision_7update_board_from_snake, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_7cvision_7update_board_from_snake(PyObject *__pyx_self, 
+static PyMethodDef __pyx_mdef_7cvision_5update_board_from_snake = {"update_board_from_snake", (PyCFunction)(void*)(__Pyx_PyCFunction_FastCallWithKeywords)__pyx_pw_7cvision_5update_board_from_snake, __Pyx_METH_FASTCALL|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_7cvision_5update_board_from_snake(PyObject *__pyx_self, 
 #if CYTHON_METH_FASTCALL
 PyObject *const *__pyx_args, Py_ssize_t __pyx_nargs, PyObject *__pyx_kwds
 #else
@@ -20913,19 +20105,19 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       switch (__pyx_nargs) {
         case  0:
         if (likely((values[0] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_board)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 237, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 269, __pyx_L3_error)
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
         if (likely((values[1] = __Pyx_GetKwValue_FASTCALL(__pyx_kwds, __pyx_kwvalues, __pyx_n_s_body)) != 0)) kw_args--;
-        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 237, __pyx_L3_error)
+        else if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 269, __pyx_L3_error)
         else {
-          __Pyx_RaiseArgtupleInvalid("update_board_from_snake", 1, 2, 2, 1); __PYX_ERR(0, 237, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("update_board_from_snake", 1, 2, 2, 1); __PYX_ERR(0, 269, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         const Py_ssize_t kwd_pos_args = __pyx_nargs;
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "update_board_from_snake") < 0)) __PYX_ERR(0, 237, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values + 0, kwd_pos_args, "update_board_from_snake") < 0)) __PYX_ERR(0, 269, __pyx_L3_error)
       }
     } else if (unlikely(__pyx_nargs != 2)) {
       goto __pyx_L5_argtuple_error;
@@ -20933,12 +20125,12 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
       values[0] = __Pyx_Arg_FASTCALL(__pyx_args, 0);
       values[1] = __Pyx_Arg_FASTCALL(__pyx_args, 1);
     }
-    __pyx_v_board = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_board.memview)) __PYX_ERR(0, 237, __pyx_L3_error)
-    __pyx_v_body = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_body.memview)) __PYX_ERR(0, 237, __pyx_L3_error)
+    __pyx_v_board = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_board.memview)) __PYX_ERR(0, 269, __pyx_L3_error)
+    __pyx_v_body = __Pyx_PyObject_to_MemoryviewSlice_dsds_int(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_body.memview)) __PYX_ERR(0, 269, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("update_board_from_snake", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 237, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("update_board_from_snake", 1, 2, 2, __pyx_nargs); __PYX_ERR(0, 269, __pyx_L3_error)
   __pyx_L3_error:;
   __PYX_XCLEAR_MEMVIEW(&__pyx_v_board, 1);
   __PYX_XCLEAR_MEMVIEW(&__pyx_v_body, 1);
@@ -20946,7 +20138,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_7cvision_6update_board_from_snake(__pyx_self, __pyx_v_board, __pyx_v_body);
+  __pyx_r = __pyx_pf_7cvision_4update_board_from_snake(__pyx_self, __pyx_v_board, __pyx_v_body);
 
   /* function exit code */
   __PYX_XCLEAR_MEMVIEW(&__pyx_v_board, 1);
@@ -20955,7 +20147,7 @@ PyObject *__pyx_args, PyObject *__pyx_kwds
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_7cvision_6update_board_from_snake(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_body) {
+static PyObject *__pyx_pf_7cvision_4update_board_from_snake(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_board, __Pyx_memviewslice __pyx_v_body) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -20964,9 +20156,9 @@ static PyObject *__pyx_pf_7cvision_6update_board_from_snake(CYTHON_UNUSED PyObje
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("update_board_from_snake", 0);
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_board.memview)) { __Pyx_RaiseUnboundLocalError("board"); __PYX_ERR(0, 237, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_body.memview)) { __Pyx_RaiseUnboundLocalError("body"); __PYX_ERR(0, 237, __pyx_L1_error) }
-  __pyx_t_1 = __pyx_f_7cvision_update_board_from_snake(__pyx_v_board, __pyx_v_body, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 237, __pyx_L1_error)
+  if (unlikely(!__pyx_v_board.memview)) { __Pyx_RaiseUnboundLocalError("board"); __PYX_ERR(0, 269, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_body.memview)) { __Pyx_RaiseUnboundLocalError("body"); __PYX_ERR(0, 269, __pyx_L1_error) }
+  __pyx_t_1 = __pyx_f_7cvision_update_board_from_snake(__pyx_v_board, __pyx_v_body, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 269, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -22182,7 +21374,7 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_s_VisionLine___reduce_cython, __pyx_k_VisionLine___reduce_cython, sizeof(__pyx_k_VisionLine___reduce_cython), 0, 0, 1, 1},
     {&__pyx_n_s_VisionLine___setstate_cython, __pyx_k_VisionLine___setstate_cython, sizeof(__pyx_k_VisionLine___setstate_cython), 0, 0, 1, 1},
     {&__pyx_kp_u__3, __pyx_k__3, sizeof(__pyx_k__3), 0, 1, 0, 0},
-    {&__pyx_n_s__33, __pyx_k__33, sizeof(__pyx_k__33), 0, 0, 1, 1},
+    {&__pyx_n_s__32, __pyx_k__32, sizeof(__pyx_k__32), 0, 0, 1, 1},
     {&__pyx_kp_u__4, __pyx_k__4, sizeof(__pyx_k__4), 0, 1, 0, 0},
     {&__pyx_n_s__5, __pyx_k__5, sizeof(__pyx_k__5), 0, 0, 1, 1},
     {&__pyx_kp_u__8, __pyx_k__8, sizeof(__pyx_k__8), 0, 1, 0, 0},
@@ -22224,8 +21416,7 @@ static int __Pyx_CreateStringTabAndInitStrings(void) {
     {&__pyx_n_u_fortran, __pyx_k_fortran, sizeof(__pyx_k_fortran), 0, 1, 0, 1},
     {&__pyx_kp_u_gc, __pyx_k_gc, sizeof(__pyx_k_gc), 0, 1, 0, 0},
     {&__pyx_n_s_get_all_random_blocks, __pyx_k_get_all_random_blocks, sizeof(__pyx_k_get_all_random_blocks), 0, 0, 1, 1},
-    {&__pyx_n_s_get_vision_lines_snake_head, __pyx_k_get_vision_lines_snake_head, sizeof(__pyx_k_get_vision_lines_snake_head), 0, 0, 1, 1},
-    {&__pyx_n_s_get_vision_lines_snake_head_1_ah, __pyx_k_get_vision_lines_snake_head_1_ah, sizeof(__pyx_k_get_vision_lines_snake_head_1_ah), 0, 0, 1, 1},
+    {&__pyx_n_s_get_vision_lines, __pyx_k_get_vision_lines, sizeof(__pyx_k_get_vision_lines), 0, 0, 1, 1},
     {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
     {&__pyx_kp_u_got, __pyx_k_got, sizeof(__pyx_k_got), 0, 1, 0, 0},
     {&__pyx_kp_u_got_differing_extents_in_dimensi, __pyx_k_got_differing_extents_in_dimensi, sizeof(__pyx_k_got_differing_extents_in_dimensi), 0, 1, 0, 0},
@@ -22514,35 +21705,26 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   /* "cvision.pyx":53
  *         return manhattan_distance(a,b)
  * 
- * cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):             # <<<<<<<<<<<<<<
- *     cdef int directions[8][2]
- *     directions[0][0] = -1
+ * cpdef get_vision_lines(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):             # <<<<<<<<<<<<<<
+ *     cdef int directions[16][2]
+ *     # UP
  */
   __pyx_tuple__28 = PyTuple_Pack(5, __pyx_n_s_board, __pyx_n_s_snake_head, __pyx_n_s_vision_direction_count, __pyx_n_s_apple_return_type, __pyx_n_s_segment_return_type); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__28);
   __Pyx_GIVEREF(__pyx_tuple__28);
-  __pyx_codeobj__29 = (PyObject*)__Pyx_PyCode_New(5, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__28, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cvision_pyx, __pyx_n_s_get_vision_lines_snake_head, 53, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__29)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __pyx_codeobj__29 = (PyObject*)__Pyx_PyCode_New(5, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__28, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cvision_pyx, __pyx_n_s_get_vision_lines, 53, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__29)) __PYX_ERR(0, 53, __pyx_L1_error)
 
-  /* "cvision.pyx":145
- *     return vision_lines
- * 
- * cpdef get_vision_lines_snake_head_1_ahead(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):             # <<<<<<<<<<<<<<
- *     cdef int directions[8][2]
- *     directions[0][0] = -1
- */
-  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(5, 0, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__28, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cvision_pyx, __pyx_n_s_get_vision_lines_snake_head_1_ah, 145, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(0, 145, __pyx_L1_error)
-
-  /* "cvision.pyx":237
- *     return vision_lines
+  /* "cvision.pyx":269
+ * #     return vision_lines
  * 
  * cpdef update_board_from_snake(int[:, :] board,int[:,:]body):             # <<<<<<<<<<<<<<
  *     cdef int x, y
  *     cdef int width = board.shape[0]
  */
-  __pyx_tuple__31 = PyTuple_Pack(2, __pyx_n_s_board, __pyx_n_s_body); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(0, 237, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__31);
-  __Pyx_GIVEREF(__pyx_tuple__31);
-  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cvision_pyx, __pyx_n_s_update_board_from_snake, 237, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(0, 237, __pyx_L1_error)
+  __pyx_tuple__30 = PyTuple_Pack(2, __pyx_n_s_board, __pyx_n_s_body); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(0, 269, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__30);
+  __Pyx_GIVEREF(__pyx_tuple__30);
+  __pyx_codeobj__31 = (PyObject*)__Pyx_PyCode_New(2, 0, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__30, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_cvision_pyx, __pyx_n_s_update_board_from_snake, 269, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__31)) __PYX_ERR(0, 269, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -23643,37 +22825,25 @@ if (!__Pyx_RefNanny) {
   /* "cvision.pyx":53
  *         return manhattan_distance(a,b)
  * 
- * cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):             # <<<<<<<<<<<<<<
- *     cdef int directions[8][2]
- *     directions[0][0] = -1
+ * cpdef get_vision_lines(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):             # <<<<<<<<<<<<<<
+ *     cdef int directions[16][2]
+ *     # UP
  */
-  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_7cvision_3get_vision_lines_snake_head, 0, __pyx_n_s_get_vision_lines_snake_head, NULL, __pyx_n_s_cvision, __pyx_d, ((PyObject *)__pyx_codeobj__29)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_7cvision_3get_vision_lines, 0, __pyx_n_s_get_vision_lines, NULL, __pyx_n_s_cvision, __pyx_d, ((PyObject *)__pyx_codeobj__29)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_vision_lines_snake_head, __pyx_t_7) < 0) __PYX_ERR(0, 53, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_vision_lines, __pyx_t_7) < 0) __PYX_ERR(0, 53, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-  /* "cvision.pyx":145
- *     return vision_lines
- * 
- * cpdef get_vision_lines_snake_head_1_ahead(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):             # <<<<<<<<<<<<<<
- *     cdef int directions[8][2]
- *     directions[0][0] = -1
- */
-  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_7cvision_5get_vision_lines_snake_head_1_ahead, 0, __pyx_n_s_get_vision_lines_snake_head_1_ah, NULL, __pyx_n_s_cvision, __pyx_d, ((PyObject *)__pyx_codeobj__30)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 145, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_vision_lines_snake_head_1_ah, __pyx_t_7) < 0) __PYX_ERR(0, 145, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-
-  /* "cvision.pyx":237
- *     return vision_lines
+  /* "cvision.pyx":269
+ * #     return vision_lines
  * 
  * cpdef update_board_from_snake(int[:, :] board,int[:,:]body):             # <<<<<<<<<<<<<<
  *     cdef int x, y
  *     cdef int width = board.shape[0]
  */
-  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_7cvision_7update_board_from_snake, 0, __pyx_n_s_update_board_from_snake, NULL, __pyx_n_s_cvision, __pyx_d, ((PyObject *)__pyx_codeobj__32)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 237, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_CyFunction_New(&__pyx_mdef_7cvision_5update_board_from_snake, 0, __pyx_n_s_update_board_from_snake, NULL, __pyx_n_s_cvision, __pyx_d, ((PyObject *)__pyx_codeobj__31)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 269, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_update_board_from_snake, __pyx_t_7) < 0) __PYX_ERR(0, 237, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_update_board_from_snake, __pyx_t_7) < 0) __PYX_ERR(0, 269, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
   /* "cvision.pyx":1
@@ -29676,7 +28846,7 @@ __Pyx_PyType_GetName(PyTypeObject* tp)
                                                __pyx_n_s_name_2);
     if (unlikely(name == NULL) || unlikely(!PyUnicode_Check(name))) {
         PyErr_Clear();
-        Py_XSETREF(name, __Pyx_NewRef(__pyx_n_s__33));
+        Py_XSETREF(name, __Pyx_NewRef(__pyx_n_s__32));
     }
     return name;
 }

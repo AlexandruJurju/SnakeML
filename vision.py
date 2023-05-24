@@ -9,6 +9,7 @@ from game_config import *
 def manhattan_distance(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
+
 class VisionLine:
     def __init__(self, wall_coord, wall_distance: float, apple_coord, apple_distance: float, segment_coord, segment_distance: float, direction: Direction):
         self.wall_coord = wall_coord
@@ -37,6 +38,10 @@ def get_vision_lines(board: np.ndarray, snake_head, vision_direction_count: int,
     directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
     if vision_direction_count == 8:
         directions += [Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
+
+    if vision_direction_count == 16:
+        directions += [Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
+        directions += [Direction.Q11, Direction.Q12, Direction.Q21, Direction.Q22, Direction.Q31, Direction.Q32, Direction.Q41, Direction.Q42]
 
     vision_lines = []
     for direction in directions:

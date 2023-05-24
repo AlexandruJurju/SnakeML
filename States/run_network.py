@@ -97,7 +97,7 @@ class RunTrained(BaseState):
 
     def run_network(self, surface):
         snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
-        vision_lines = cvision.get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
+        vision_lines = cvision.get_vision_lines(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
         nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
         neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
 

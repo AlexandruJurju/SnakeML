@@ -5,7 +5,7 @@ from pygame_gui.elements import UILabel, UIButton
 import genetic_operators
 import neural_network
 from States.base_state import BaseState
-from cvision import get_vision_lines_snake_head
+from cvision import get_vision_lines
 from file_operations import save_neural_network_to_json, write_genetic_training
 from game_config import GameSettings
 from game_config import State
@@ -145,7 +145,7 @@ class GeneticTrainNetwork(BaseState):
 
     def run_genetic(self, surface):
         snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
-        vision_lines = get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
+        vision_lines = get_vision_lines(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
 
         nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
         neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
@@ -155,7 +155,7 @@ class GeneticTrainNetwork(BaseState):
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             old_vision_lines = cvision_to_old_vision(vision_lines)
 
-            # self.print_all_vision_lines(old_vision_lines)
+            self.print_all_vision_lines(old_vision_lines)
 
             if self.draw_vision_lines:
                 draw_vision_lines(surface, self.model.snake.body[0], old_vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
@@ -210,8 +210,7 @@ class GeneticTrainNetwork(BaseState):
             "initial_snake_size": self.initial_snake_size,
             "input_direction_count": self.input_direction_count,
             "apple_return_type": self.apple_return_type,
-            "segment_return_type": self.segment_return_type,
-            "distance_function": self.data_received["distance_function"]
+            "segment_return_type": self.segment_return_type
         }
 
         self.networks.append([data_to_save, best_individual.brain, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + name])

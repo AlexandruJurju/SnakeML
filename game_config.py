@@ -90,11 +90,20 @@ class Direction(Enum):
     Q2 = [-1, -1]
     Q3 = [1, -1]
     Q4 = [1, 1]
+    Q11 = [-1, 2]
+    Q12 = [-2, 1]
+    Q21 = [-2, 1]
+    Q22 = [-1, -2]
+    Q31 = [1, -2]
+    Q32 = [2, -1]
+    Q41 = [2, 1]
+    Q42 = [1, 2]
 
 
 DYNAMIC_DIRECTIONS = ["STRAIGHT", "LEFT", "RIGHT"]
 MAIN_DIRECTIONS = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
-ALL_DIRECTIONS = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT, Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
+ALL_DIRECTIONS = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT, Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4, Direction.Q11, Direction.Q12, Direction.Q21, Direction.Q22, Direction.Q31, Direction.Q32, Direction.Q41,
+                  Direction.Q42]
 
 
 class GameSettings:
@@ -106,7 +115,7 @@ class GameSettings:
     MUTATION_CHANCE = 0.05
     POPULATION_COUNT = 1000
 
-    AVAILABLE_INPUT_DIRECTIONS = ["4", "8"]
+    AVAILABLE_INPUT_DIRECTIONS = ["4", "8", "16"]
     AVAILABLE_VISION_LINES_RETURN_TYPE = ["boolean", "distance"]
 
     AVAILABLE_ACTIVATION_FUNCTIONS = ["sigmoid", "tanh", "relu"]
