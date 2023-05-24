@@ -33,9 +33,8 @@ def find_snake_head_poz(board: np.ndarray) -> np.ndarray:
         return np.array([])
 
 
-def get_vision_lines_snake_head(board: np.ndarray, snake_head, vision_direction_count: int, apple_return_type: str, segment_return_type: str) -> List[VisionLine]:
+def get_vision_lines(board: np.ndarray, snake_head, vision_direction_count: int, apple_return_type: str, segment_return_type: str) -> List[VisionLine]:
     directions = [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT]
-    distance_function = manhattan_distance
     if vision_direction_count == 8:
         directions += [Direction.Q1, Direction.Q2, Direction.Q3, Direction.Q4]
 
@@ -56,18 +55,18 @@ def get_vision_lines_snake_head(board: np.ndarray, snake_head, vision_direction_
             current_block = [current_block[0] + direction.value[0], current_block[1] + direction.value[1]]
 
         wall_coord = current_block
-        wall_distance = distance_function(snake_head, wall_coord)
+        wall_distance = manhattan_distance(snake_head, wall_coord)
         wall_output = 1 / wall_distance
 
         if apple_return_type == "boolean":
             apple_output = 1.0 if apple_coord is not None else 0.0
         else:
-            apple_output = 1.0 / distance_function(snake_head, apple_coord) if apple_coord is not None else 0.0
+            apple_output = 1.0 / manhattan_distance(snake_head, apple_coord) if apple_coord is not None else 0.0
 
         if segment_return_type == "boolean":
             segment_output = 1.0 if segment_coord is not None else 0.0
         else:
-            segment_output = 1.0 / distance_function(snake_head, segment_coord) if segment_coord is not None else 0.0
+            segment_output = 1.0 / manhattan_distance(snake_head, segment_coord) if segment_coord is not None else 0.0
 
         vision_lines.append(VisionLine(wall_coord, wall_output, apple_coord, apple_output, segment_coord, segment_output, direction))
     return vision_lines

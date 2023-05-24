@@ -58,7 +58,7 @@ class GeneticTrainNetwork(BaseState):
         self.rect_draw_network = None
 
         self.button_draw_vision_lines = None
-        self.draw_vision_lines = True
+        self.draw_vision_lines = False
         self.rect_draw_vision_lines = None
 
         self.button_stop_drawing = None
@@ -138,6 +138,11 @@ class GeneticTrainNetwork(BaseState):
     def end(self):
         self.ui_manager.clear_and_reset()
 
+    def print_all_vision_lines(self, lines: List[vision.VisionLine]):
+        for line in lines:
+            print(f"{line.direction:<30} Wall_D: {line.wall_distance:<30} Apple_D: {line.apple_distance:<30} Segment_D: {line.segment_distance:<30}")
+        print()
+
     def run_genetic(self, surface):
         snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
         vision_lines = get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
@@ -149,6 +154,8 @@ class GeneticTrainNetwork(BaseState):
         if ViewSettings.DRAW:
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             old_vision_lines = cvision_to_old_vision(vision_lines)
+
+            # self.print_all_vision_lines(old_vision_lines)
 
             if self.draw_vision_lines:
                 draw_vision_lines(surface, self.model.snake.body[0], old_vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])

@@ -46,6 +46,7 @@ class Model:
 
         self.make_board()
         self.create_random_snake()
+        # self.place_snake_at_given_position([[5, 6], [4, 6], [4, 5]], Direction.DOWN)
         self.update_board_from_snake()
         self.place_new_apple()
 
