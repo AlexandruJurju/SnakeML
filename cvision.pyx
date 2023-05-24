@@ -144,20 +144,28 @@ cpdef get_vision_lines_snake_head(int[:, :] board, int[:] snake_head,int vision_
 
 cpdef get_vision_lines_snake_head_1_ahead(int[:, :] board, int[:] snake_head,int vision_direction_count, str apple_return_type, str segment_return_type):
     cdef int directions[8][2]
+    # UP
     directions[0][0] = -1
     directions[0][1] = 0
+    # DOWN
     directions[1][0] = 1
     directions[1][1] = 0
+    # LEFT
     directions[2][0] = 0
     directions[2][1] = -1
+    # RIGHT
     directions[3][0] = 0
     directions[3][1] = 1
+    # Q1
     directions[4][0] = -1
     directions[4][1] = 1
+    # Q2
     directions[5][0] = -1
     directions[5][1] = -1
+    # Q3
     directions[6][0] = 1
     directions[6][1] = -1
+    # Q4
     directions[7][0] = 1
     directions[7][1] = 1
 
