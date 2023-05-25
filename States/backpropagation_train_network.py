@@ -137,11 +137,12 @@ class BackpropagationTrainNetwork(BaseState):
                 target_output[3] = 1.0
                 direction_to_move = Direction.RIGHT
 
-            example = TrainingExample(self.model.snake.direction, old_lines, target_output)
-            self.training_examples.append(example)
-            is_alive = self.model.move(direction_to_move)
-            if not is_alive:
-                self.model = Model(self.initial_board_size, self.initial_snake_size, self.model.snake.brain)
+            if input_string != "B":
+                example = TrainingExample(self.model.snake.direction, old_lines, target_output)
+                self.training_examples.append(example)
+                is_alive = self.model.move(direction_to_move)
+                if not is_alive:
+                    self.model = Model(self.initial_board_size, self.initial_snake_size, self.model.snake.brain)
 
     def wait_for_key(self) -> str:
         while True:
@@ -192,7 +193,7 @@ class BackpropagationTrainNetwork(BaseState):
                         self.set_target_state_name(State.MAIN_MENU)
                         self.trigger_transition()
                         ViewSettings.DRAW = True
-                        break
+                        return "B"
 
     def run(self, surface, time_delta):
         if ViewSettings.DRAW:
