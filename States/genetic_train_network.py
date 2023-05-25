@@ -183,24 +183,18 @@ class GeneticTrainNetwork(BaseState):
         # best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken))
         best_individual = max(self.parent_list, key=lambda individual: (individual.score, individual.score / individual.steps_taken if individual.steps_taken != 0 else 0))
 
-        counts = {'won': 0, 'apple_count': 0, 'too_old': 0, 'steps_taken': 0}
+        counts = {'won': 0, "avg_score": 0, "avg_fitness": 0, "avg_ratio": 0}
         won_ratios = []
         for individual in self.parent_list:
-            # counts['apple_count'] += individual.score
-            # counts['steps_taken'] += individual.steps_taken
+            counts["avg_score"] += individual.score
+            counts["avg_fitness"] += individual.fitness
+            counts["avg_ratio"] += individual.score / individual.steps_taken if individual.steps_taken > 0 else 0
+
             if individual.won:
                 counts['won'] += 1
                 won_ratios.append(individual.score / individual.steps_taken)
-            # if individual.TTL == 0:
-            #     counts['too_old'] += 1
 
         won_ratios.sort()
-        won_count = counts['won']
-        # apple_count = counts['apple_count']
-        # too_old = counts['too_old']
-        # steps_taken = counts['steps_taken']
-        # average_score = apple_count / len(self.parent_list)
-        # average_fitness = total_fitness / self.population_count
 
         name = "Generation" + str(self.generation)
 
@@ -216,15 +210,14 @@ class GeneticTrainNetwork(BaseState):
         self.networks.append([data_to_save, best_individual.brain, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + name])
 
         training_data = (f"GEN: {self.generation + 1:<5} "
-                         # f"AVG FITNESS: {average_fitness:<25}\t"
-                         # f"AVG SCORE: {average_score:<10}\t"
-                         # f"AVG RATIO: {(apple_count / len(self.parent_list)) / (steps_taken / len(self.parent_list)):<25}\t"
-                         f"BEST FITNESS: {best_individual.fitness:<25}\t"
+                         f"AVG FITNESS: {counts['avg_fitness'] / self.population_count :<22}\t"
+                         f"AVG SCORE: {counts['avg_score'] / self.population_count :<22}\t"
+                         f"AVG RATIO: {counts['avg_ratio'] / self.population_count :<22}\t"
+                         f"BEST FITNESS: {best_individual.fitness:<22}\t"
                          f"BEST SCORE: {best_individual.score:<5}\t"
-                         f"BEST RATIO: {best_individual.score / best_individual.steps_taken if best_individual.steps_taken > 0 else 0:<25}"
-                         # f"TOO_OLD: {too_old:<8}\t"
-                         f"WON: {won_count:<5}\t"
-                         f"WON AVG RATIO: {np.mean(won_ratios) if len(won_ratios) > 0 else 0 :<25}\t"
+                         f"BEST RATIO: {best_individual.score / best_individual.steps_taken if best_individual.steps_taken > 0 else 0:<22}"
+                         f"WON: {counts['won']:<5}\t"
+                         f"WON AVG RATIO: {np.mean(won_ratios) if len(won_ratios) > 0 else 0 :<22}\t"
                          f"WON MEDIAN RATIO: {np.median(won_ratios) if len(won_ratios) > 0 else 0}"
                          )
         print(training_data)
