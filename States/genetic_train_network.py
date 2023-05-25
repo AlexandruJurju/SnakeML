@@ -210,8 +210,7 @@ class GeneticTrainNetwork(BaseState):
             "initial_snake_size": self.initial_snake_size,
             "input_direction_count": self.input_direction_count,
             "apple_return_type": self.apple_return_type,
-            "segment_return_type": self.segment_return_type,
-            "distance_function": self.data_received["distance_function"]
+            "segment_return_type": self.segment_return_type
         }
 
         self.networks.append([data_to_save, best_individual.brain, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + name])

@@ -1,6 +1,5 @@
 import copy
 import random
-import time
 from typing import Tuple
 
 from model import Snake
@@ -247,6 +246,16 @@ def gaussian_mutation(matrix: np.ndarray, mutation_rate: float) -> np.ndarray:
 
 def point_mutation():
     pass
+
+
+def uniform_mutation(matrix: np.ndarray, mutation_rate: float) -> np.ndarray:
+    after_mutation = matrix
+    mutation_array = np.random.random(after_mutation.shape) < mutation_rate
+
+    mutation_values = np.random.uniform(-1, 1, size=after_mutation.shape)
+    after_mutation[mutation_array] = mutation_values[mutation_array]
+
+    return after_mutation
 
 
 def full_mutation(individual: NeuralNetwork, mutation_rate: float, operator) -> None:
