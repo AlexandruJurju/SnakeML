@@ -1,3 +1,4 @@
+import numpy as np
 import pygame_gui
 from pygame_gui import UIManager
 from pygame_gui.elements import UILabel, UIButton
@@ -155,7 +156,7 @@ class GeneticTrainNetwork(BaseState):
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             old_vision_lines = cvision_to_old_vision(vision_lines)
 
-            self.print_all_vision_lines(old_vision_lines)
+            # self.print_all_vision_lines(old_vision_lines)
 
             if self.draw_vision_lines:
                 draw_vision_lines(surface, self.model.snake.body[0], old_vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])

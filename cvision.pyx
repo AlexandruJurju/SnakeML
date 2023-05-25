@@ -2,6 +2,8 @@
 #cython: boundscheck=False
 #cython: wraparound=False
 #cython: cdivision=False
+from libc.stdio cimport printf
+
 
 cpdef get_all_random_blocks(int[:, :] board,int rows,int cols):
     cdef list empty = []
@@ -138,12 +140,18 @@ cpdef get_vision_lines(int[:, :] board, int[:] snake_head,int vision_direction_c
         y_offset = directions[i][1]
 
         # search starts at one block in the given direction otherwise head is also check in the loop
-        current_block.x = snake_head_pair.x + x_offset
-        current_block.y = snake_head_pair.y + y_offset
-        board_element = board[current_block.x, current_block.y]
+        current_block.x = snake_head_pair.x
+        current_block.y = snake_head_pair.y
 
         # loop the blocks in the given direction and store position and coordinates
-        while 0 <= current_block.x <= len(board) and 0<= current_block.y <= len(board):
+        while True:
+            current_block.x += x_offset
+            current_block.y += y_offset
+            if 0 <= current_block.x <= len(board)-1 and 0<= current_block.y <= len(board)-1:
+                board_element = board[current_block.x, current_block.y]
+            else:
+                break
+
             if board_element == APPLE and apple_found == False:
                 apple_coord = current_block
                 apple_found = True
@@ -157,9 +165,7 @@ cpdef get_vision_lines(int[:, :] board, int[:] snake_head,int vision_direction_c
                 wall_found = True
                 break
 
-            current_block.x += x_offset
-            current_block.y += y_offset
-            board_element = board[current_block.x, current_block.y]
+
 
         # for wall
         wall_output = 1.0 / distance(snake_head_pair,wall_coord,vision_direction_count) if wall_found else 0.0
