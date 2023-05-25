@@ -1,6 +1,9 @@
+import os
+
 import numpy as np
 import pygame
 import pygame_gui
+from matplotlib import pyplot as plt
 from pygame_gui import UIManager
 from pygame_gui.core.utility import create_resource_path
 from pygame_gui.elements import UILabel, UIButton, UITextEntryLine
@@ -60,6 +63,7 @@ class RunTrained(BaseState):
 
         self.x_steps = []
         self.y_ratio = []
+        self.y_steps = []
         self.x_score = []
 
         self.ratio_test = []
@@ -115,35 +119,36 @@ class RunTrained(BaseState):
         self.x_steps.append(self.model.snake.steps_taken)
         self.y_ratio.append(self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0)
         self.x_score.append(self.model.snake.score)
+        self.y_steps.append(self.model.snake.steps_to_apple)
 
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
             ratio = self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0
-            # print(np.asarray(self.model.board))
-            # print(self.model.snake.direction)
             if self.model.snake.score == 97:
                 self.ratio_test.append(ratio)
-                print(f"mean ratio {np.mean(self.ratio_test)}")
-            self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), self.model.snake.brain)
+                print(f"ratio {ratio}   mean {np.mean(self.ratio_test)}")
+            if self.model.snake.score == 97 and ratio > 0.55:
+                fig1 = plt.figure(figsize=(16, 9))
+                plt.plot(self.x_score, self.y_steps)
+                plt.xlabel("Scorul Sarpelui", fontsize=20)
+                plt.ylabel("Numarul de pasi pentru a manca un mar", fontsize=20)
+                plt.savefig(os.path.dirname(self.file_path) + "/" + "step_ratio.pdf")
+                plt.show()
+                #
+                # fig2 = plt.figure(figsize=(16, 9))
+                # plt.plot(self.x_score, self.y_ratio, "b")
+                # plt.xlabel("Score")
+                # plt.ylabel("Ratio")
+                # plt.savefig(os.path.dirname(self.file_path) + "/" + "score_ratio.pdf")
+                # plt.show()
 
-            # fig1 = plt.figure(figsize=(16, 9))
-            # plt.plot(self.x_steps, self.y_ratio, )
-            # plt.xlabel("Steps")
-            # plt.ylabel("Ratio")
-            # plt.savefig(os.path.dirname(self.file_path) + "/" + "step_ratio.pdf")
-            # plt.show()
-            #
-            # fig2 = plt.figure(figsize=(16, 9))
-            # plt.plot(self.x_score, self.y_ratio, "b")
-            # plt.xlabel("Score")
-            # plt.ylabel("Ratio")
-            # plt.savefig(os.path.dirname(self.file_path) + "/" + "score_ratio.pdf")
-            # plt.show()
+            self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), self.model.snake.brain)
 
             self.x_steps = []
             self.y_ratio = []
             self.x_score = []
+            self.y_steps = []
 
     def run(self, surface, time_delta):
         if ViewSettings.DRAW:
@@ -174,10 +179,8 @@ class RunTrained(BaseState):
 
                 if event.ui_element == self.button_run:
                     self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), self.network)
-                    # # TODO dynamic max distance
-                    # self.max_dist = 10
                     self.execute_network = True
-                    # ViewSettings.DRAW = False
+                    ViewSettings.DRAW = False
 
                 if event.ui_element == self.button_draw_network:
                     self.draw_network = not self.draw_network

@@ -13,6 +13,7 @@ class Snake:
         self.brain = neural_network
         self.score = 0
         self.fitness = 0
+        self.steps_to_apple = 0
 
         self.body: List = []
         self.TTL: int = GameSettings.SNAKE_MAX_TTL
@@ -134,6 +135,7 @@ class Model:
 
         # if snake eats an apple, the last segment isn't removed from the body list when moving
         if new_head_value == BoardConsts.APPLE:
+            self.snake.steps_to_apple = 0
             self.update_board_from_snake()
             self.snake.score = self.snake.score + 1
 
@@ -146,6 +148,7 @@ class Model:
 
         else:
             self.snake.body = self.snake.body[:-1]
+            self.snake.steps_to_apple += 1
             self.update_board_from_snake()
             self.snake.TTL = self.snake.TTL - 1
 
