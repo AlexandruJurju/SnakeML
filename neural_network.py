@@ -8,7 +8,7 @@ def relu(x):
 
 
 def relu_prime(x):
-    return np.where(x > 0, 1.0, 0.0)
+    return np.where(x <= 0, 0.0, 1.0)
 
 
 def sigmoid(x):
