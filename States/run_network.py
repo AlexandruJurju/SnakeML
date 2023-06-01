@@ -180,7 +180,7 @@ class RunTrained(BaseState):
                 if event.ui_element == self.button_run:
                     self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), self.network)
                     self.execute_network = True
-                    ViewSettings.DRAW = False
+                    # ViewSettings.DRAW = False
 
                 if event.ui_element == self.button_draw_network:
                     self.draw_network = not self.draw_network

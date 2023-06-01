@@ -198,9 +198,9 @@ class BackpropagationTrainNetwork(BaseState):
     def run(self, surface, time_delta):
         if ViewSettings.DRAW:
             surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
-        # file_path = "Backpropagation_Training/" + str(self.input_direction_count) + "_in_directions_" + str(self.data_received["output_layer_neurons"]) + "_out_directions.json"
+        # file_path = "Backpropagation_Training/" + self.data_received["file_name"] + ".json"
         # self.model.snake.brain.reinit_weights_and_biases()
-        # self.model = Model(self.initial_board_size, self.initial_snake_size, False, self.model.snake.brain)
+        # self.model = Model(self.initial_board_size, self.initial_snake_size, self.model.snake.brain)
         # read_training_data_and_train(self.model.snake.brain, file_path)
         #
         # data_to_save = {
