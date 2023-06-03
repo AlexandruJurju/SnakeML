@@ -1,7 +1,6 @@
 import os
 from typing import List
 
-import numpy as np
 import pygame
 from pygame_gui import UIManager
 
@@ -50,16 +49,17 @@ def print_all_vision_lines(lines: List[vision.VisionLine]):
 
 
 if __name__ == '__main__':
-    # net = NeuralNetwork()
-    # net.add_layer(Dense(14, 16))
-    # net.add_layer(Activation(relu, relu))
-    # net.add_layer(Dense(16, 4))
-    # net.add_layer(Activation(sigmoid, sigmoid))
-    #
-    # model = Model(10, 3, net)
+    net = NeuralNetwork()
+    net.add_layer(Dense(14, 16))
+    net.add_layer(Activation(relu, relu))
+    net.add_layer(Dense(16, 4))
+    net.add_layer(Activation(sigmoid, sigmoid))
+
+    model = Model(10, 3, net)
+    vision.put_distances(model.board, model.snake.body[0])
     # vision_lines = vision.get_vision_lines(model.board, model.snake.body[0], 4, apple_return_type="distance", segment_return_type="distance")
     #
     # np.set_printoptions(precision=4, suppress=True, linewidth=10000)
     # print(net.get_dense_layers()[0].weights)
 
-    main()
+    # main()

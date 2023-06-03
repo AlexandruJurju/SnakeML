@@ -9,6 +9,7 @@ from game_config import *
 def manhattan_distance(a, b):
     return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
+
 class VisionLine:
     def __init__(self, wall_coord, wall_distance: float, apple_coord, apple_distance: float, segment_coord, segment_distance: float, direction: Direction):
         self.wall_coord = wall_coord
@@ -142,3 +143,17 @@ def cvision_to_old_vision(old: List[cvision.VisionLine]):
         i += 1
 
     return lines
+
+
+def put_distances(board: np.ndarray, head):
+    head = [5, 5]
+    board = np.full((len(board), len(board)), np.nan)  # Initialize as float array
+    for i in range(len(board)):
+        for j in range(len(board)):
+            if [i, j] != head:
+                board[i, j] = 1.0 / manhattan_distance(head, [i, j])
+
+    board[head[0],head[1]] = 0
+
+    np.set_printoptions(precision=3)  # Set precision to 3 decimal places
+    print(np.asarray(board,dtype=float))
