@@ -158,6 +158,6 @@ class NeuralNetwork:
 
             # error /= len(x_train)
             epoch += 1
-            if epoch % 100:
+            if epoch % 100 == 0:
                 print(f"epoch = {epoch}, error = {error}")
         print(f"final error {error}  \n")
