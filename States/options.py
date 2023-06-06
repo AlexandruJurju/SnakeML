@@ -341,7 +341,7 @@ class Options(BaseState):
     def run(self, surface, time_delta):
         surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
 
-        self.neural_network_layers_entries["input"][0].set_text(str(int(self.dropdown_input_direction_count.selected_option) * 3 + 4))
+        self.neural_network_layers_entries["input"][0].set_text(str(int(self.dropdown_input_direction_count.selected_option) * 3 + 2))
         self.draw_options()
 
         for event in pygame.event.get():

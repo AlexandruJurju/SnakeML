@@ -104,40 +104,36 @@ def different(l1, l2):
 
 
 def get_parameters_in_nn_input_form_4d(vision_lines, current_direction: Direction) -> np.ndarray:
-    size = len(vision_lines) * 3 + 4
-    nn_input1 = [0] * size
-
-    nn_input1[:-4:3] = [line.wall_distance for line in vision_lines]
-    nn_input1[1:-4:3] = [line.apple_distance for line in vision_lines]
-    nn_input1[2:-4:3] = [line.segment_distance for line in vision_lines]
-
-    if current_direction == Direction.UP:
-        nn_input1[-4] = 1
-    if current_direction == Direction.DOWN:
-        nn_input1[-3] = 1
-    if current_direction == Direction.LEFT:
-        nn_input1[-2] = 1
-    if current_direction == Direction.RIGHT:
-        nn_input1[-1] = 1
-
-    # nn_input2 = []
-    # for line in vision_lines:
-    #     nn_input2.append(line.wall_distance)
-    #     nn_input2.append(line.apple_distance)
-    #     nn_input2.append(line.segment_distance)
+    # size = len(vision_lines) * 3 + 4
+    # nn_input1 = [0] * size
     #
-    # for direction in MAIN_DIRECTIONS:
-    #     if current_direction == direction:
-    #         nn_input2.append(1)
-    #     else:
-    #         nn_input2.append(0)
+    # nn_input1[:-4:3] = [line.wall_distance for line in vision_lines]
+    # nn_input1[1:-4:3] = [line.apple_distance for line in vision_lines]
+    # nn_input1[2:-4:3] = [line.segment_distance for line in vision_lines]
     #
-    # if different(nn_input1, nn_input2):
-    #     print(nn_input1)
-    #     print(nn_input2)
-    #     print("FK")
+    # if current_direction == Direction.UP:
+    #     nn_input1[-4] = 1
+    # if current_direction == Direction.DOWN:
+    #     nn_input1[-3] = 1
+    # if current_direction == Direction.LEFT:
+    #     nn_input1[-2] = 1
+    # if current_direction == Direction.RIGHT:
+    #     nn_input1[-1] = 1
 
-    return np.reshape(nn_input1, (len(nn_input1), 1))
+    nn_input2 = []
+    for line in vision_lines:
+        nn_input2.append(line.wall_distance)
+        nn_input2.append(line.apple_distance)
+        nn_input2.append(line.segment_distance)
+
+    for direction in MAIN_DIRECTIONS:
+        if current_direction == direction:
+            nn_input2.append(1)
+        else:
+            nn_input2.append(0)
+
+
+    return np.reshape(nn_input2, (len(nn_input2), 1))
 
     # nn_input = [value for line in vision_lines for value in (line.wall_distance, line.apple_distance, line.segment_distance)]
     #

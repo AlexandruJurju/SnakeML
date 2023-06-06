@@ -138,7 +138,7 @@ class BackpropagationTrainNetwork(BaseState):
                 direction_to_move = Direction.RIGHT
 
             if input_string != "B":
-                example = TrainingExample(self.model.snake.direction, old_lines, target_output)
+                example = TrainingExample(self.model.snake.past_direction, old_lines, target_output)
                 self.training_examples.append(example)
                 is_alive = self.model.move(direction_to_move)
                 if not is_alive:

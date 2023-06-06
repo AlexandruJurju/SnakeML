@@ -20,7 +20,7 @@ class Snake:
         self.MAX_TTL: int = max_ttl
         self.steps_taken: int = 0
         self.won: bool = False
-        self.direction: Direction = None
+        self.past_direction: Direction = None
 
     def calculate_fitness(self) -> None:
         fitness_score = self.method1()
@@ -72,7 +72,7 @@ class Model:
             else:
                 self.board[position[0]][position[1]] = BoardConsts.SNAKE_BODY
             self.snake.body.append([position[0], position[1]])
-        self.snake.direction = direction
+        self.snake.past_direction = direction
 
     def get_random_empty_block(self) -> []:
         rows, cols = self.board.shape
@@ -114,14 +114,20 @@ class Model:
             self.snake.body.append(new_block)
             head = new_block
 
-        self.snake.direction = random.choice(self.get_valid_direction_for_block(self.snake.body[0]))
+        head = self.snake.body[0]
+        first_segment = self.snake.body[1]
+        for direction in MAIN_DIRECTIONS:
+            block_in_direction = [first_segment[0] + direction.value[0], first_segment[1] + direction.value[1]]
+            if block_in_direction[0] == head[0] and block_in_direction[1] == head[1]:
+                self.snake.past_direction = direction
+                break
 
     def update_board_from_snake(self) -> None:
         snake_body_array = np.array(self.snake.body, dtype=np.int32)
         self.board = cvision.update_board_from_snake(self.board, snake_body_array)
 
     def move(self, new_direction: Direction) -> bool:
-        self.snake.direction = new_direction
+        self.snake.past_direction = new_direction
 
         head = self.snake.body[0]
         next_head = [head[0] + new_direction.value[0], head[1] + new_direction.value[1]]
