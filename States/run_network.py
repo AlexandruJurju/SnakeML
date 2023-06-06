@@ -114,10 +114,10 @@ class RunTrained(BaseState):
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move(next_direction)
 
-        self.x_steps.append(self.model.snake.steps_taken)
-        self.y_ratio.append(self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0)
-        self.x_score.append(self.model.snake.score)
-        self.y_steps.append(self.model.snake.steps_to_apple)
+        # self.x_steps.append(self.model.snake.steps_taken)
+        # self.y_ratio.append(self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0)
+        # self.x_score.append(self.model.snake.score)
+        # self.y_steps.append(self.model.snake.steps_to_apple)
 
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
@@ -147,10 +147,10 @@ class RunTrained(BaseState):
 
             self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), self.model.snake.brain)
 
-            self.x_steps = []
-            self.y_ratio = []
-            self.x_score = []
-            self.y_steps = []
+            # self.x_steps = []
+            # self.y_ratio = []
+            # self.x_score = []
+            # self.y_steps = []
 
     def run(self, surface, time_delta):
         if ViewSettings.DRAW:

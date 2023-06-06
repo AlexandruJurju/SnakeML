@@ -91,7 +91,7 @@ class BackpropagationTrainNetwork(BaseState):
             pygame.display.flip()
 
             direction_to_move = None
-            input_string = self.wait_for_key()
+            input_string = self.wait_for_key(True)
             if input_string == "":
                 direction_to_move = direction
             else:
@@ -113,6 +113,14 @@ class BackpropagationTrainNetwork(BaseState):
 
             self.model.move(direction_to_move)
 
+            # draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            # view.draw_next_snake_direction(surface, self.model.snake.body[0], direction, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
+            # write_controls(surface, 300, 300)
+            # self.model.move(direction)
+            # self.ui_manager.update(time_delta)
+            # self.ui_manager.draw_ui(surface)
+            # pygame.display.flip()
+
         else:
             draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             draw_vision_lines(surface, snake_head, old_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
@@ -121,7 +129,7 @@ class BackpropagationTrainNetwork(BaseState):
             self.ui_manager.draw_ui(surface)
             pygame.display.flip()
 
-            input_string = self.wait_for_key()
+            input_string = self.wait_for_key(False)
             target_output = [0.0, 0.0, 0.0, 0.0]
             direction_to_move = None
             if input_string == "W":
@@ -144,7 +152,7 @@ class BackpropagationTrainNetwork(BaseState):
                 if not is_alive:
                     self.model = Model(self.initial_board_size, self.initial_snake_size, self.model.snake.brain)
 
-    def wait_for_key(self) -> str:
+    def wait_for_key(self, use_enter) -> str:
         while True:
             event = pygame.event.wait()
             if event.type == pygame_gui.UI_BUTTON_PRESSED:
@@ -165,7 +173,8 @@ class BackpropagationTrainNetwork(BaseState):
                     case pygame.K_d:
                         return "D"
                     case pygame.K_RETURN:
-                        return ""
+                        if use_enter:
+                            return ""
                     case pygame.K_x:
                         return "X"
                     case pygame.K_ESCAPE:
@@ -196,27 +205,30 @@ class BackpropagationTrainNetwork(BaseState):
                         return "B"
 
     def run(self, surface, time_delta):
-        if ViewSettings.DRAW:
-            surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
-        # file_path = "Backpropagation_Training/" + self.data_received["file_name"] + ".json"
-        # self.model.snake.brain.reinit_weights_and_biases()
-        # self.model = Model(self.initial_board_size, self.initial_snake_size, self.model.snake.brain)
-        # read_training_data_and_train(self.model.snake.brain, file_path)
-        #
-        # data_to_save = {
-        #     "generation": -1,
-        #     "initial_board_size": self.initial_board_size,
-        #     "initial_snake_size": self.initial_snake_size,
-        #     "input_direction_count": self.input_direction_count,
-        #     "apple_return_type": self.apple_return_type,
-        #     "segment_return_type": self.segment_return_type
-        # }
-        #
-        # save_neural_network_to_json(data_to_save,
-        #                             self.model.snake.brain,
-        #                             GameSettings.BACKPROPAGATION_NETWORK_FOLDER + self.data_received["file_name"])
+        # if ViewSettings.DRAW:
+        #     surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
+        file_path = "Backpropagation_Training/" + self.data_received["file_name"] + ".json"
+        self.model.snake.brain.reinit_weights_and_biases()
+        self.model = Model(self.initial_board_size, self.initial_snake_size, self.model.snake.brain)
+        read_training_data_and_train(self.model.snake.brain, file_path)
 
-        self.play_game_manual(surface, time_delta)
-        if ViewSettings.DRAW:
-            self.ui_manager.update(time_delta)
-            self.ui_manager.draw_ui(surface)
+        data_to_save = {
+            "generation": -1,
+            "initial_board_size": self.initial_board_size,
+            "initial_snake_size": self.initial_snake_size,
+            "input_direction_count": self.input_direction_count,
+            "apple_return_type": self.apple_return_type,
+            "segment_return_type": self.segment_return_type
+        }
+
+        save_neural_network_to_json(data_to_save,
+                                    self.model.snake.brain,
+                                    GameSettings.BACKPROPAGATION_NETWORK_FOLDER + self.data_received["file_name"])
+
+        self.set_target_state_name(State.MAIN_MENU)
+        self.trigger_transition()
+
+        # self.play_game_manual(surface, time_delta)
+        # if ViewSettings.DRAW:
+        #     self.ui_manager.update(time_delta)
+        #     self.ui_manager.draw_ui(surface)

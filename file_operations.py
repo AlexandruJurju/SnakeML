@@ -58,11 +58,8 @@ def write_examples_to_json_4d(examples: List[TrainingExample], output_file_locat
         for line in example.vision_lines:
             line_dict = {
                 "direction": line.direction.name,
-                "wall_coord": line.wall_coord,
                 "wall_distance": line.wall_distance,
-                "apple_coord": line.apple_coord,
                 "apple_distance": line.apple_distance,
-                "segment_coord": line.segment_coord,
                 "segment_distance": line.segment_distance
             }
             vision_lines.append(line_dict)

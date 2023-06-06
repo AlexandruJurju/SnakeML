@@ -143,18 +143,26 @@ class NeuralNetwork:
     def train(self, loss, loss_prime, x_train, y_train, learning_rate, epoch_limit) -> None:
         error = 10000
         epoch = 0
-        while epoch < epoch_limit and error > 0.5:
+        max_error = 0
+        max_error_example = []
+        while error > 0.5:
             error = 0
             for x, y in zip(x_train, y_train):
                 output = self.feed_forward(x)
 
                 error += loss(y, output)
+                if max_error < loss(y, output):
+                    max_error = loss(y, output)
+                    max_error_example = [x, output, y]
 
                 # gradient is used as the output error dE/dY of the whole network
                 # input gradient of last layer is considered output gradient of penultimate layer
                 gradient = loss_prime(y, output)
                 for layer in reversed(self.layers):
                     gradient = layer.backward(gradient, learning_rate)
+
+                np.set_printoptions(suppress=True)
+                print(f"{max_error} {max_error_example}")
 
             # error /= len(x_train)
             epoch += 1
