@@ -147,7 +147,7 @@ class GeneticTrainNetwork(BaseState):
         snake_head = np.asarray(self.model.snake.body[0], dtype=np.int32)
         vision_lines = get_vision_lines_snake_head(self.model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
 
-        nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, self.model.snake.direction)
+        nn_input = vision.get_parameters_in_nn_input_form_4d(vision_lines, self.model.snake.direction)
         neural_net_prediction = self.model.snake.brain.feed_forward(nn_input)
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
 
@@ -209,7 +209,7 @@ class GeneticTrainNetwork(BaseState):
 
         self.networks.append([data_to_save, best_individual.brain, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + name])
 
-        training_data = (f"GEN: {self.generation + 1:<5} "
+        training_data = (f"GEN: {self.generation:<5} "
                          f"AVG FITNESS: {counts['avg_fitness'] / self.population_count :<22}\t"
                          f"AVG SCORE: {counts['avg_score'] / self.population_count :<22}\t"
                          f"AVG RATIO: {counts['avg_ratio'] / self.population_count :<22}\t"
@@ -220,7 +220,8 @@ class GeneticTrainNetwork(BaseState):
                          f"WON AVG RATIO: {np.mean(won_ratios) if len(won_ratios) > 0 else 0 :<22}\t"
                          f"WON MEDIAN RATIO: {np.median(won_ratios) if len(won_ratios) > 0 else 0}"
                          )
-        print(training_data)
+        if self.generation % 10 == 0:
+            print(training_data)
         self.training_data += training_data + "\n"
 
         # self.x_generations.append(self.generation)

@@ -140,10 +140,10 @@ class NeuralNetwork:
             layer.weights = np.random.uniform(-1, 1, (layer.output_size, layer.input_size))
             layer.bias = np.random.uniform(-1, 1, (layer.output_size, 1))
 
-    def train(self, loss, loss_prime, x_train, y_train, learning_rate) -> None:
+    def train(self, loss, loss_prime, x_train, y_train, learning_rate, epoch_limit) -> None:
         error = 10000
         epoch = 0
-        while error > 0.05:
+        while epoch < epoch_limit and error > 0.5:
             error = 0
             for x, y in zip(x_train, y_train):
                 output = self.feed_forward(x)

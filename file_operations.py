@@ -5,7 +5,7 @@ from typing import Tuple, Dict
 import neural_network
 from game_config import Direction
 from neural_network import *
-from vision import VisionLine, get_parameters_in_nn_input_form_4d, get_parameters_in_nn_input_form_2d
+from vision import VisionLine, get_parameters_in_nn_input_form_2d
 
 
 class TrainingExample:
@@ -24,7 +24,7 @@ def read_training_data_and_train(network: NeuralNetwork, file_path: str) -> None
     x = np.reshape(x, (len(x), input_neuron_count, 1))
     y = np.reshape(y, (len(y), output_neuron_count, 1))
 
-    network.train(mse, mse_prime, x, y, 0.5)
+    network.train(mse, mse_prime, x, y, 0.5, 10000)
 
 
 # def train_using_training_examples(network: NeuralNetwork, training_examples: List[TrainingExample]):
