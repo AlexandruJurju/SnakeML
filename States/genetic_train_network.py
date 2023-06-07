@@ -6,7 +6,7 @@ import genetic_operators
 import neural_network
 from States.base_state import BaseState
 from cvision import get_vision_lines_snake_head
-from file_operations import save_neural_network_to_json, write_genetic_training
+from file_operations import write_genetic_training, save_neural_network_to_json
 from game_config import GameSettings
 from game_config import State
 from genetic_operators import elitist_selection, full_mutation, full_crossover
@@ -64,8 +64,8 @@ class GeneticTrainNetwork(BaseState):
         self.button_stop_drawing = None
         self.draw_switch = True
 
-        self.py_times = []
-        self.cy_times = []
+        # self.py_times = []
+        # self.cy_times = []
 
     def start(self):
         self.initial_board_size = self.data_received["board_size"]
@@ -181,7 +181,18 @@ class GeneticTrainNetwork(BaseState):
         # best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken))
         # best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken if individual.steps_taken != 0 else 0))
         # best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken))
-        best_individual = max(self.parent_list, key=lambda individual: (individual.score, individual.score / individual.steps_taken if individual.steps_taken != 0 else 0))
+        # best_individual = max(self.parent_list, key=lambda individual: (individual.score, individual.score / individual.steps_taken if individual.steps_taken != 0 else 0))
+
+        sorted_individuals = sorted(
+            self.parent_list,
+            key=lambda individual: (
+                individual.score,
+                individual.score / individual.steps_taken if individual.steps_taken != 0 else 0
+            ),
+            reverse=True
+        )
+
+        best_generation_individuals = sorted_individuals[:15]
 
         counts = {'won': 0, "avg_score": 0, "avg_fitness": 0, "avg_ratio": 0}
         won_ratios = []
@@ -189,33 +200,24 @@ class GeneticTrainNetwork(BaseState):
             counts["avg_score"] += individual.score
             counts["avg_fitness"] += individual.fitness
             counts["avg_ratio"] += individual.score / individual.steps_taken if individual.steps_taken > 0 else 0
-
             if individual.won:
                 counts['won'] += 1
                 won_ratios.append(individual.score / individual.steps_taken)
+        # won_ratios.sort()
 
-        won_ratios.sort()
+        for individual in best_generation_individuals:
+            if len(self.networks) == 150:
+                self.networks.pop(0)
 
-        name = "Generation" + str(self.generation)
-
-        data_to_save = {
-            "generation": self.generation,
-            "initial_board_size": self.initial_board_size,
-            "initial_snake_size": self.initial_snake_size,
-            "input_direction_count": self.input_direction_count,
-            "apple_return_type": self.apple_return_type,
-            "segment_return_type": self.segment_return_type
-        }
-
-        self.networks.append([data_to_save, best_individual.brain, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + name])
+            self.networks.append([self.generation, individual.brain])
 
         training_data = (f"GEN: {self.generation:<5} "
                          f"AVG FITNESS: {counts['avg_fitness'] / self.population_count :<22}\t"
                          f"AVG SCORE: {counts['avg_score'] / self.population_count :<22}\t"
                          f"AVG RATIO: {counts['avg_ratio'] / self.population_count :<22}\t"
-                         f"BEST FITNESS: {best_individual.fitness:<22}\t"
-                         f"BEST SCORE: {best_individual.score:<5}\t"
-                         f"BEST RATIO: {best_individual.score / best_individual.steps_taken if best_individual.steps_taken > 0 else 0:<22}"
+                         f"BEST FITNESS: {best_generation_individuals[0].fitness:<22}\t"
+                         f"BEST SCORE: {best_generation_individuals[0].score:<5}\t"
+                         f"BEST RATIO: {best_generation_individuals[0].score / best_generation_individuals[0].steps_taken if best_generation_individuals[0].steps_taken > 0 else 0:<22}"
                          f"WON: {counts['won']:<5}\t"
                          f"WON AVG RATIO: {np.mean(won_ratios) if len(won_ratios) > 0 else 0 :<22}\t"
                          # f"WON MEDIAN RATIO: {np.median(won_ratios) if len(won_ratios) > 0 else 0}"
@@ -273,14 +275,67 @@ class GeneticTrainNetwork(BaseState):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    for network in self.networks[-50:]:
-                        save_neural_network_to_json(
-                            network[0],
-                            network[1],
-                            network[2]
-                        )
+                    after_test = []
+
+                    for count, network in enumerate(self.networks):
+                        print(f"NETWORK {count} / {len(self.networks)}")
+                        ratios = []
+                        scores = []
+                        won_count = 0
+                        for i in range(100):
+                            test_model = Model(self.initial_board_size, self.initial_snake_size, network[1])
+                            while True:
+                                snake_head = np.asarray(test_model.snake.body[0], dtype=np.int32)
+                                vision_lines = get_vision_lines_snake_head(test_model.board, snake_head, self.input_direction_count, apple_return_type=self.apple_return_type, segment_return_type=self.segment_return_type)
+
+                                nn_input = vision.get_parameters_in_nn_input_form_2d(vision_lines, test_model.snake.past_direction)
+                                neural_net_prediction = test_model.snake.brain.feed_forward(nn_input)
+                                next_direction = test_model.get_nn_output_4directions(neural_net_prediction)
+
+                                is_alive = test_model.move(next_direction)
+
+                                if not is_alive:
+                                    scores.append(test_model.snake.score)
+                                    ratios.append(test_model.snake.score / test_model.snake.steps_taken if test_model.snake.steps_taken > 0 else 0)
+                                    won_count += 1
+                                    break
+
+                        average_ratio = np.mean(ratios)
+                        average_scores = np.mean(scores)
+
+                        after_test.append([network[0], network[1], average_scores, average_ratio, won_count])
+
+                    sorted_individuals = sorted(
+                        after_test,
+                        key=lambda individual: (
+                            individual[2],
+                            individual[3]
+                        ),
+                        reverse=True
+                    )
+
+                    for i, net in enumerate(sorted_individuals[:25]):
+                        print(f" {i} {net[2]} {net[3]}")
+
+                        data_to_save = {
+                            "generation": net[0],
+                            "initial_board_size": self.initial_board_size,
+                            "initial_snake_size": self.initial_snake_size,
+                            "input_direction_count": self.input_direction_count,
+                            "apple_return_type": self.apple_return_type,
+                            "segment_return_type": self.segment_return_type
+                        }
+                        name = "Position" + str(i) + " Generation" + str(net[0])
+                        nn_path = GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + name
+                        # print(nn_path)
+                        save_neural_network_to_json(data_to_save, net[1], nn_path)
 
                     write_genetic_training(self.training_data, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name, True if self.generation == 0 else False)
+                    print("DONE WRITING")
+
+                    self.set_target_state_name(State.MAIN_MENU)
+                    self.trigger_transition()
+                    ViewSettings.DRAW = True
 
                     # fig1 = plt.figure(figsize=(16, 9))
                     # plt.plot(self.x_generations, self.y_best_individual_score, "b", label="Best Individual Score")
@@ -299,10 +354,6 @@ class GeneticTrainNetwork(BaseState):
                     # plt.title("Ratio Progression")
                     # plt.savefig(GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + "best_ratio.pdf")
                     # plt.show()
-
-                    self.set_target_state_name(State.MAIN_MENU)
-                    self.trigger_transition()
-                    ViewSettings.DRAW = True
 
                 if event.key == pygame.K_RETURN:
                     ViewSettings.DRAW = True
