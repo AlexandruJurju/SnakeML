@@ -218,10 +218,10 @@ class GeneticTrainNetwork(BaseState):
                          f"BEST RATIO: {best_individual.score / best_individual.steps_taken if best_individual.steps_taken > 0 else 0:<22}"
                          f"WON: {counts['won']:<5}\t"
                          f"WON AVG RATIO: {np.mean(won_ratios) if len(won_ratios) > 0 else 0 :<22}\t"
-                         f"WON MEDIAN RATIO: {np.median(won_ratios) if len(won_ratios) > 0 else 0}"
+                         # f"WON MEDIAN RATIO: {np.median(won_ratios) if len(won_ratios) > 0 else 0}"
                          )
-        if self.generation % 10 == 0:
-            print(training_data)
+
+        print(training_data)
         self.training_data += training_data + "\n"
 
         # self.x_generations.append(self.generation)

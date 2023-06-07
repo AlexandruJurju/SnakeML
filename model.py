@@ -28,6 +28,8 @@ class Snake:
 
     def method1(self) -> float:
         fitness_score = self.steps_taken + ((2 ** self.score) + (self.score ** 2.1) * 500) - (((.25 * self.steps_taken) ** 1.3) * (self.score ** 1.2))
+        if self.score == 97:
+            fitness_score *= 10 ** 5 * (self.score / self.steps_taken)
         return fitness_score
 
     def method2(self):
