@@ -70,7 +70,8 @@ class BackpropagationTrainNetwork(BaseState):
     def check_if_already_seen(self, vision_lines) -> int:
         for i in range(len(self.training_examples)):
             if np.array_equal(self.training_examples[i].vision_lines, vision_lines):
-                return i
+                if self.training_examples[i].past_direction == self.model.snake.past_direction:
+                    return i
         return None
 
     def play_game_manual(self, surface, time_delta):
@@ -205,8 +206,6 @@ class BackpropagationTrainNetwork(BaseState):
                         return "B"
 
     def run(self, surface, time_delta):
-        # if ViewSettings.DRAW:
-        #     surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
         file_path = "Backpropagation_Training/" + self.data_received["file_name"] + ".json"
         self.model.snake.brain.reinit_weights_and_biases()
         self.model = Model(self.initial_board_size, self.initial_snake_size, self.model.snake.brain)
@@ -228,6 +227,9 @@ class BackpropagationTrainNetwork(BaseState):
         self.set_target_state_name(State.MAIN_MENU)
         self.trigger_transition()
 
+        # if ViewSettings.DRAW:
+        #     surface.fill(self.ui_manager.ui_theme.get_colour("main_bg"))
+        #
         # self.play_game_manual(surface, time_delta)
         # if ViewSettings.DRAW:
         #     self.ui_manager.update(time_delta)

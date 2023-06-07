@@ -58,18 +58,18 @@ class RunTrained(BaseState):
         self.label_return_type: UILabel = None
         self.label_distance: UILabel = None
 
-        self.x_steps = []
-        self.y_ratio = []
-        self.y_steps = []
-        self.x_score = []
+        # self.x_steps = []
+        # self.y_ratio = []
+        # self.y_steps = []
+        # self.x_score = []
 
         self.ratio_test = []
         self.score_test = []
 
     def start(self):
-        self.x_steps = []
-        self.y_ratio = []
-        self.x_score = []
+        # self.x_steps = []
+        # self.y_ratio = []
+        # self.x_score = []
 
         self.button_back = UIButton(pygame.Rect(ViewSettings.BUTTON_BACK_POSITION, ViewSettings.BUTTON_BACK_DIMENSION), "BACK", self.ui_manager)
         self.label_return_type = UILabel(pygame.Rect((25, 25), (350, 35)), "", self.ui_manager)

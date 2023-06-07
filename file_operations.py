@@ -9,8 +9,8 @@ from vision import VisionLine, get_parameters_in_nn_input_form_2d
 
 
 class TrainingExample:
-    def __init__(self, current_direction: Direction, vision_lines: List[VisionLine], user_move: List[float]):
-        self.current_direction = current_direction
+    def __init__(self, past_direction: Direction, vision_lines: List[VisionLine], user_move: List[float]):
+        self.past_direction = past_direction
         self.vision_lines = vision_lines
         self.user_move = user_move
 
@@ -24,7 +24,7 @@ def read_training_data_and_train(network: NeuralNetwork, file_path: str) -> None
     x = np.reshape(x, (len(x), input_neuron_count, 1))
     y = np.reshape(y, (len(y), output_neuron_count, 1))
 
-    network.train(mse, mse_prime, x, y, 0.5, 10000)
+    network.train(mse, mse_prime, x, y, 0.5)
 
 
 # def train_using_training_examples(network: NeuralNetwork, training_examples: List[TrainingExample]):
@@ -65,7 +65,7 @@ def write_examples_to_json_4d(examples: List[TrainingExample], output_file_locat
             vision_lines.append(line_dict)
 
         example_dictionary: Dict = {
-            "current_direction": example.current_direction.name,
+            "current_direction": example.past_direction.name,
             "vision_lines": vision_lines,
             "up": up,
             "down": down,
@@ -91,7 +91,7 @@ def read_training_data_json(file_location) -> Tuple[List, List]:
 
             vision_lines = []
             for line in example["vision_lines"]:
-                line = VisionLine(line["wall_coord"], line["wall_distance"], line["apple_coord"], line["apple_distance"], line["segment_coord"], line["segment_distance"], Direction[line["direction"]])
+                line = VisionLine(None, line["wall_distance"], None, line["apple_distance"], None, line["segment_distance"], Direction[line["direction"]])
                 vision_lines.append(line)
 
             x.append(get_parameters_in_nn_input_form_2d(vision_lines, real_direction))

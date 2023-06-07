@@ -41,15 +41,12 @@ def leaky_relu_prime(x):
     return np.where(leaky >= 0, leaky, 1)
 
 
-# use np because y_real and y_predicted are vectors of values
-# mse returns a scalar, MSE of all errors in output
-def mse(target_y, predicted_y):
-    return np.mean(np.power(target_y - predicted_y, 2))
+def mse(y_true, y_pred):
+    return np.mean(np.power(y_true - y_pred, 2))
 
 
-# mse prime returns a vector of dE/dY, output gradient vector for output vector
-def mse_prime(target_y, predicted_y):
-    return (2 / np.size(target_y)) * (predicted_y - target_y)
+def mse_prime(y_true, y_pred):
+    return 2 * (y_pred - y_true) / np.size(y_true)
 
 
 class Layer:
@@ -140,29 +137,19 @@ class NeuralNetwork:
             layer.weights = np.random.uniform(-1, 1, (layer.output_size, layer.input_size))
             layer.bias = np.random.uniform(-1, 1, (layer.output_size, 1))
 
-    def train(self, loss, loss_prime, x_train, y_train, learning_rate, epoch_limit) -> None:
+    def train(self, loss, loss_prime, x_train, y_train, learning_rate) -> None:
         error = 10000
         epoch = 0
-        max_error = 0
-        max_error_example = []
-        while error > 0.5:
+        while epoch < 20 * len(x_train):
             error = 0
             for x, y in zip(x_train, y_train):
                 output = self.feed_forward(x)
-
-                error += loss(y, output)
-                if max_error < loss(y, output):
-                    max_error = loss(y, output)
-                    max_error_example = [x, output, y]
-
+                error += mse(y, output)
                 # gradient is used as the output error dE/dY of the whole network
                 # input gradient of last layer is considered output gradient of penultimate layer
-                gradient = loss_prime(y, output)
+                gradient = mse_prime(y, output)
                 for layer in reversed(self.layers):
                     gradient = layer.backward(gradient, learning_rate)
-
-                np.set_printoptions(suppress=True)
-                print(f"{max_error} {max_error_example}")
 
             # error /= len(x_train)
             epoch += 1
