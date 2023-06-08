@@ -112,7 +112,8 @@ class BackpropagationTrainNetwork(BaseState):
 
                 self.training_examples[example_index].user_move = target_output
 
-            self.model.move(direction_to_move)
+            if input_string != "B":
+                self.model.move(direction_to_move)
 
             # draw_board(surface, self.model.board, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             # view.draw_next_snake_direction(surface, self.model.snake.body[0], direction, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])

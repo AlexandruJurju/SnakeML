@@ -183,17 +183,6 @@ class GeneticTrainNetwork(BaseState):
         # best_individual = max(self.parent_list, key=lambda individual: (individual.fitness, individual.score / individual.steps_taken))
         # best_individual = max(self.parent_list, key=lambda individual: (individual.score, individual.score / individual.steps_taken if individual.steps_taken != 0 else 0))
 
-        sorted_individuals = sorted(
-            self.parent_list,
-            key=lambda individual: (
-                individual.score,
-                individual.score / individual.steps_taken if individual.steps_taken != 0 else 0
-            ),
-            reverse=True
-        )
-
-        best_generation_individuals = sorted_individuals[:15]
-
         counts = {'won': 0, "avg_score": 0, "avg_fitness": 0, "avg_ratio": 0}
         won_ratios = []
         for individual in self.parent_list:
@@ -204,6 +193,17 @@ class GeneticTrainNetwork(BaseState):
                 counts['won'] += 1
                 won_ratios.append(individual.score / individual.steps_taken)
         # won_ratios.sort()
+
+        sorted_individuals = sorted(
+            self.parent_list,
+            key=lambda individual: (
+                individual.score,
+                individual.score / individual.steps_taken if individual.steps_taken != 0 else 0
+            ),
+            reverse=True
+        )
+
+        best_generation_individuals = sorted_individuals[:15]
 
         for individual in best_generation_individuals:
             if len(self.networks) == 150:
@@ -280,6 +280,7 @@ class GeneticTrainNetwork(BaseState):
                     for count, network in enumerate(self.networks):
                         print(f"NETWORK {count} / {len(self.networks)}")
                         ratios = []
+                        won_rations = []
                         scores = []
                         won_count = 0
                         for i in range(100):
@@ -299,27 +300,27 @@ class GeneticTrainNetwork(BaseState):
                                     ratios.append(test_model.snake.score / test_model.snake.steps_taken if test_model.snake.steps_taken > 0 else 0)
                                     if test_model.snake.score == test_model.max_score:
                                         won_count += 1
+                                        won_rations.append(test_model.snake.score / test_model.snake.steps_taken)
                                     break
 
                         average_ratio = np.mean(ratios)
                         average_scores = np.mean(scores)
 
-                        after_test.append([network[0], network[1], average_scores, average_ratio, won_count])
+                        after_test.append([network[0], network[1], average_scores, average_ratio, won_count, won_rations])
 
                     sorted_individuals = sorted(
                         after_test,
                         key=lambda individual: (
-                            # individual[2],
-                            individual[4]
-                            # individual[3]
+                            # individual[4]
+                            individual[5]
                         ),
                         reverse=True
                     )
 
                     results = ""
-                    for i, net in enumerate(sorted_individuals[:250]):
-                        print(f" {i} {net[2]} {net[3]} {net[4]}")
-                        results += "Position: " + str(i) + " Generation: " + str(net[0]) + " Average Scores: " + str(net[2]) + " Average Ratios: " + str(net[3]) + " Won Counts: " + str(net[4]) + "\n"
+                    for i, net in enumerate(sorted_individuals):
+                        print(f" {i} {net[2]} {net[3]} {net[4]} {net[5]}")
+                        results += "Position: " + str(i) + " Generation: " + str(net[0]) + " Average Scores: " + str(net[2]) + " Average Ratios: " + str(net[3]) + " Won Counts: " + str(net[4]) + " Won Rations: " + str(net[5]) + "\n"
 
                         data_to_save = {
                             "generation": net[0],
@@ -333,8 +334,8 @@ class GeneticTrainNetwork(BaseState):
                         nn_path = GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + name
                         save_neural_network_to_json(data_to_save, net[1], nn_path)
 
-                    write_genetic_training(results, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name, False)
-                    write_genetic_training(self.training_data, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name, False)
+                    write_genetic_training(results, GameSettings.GENETIC_NETWORK_FOLDER + self.file_name, False)
+                    write_genetic_training(self.training_data, GameSettings.GENETIC_NETWORK_FOLDER + self.file_name, False)
                     print("DONE WRITING")
 
                     self.set_target_state_name(State.MAIN_MENU)
