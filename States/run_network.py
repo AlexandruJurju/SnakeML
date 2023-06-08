@@ -65,6 +65,8 @@ class RunTrained(BaseState):
 
         self.ratio_test = []
         self.score_test = []
+        self.won = 0
+        self.total = 0
 
     def start(self):
         # self.x_steps = []
@@ -122,10 +124,14 @@ class RunTrained(BaseState):
         self.score_counter.set_text("Score: " + str(self.model.snake.score))
 
         if not is_alive:
+            self.total += 1
+            if self.model.snake.score == self.model.max_score:
+                self.won += 1
+
             ratio = self.model.snake.score / self.model.snake.steps_taken if self.model.snake.steps_taken > 0 else 0
             self.ratio_test.append(ratio)
             self.score_test.append(self.model.snake.score)
-            print(f"score {self.model.snake.score:<5}  score_mean {np.mean(self.score_test):<20} ratio {ratio:<20} ratio_mean {np.mean(self.ratio_test):<20}")
+            print(f"score {self.model.snake.score:<5}  score_mean {np.mean(self.score_test):<20} ratio {ratio:<20} ratio_mean {np.mean(self.ratio_test):<20} WON {self.won} / {self.total}")
 
             # if self.model.snake.score == 97:
             #     self.ratio_test.append(ratio)

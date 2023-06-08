@@ -297,7 +297,8 @@ class GeneticTrainNetwork(BaseState):
                                 if not is_alive:
                                     scores.append(test_model.snake.score)
                                     ratios.append(test_model.snake.score / test_model.snake.steps_taken if test_model.snake.steps_taken > 0 else 0)
-                                    won_count += 1
+                                    if test_model.snake.score == test_model.max_score:
+                                        won_count += 1
                                     break
 
                         average_ratio = np.mean(ratios)
@@ -308,14 +309,17 @@ class GeneticTrainNetwork(BaseState):
                     sorted_individuals = sorted(
                         after_test,
                         key=lambda individual: (
-                            individual[2],
-                            individual[3]
+                            # individual[2],
+                            individual[4]
+                            # individual[3]
                         ),
                         reverse=True
                     )
 
-                    for i, net in enumerate(sorted_individuals[:25]):
-                        print(f" {i} {net[2]} {net[3]}")
+                    results = ""
+                    for i, net in enumerate(sorted_individuals[:250]):
+                        print(f" {i} {net[2]} {net[3]} {net[4]}")
+                        results += "Position: " + str(i) + " Generation: " + str(net[0]) + " Average Scores: " + str(net[2]) + " Average Ratios: " + str(net[3]) + " Won Counts: " + str(net[4]) + "\n"
 
                         data_to_save = {
                             "generation": net[0],
@@ -327,10 +331,10 @@ class GeneticTrainNetwork(BaseState):
                         }
                         name = "Position" + str(i) + " Generation" + str(net[0])
                         nn_path = GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name + "/" + name
-                        # print(nn_path)
                         save_neural_network_to_json(data_to_save, net[1], nn_path)
 
-                    write_genetic_training(self.training_data, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name, True if self.generation == 0 else False)
+                    write_genetic_training(results, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name, False)
+                    write_genetic_training(self.training_data, GameSettings.GENETIC_NETWORK_FOLDER + "/" + self.file_name, False)
                     print("DONE WRITING")
 
                     self.set_target_state_name(State.MAIN_MENU)
