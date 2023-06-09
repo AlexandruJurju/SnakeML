@@ -280,7 +280,7 @@ class GeneticTrainNetwork(BaseState):
                     for count, network in enumerate(self.networks):
                         print(f"NETWORK {count} / {len(self.networks)}")
                         ratios = []
-                        won_rations = []
+                        won_ratios = []
                         scores = []
                         won_count = 0
                         for i in range(100):
@@ -300,18 +300,19 @@ class GeneticTrainNetwork(BaseState):
                                     ratios.append(test_model.snake.score / test_model.snake.steps_taken if test_model.snake.steps_taken > 0 else 0)
                                     if test_model.snake.score == test_model.max_score:
                                         won_count += 1
-                                        won_rations.append(test_model.snake.score / test_model.snake.steps_taken)
+                                        won_ratios.append(test_model.snake.score / test_model.snake.steps_taken)
                                     break
 
                         average_ratio = np.mean(ratios)
                         average_scores = np.mean(scores)
+                        average_won_ratios = np.mean(won_ratios)
 
-                        after_test.append([network[0], network[1], average_scores, average_ratio, won_count, won_rations])
+                        after_test.append([network[0], network[1], average_scores, average_ratio, won_count, average_won_ratios])
 
                     sorted_individuals = sorted(
                         after_test,
                         key=lambda individual: (
-                            # individual[4]
+                            individual[4],
                             individual[5]
                         ),
                         reverse=True
@@ -319,8 +320,9 @@ class GeneticTrainNetwork(BaseState):
 
                     results = ""
                     for i, net in enumerate(sorted_individuals):
-                        print(f" {i} {net[2]} {net[3]} {net[4]} {net[5]}")
-                        results += "Position: " + str(i) + " Generation: " + str(net[0]) + " Average Scores: " + str(net[2]) + " Average Ratios: " + str(net[3]) + " Won Counts: " + str(net[4]) + " Won Rations: " + str(net[5]) + "\n"
+                        current_string = "Position: " + str(i) + " Generation: " + str(net[0]) + " Average Scores: " + str(net[2]) + " Average Ratios: " + str(net[3]) + " Won Counts: " + str(net[4]) + " Won Rations: " + str(net[5])
+                        print(current_string)
+                        results += current_string + "\n"
 
                         data_to_save = {
                             "generation": net[0],
