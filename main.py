@@ -1,4 +1,5 @@
 import os
+import sys
 
 import pygame
 from pygame_gui import UIManager
@@ -10,6 +11,17 @@ from States.options import Options
 from States.run_network import RunTrained
 from States.state_manager import StateManager
 from game_config import ViewSettings, State
+
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller's 'onefile' mode """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except AttributeError:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 
 def main():
