@@ -23,7 +23,7 @@ class Snake:
         self.past_direction: Direction = None
 
     def calculate_fitness(self) -> None:
-        fitness_score = self.method2()
+        fitness_score = self.method1()
         self.fitness = fitness_score
 
     def method1(self) -> float:
@@ -41,7 +41,7 @@ class Snake:
 class Model:
     def __init__(self, model_size: int, snake_size: int, net: NeuralNetwork):
         self.size: int = model_size + 2
-        self.board: np.ndarray = np.full((self.size, self.size), BoardConsts.EMPTY)
+        self.board = np.full((self.size, self.size), BoardConsts.EMPTY)
 
         self.max_score = model_size ** 2 - snake_size
         self.snake_size: int = snake_size

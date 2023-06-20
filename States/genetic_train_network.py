@@ -320,7 +320,7 @@ class GeneticTrainNetwork(BaseState):
 
                     results = ""
                     for i, net in enumerate(sorted_individuals):
-                        current_string = "Position: " + str(i) + " Generation: " + str(net[0]) + " Average Scores: " + str(net[2]) + " Average Ratios: " + str(net[3]) + " Won Counts: " + str(net[4]) + " Won Rations: " + str(net[5])
+                        current_string = "Position: " + str(i) + " Generation: " + str(net[0]) + " Average Scores: " + str(net[2]) + " Average Ratios: " + str(net[3]) + " Won Counts: " + str(net[4]) + " Won Ratios: " + str(net[5])
                         print(current_string)
                         results += current_string + "\n"
 
