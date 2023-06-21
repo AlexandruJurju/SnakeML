@@ -122,6 +122,10 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[vision
                     #
                     input_val = font.render(str(np.round(layer.input[i], 6)).replace("[", "").replace("]", ""), True, ViewSettings.COLOR_LABEL)
                     window.blit(input_val, (neuron_x, neuron_y))
+                neuron_y = neuron_offset_y
+                neuron_offset_y += ViewSettings.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2
+                input_string = font.render("Input Layer", True, ViewSettings.COLOR_DODGER_BLUE)
+                window.blit(input_string, (neuron_x, neuron_y))
 
                 neuron_offset_x += ViewSettings.NN_DISPLAY_NEURON_WIDTH_BETWEEN
                 neuron_offset_y = offset_y
@@ -141,25 +145,18 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[vision
                     line_label = font.render(MAIN_DIRECTIONS[j].name, True, ViewSettings.COLOR_LABEL)
                     window.blit(line_label, (neuron_x + 75, neuron_y))
 
-                    # max_neuron_output = np.max(nn_layers[layer_count + 1].output)
-
-                #     if nn_layers[layer_count + 1].output[j] == max_neuron_output:
-                #         inner_color = (0, 255, 0)
-                #     else:
-                #         inner_color = (0, 0, 0)
-                # else:
-                #     neuron_output = nn_layers[layer_count + 1].output[j]
-                #     if neuron_output <= 0:
-                #         inner_color = ViewSettings.COLOR_BLACK
-                #     else:
-                #         inner_color = ViewSettings.COLOR_NEURON * neuron_output
-                #         inner_color = tuple(int(min(x, 255)) for x in inner_color)
-                #
-                # pygame.draw.circle(window, inner_color, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS)
-                # pygame.draw.circle(window, ViewSettings.COLOR_NEURON_OUTLINE, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS, width=2)
-                
                 input_val = font.render(str(np.round(nn_layers[layer_count + 1].output[j], 6)).replace("[", "").replace("]", ""), True, ViewSettings.COLOR_LABEL)
                 window.blit(input_val, (neuron_x, neuron_y))
+
+            neuron_y = neuron_offset_y
+            neuron_offset_y += ViewSettings.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2
+
+            if layer_count == len(nn_layers) - 2:
+                output_string = font.render("Output Layer", True, ViewSettings.COLOR_DODGER_BLUE)
+                window.blit(output_string, (neuron_x, neuron_y))
+            else:
+                hidden_string = font.render("Hidden Layer", True, ViewSettings.COLOR_DODGER_BLUE)
+                window.blit(hidden_string, (neuron_x, neuron_y))
 
             neuron_offset_x += ViewSettings.NN_DISPLAY_NEURON_WIDTH_BETWEEN
             neuron_offset_y = offset_y
