@@ -21,7 +21,7 @@ class BoardConsts:
 class ViewSettings:
     DRAW = True
     DARK_MODE = False
-    MAX_FPS = 20
+    MAX_FPS = 10
     # WIDTH, HEIGHT = 1600, 900
     WIDTH, HEIGHT = 1366, 768
     SQUARE_SIZE = 25
@@ -118,3 +118,4 @@ class GameSettings:
 
     GENETIC_NETWORK_FOLDER = "Trained Neural Networks/Genetic Networks/"
     BACKPROPAGATION_NETWORK_FOLDER = "Trained Neural Networks/Backpropagation Networks/"
+    BACKPROPAGATION_TRAINING_DATA = "Backpropagation_Training/"
