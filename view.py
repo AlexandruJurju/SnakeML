@@ -107,10 +107,10 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[vision
                     if i < input_neuron_count - 2:
                         # divide by number of attributes in vision line, 0 0 0, 1 1 1, 2 2 2
                         line_label = font.render(vision_lines[int(i / 3)].direction.name + " " + param_type[i % (len(param_type))], True, ViewSettings.COLOR_LABEL)
-                        window.blit(line_label, (neuron_x - 125, neuron_y - 10))
+                        window.blit(line_label, (neuron_x - 125, neuron_y))
                     else:
                         line_label = font.render(offsets[i % 2], True, ViewSettings.COLOR_LABEL)
-                        window.blit(line_label, (neuron_x - 125, neuron_y - 10))
+                        window.blit(line_label, (neuron_x - 125, neuron_y))
 
                     # inner_color = ViewSettings.COLOR_NEURON * layer.input[i]
                     # inner_color[inner_color > 255] = 255
