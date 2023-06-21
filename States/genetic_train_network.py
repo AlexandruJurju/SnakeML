@@ -160,7 +160,7 @@ class GeneticTrainNetwork(BaseState):
             if self.draw_vision_lines:
                 draw_vision_lines(surface, self.model.snake.body[0], old_vision_lines, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             if self.draw_network:
-                draw_neural_network_complete(surface, self.model, old_vision_lines, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
+                draw_neural_network_complete(surface, self.model, old_vision_lines)
 
         is_alive = self.model.move(next_direction)
 

@@ -110,7 +110,7 @@ class RunTrained(BaseState):
             if self.draw_vision_lines:
                 draw_vision_lines(surface, self.model.snake.body[0], old_vis, ViewSettings.BOARD_POSITION[0], ViewSettings.BOARD_POSITION[1])
             if self.draw_network:
-                draw_neural_network_complete(surface, self.model, old_vis, ViewSettings.NN_POSITION[0], ViewSettings.NN_POSITION[1])
+                draw_neural_network_complete(surface, self.model, old_vis)
 
         next_direction = self.model.get_nn_output_4directions(neural_net_prediction)
         is_alive = self.model.move(next_direction)
@@ -187,7 +187,7 @@ class RunTrained(BaseState):
                 if event.ui_element == self.button_run:
                     self.model = Model(int(self.board_size_entry.text), int(self.snake_size_entry.text), self.network)
                     self.execute_network = True
-                    ViewSettings.DRAW = False
+                    # ViewSettings.DRAW = False
 
                 if event.ui_element == self.button_draw_network:
                     self.draw_network = not self.draw_network

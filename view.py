@@ -65,9 +65,11 @@ def draw_vision_line(window, color, width, line_coord_1, line_coord_0, line_end_
                      (line_end_x, line_end_y), width=width)
 
 
-def draw_neural_network_complete(window, model: Model, vision_lines: List[vision.VisionLine], offset_x, offset_y):
+def draw_neural_network_complete(window, model: Model, vision_lines: List[vision.VisionLine]):
     nn_layers = model.snake.brain.layers
     dense_layers = model.snake.brain.get_dense_layers()
+    offset_x = ViewSettings.NN_POSITION[0]
+    offset_y = ViewSettings.NN_POSITION[1]
     neuron_offset_x = 100 + offset_x
     neuron_offset_y = offset_y
     offsets = ["OFFSET X", "OFFSET Y"]
@@ -76,7 +78,7 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[vision
     line_end_positions: List[Tuple[int, int]] = []
 
     param_type = ["WALL", "APPLE", "SEGMENT"]
-    font = pygame.font.SysFont("arial", 12)
+    font = pygame.font.SysFont("arial", 14)
 
     max_y = -1
     for layer in dense_layers:
@@ -118,7 +120,7 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[vision
                     # pygame.draw.circle(window, inner_color, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS)
                     # pygame.draw.circle(window, ViewSettings.COLOR_NEURON_OUTLINE, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS, width=2)
                     #
-                    input_val = font.render(str(layer.input[i]).replace("[", "").replace("]", ""), True, ViewSettings.COLOR_LABEL)
+                    input_val = font.render(str(np.round(layer.input[i], 6)).replace("[", "").replace("]", ""), True, ViewSettings.COLOR_LABEL)
                     window.blit(input_val, (neuron_x, neuron_y))
 
                 neuron_offset_x += ViewSettings.NN_DISPLAY_NEURON_WIDTH_BETWEEN
@@ -155,8 +157,8 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[vision
                 #
                 # pygame.draw.circle(window, inner_color, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS)
                 # pygame.draw.circle(window, ViewSettings.COLOR_NEURON_OUTLINE, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS, width=2)
-
-                input_val = font.render(str(nn_layers[layer_count + 1].output[j]).replace("[", "").replace("]", ""), True, ViewSettings.COLOR_LABEL)
+                
+                input_val = font.render(str(np.round(nn_layers[layer_count + 1].output[j], 6)).replace("[", "").replace("]", ""), True, ViewSettings.COLOR_LABEL)
                 window.blit(input_val, (neuron_x, neuron_y))
 
             neuron_offset_x += ViewSettings.NN_DISPLAY_NEURON_WIDTH_BETWEEN
