@@ -143,10 +143,21 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[vision
 
                 if layer_count == len(nn_layers) - 2:
                     line_label = font.render(MAIN_DIRECTIONS[j].name, True, ViewSettings.COLOR_LABEL)
-                    window.blit(line_label, (neuron_x + 75, neuron_y))
+                    window.blit(line_label, (neuron_x + 25, neuron_y - 10))
 
-                input_val = font.render(str(np.round(nn_layers[layer_count + 1].output[j], 6)).replace("[", "").replace("]", ""), True, ViewSettings.COLOR_LABEL)
-                window.blit(input_val, (neuron_x, neuron_y))
+                    max_neuron_output = np.max(nn_layers[layer_count + 1].output)
+
+                    if nn_layers[layer_count + 1].output[j] == max_neuron_output:
+                        inner_color = (0, 255, 0)
+                    else:
+                        inner_color = (0, 0, 0)
+
+                    pygame.draw.circle(window, inner_color, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS)
+                    pygame.draw.circle(window, ViewSettings.COLOR_NEURON_OUTLINE, (neuron_x, neuron_y), ViewSettings.NN_DISPLAY_NEURON_RADIUS, width=2)
+
+                else:
+                    input_val = font.render(str(np.round(nn_layers[layer_count + 1].output[j], 6)).replace("[", "").replace("]", ""), True, ViewSettings.COLOR_LABEL)
+                    window.blit(input_val, (neuron_x, neuron_y))
 
             neuron_y = neuron_offset_y
             neuron_offset_y += ViewSettings.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2
