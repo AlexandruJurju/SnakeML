@@ -70,6 +70,7 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[vision
     dense_layers = model.snake.brain.get_dense_layers()
     offset_x = ViewSettings.NN_POSITION[0]
     offset_y = ViewSettings.NN_POSITION[1]
+    nn_display_height_between = 4
     neuron_offset_x = 100 + offset_x
     neuron_offset_y = offset_y
     offsets = ["OFFSET X", "OFFSET Y"]
@@ -82,8 +83,8 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[vision
 
     max_y = -1
     for layer in dense_layers:
-        max_y_input = layer.input_size * (ViewSettings.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2)
-        max_y_output = layer.output_size * (ViewSettings.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2)
+        max_y_input = layer.input_size * (nn_display_height_between + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2)
+        max_y_output = layer.output_size * (nn_display_height_between + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2)
         max_layer = max_y_input if max_y_input > max_y_output else max_y_output
         if max_layer > max_y:
             max_y = max_layer
@@ -95,14 +96,14 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[vision
 
             # if it's the first layer only draw input
             if layer_count == 0:
-                current_max_y = input_neuron_count * (ViewSettings.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2)
+                current_max_y = input_neuron_count * (nn_display_height_between + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2)
                 offset = (max_y - current_max_y) // 2
                 neuron_offset_y += offset
 
                 for i in range(input_neuron_count):
                     neuron_x = neuron_offset_x
                     neuron_y = neuron_offset_y
-                    neuron_offset_y += ViewSettings.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2
+                    neuron_offset_y += nn_display_height_between + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2
                     line_start_positions.append((neuron_x, neuron_y))
 
                     # first ones are vision lines input, the last 4 are current snake direction
@@ -123,7 +124,7 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[vision
                     input_val = font.render(str(np.round(layer.input[i], 6)).replace("[", "").replace("]", ""), True, ViewSettings.COLOR_LABEL)
                     window.blit(input_val, (neuron_x, neuron_y))
                 neuron_y = neuron_offset_y
-                neuron_offset_y += ViewSettings.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2
+                neuron_offset_y += nn_display_height_between + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2
                 input_string = font.render("Input Layer", True, ViewSettings.COLOR_DODGER_BLUE)
                 window.blit(input_string, (neuron_x, neuron_y))
 
@@ -131,14 +132,14 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[vision
                 neuron_offset_y = offset_y
 
             # always draw output neurons
-            current_max_y = output_neuron_count * (ViewSettings.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2)
+            current_max_y = output_neuron_count * (nn_display_height_between + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2)
             offset = (max_y - current_max_y) // 2
             neuron_offset_y += offset
 
             for j in range(output_neuron_count):
                 neuron_x = neuron_offset_x
                 neuron_y = neuron_offset_y
-                neuron_offset_y += ViewSettings.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2
+                neuron_offset_y += nn_display_height_between + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2
                 line_end_positions.append((neuron_x, neuron_y))
 
                 if layer_count == len(nn_layers) - 2:
@@ -160,7 +161,7 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[vision
                     window.blit(input_val, (neuron_x, neuron_y))
 
             neuron_y = neuron_offset_y
-            neuron_offset_y += ViewSettings.NN_DISPLAY_NEURON_HEIGHT_BETWEEN + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2
+            neuron_offset_y += nn_display_height_between + ViewSettings.NN_DISPLAY_NEURON_RADIUS * 2
 
             if layer_count == len(nn_layers) - 2:
                 output_string = font.render("Output Layer", True, ViewSettings.COLOR_DODGER_BLUE)
