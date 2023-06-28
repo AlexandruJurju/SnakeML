@@ -70,7 +70,7 @@ def draw_neural_network_complete(window, model: Model, vision_lines: List[vision
     dense_layers = model.snake.brain.get_dense_layers()
     offset_x = ViewSettings.NN_POSITION[0]
     offset_y = ViewSettings.NN_POSITION[1]
-    nn_display_height_between = 4
+    nn_display_height_between = 4 if len(vision_lines) == 12 else 2
     neuron_offset_x = 100 + offset_x
     neuron_offset_y = offset_y
     offsets = ["OFFSET X", "OFFSET Y"]
