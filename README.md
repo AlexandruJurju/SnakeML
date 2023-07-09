@@ -20,11 +20,11 @@ The neural network predicts the next move of the snake using as input a reduced 
 
 The vision lines can be drawn either using:
 
-4 directions (UP, DOWN, LEFT, RIGHT) 
+* 4 directions (UP, DOWN, LEFT, RIGHT) 
 
 ![4 Directions](readme/4.png)
 
-or 8 directions (UP, DOWN, LEFT, RIGHT + diagonal directions)
+* 8 directions (UP, DOWN, LEFT, RIGHT + diagonal directions)
 
 ![8 directions](readme/8.png)
 
