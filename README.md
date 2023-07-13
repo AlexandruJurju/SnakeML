@@ -1,4 +1,5 @@
 # SnakeML
+Inspired by: https://github.com/Chrispresso/SnakeAI
 
 ## Dependencies
 When using the executable it's not necessary to install the dependencies
