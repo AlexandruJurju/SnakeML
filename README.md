@@ -1,4 +1,6 @@
 # SnakeML
+Documentation in romanian [HERE](readme/Doc.pdf)
+
 Inspired by: https://github.com/Chrispresso/SnakeAI
 
 ## Dependencies
